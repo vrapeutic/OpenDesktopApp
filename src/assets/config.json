@@ -1,0 +1,8 @@
+{
+    "apiUrl": "http://vrapeutic-rails-production.eba-2nd4efne.eu-west-1.elasticbeanstalk.com/api/v1",
+    "maxTry":0,
+    "nativePaltform": "electron",
+    "env": "dev",
+    "lang":"en",
+    "dir":"ltr"
+}

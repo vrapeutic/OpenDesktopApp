@@ -1,0 +1,125 @@
+<!-- <ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'PATIENT.PATIENT' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<nb-layout>
+  <nb-layout-header fixed>
+    <div class="header-container">
+      <nb-actions size="small">
+        <nb-action badgePosition="right" class="action-icon" (click)="goBack()"
+                   badgeStatus="info" title="Back to Patient Profile" size="giant">
+          <nb-icon class="action-icon" icon="arrow-back-outline"></nb-icon>
+        </nb-action>
+        <nb-action size="giant" title="Statistics" class="action-icon"
+                   badgePosition="right" badgeStatus="info" class="action-icon">
+         <nb-icon class="action-icon" icon="trending-up-outline"></nb-icon>
+         <span style="font-size: medium; font-weight: lighter;">Statistics</span>
+       </nb-action>
+      </nb-actions>
+    </div>
+    <div style="margin-left: auto!important; float: right;">
+      <nb-actions>
+        <nb-action badgePosition="right" badgeStatus="danger" title="Information" size="giant">
+          <nb-icon class="action-icon" icon="info-outline"></nb-icon>
+        </nb-action>
+      </nb-actions>
+    </div>
+  </nb-layout-header>
+
+  <nb-layout-column>
+    <div class="center-div row module-controls">
+      <div style="flex: row;">
+        <label class="label filter-label">Sessions Scopes</label>
+        <nb-select filled status="info"
+                    fullWidth  shape="semi-round" size="medium" placeholder="Sessions Scopes"
+                    [(selected)]="selectedSessionsScope" (selectedChange)="changeSessionScope()">
+          <nb-option *ngFor="let sessionsScope of sessionsScopes" [value]="sessionsScope">
+            {{ sessionsScope }}
+          </nb-option>
+        </nb-select>
+      </div>
+
+      <div style="flex: row;" *ngIf="selectedSessionsScope == 'One Session' && sessions?.length">
+        <label class="label filter-label">Session Date</label>
+        <nb-select filled status="info"
+                    fullWidth  shape="semi-round" size="medium" placeholder="Sessions Scopes"
+                    [(selected)]="selectedSession" (selectedChange)="getStatistics()">
+          <nb-option *ngFor="let session of sessions" [value]="session">
+            {{ session?.session_date }}
+          </nb-option>
+        </nb-select>
+      </div>
+
+      <div style="flex: row;" *ngIf="selectedSessionsScope == 'Within Dates'">
+        <label class="label filter-label">Pick Dates</label>
+        <br>
+        <input nbInput placeholder="" shape="semi-round" [nbDatepicker]="rangePicker" class="date-picker">
+        <nb-rangepicker #rangePicker (rangeChange)="onDateFilterChange($event)" [(min)]="nbDatePickerOptions.orgStart" [(max)]="nbDatePickerOptions.orgEnd"></nb-rangepicker>
+      </div>
+    </div>
+
+    <!-- <div class="empty-content" *ngIf="!sessions?.length">
+      <div class="illustration-wrapper">
+        <nb-icon name="trending-up-outline"></nb-icon>
+      </div>
+      <div class="empty-text">No Sessions Available</div>
+    </div> -->
+    <div class="center-div row module-controls">
+      <nb-layout-column *ngIf="!sessions?.length">
+          <nb-card>
+              <nb-card-body class="empty-chart">
+                  <span><nb-icon icon="trending-up-outline"></nb-icon> No Data Available For This Chart</span>
+              </nb-card-body>
+          </nb-card>
+      </nb-layout-column>
+    </div>
+    
+
+    <br>
+
+    <app-stats *ngIf="showStats && sessions?.length"
+                [moduleId]= "moduleId" [allData]="sessionStatistics"
+                [sessionName]="selectedSession.session_date"
+                [sessionsScope]="selectedSessionsScope"
+     ></app-stats>
+  </nb-layout-column>
+</nb-layout>
+
+<!-- 
+<ion-content class="ion-padding">
+  <div *ngIf="selectedSessionsScope == 'Within Dates'">
+    <ngx-datetime-range-picker name="date" [options]="datePickerOptions" [settings]="datePickerSettings"
+    (dateRangeChanged)="onDateFilterChange($event)" required>
+    </ngx-datetime-range-picker>
+  </div>
+
+  <ion-list class="sessions-list ion-no-padding" *ngIf="selectedSessionsScope == 'One Session'">
+    <ion-item *ngIf="sessions?.length" color='secondary' size="small" slot="start">
+      <ion-label position="stacked">Session</ion-label>
+      <ion-select (ionChange)="getStatistics()" [(ngModel)]="selectedSession" interface="popover">
+        <ion-select-option *ngFor="let session of sessions" [value] = "session">
+          {{ session?.session_date }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+    <div class="empty-content" *ngIf="!sessions?.length">
+      <div class="illustration-wrapper">
+        <ion-icon name="analytics"></ion-icon>
+      </div>
+      <div class="empty-text">No Sessions Available</div>
+    </div>
+
+    <app-stats *ngIf="showStats"
+     [moduleId]= "moduleId" [allData]="sessionStatistics"
+     [sessionName]="selectedSession.session_date"
+     [sessionsScope]="selectedSessionsScope"
+     ></app-stats>
+
+</ion-content> -->

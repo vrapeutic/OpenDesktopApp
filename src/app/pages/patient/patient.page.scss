@@ -1,0 +1,237 @@
+
+ion-card {
+    border: 2px solid var(--ion-color-primary);
+    border-radius: 1rem
+}
+
+ion-button {
+    --border-width: 1px;
+}
+
+.running-mode {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 23px;
+    margin-bottom: 10px;
+}
+
+.headset-status {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.has-updates {
+    border: 2px solid var(--ion-color-warning);
+}
+
+ion-select {
+    justify-content: center;
+}
+
+.my-buffer-progress{
+    --background: #ffffff;
+    --buffer-background:#d3d3d3;
+    --progress-background:#45a8c8;
+}
+
+.module-card {
+  --background: #ffffff;
+  transition: transform .2s;
+}
+
+.module-card:hover,
+.module-card:focus {
+  --background: #ffffff;
+  transform: scale(1.02);
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+ion-img {
+  border-radius: 5px 5px 0 0;
+}
+
+.container {
+  padding: 2px 16px;
+}
+
+.patientAccordion {
+  cursor: pointer;
+}
+
+.patientAccordion:hover {
+  background-color: #F5F5F5;
+}
+
+.module-desc {
+  cursor: pointer;
+}
+
+// @import '../../../themes';
+
+// @include nb-install-component() {
+//   // display: flex;
+//   // justify-content: space-between;
+//   // width: 100%;
+
+//   // nb-action {
+//   //   height: auto;
+//   //   display: flex;
+//   //   align-content: center;
+//   // }
+
+//   // nb-user {
+//   //   cursor: pointer;
+//   // }
+
+//   // .header-container {
+//   //   display: flex;
+//   //   align-items: center;
+//   //   width: auto;
+//   // }
+
+//   // .buttons-row {
+//   //   align-items: center;
+//   //   margin: -0.5rem;
+//   // }
+
+//   // button[nbButton] {
+//   //   margin: 0.5rem;
+//   // }
+
+//   // button[nbButton]:hover:enabled {
+//   //   // color: #45a8c8;
+//   //   // background-color: white;
+//   //   // border-color: #45a8c8;
+//   // }
+
+//   // .action-icon {
+//   //   @include nb-ltr(margin-right, 0.5rem);
+//   //   @include nb-rtl(margin-left, 0.5rem);
+//   //   cursor: pointer;
+//   //   font-size: larger;
+//   // }
+//   // .action-icon:hover {
+//   //   background-color: whitesmoke;
+//   // }
+
+// }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: auto; 
+  padding: 0;
+  width: 80%;
+}
+
+.cards_item {
+  transition: transform .5s;
+  display: flex;
+  padding: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .cards_item {
+    width: 50%;
+  }
+}
+
+@media (min-width: 56rem) {
+  .cards_item {
+    width: 33.3333%;
+  }
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow .5s;
+}
+
+.card:hover {
+  box-shadow: 0 10px 20px -7px rgba(0, 0, 0, 0.25);
+}
+
+.cards_item:hover,
+.cards_item:focus {
+  --background: #ffffff;
+  transform: scale(1.001);
+}
+
+.card_content {
+  padding: 1rem;
+  // background: linear-gradient(to bottom left, #EF8D9C 40%, #FFC39E 100%);
+  --background: #ffffff;
+}
+
+.card_title {
+  // color: #ffffff;
+  color: #0095ff;
+  font-size: 1.2rem;
+  font-weight: bolder;
+  // letter-spacing: 1px;
+  text-transform: capitalize;
+  margin: 0px;
+  margin: auto;
+}
+.card_title_accordion:hover {
+  background-color: #F5F5F5;
+}
+
+.card_text {
+  // color: #ffffff;
+  color: #45a8c8;
+  font-size: 0.675rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;    
+  font-weight: 400;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.module-controls {
+  display: flex;
+  justify-content: space-around;
+  margin: auto;
+}
+
+.module-control {
+  // width: 15%;
+}
+
+
+.center-div {
+  margin: auto; 
+  width: 55%;
+}
+
+.new-version {
+  margin: auto;
+  font-weight: bolder;
+  padding: 0.5rem;
+}
+
+.round-bg {
+  background-color: 		#f7f9fc; 
+  border-radius: 1rem;
+  text-align: center;
+}
+
+::ng-deep .datatable-body-row.active .datatable-row-group {
+  background-color:	#c7e2ff !important;
+}
