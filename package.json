@@ -23,7 +23,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "electron": "ng build --prod --base-href ./ && tsc --p electron  && electron .",
+    "electron": "cross-env NODE_OPTIONS=--openssl-legacy-provider ng build --prod --base-href ./ && tsc --p electron  && electron .",
     "release": "electron-builder",
     "build-electron": "ng build  --prod --base-href ./ && tsc --p electron",
     "package-linux": "electron-packager . Vrapeutic --overwrite --asar=true --platform=linux --arch=x64 --icon=1024x1024.png --prune=true --out=release-builds --extraResource=dist/vrapeutic-desktop/assets/modules/ --ignore=release-builds/",
