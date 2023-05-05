@@ -24,15 +24,34 @@ import Gradient from "../assets/images/Gradient.png";
 import { EyeIcon } from "../assets/icons/EyeIcon";
 
 const Login = (props: any) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [checkIconView, setcheckIconView] = useState(false);
 
-  const printing = () => {
-    console.log(email);
-    console.log(password);
+  const togglePassword: any = () => {
+    setShowPassword(!showPassword);
   };
 
-  printing();
+  const validationHandler = () => {
+    event.preventDefault();
+    const Joi = require("joi");
+    const schema = Joi.object().keys({
+      email: Joi.string().alphanum().min(3).max(30).required(),
+      password: Joi.number().integer().min(3).required(),
+    });
+
+    const emailToValidate = {
+      email: emailInput,
+      password: passwordInput,
+    };
+    const result = schema.validate(emailToValidate);
+    if (result.error == null) {
+      setcheckIconView(true);
+    } else {
+      setcheckIconView(false);
+    }
+  };
 
   return (
     <>
@@ -53,7 +72,7 @@ const Login = (props: any) => {
               <Text fontSize="1rem" pt="19px" color="#58667E">
                 Please login or register to start using your VRapeutic account.
               </Text>
-              <form>
+              <form onSubmit={validationHandler}>
                 <FormControl>
                   <FormLabel
                     pt="24px"
@@ -65,8 +84,8 @@ const Login = (props: any) => {
                   </FormLabel>
                   <InputGroup>
                     <Input
-                      onChange={(e) => setEmail(e.target.value)}
-                      value={email}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      value={emailInput}
                       type="email"
                       borderRadius="8px"
                       border="1px"
@@ -79,7 +98,9 @@ const Login = (props: any) => {
                     <InputRightElement
                       h="100%"
                       pr="11.33px"
-                      children={<CheckIcon color="#16C683" />}
+                      children={
+                        checkIconView ? <CheckIcon color="#16C683" /> : null
+                      }
                     />
                   </InputGroup>
                   <FormLabel
@@ -92,9 +113,9 @@ const Login = (props: any) => {
                   </FormLabel>
                   <InputGroup>
                     <Input
-                      onChange={(e) => setPassword(e.target.value)}
-                      value={password}
-                      type="password"
+                      onChange={(e) => setPasswordInput(e.target.value)}
+                      value={passwordInput}
+                      type={showPassword ? "text" : "password"}
                       borderRadius="8px"
                       border="1px"
                       borderColor="#E9EDF0"
@@ -106,6 +127,8 @@ const Login = (props: any) => {
                     <InputRightElement
                       pr="10.83px"
                       h="100%"
+                      cursor="pointer"
+                      onClick={togglePassword}
                       children={<EyeIcon />}
                     />
                   </InputGroup>
@@ -113,6 +136,7 @@ const Login = (props: any) => {
                     Forgot Password ?
                   </FormHelperText>
                   <Button
+                    type="submit"
                     w="380px"
                     h="73px"
                     mt="32px"
@@ -205,19 +229,6 @@ const Login = (props: any) => {
           </Box>
         </GridItem>
       </Grid>
-      {/* <h1>Welcome back</h1>
-      <div>
-        Please login or register to start using your VRapeutic account.{" "}
-      </div>
-      <FormControl>
-        <FormLabel>Email or mobile number</FormLabel>
-        <input type="text" />
-      </FormControl>
-      <FormControl>
-        <FormLabel>Password</FormLabel>
-        <input type="password" />
-        <FormHelperText>Forgot Password ?</FormHelperText>
-      </FormControl> */}
     </>
   );
 };
