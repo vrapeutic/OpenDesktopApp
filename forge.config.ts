@@ -37,7 +37,7 @@ const config: ForgeConfig = {
     publishers: [
         new PublisherGithub({
             repository: { owner: "vrapeutic", name: "OpenDesktopApp" },
-            authToken: process.env.GITHUB_TOKEN,
+            authToken: process.env.GH_TOKEN,
             draft: true,
         }),
     ],
