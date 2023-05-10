@@ -2,6 +2,7 @@
 // import logo from "@renderer/logo.svg";
 import "@renderer/App.css";
 import Login from "./pages/Login";
+import Header from "./theme/components/Header";
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
           </a>
         </header>
       </div> */}
-      <Login />
+      {/* <Login /> */}
+      <Header />
     </>
   );
 }
