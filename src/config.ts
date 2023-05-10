@@ -1,4 +1,4 @@
 export const config = {
-    apiURL: process.env.API_URL,
-    appEnv: process.env.APP_ENV as "dev" | "production" | "staging",
+    apiURL: (window as any).envVars.API_URL,
+    appEnv: (window as any).envVars.APP_ENV as "dev" | "production" | "staging",
 };

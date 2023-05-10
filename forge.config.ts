@@ -21,14 +21,15 @@ const config: ForgeConfig = {
     plugins: [
         new WebpackPlugin({
             mainConfig,
+            devContentSecurityPolicy: "connect-src 'self' * 'unsafe-eval'",
             renderer: {
                 config: rendererConfig,
                 entryPoints: [
                     {
-                        html: "/src/index.html",
-                        js: "/src/index.tsx",
+                        html: "./src/index.html",
+                        js: "./src/index.tsx",
                         name: "main_window",
-                        preload: { js: "/src/preload.ts" },
+                        preload: { js: "./src/preload.ts" },
                     },
                 ],
             },

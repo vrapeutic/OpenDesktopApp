@@ -6,15 +6,21 @@ import { ChakraProvider } from "@chakra-ui/react";
 import theme from "@renderer/theme";
 import { Fonts } from "@renderer/theme/Fonts";
 import "@renderer/index.css";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
 );
+
 root.render(
     <React.StrictMode>
         <ChakraProvider theme={theme}>
-            <Fonts />
-            <App />
+            <QueryClientProvider client={queryClient}>
+                <Fonts />
+                <App />
+            </QueryClientProvider>
         </ChakraProvider>
     </React.StrictMode>
 );
