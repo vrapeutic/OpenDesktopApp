@@ -1,16 +1,8 @@
-import {
-    Grid,
-    GridItem,
-    Flex,
-    Box,
-    Image,
-    Link,
-    Button,
-} from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 
-import ImageLogin from "../../assets/images/ImageLogin.png";
-import BackgroundLogin from "../../assets/images/BackgroundLogin.png";
 import LoginForm from "@renderer/features/auth/components/LoginForm";
+import LoginNavigation from "@renderer/features/auth/components/LoginNavigation";
+import BackgroundLogin from "../../assets/images/BackgroundLogin.png";
 
 const Login = () => {
     return (
@@ -35,49 +27,7 @@ const Login = () => {
                     borderStartRadius="50px"
                     height="100%"
                 >
-                    <Flex
-                        justifyContent="space-between"
-                        marginX="auto"
-                        alignItems="center"
-                        paddingTop="45px"
-                        maxW="435px"
-                    >
-                        <Link
-                            fontFamily="Manrope"
-                            lineHeight="1.2"
-                            color="#FFFFFF"
-                            fontWeight="600"
-                        >
-                            Features
-                        </Link>
-                        <Link
-                            fontFamily="Manrope"
-                            color="#FFFFFF"
-                            fontWeight="600"
-                        >
-                            About us
-                        </Link>
-                        <Link
-                            fontFamily="Manrope"
-                            color="#FFFFFF"
-                            fontWeight="600"
-                        >
-                            Blog
-                        </Link>
-                        <Button
-                            fontFamily="Manrope"
-                            bg="#FFFFFF"
-                            color="#15134B"
-                            fontWeight="800"
-                            padding="12px 24px"
-                            border-radius="8px"
-                        >
-                            Get Started
-                        </Button>
-                    </Flex>
-                    <Box marginLeft="-55px">
-                        <Image src={ImageLogin} alt="login background image" />
-                    </Box>
+                    <LoginNavigation />
                 </GridItem>
             </Grid>
         </>

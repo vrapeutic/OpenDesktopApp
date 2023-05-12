@@ -18,7 +18,6 @@ import VRapeutic from "../../../assets/images/VRapeutic.png";
 import { EyeIcon } from "../../../assets/icons/EyeIcon";
 import { ArrowForwardIcon, CheckIcon } from "@chakra-ui/icons";
 import Joi from "joi";
-import { config } from "@renderer/config";
 import { useLoginMutation } from "../hooks/useLoginMutation";
 
 const LoginForm = () => {
@@ -231,7 +230,11 @@ const LoginForm = () => {
                     fontSize="1rem"
                 >
                     New to VRapeutic?{" "}
-                    <Link display="inline" color="#3961FB">
+                    <Link
+                        display="inline"
+                        color="#3961FB"
+                        href="https://site.vrpeutic.ca/request-demo/"
+                    >
                         Create an Account
                     </Link>
                 </Text>

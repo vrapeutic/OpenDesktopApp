@@ -32,6 +32,7 @@ export function useLoginMutation(
         {
             ...options,
             onSuccess: async (...params) => {
+                console.log(params);
                 setApiToken(params[0].token);
                 setMe(params[0]);
                 console.log("params: ", params);
