@@ -15,8 +15,6 @@ jobs:
 
         steps:
             - uses: actions/checkout@v2
-              with:
-                  ref: my-branch
             - uses: actions/setup-node@master
               with:
                   node-version: 18
@@ -24,5 +22,5 @@ jobs:
               run: npm ci
             - name: publish
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: npm run publish
