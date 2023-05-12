@@ -25,10 +25,10 @@ const config: ForgeConfig = {
                 config: rendererConfig,
                 entryPoints: [
                     {
-                        html: "/src/index.html",
-                        js: "/src/index.tsx",
+                        html: "./src/index.html",
+                        js: "./src/index.tsx",
                         name: "main_window",
-                        preload: { js: "/src/preload.ts" },
+                        preload: { js: "./src/preload.ts" },
                     },
                 ],
             },
