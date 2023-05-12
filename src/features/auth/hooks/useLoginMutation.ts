@@ -1,6 +1,7 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { config } from "@renderer/config";
+import { api, setApiToken } from "@renderer/api";
+import { setMe } from "@renderer/cache";
 
 type Params = {
     identifier: string;
@@ -8,28 +9,31 @@ type Params = {
 };
 
 type Return = {
-    access_token: string;
-    refresh_token: string;
-    expires_in: number;
-    token_type: string;
+    id: number;
+    address: string;
+    email: string;
+    name: string;
+    phone: string;
+    specialty: string;
+    token: string;
 };
+
 export function useLoginMutation(
     options?: UseMutationOptions<Return, AxiosError, Params>
 ) {
     return useMutation<Return, AxiosError, Params>(
         (params) =>
-            axios
-                .post<Params, AxiosResponse<Return>>(
-                    `${config.apiURL}/api/v1/login`,
-                    {
-                        email: params.identifier,
-                        password: params.password,
-                    }
-                )
+            api
+                .post<Params, AxiosResponse<Return>>("/api/v1/login", {
+                    email: params.identifier,
+                    password: params.password,
+                })
                 .then((res) => res.data),
         {
             ...options,
             onSuccess: async (...params) => {
+                setApiToken(params[0].token);
+                setMe(params[0]);
                 console.log("params: ", params);
             },
         }
