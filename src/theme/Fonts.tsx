@@ -17,6 +17,13 @@ import GraphicLCGSuper from "@renderer/assets/fonts/GraphikLCG-Super.ttf";
 import GraphicLCGSuperItalic from "@renderer/assets/fonts/GraphikLCG-SuperItalic.ttf";
 import GraphicLCGBlack from "@renderer/assets/fonts/GraphikLCG-Black.ttf";
 import GraphicLCGBlackItalic from "@renderer/assets/fonts/GraphikLCG-BlackItalic.ttf";
+import ManropeExtraLight from "@renderer/assets/fonts/Manrope-ExtraLight.ttf";
+import ManropeLight from "@renderer/assets/fonts/Manrope-Light.ttf";
+import ManropeRegular from "@renderer/assets/fonts/Manrope-Regular.ttf";
+import ManropeMedium from "@renderer/assets/fonts/Manrope-Medium.ttf";
+import ManropeSemiBold from "@renderer/assets/fonts/Manrope-SemiBold.ttf";
+import ManropeBold from "@renderer/assets/fonts/Manrope-Bold.ttf";
+import ManropeExtraBold from "@renderer/assets/fonts/Manrope-ExtraBold.ttf";
 
 export const Fonts = () => (
   <Global
@@ -146,6 +153,55 @@ export const Fonts = () => (
         font-style: italic;
         font-weight: 900;
         src: url(${GraphicLCGBlackItalic}) format('truetype');
+      }
+      /* Manrope-ExtraLight */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 200;
+        src: url(${ManropeExtraLight}) format('truetype');
+      }
+      /* Manrope-Light */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 300;
+        src: url(${ManropeLight}) format('truetype');
+      }
+      /* Manrope-Regular */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: normal;
+        src: url(${ManropeRegular}) format('truetype');
+      }
+      /* Manrope-Medium */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 500;
+        src: url(${ManropeMedium}) format('truetype');
+      }
+      /* Manrope-SemiBold */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 600;
+        src: url(${ManropeSemiBold}) format('truetype');
+      }
+      /* Manrope-Bold */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 700;
+        src: url(${ManropeBold}) format('truetype');
+      }
+      /* Manrope-ExtraBold */
+      @font-face {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 800;
+        src: url(${ManropeExtraBold}) format('truetype');
       }
       `}
   />
