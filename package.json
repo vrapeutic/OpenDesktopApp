@@ -23,12 +23,19 @@
         "@electron-forge/maker-squirrel": "^6.1.1",
         "@electron-forge/maker-zip": "^6.1.1",
         "@electron-forge/plugin-webpack": "^6.1.1",
+<<<<<<< HEAD
+=======
+        "@electron-forge/publisher-github": "^6.1.1",
+>>>>>>> dev
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^14.0.0",
         "@testing-library/user-event": "^14.4.3",
         "@types/jest": "^29.5.1",
         "@types/node": "^18.15.13",
+<<<<<<< HEAD
         "@types/reach__router": "^1.3.11",
+=======
+>>>>>>> dev
         "@types/react": "^18.0.38",
         "@types/react-dom": "^18.0.11",
         "@typescript-eslint/eslint-plugin": "^5.0.0",
@@ -52,14 +59,24 @@
         "@chakra-ui/react": "^2.5.5",
         "@emotion/react": "^11.10.6",
         "@emotion/styled": "^11.10.6",
+<<<<<<< HEAD
         "@reach/router": "^1.3.4",
+=======
+        "@tanstack/react-query": "^4.29.5",
+        "axios": "^1.4.0",
+        "dotenv": "^16.0.3",
+>>>>>>> dev
         "electron-squirrel-startup": "^1.0.0",
         "framer-motion": "^10.12.4",
         "joi": "^17.9.2",
         "react": "^18.2.0",
+<<<<<<< HEAD
         "react-custom-scrollbars-2": "^4.5.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.11.1",
+=======
+        "react-dom": "^18.2.0",
+>>>>>>> dev
         "web-vitals": "^3.3.1"
     }
 }

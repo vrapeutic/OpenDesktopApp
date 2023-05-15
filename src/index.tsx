@@ -5,6 +5,7 @@ import reportWebVitals from "@renderer/reportWebVitals";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "@renderer/theme";
 import { Fonts } from "@renderer/theme/Fonts";
+<<<<<<< HEAD
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -16,6 +17,26 @@ root.render(
       <App />
     </ChakraProvider>
   </React.StrictMode>
+=======
+import "@renderer/index.css";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+const root = ReactDOM.createRoot(
+    document.getElementById("root") as HTMLElement
+);
+
+root.render(
+    <React.StrictMode>
+        <ChakraProvider theme={theme}>
+            <QueryClientProvider client={queryClient}>
+                <Fonts />
+                <App />
+            </QueryClientProvider>
+        </ChakraProvider>
+    </React.StrictMode>
+>>>>>>> dev
 );
 
 // If you want to start measuring performance in your app, pass a function

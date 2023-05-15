@@ -24,6 +24,7 @@ import ManropeMedium from "@renderer/assets/fonts/Manrope-Medium.ttf";
 import ManropeSemiBold from "@renderer/assets/fonts/Manrope-SemiBold.ttf";
 import ManropeBold from "@renderer/assets/fonts/Manrope-Bold.ttf";
 import ManropeExtraBold from "@renderer/assets/fonts/Manrope-ExtraBold.ttf";
+<<<<<<< HEAD
 import InterThin from "@renderer/assets/fonts/Inter-Thin.ttf";
 import InterExtraLight from "@renderer/assets/fonts/Inter-ExtraLight.ttf";
 import InterLight from "@renderer/assets/fonts/Inter-Light.ttf";
@@ -33,6 +34,8 @@ import InterSemiBold from "@renderer/assets/fonts/Inter-SemiBold.ttf";
 import InterBold from "@renderer/assets/fonts/Inter-Bold.ttf";
 import InterExtraBold from "@renderer/assets/fonts/Inter-ExtraBold.ttf";
 import InterBlack from "@renderer/assets/fonts/Inter-Black.ttf";
+=======
+>>>>>>> dev
 
 export const Fonts = () => (
   <Global
@@ -212,6 +215,7 @@ export const Fonts = () => (
         font-weight: 800;
         src: url(${ManropeExtraBold}) format('truetype');
       }
+<<<<<<< HEAD
       /* Inter-Thin */
       @font-face {
         font-family: 'Inter';
@@ -275,6 +279,8 @@ export const Fonts = () => (
         font-weight: 900;
         src: url(${InterBlack}) format('truetype');
       }
+=======
+>>>>>>> dev
       `}
   />
 );
