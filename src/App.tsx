@@ -2,7 +2,7 @@
 // import logo from "@renderer/logo.svg";
 import "@renderer/App.css";
 import Login from "./pages/Login";
-import Header from "./theme/components/Header";
+import Header from "./features/header/Header";
 
 function App() {
   return (
