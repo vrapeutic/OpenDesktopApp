@@ -2,9 +2,22 @@ import { Grid, GridItem } from "@chakra-ui/react";
 
 import LoginForm from "@renderer/features/auth/components/LoginForm";
 import LoginNavigation from "@renderer/features/auth/components/LoginNavigation";
+import { useEffect, useState } from "react";
 import BackgroundLogin from "../../assets/images/BackgroundLogin.png";
 
 const Login = () => {
+    const [loggedIn, setLoggedIn] = useState(false);
+
+    useEffect(() => {
+        (async () => {
+            const token = await (window as any).electronAPI.getPassword(
+                "token"
+            );
+            console.log("token: ", token);
+            if (token) setLoggedIn(true);
+        })();
+    }, []);
+
     return (
         <>
             <Grid

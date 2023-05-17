@@ -35,6 +35,10 @@ export function useLoginMutation(
                 console.log(params);
                 setApiToken(params[0].token);
                 setMe(params[0]);
+                (window as any).electronAPI.setPassword(
+                    "token",
+                    params[0].token
+                );
                 console.log("params: ", params);
             },
         }
