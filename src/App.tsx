@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 // import React from "react";
 // import logo from "@renderer/logo.svg";
 import "./App.css";
@@ -37,16 +37,6 @@ function App() {
       </BrowserRouter>
     </Flex>
   );
-=======
-import Login from "./features/auth/Login";
-
-function App() {
-    return (
-        <>
-            <Login />
-        </>
-    );
->>>>>>> dev
 }
 
 export default App;
