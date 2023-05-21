@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
   Button,
   IconButton,
+  Circle,
 } from "@chakra-ui/react";
 import { Notification } from "@renderer/assets/icons/Notification";
 import { useState } from "react";
@@ -35,6 +36,18 @@ const Notifications = (props: any) => {
 
   return (
     <>
+      <Circle
+        bg="#FF6060"
+        maxH="14px"
+        fontSize="0.5rem"
+        color="#FFFFFF"
+        fontWeight="700"
+        mt="9px"
+        ml="24px"
+        mr="-35px"
+        zIndex="100">
+        +9
+      </Circle>
       <Popover
         closeOnBlur={false}
         closeOnEsc={false}

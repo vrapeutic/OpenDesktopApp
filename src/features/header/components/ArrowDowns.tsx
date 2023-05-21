@@ -10,6 +10,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
   HStack,
+  Divider,
 } from "@chakra-ui/react";
 import { ArrowDown } from "@renderer/assets/icons/ArrowDown";
 import { Language } from "@renderer/assets/icons/Language";
@@ -36,10 +37,7 @@ const ArrowDowns = (props: any) => {
           </PopoverHeader>
           <PopoverBody p="0">
             <>
-              <Flex
-                pb="24px"
-                direction="column"
-                borderBottom="1px solid #F5F5F5">
+              <Flex pb="21px" direction="column">
                 <Flex mt="25px" ml="25px">
                   <HStack>
                     <Users />
@@ -79,7 +77,8 @@ const ArrowDowns = (props: any) => {
               </Flex>
             </>
           </PopoverBody>
-          <Flex mb="24px" mt="25px" ml="25px">
+          <Divider w="auto" mr="8px" ml="8px" color="#F5F5F5" />
+          <Flex mb="24px" mt="21px" ml="25px">
             <HStack>
               <LogOut />
             </HStack>

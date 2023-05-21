@@ -12,6 +12,8 @@ import {
   Button,
   IconButton,
   Box,
+  Circle,
+  Container,
 } from "@chakra-ui/react";
 import { MessageQuestion } from "@renderer/assets/icons/MessageQuestion";
 import { useState } from "react";
@@ -95,14 +97,7 @@ const MessageQuestions = (props: any) => {
               ml="20px">
               Skip
             </Button>
-            {/* <Button
-              cursor="unset"
-              height="0.5rem"
-              width="0.5rem"
-              bg="#00DEA3"
-              mb="14px"
-              mt="37px"
-            /> */}
+            {/* <Container zIndex="100" bg="#00DEA3" maxH="8px"></Container> */}
             <Button
               bg="#00DEA3"
               borderRadius="8px"
