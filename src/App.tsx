@@ -1,5 +1,3 @@
-import "./App.css";
-import Sidebar from "./shared/Sidebar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Kids from "./pages/Kids";
@@ -9,9 +7,9 @@ import Branches from "./pages/Branches";
 import Specialists from "./pages/Specialists";
 import Assessmenttools from "./pages/Assessmenttools";
 import Setting from "./pages/Setting";
-import { Flex } from "@chakra-ui/react";
 import Login from "./features/auth/Login";
 import { useEffect, useState } from "react";
+import Layout from "./shared/Layout";
 
 function App() {
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -31,13 +29,9 @@ function App() {
     if (!isLoggedIn) return <Login />;
 
     return (
-        <Flex>
-            {/* <Login /> */}
-            {/* <Header /> */}
-            <BrowserRouter>
-                <Sidebar />
-                <Routes>
-                    <Route path="login" element={<Login />} />
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Layout />}>
                     <Route path="main_window" element={<Home />} />
                     <Route path="Kids" element={<Kids />} />
                     <Route
@@ -53,9 +47,9 @@ function App() {
                         element={<Assessmenttools />}
                     />
                     <Route path="setting" element={<Setting />} />
-                </Routes>
-            </BrowserRouter>
-        </Flex>
+                </Route>
+            </Routes>
+        </BrowserRouter>
     );
 }
 
