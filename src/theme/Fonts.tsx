@@ -24,6 +24,15 @@ import ManropeMedium from "@renderer/assets/fonts/Manrope-Medium.ttf";
 import ManropeSemiBold from "@renderer/assets/fonts/Manrope-SemiBold.ttf";
 import ManropeBold from "@renderer/assets/fonts/Manrope-Bold.ttf";
 import ManropeExtraBold from "@renderer/assets/fonts/Manrope-ExtraBold.ttf";
+import InterThin from "@renderer/assets/fonts/Inter-Thin.ttf";
+import InterExtraLight from "@renderer/assets/fonts/Inter-ExtraLight.ttf";
+import InterLight from "@renderer/assets/fonts/Inter-Light.ttf";
+import InterRegular from "@renderer/assets/fonts/Inter-Regular.ttf";
+import InterMedium from "@renderer/assets/fonts/Inter-Medium.ttf";
+import InterSemiBold from "@renderer/assets/fonts/Inter-SemiBold.ttf";
+import InterBold from "@renderer/assets/fonts/Inter-Bold.ttf";
+import InterExtraBold from "@renderer/assets/fonts/Inter-ExtraBold.ttf";
+import InterBlack from "@renderer/assets/fonts/Inter-Black.ttf";
 
 export const Fonts = () => (
   <Global
@@ -202,6 +211,69 @@ export const Fonts = () => (
         font-style: normal;
         font-weight: 800;
         src: url(${ManropeExtraBold}) format('truetype');
+      }
+      /* Inter-Thin */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 100;
+        src: url(${InterThin}) format('truetype');
+      }
+      /* Inter-ExtraLight */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 200;
+        src: url(${InterExtraLight}) format('truetype');
+      }
+      /* Inter-Light */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 300;
+        src: url(${InterLight}) format('truetype');
+      }
+      /* Inter-Regular */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        src: url(${InterRegular}) format('truetype');
+      }
+      /* Inter-Medium */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        src: url(${InterMedium}) format('truetype');
+      }
+      /* Inter-SemiBold */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 600;
+        src: url(${InterSemiBold}) format('truetype');
+      }
+      /* Inter-Bold */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 700;
+        src: url(${InterBold}) format('truetype');
+      }
+      /* Inter-ExtraBold */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 800;
+        src: url(${InterExtraBold}) format('truetype');
+      }
+      /* Inter-Black */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 900;
+        src: url(${InterBlack}) format('truetype');
       }
       `}
   />
