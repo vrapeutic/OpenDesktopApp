@@ -8,7 +8,7 @@ on:
 jobs:
     release:
         runs-on: ${{ matrix.os }}
-
+        environment: staging
         strategy:
             matrix:
                 os: [macos-latest, ubuntu-latest, windows-latest]
@@ -23,4 +23,6 @@ jobs:
             - name: publish
               env:
                   GH_TOKEN: ${{ secrets.GH_TOKEN }}
+                  API_URL: ${{ vars.API_URL }}
+                  STORE_SECRET: ${{ secrets.STORE_SECRET }}
               run: npm run publish
