@@ -25,4 +25,5 @@ jobs:
                   GH_TOKEN: ${{ secrets.GH_TOKEN }}
                   API_URL: ${{ vars.API_URL }}
                   STORE_SECRET: ${{ secrets.STORE_SECRET }}
+                  appEnv: staging
               run: npm run publish

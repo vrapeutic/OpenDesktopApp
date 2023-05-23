@@ -27,11 +27,6 @@ const handleStoreSetPassword = (event: IpcMainInvokeEvent, args: any[]) => {
 const createWindow = (): void => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-<<<<<<< HEAD
-        height: 600,
-        width: 800,
-=======
->>>>>>> dev
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
         },
@@ -44,7 +39,9 @@ const createWindow = (): void => {
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    if (process.env.appEnv === "dev") {
+        mainWindow.webContents.openDevTools();
+    }
 
     //
     ipcMain.handle("store:getPassword", handleStoreGetPassword);
