@@ -19,7 +19,7 @@ jobs:
               with:
                   node-version: 18
             - name: install dependencies
-              run: npm ci
+              run: yarn install --frozen-lockfile
             - name: publish
               env:
                   GH_TOKEN: ${{ secrets.GH_TOKEN }}
