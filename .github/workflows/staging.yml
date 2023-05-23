@@ -11,7 +11,7 @@ jobs:
         environment: staging
         strategy:
             matrix:
-                os: [macos-latest, windows-latest]
+                os: [macos-latest, ubuntu-22.04, windows-latest]
 
         steps:
             - uses: actions/checkout@v2
