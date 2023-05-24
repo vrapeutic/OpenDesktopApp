@@ -3,6 +3,8 @@
 import "@renderer/App.css";
 import Login from "./pages/Login";
 import Header from "./features/header/Header";
+import RecentActivities from "./features/recentActivities/RecentActivities";
+import { Box } from "@chakra-ui/react";
 
 function App() {
   return (
@@ -20,7 +22,10 @@ function App() {
         </header>
       </div> */}
       {/* <Login /> */}
-      <Header />
+      <Box bg="#F5F5F5">
+        <Header />
+        <RecentActivities />
+      </Box>
     </>
   );
 }
