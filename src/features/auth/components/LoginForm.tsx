@@ -20,7 +20,7 @@ import { ArrowForwardIcon, CheckIcon } from "@chakra-ui/icons";
 import Joi from "joi";
 import { useLoginMutation } from "../hooks/useLoginMutation";
 
-const LoginForm = () => {
+const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
     const [data, setData] = useState({ identifier: "", password: "" });
     const [error, setError] = useState({ identifier: null, password: null });
     const [showPassword, setShowPassword] = useState(false);
@@ -84,6 +84,7 @@ const LoginForm = () => {
                 onSuccess: () => {
                     // TODO: handle success
                     console.log("success");
+                    onLoginSuccess();
                 },
                 onError: (e) => console.log("login failed: ", e.message),
             });
