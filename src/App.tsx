@@ -26,7 +26,7 @@ function App() {
 
     console.log("isLoggedIn: ", isLoggedIn);
 
-    if (!isLoggedIn) return <Login />;
+    if (!isLoggedIn) return <Login setLoggedIn={setLoggedIn} />;
 
     return (
         <BrowserRouter>

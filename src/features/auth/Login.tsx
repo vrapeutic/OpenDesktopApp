@@ -4,7 +4,15 @@ import LoginForm from "@renderer/features/auth/components/LoginForm";
 import LoginNavigation from "@renderer/features/auth/components/LoginNavigation";
 import BackgroundLogin from "../../assets/images/BackgroundLogin.png";
 
-const Login = () => {
+const Login = ({
+    setLoggedIn,
+}: {
+    setLoggedIn: (loggedIn: boolean) => void;
+}) => {
+    const onLoginSuccess = () => {
+        setLoggedIn(true);
+    };
+
     return (
         <>
             <Grid
@@ -18,7 +26,7 @@ const Login = () => {
                 height="100vh"
             >
                 <GridItem bg="white">
-                    <LoginForm />
+                    <LoginForm onLoginSuccess={onLoginSuccess} />
                 </GridItem>
                 <GridItem
                     bgImage={BackgroundLogin}
