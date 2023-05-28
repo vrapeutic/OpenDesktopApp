@@ -15,6 +15,8 @@ import Specialists from "./pages/Specialists";
 import Assessmenttools from "./pages/Assessmenttools";
 import Setting from "./pages/Setting";
 import { Flex } from "@chakra-ui/react";
+import MMcard from "./theme/components/MMChart.tsx/MMcard";
+import SBDcard from "./theme/components/SBDchart.tsx/SBDcard";
 
 function App() {
   return (
@@ -24,7 +26,7 @@ function App() {
       <BrowserRouter>
       <Sidebar />
       <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/main_window" element={<Home />} />
       <Route path="Kids" element={<Kids />} />
       <Route path="Theraputicmodules" element={<Theraputicmodules />} />
       <Route path="Therapycenters" element={<Therapycenters />} />
@@ -35,6 +37,7 @@ function App() {
       <Route path="setting" element={<Setting />} />
       </Routes>
       </BrowserRouter>
+      
     </Flex>
   );
 }

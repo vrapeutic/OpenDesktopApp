@@ -12,6 +12,7 @@ import { Specialists } from '../../assets/icons/Specialists'
 import { Therapycenters } from '../../assets/icons/Therapycenters'
 import { Theraputicmodules } from '../../assets/icons/Theraputicmodules'
 import { Lamp } from '../../assets/icons/Lamp'
+import { Subscriptions } from '../../assets/icons/Subscriptions';
 
 
 export default function Sidebar() {
@@ -35,8 +36,8 @@ export default function Sidebar() {
     const sideItems=[
         {
           link: "Dashboard",
-          icon: <Dashboard color={location.pathname === '/' ? '#00DEA3' :'#333333'}/>,
-          path: "/",
+          icon: <Dashboard color={location.pathname === '/main_window' ? '#00DEA3' :'#333333'}/>,
+          path: "/main_window",
         },
         {
           link: "Kids",
@@ -62,6 +63,11 @@ export default function Sidebar() {
             link: "Specialists",
             icon: <Specialists color={location.pathname === '/Specialists' ? '#00DEA3' :'#333333'}/>,
             path: "/Specialists",
+          },
+          {
+            link: "Subscriptions",
+            icon: <Subscriptions color={location.pathname === '/Subscriptions' ? '#00DEA3' :'#333333'}/>,
+            path: "/Subscriptions",
           },
           {
              link: "Assessment tools",
