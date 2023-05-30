@@ -1,11 +1,7 @@
 import { safeStorage } from "electron";
 import * as Store from "electron-store";
 
-const store = new Store<Record<string, string>>({
-    name: "ray-encrypted",
-    watch: true,
-    encryptionKey: process.env.STORE_SECRET,
-});
+const store = new Store<Record<string, string>>();
 
 export default {
     setPassword: (key: string, password: string) => {
@@ -13,7 +9,9 @@ export default {
         store.set(key, buffer.toString("latin1"));
     },
     getPassword: (key: string) => {
-        return safeStorage.decryptString(Buffer.from(store.get(key), "latin1"));
+        return safeStorage.decryptString(
+            Buffer.from(store.get(key) ?? "", "latin1")
+        );
     },
     deletePassword: (key: string) => {
         store.delete(key);

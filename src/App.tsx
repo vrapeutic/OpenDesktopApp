@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, MemoryRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Kids from "./pages/Kids";
 import Theraputicmodules from "./pages/Theraputicmodules";
@@ -29,7 +29,7 @@ function App() {
     if (!isLoggedIn) return <Login setLoggedIn={setLoggedIn} />;
 
     return (
-        <BrowserRouter>
+        <MemoryRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route path="main_window" element={<Home />} />
@@ -49,7 +49,7 @@ function App() {
                     <Route path="setting" element={<Setting />} />
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </MemoryRouter>
     );
 }
 
