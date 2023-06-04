@@ -1,16 +1,22 @@
 
-import React from 'react'
+import React, {useState} from 'react'
 import { Button, Card, Flex ,Text, CardHeader, Box, FormControl,FormLabel,Switch,Checkbox} from '@chakra-ui/react'
 import MMcard from '../theme/components/MMChart.tsx/MMcard'
 import SBDcard from '../theme/components/SBDchart.tsx/SBDcard'
 import { Subscriptions } from '../assets/icons/Subscriptions'
 import { Specialists } from '../assets/icons/Specialists'
 import Statiscscard from '../theme/components/Statiscscard'
-
-
-
+import Createnewwidget from '../theme/components/Createnewwidget'
 
 export default function Home() {
+  const [isShown, setIsShown] = useState(false);
+  const handleClick = () => {
+    setIsShown(true);
+  };
+  const close = () => {
+    setIsShown(false)
+  };
+  
   return (
     <Flex>
       <Text
@@ -51,6 +57,7 @@ export default function Home() {
             color="#FFFFFF"
             lineHeight="16px"
             fontStyle="normal"
+            onClick={handleClick}
              >Create New widget</Button>
        {/* <Button
             position="absolute"
@@ -208,6 +215,9 @@ export default function Home() {
       </Flex> 
       </Card>
       <Statiscscard />
+      {isShown && (
+      <Createnewwidget close={close} />
+      )}
     </Flex>
   )
 }
