@@ -19,12 +19,18 @@ import { EyeIcon } from "../../../assets/icons/EyeIcon";
 import { ArrowForwardIcon, CheckIcon } from "@chakra-ui/icons";
 import Joi from "joi";
 import { useLoginMutation } from "../hooks/useLoginMutation";
+import Generalinfo from "../../../pages/SignUp/Generalinfo";
 
 const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
     const [data, setData] = useState({ identifier: "", password: "" });
     const [error, setError] = useState({ identifier: null, password: null });
     const [showPassword, setShowPassword] = useState(false);
+    const [newAccount, setNewAccount] = useState(false);
     const loginMutation = useLoginMutation();
+
+    const createNewAccount = ()=> {
+        setNewAccount(current => !current);
+        };
 
     const identifierSchema = Joi.alternatives()
         .try(
@@ -234,7 +240,8 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                     <Link
                         display="inline"
                         color="#3961FB"
-                        href="https://site.vrpeutic.ca/request-demo/"
+                        // href="https://site.vrpeutic.ca/request-demo/"
+                        onClick={createNewAccount}
                     >
                         Create an Account
                     </Link>
@@ -260,6 +267,10 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
             >
                 2022 All Rights Reserved. VRapeutic.
             </Text>
+
+            {newAccount && (
+                <Generalinfo />
+        )}
         </Flex>
     );
 };

@@ -50,12 +50,13 @@
         "url-loader": "^4.1.1"
     },
     "dependencies": {
-        "@chakra-ui/icons": "^2.0.19",
+        "@chakra-ui/icons": "^2.1.0",
         "@chakra-ui/react": "^2.5.5",
         "@emotion/react": "^11.10.6",
         "@emotion/styled": "^11.10.6",
         "@tanstack/react-query": "^4.29.5",
         "axios": "^1.4.0",
+        "chakra-ui-steps": "^2.1.0",
         "dotenv": "^16.0.3",
         "electron-squirrel-startup": "^1.0.0",
         "electron-store": "^8.1.0",
@@ -63,7 +64,10 @@
         "joi": "^17.9.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-icons": "^4.11.0",
+        "react-otp-input": "^3.1.0",
         "react-router-dom": "^6.11.1",
+        "react-select": "^5.7.7",
         "web-vitals": "^3.3.1"
     }
 }

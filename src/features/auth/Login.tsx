@@ -1,7 +1,6 @@
 import { Grid, GridItem } from "@chakra-ui/react";
-
-import LoginForm from "@renderer/features/auth/components/LoginForm";
-import LoginNavigation from "@renderer/features/auth/components/LoginNavigation";
+import LoginForm from "../../features/auth/components/LoginForm";
+import LoginNavigation from "../../features/auth/components/LoginNavigation";
 import BackgroundLogin from "../../assets/images/BackgroundLogin.png";
 
 const Login = ({
