@@ -22,7 +22,7 @@ export default function Therapycenters() {
     <>
       <Box bg="#FFFFFF" borderRadius="10px" m="5.875em 2.625em 5.875em 2.375em">
         <Divider mt="10em" />
-        <FormControl>
+        {/* <FormControl> */}
           {sliding === 1 ? (
             <GeneralInfoForm />
           ) : sliding === 2 ? (
@@ -81,7 +81,6 @@ export default function Therapycenters() {
               </Button>
             )}
           </Flex>
-        </FormControl>
       </Box>
     </>
   );

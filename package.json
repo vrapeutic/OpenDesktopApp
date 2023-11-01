@@ -54,8 +54,10 @@
         "@chakra-ui/react": "^2.5.5",
         "@emotion/react": "^11.10.6",
         "@emotion/styled": "^11.10.6",
+        "@hookform/resolvers": "^3.3.2",
         "@tanstack/react-query": "^4.29.5",
         "axios": "^1.4.0",
+        "chakra-ui-steps": "1.1.3",
         "dotenv": "^16.0.3",
         "electron-squirrel-startup": "^1.0.0",
         "electron-store": "^8.1.0",
@@ -63,6 +65,7 @@
         "joi": "^17.9.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-hook-form": "^7.47.0",
         "react-router-dom": "^6.11.1",
         "web-vitals": "^3.3.1"
     }
