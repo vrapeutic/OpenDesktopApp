@@ -7,32 +7,38 @@ import {
   FormLabel,
   Grid,
   GridItem,
+  Image,
   Input,
   Text,
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
+import { useRef } from "react";
 
-export default function EductionIInfoForm() {
+export default function EductionIInfoForm({ onSubmit }) {
   const schema = joi.object({
-    Country: joi.string().required().label("Country"),
+    registrationNumber: joi.number().required().label("registrationNumber"),
     Certification: joi.string().required().label("Certification"),
-    Degree: joi.string().required().label("Degree"),
-    University: joi.string().required().label("University"),
-    graduationYear: joi.number().required().label("graduationYear"),
+    taxID: joi.number().required().label("taxID"),
   });
+  const inputRef = useRef(null);
 
   const { control, handleSubmit } = useForm({
     resolver: joiResolver(schema),
     mode: "onTouched",
   });
 
-  const onSubmit = (data:object) => {
+  const FormonSubmit = (data: object) => {
     alert(JSON.stringify(data));
-    console.log("data:", data);
+    onSubmit(data);
+  };
+
+  const handleCertificateChange = (event: any) => {
+    const file = (event.target as HTMLInputElement).files[0];
+    console.log(file);
   };
   return (
     <>
-      <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+      <Box as="form" onSubmit={handleSubmit(FormonSubmit)}>
         <Grid
           m="2.625em 1.5em 0em 1.5em"
           templateColumns="repeat(2, 1fr)"
@@ -41,16 +47,16 @@ export default function EductionIInfoForm() {
           <GridItem>
             <Controller
               control={control}
-              name="Country"
+              name="registrationNumber"
               render={({ field, fieldState: { error } }) => (
                 <FormControl isRequired isInvalid={!!error}>
                   <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                    Country
+                    registrationNumber
                   </FormLabel>
                   <Input
                     {...field}
-                    id="Country"
-                    autoComplete="Country"
+                    id="registrationNumber"
+                    autoComplete="registrationNumber"
                     borderColor="#4965CA"
                     border="2px solid #E8E8E8"
                     _hover={{ border: "1px solid #4965CA" }}
@@ -71,24 +77,38 @@ export default function EductionIInfoForm() {
               name="Certification"
               render={({ field, fieldState: { error } }) => (
                 <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                  <FormLabel
+                    fontFamily="Graphik LCG"
+                    fontWeight="400"
+                    fontSize="16px"
+                    lineHeight="16px"
+                    color="#15134B"
+                  >
                     Certification
                   </FormLabel>
-                  <Input
-                    {...field}
-                    id="Certification"
-                    autoComplete="Certification"
-                    h="8em"
-                    w="10.875em"
-                    borderColor="#4965CA"
+                  <Button
+                    h="128px"
+                    w="174px"
                     border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="image"
-                    mt="0.75em"
-                    mb="1.5em"
                     borderRadius="8px"
-                  />
+                    bg="#FFFFFF"
+                    onClick={() => inputRef.current.click()}
+                  >
+                    <Image />
+                    <Input
+                      {...field}
+                      id="Certification"
+                      autoComplete="Certification"
+                      type="file"
+                      accept="pdf/*"
+                      ref={inputRef}
+                      name="certification"
+                      //  value={values.certification}
+                      onChange={handleCertificateChange}
+                      hidden
+                    />
+                  </Button>
+
                   {error && <Text color="red.500">{error.message}</Text>}
                 </FormControl>
               )}
@@ -97,16 +117,16 @@ export default function EductionIInfoForm() {
           <GridItem>
             <Controller
               control={control}
-              name="Degree"
+              name="taxID"
               render={({ field, fieldState: { error } }) => (
                 <FormControl isRequired isInvalid={!!error}>
                   <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                    Degree
+                    taxID
                   </FormLabel>
                   <Input
                     {...field}
-                    id="Degree"
-                    autoComplete="Degree"
+                    id="taxID"
+                    autoComplete="taxID"
                     borderColor="#4965CA"
                     border="2px solid #E8E8E8"
                     _hover={{ border: "1px solid #4965CA" }}
@@ -114,60 +134,6 @@ export default function EductionIInfoForm() {
                     type="name"
                     mt="0.75em"
                     mb="1em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
-            />
-          </GridItem>
-          <GridItem>
-            <Controller
-              control={control}
-              name="University"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                    University
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="University"
-                    autoComplete="University"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="text"
-                    mt="0.75em"
-                    mb="5em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
-            />
-          </GridItem>
-          <GridItem>
-            <Controller
-              control={control}
-              name="graduationYear"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                    Graduation year
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="graduationYear"
-                    autoComplete="graduationYear"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="text"
-                    mt="0.75em"
-                    mb="5em"
                     borderRadius="8px"
                   />
                   {error && <Text color="red.500">{error.message}</Text>}
@@ -196,3 +162,34 @@ export default function EductionIInfoForm() {
     </>
   );
 }
+
+// <Box marginLeft="50px">
+//             <FormLabel
+//                      fontFamily="Graphik LCG"
+//                      fontWeight="400"
+//                      fontSize="16px"
+//                      lineHeight="16px"
+//                      color="#15134B">
+//                          Certification</FormLabel>
+
+//             <Button
+//                    h="128px"
+//                    w="174px"
+//                    border="2px solid #E8E8E8"
+//                    borderRadius="8px"
+//                    bg="#FFFFFF"
+//                    onClick={() => inputRef.current.click()}
+//                    >
+//               <Image />
+//             <Input
+//                type="file"
+//                accept='pdf/*'
+//                ref={inputRef}
+//                name="certification"
+//               //  value={values.certification}
+//                onChange={handleCertificateChange}
+//                hidden
+//                 />
+//            </Button>
+//             <div>{errors.certification}</div>
+//            </Box>

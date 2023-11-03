@@ -64,11 +64,11 @@ export default function Sidebar() {
       icon: (
         <Therapycenters
           color={
-            location.pathname === "/Therapycenters" ? "#00DEA3" : "#333333"
+            location.pathname === "/HeaderTherapyCenter" ? "#00DEA3" : "#333333"
           }
         />
       ),
-      path: "/Therapycenters",
+      path: "/HeaderTherapyCenter",
     },
     {
       link: "Branches",

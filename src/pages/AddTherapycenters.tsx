@@ -1,36 +1,45 @@
-import { Box, Button, Divider, Flex, FormControl } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, FormControl ,  Grid, Text } from "@chakra-ui/react";
 import ContactForm from "@renderer/features/AddCenterForm/ContactForm";
 import EductionIInfoForm from "@renderer/features/AddCenterForm/EductionIInfoForm";
 import GeneralInfoForm from "@renderer/features/AddCenterForm/GeneralInfoForm";
 import SpecialtyForm from "@renderer/features/AddCenterForm/SpecialtyForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Therapycenters() {
+export default function AddTherapycenters() {
   const [sliding, setSliding] = useState(1);
+  const [formData, setFormData] = useState({});
 
+  const handleFormSubmit = (data) => {
+    console.log(data)
+    setFormData({ ...formData, ...data });
+  };
   const nextHandler = () => {
     setSliding(sliding + 1);
-    console.log("next");
+    // console.log("next");
   };
 
   const backHandler = () => {
     setSliding(sliding - 1);
-    console.log("back");
+    // console.log("back");
   };
+
+  useEffect(() => {
+    // handleFormSubmit()
+    console.log(formData)
+}, [formData]);
 
   return (
     <>
       <Box bg="#FFFFFF" borderRadius="10px" m="5.875em 2.625em 5.875em 2.375em">
         <Divider mt="10em" />
-        {/* <FormControl> */}
           {sliding === 1 ? (
-            <GeneralInfoForm />
+            <GeneralInfoForm  onSubmit={handleFormSubmit}  />
           ) : sliding === 2 ? (
-            <SpecialtyForm />
+            <SpecialtyForm  onSubmit={handleFormSubmit}/>
           ) : sliding === 3 ? (
-            <EductionIInfoForm />
+            <EductionIInfoForm onSubmit={handleFormSubmit}/>
           ) : sliding === 4 ? (
-            <ContactForm />
+            <ContactForm onSubmit={handleFormSubmit} />
           ) : undefined}
           <Flex flexDirection="row-reverse">
             <Button

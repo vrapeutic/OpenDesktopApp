@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
 
-export default function ContactForm() {
+export default function ContactForm({ onSubmit  }) {
   const schema = joi.object({
     phoneNumber: joi.number().required().label("phoneNumber"),
     socialMedia: joi.string().required().label("socialMedia"),
@@ -28,13 +28,14 @@ export default function ContactForm() {
     mode: "onTouched",
   });
 
-  const onSubmit = (data:object) => {
+  const FormonSubmit = (data:object) => {
     alert(JSON.stringify(data));
-    console.log("data:", data);
+    onSubmit(data);
+
   };
   return (
     <>
-      <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+      <Box as="form" onSubmit={handleSubmit(FormonSubmit)}>
         <Grid
           m="2.625em 1.5em 0em 1.5em"
           templateColumns="repeat(2, 1fr)"
@@ -128,6 +129,7 @@ export default function ContactForm() {
               name="Linkedin"
               render={({ field, fieldState: { error } }) => (
                 <FormControl isRequired isInvalid={!!error}>
+                  
                   <Input
                     {...field}
                     id="Linkedin"
@@ -167,3 +169,5 @@ export default function ContactForm() {
     </>
   );
 }
+
+
