@@ -11,8 +11,10 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
-
-export default function SpecialtyForm({ onSubmit  }) {
+import axios from "axios";
+import { useEffect, useState } from "react";
+import {config} from '../../config'
+export default function SpecialtyForm({ onSubmit }) {
   const schema = joi.object({
     specialtyInformation: joi.string().required().label("SpecialtyInformation"),
     chooseSpecializations: joi
@@ -29,10 +31,24 @@ export default function SpecialtyForm({ onSubmit  }) {
   const FormonSubmit = (data: object) => {
     alert(JSON.stringify(data));
     onSubmit(data);
-
   };
 
+  const [specialistslist, setspecialistslist] = useState([]);
 
+  useEffect(() => {
+    getSpecialists();
+  }, []);
+
+  const getSpecialists = async () => {
+    try {
+      const response = await axios.get(`${config.apiURL}/specialties`);
+      setspecialistslist(response.data);
+      console.log(specialistslist);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  console.log(specialistslist);
 
   return (
     <>
@@ -127,7 +143,6 @@ export default function SpecialtyForm({ onSubmit  }) {
               )}
             />
           </GridItem>
-
 
           <Button
             type="submit"

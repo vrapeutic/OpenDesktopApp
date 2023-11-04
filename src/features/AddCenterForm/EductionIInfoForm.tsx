@@ -7,12 +7,12 @@ import {
   FormLabel,
   Grid,
   GridItem,
-  Image,
   Input,
   Text,
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useRef } from "react";
+import { ImageLogo } from '../../assets/icons/Image'
 
 export default function EductionIInfoForm({ onSubmit }) {
   const schema = joi.object({
@@ -94,7 +94,7 @@ export default function EductionIInfoForm({ onSubmit }) {
                     bg="#FFFFFF"
                     onClick={() => inputRef.current.click()}
                   >
-                    <Image />
+                    <ImageLogo />
                     <Input
                       {...field}
                       id="Certification"

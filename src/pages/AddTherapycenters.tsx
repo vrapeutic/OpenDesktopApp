@@ -14,8 +14,13 @@ export default function AddTherapycenters() {
     setFormData({ ...formData, ...data });
   };
   const nextHandler = () => {
-    setSliding(sliding + 1);
+    sliding < 4 ? 
+    setSliding(sliding + 1)
+    :
+    setSliding(sliding)
     // console.log("next");
+    
+
   };
 
   const backHandler = () => {

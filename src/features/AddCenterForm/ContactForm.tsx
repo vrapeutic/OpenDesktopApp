@@ -1,9 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import joi from "joi";
 import {
-  
   Button,
-  
   FormControl,
   Text,
   Box,
@@ -11,11 +9,13 @@ import {
   Grid,
   GridItem,
   Input,
-  
+  useDisclosure,
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
+import Uploadlogo from "./UploadLogoCenter";
 
-export default function ContactForm({ onSubmit  }) {
+export default function ContactForm({ onSubmit }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const schema = joi.object({
     phoneNumber: joi.number().required().label("phoneNumber"),
     socialMedia: joi.string().required().label("socialMedia"),
@@ -28,10 +28,10 @@ export default function ContactForm({ onSubmit  }) {
     mode: "onTouched",
   });
 
-  const FormonSubmit = (data:object) => {
+  const FormonSubmit = (data: object) => {
     alert(JSON.stringify(data));
     onSubmit(data);
-
+    onOpen();
   };
   return (
     <>
@@ -129,7 +129,6 @@ export default function ContactForm({ onSubmit  }) {
               name="Linkedin"
               render={({ field, fieldState: { error } }) => (
                 <FormControl isRequired isInvalid={!!error}>
-                  
                   <Input
                     {...field}
                     id="Linkedin"
@@ -139,7 +138,6 @@ export default function ContactForm({ onSubmit  }) {
                     border="2px solid #E8E8E8"
                     _hover={{ border: "1px solid #4965CA" }}
                     boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="email"
                     mt="2.3125em"
                     mb="9.3125em"
                     borderRadius="8px"
@@ -166,8 +164,9 @@ export default function ContactForm({ onSubmit  }) {
           </Button>
         </Grid>
       </Box>
+      {onOpen && (
+        <Uploadlogo isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} />
+      )}
     </>
   );
 }
-
-
