@@ -48,7 +48,6 @@ export default function SpecialtyForm({ onSubmit }) {
       console.error(error);
     }
   };
-  console.log(specialistslist);
 
   return (
     <>
