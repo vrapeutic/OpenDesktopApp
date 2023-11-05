@@ -12,8 +12,7 @@ import User from "./components/User";
 import { useState } from "react";
 import { IcMenuOpen } from "../../assets/icons/IcMenuOpen";
 
-
-const Header = ({sideToggle}:any) => {
+const Header = ({ sideToggle }: any) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const icMenuHandler = () => {
@@ -22,15 +21,17 @@ const Header = ({sideToggle}:any) => {
     return (
         <Flex pl="31px" pr="40px" mt="27px">
             <HStack cursor="pointer" onClick={sideToggle}>
-            <div onClick={icMenuHandler}>
-                {menuOpen  
-                         ? <>
-                             <IcMenuClose /> 
-                               </>
-                         : <>
-                             <IcMenuOpen />
-                              </>}
-                 </div>
+                <div onClick={icMenuHandler}>
+                    {menuOpen ? (
+                        <>
+                            <IcMenuClose />
+                        </>
+                    ) : (
+                        <>
+                            <IcMenuOpen />
+                        </>
+                    )}
+                </div>
             </HStack>
             <HStack flexGrow={2} ml="20px" bg="#F5F5F5">
                 <InputGroup bg="rgba(255, 255, 255, 0.8)">

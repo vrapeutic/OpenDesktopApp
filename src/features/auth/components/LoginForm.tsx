@@ -28,9 +28,9 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
     const [newAccount, setNewAccount] = useState(false);
     const loginMutation = useLoginMutation();
 
-    const createNewAccount = ()=> {
-        setNewAccount(current => !current);
-        };
+    const createNewAccount = () => {
+        setNewAccount((current) => !current);
+    };
 
     const identifierSchema = Joi.alternatives()
         .try(
@@ -268,9 +268,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                 2022 All Rights Reserved. VRapeutic.
             </Text>
 
-            {newAccount && (
-                <Generalinfo />
-        )}
+            {newAccount && <Generalinfo />}
         </Flex>
     );
 };

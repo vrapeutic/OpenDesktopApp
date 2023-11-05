@@ -13,9 +13,6 @@ import Layout from "./shared/Layout";
 import Subscriptions from "./pages/Subscriptions";
 import Generalinfo from "./pages/SignUp/Generalinfo";
 
-
-
-
 function App() {
     const [isLoggedIn, setLoggedIn] = useState(false);
 
@@ -36,7 +33,7 @@ function App() {
     return (
         <MemoryRouter>
             <Routes>
-                    <Route path="/" element={<Layout />}>
+                <Route path="/" element={<Layout />}>
                     <Route path="main_window" element={<Home />} />
                     <Route path="Kids" element={<Kids />} />
                     <Route
@@ -57,8 +54,6 @@ function App() {
             </Routes>
             <Generalinfo />
         </MemoryRouter>
-
-       
     );
 }
 
