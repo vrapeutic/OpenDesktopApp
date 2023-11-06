@@ -26,9 +26,6 @@ export default function GeneralInfoForm({ onSubmit }) {
       .email({ tlds: { allow: false } })
       .required(),
     managerName: joi.string().min(3).max(30).required().label("managerName"),
-
-    Bio: joi.string().required(),
-    Description: joi.string().required(),
   });
   const { control, handleSubmit } = useForm({
     resolver: joiResolver(schema),
@@ -180,75 +177,7 @@ export default function GeneralInfoForm({ onSubmit }) {
               )}
             />
           </GridItem>
-      
-          <GridItem>
-            <Controller
-              control={control}
-              name="Bio"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    display="inline"
-                    m="0em"
-                    letterSpacing="0.256px"
-                    color="#15134B"
-                  >
-                    Bio
-                  </FormLabel>
 
-                  <Input
-                    {...field}
-                    id="Bio"
-                    autoComplete="Bio"
-                    h="5.5em"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="text"
-                    mt="0.75em"
-                    mb="3.875em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
-            />
-          </GridItem>
-          <GridItem>
-            <Controller
-              control={control}
-              name="Description"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    display="inline"
-                    m="0em"
-                    letterSpacing="0.256px"
-                    color="#15134B"
-                  >
-                    Description
-                  </FormLabel>
-
-                  <Input
-                    {...field}
-                    id="Description"
-                    autoComplete="Description"
-                    h="5.5em"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="text"
-                    mt="0.75em"
-                    mb="3.875em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
-            />
-          </GridItem>
           <Button
             type="submit"
             bg="#4AA6CA"

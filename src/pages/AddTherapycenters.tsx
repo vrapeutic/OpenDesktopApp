@@ -60,7 +60,7 @@ export default function AddTherapycenters() {
   };
 
   const steps = [
-    { label: "Step 1", icon: <CheckIcon /> }, 
+    { label: "Step 1", icon: <CheckIcon /> },
     { label: "Step 2", icon: <CheckIcon /> },
     { label: "Step 3", icon: <CheckIcon /> },
     { label: "Step 4", icon: <CheckIcon /> },
@@ -69,8 +69,8 @@ export default function AddTherapycenters() {
   return (
     <>
       <Box bg="#FFFFFF" borderRadius="10px" m="5.875em 2.625em 5.875em 2.375em">
-      <Divider mt="10em" />
-      <HStack spacing="2" mb="1em">
+        <Divider mt="10em" />
+        <HStack spacing="2" mb="1em">
           {steps.map((step, index) => (
             <Stack direction="column" align="center" key={index}>
               {index < sliding ? (
@@ -103,23 +103,7 @@ export default function AddTherapycenters() {
           >
             Next
           </Button>
-          {sliding === 1 ? null : (
-            <Button
-              bg="#FFFFF"
-              borderRadius="0.75em"
-              border="2px solid #4AA6CA"
-              w="13.375em"
-              h="3.375em"
-              mt="0em"
-              mr="1.9375em"
-              mb="2em"
-              color="#4AA6CA"
-              fontSize="1.125em"
-              fontWeight="700"
-            >
-              Save as draft
-            </Button>
-          )}
+
           {sliding === 1 ? null : (
             <Button
               onClick={backHandler}
@@ -143,4 +127,3 @@ export default function AddTherapycenters() {
     </>
   );
 }
-
