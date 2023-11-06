@@ -14,6 +14,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {config} from '../../config'
+import Progressbar from "../../theme/components/ProgressBar";
 export default function SpecialtyForm({ onSubmit }) {
   const schema = joi.object({
     specialtyInformation: joi.string().required().label("SpecialtyInformation"),
@@ -51,6 +52,8 @@ export default function SpecialtyForm({ onSubmit }) {
 
   return (
     <>
+        <Progressbar index={1} />
+
       <Box as="form" onSubmit={handleSubmit(FormonSubmit)}>
         <Grid
           m="2.625em 1.5em 0em 1.5em"

@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Uploadlogo from "./UploadLogoCenter";
+import Progressbar from "../../theme/components/ProgressBar";
 
 export default function ContactForm({ onSubmit }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,6 +36,8 @@ export default function ContactForm({ onSubmit }) {
   };
   return (
     <>
+      <Progressbar index={3} />
+
       <Box as="form" onSubmit={handleSubmit(FormonSubmit)}>
         <Grid
           m="2.625em 1.5em 0em 1.5em"

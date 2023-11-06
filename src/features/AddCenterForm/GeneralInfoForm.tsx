@@ -11,6 +11,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
+import Progressbar from "../../theme/components/ProgressBar";
 export default function GeneralInfoForm({ onSubmit }) {
   const schema = joi.object({
     therapyCenterName: joi
@@ -39,6 +40,7 @@ export default function GeneralInfoForm({ onSubmit }) {
 
   return (
     <>
+    <Progressbar index={0} />
       <Box as="form" onSubmit={handleSubmit(FormonSubmit)}>
         <Grid
           m="2.625em 1.5em 0em 1.5em"

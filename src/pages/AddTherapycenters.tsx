@@ -11,12 +11,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import ContactForm from "@renderer/features/AddCenterForm/ContactForm";
-import EductionIInfoForm from "@renderer/features/AddCenterForm/EductionIInfoForm";
-import GeneralInfoForm from "@renderer/features/AddCenterForm/GeneralInfoForm";
-import SpecialtyForm from "@renderer/features/AddCenterForm/SpecialtyForm";
-import { Step, Steps } from "chakra-ui-steps";
-import { CheckIcon } from "@chakra-ui/icons";
+import ContactForm from "../features/AddCenterForm/ContactForm";
+import EductionIInfoForm from "../features/AddCenterForm/EductionIInfoForm";
+import GeneralInfoForm from "../features/AddCenterForm/GeneralInfoForm";
+import SpecialtyForm from "../features/AddCenterForm/SpecialtyForm";
+
 
 export default function AddTherapycenters() {
   const totalSteps = 4;
@@ -59,33 +58,12 @@ export default function AddTherapycenters() {
     }
   };
 
-  const steps = [
-    { label: "Step 1", icon: <CheckIcon /> },
-    { label: "Step 2", icon: <CheckIcon /> },
-    { label: "Step 3", icon: <CheckIcon /> },
-    { label: "Step 4", icon: <CheckIcon /> },
-  ];
+
 
   return (
     <>
       <Box bg="#FFFFFF" borderRadius="10px" m="5.875em 2.625em 5.875em 2.375em">
-        <Divider mt="10em" />
-        <HStack spacing="2" mb="1em">
-          {steps.map((step, index) => (
-            <Stack direction="column" align="center" key={index}>
-              {index < sliding ? (
-                <Box bg="#4AA6CA" borderRadius="50%" p="0.5em" color="white">
-                  {step.icon}
-                </Box>
-              ) : (
-                <Box bg="gray.300" borderRadius="50%" p="0.5em">
-                  {index + 1}
-                </Box>
-              )}
-              <Text fontSize="sm">{step.label}</Text>
-            </Stack>
-          ))}
-        </HStack>
+       
         {renderFormStep()}
         <Flex flexDirection="row-reverse">
           <Button
