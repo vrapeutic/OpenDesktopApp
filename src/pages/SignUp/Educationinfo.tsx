@@ -2,16 +2,15 @@
 import {HStack ,Text ,Icon, Box, FormControl,FormLabel,Input, Button, Flex,useDisclosure} from '@chakra-ui/react'
 import {ArrowBackIcon} from '@chakra-ui/icons' 
 import React,{useState, useRef} from 'react'
-import Specialty from './Specialty';
-import { Image } from '../../assets/icons/Image';
-import Progressbar from '../../theme/components/Progressbar';
+import Specialty from '@renderer/Specialty';
+import { Image } from '@renderer/assets/icons/Image';
+import Progressbar from '@renderer/theme/components/Progressbar';
 import Joi from 'joi';
-import Uploadlogo from './Uploadlogo';
+import Uploadlogo from '@renderer/Uploadlogo';
 
 export default function Educationinfo(props: any) {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const inputRef= useRef(null);
-  // const [Next, setNext] = useState(false);
   const [Back, setBack] = useState(false);
   const [values, setValues] = useState({
     degree: '',
@@ -48,7 +47,6 @@ export default function Educationinfo(props: any) {
   const handleChange = (event: any) =>{ 
         const {name, value} = event.target;
         setValues({...values, [name]: value});
-        // console.log(values);
         };
       
   const handleSubmit =async (event: any) =>{
@@ -170,7 +168,6 @@ export default function Educationinfo(props: any) {
                accept='pdf/*'
                ref={inputRef}
                name="certification"
-              //  value={values.certification}
                onChange={handleCertificateChange}
                hidden
                 />
@@ -193,20 +190,6 @@ export default function Educationinfo(props: any) {
                    onClick={back}>
               Back</Button>
 
-              <Button 
-                   position="absolute" 
-                   w="214px"
-                   h="54px"
-                   top="200px"
-                   left="608px"
-                   bg="#FFFFFF"
-                   border="2px solid #4AA6CA"
-                   borderRadius="12px"
-                   color="#4AA6CA"
-                   fontFamily="Roboto"
-                   fontWeight="700"
-                   fontSize="18px">
-              Save as draft</Button>
 
             <Button
                    position="absolute" 

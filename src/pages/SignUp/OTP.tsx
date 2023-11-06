@@ -1,12 +1,12 @@
 import { Grid, GridItem,Flex, Box, Image, Heading, Text, Button, HStack} from "@chakra-ui/react";
-import LoginNavigation from "../../features/auth/components/LoginNavigation";
-import BackgroundLogin from "../../assets/images/BackgroundLogin.png";
-import VRapeutic from "../../../src/assets/images/VRapeutic.png"
-import { Spinner } from "../../assets/icons/Spinner";
+import LoginNavigation from "@renderer/features/auth/components/LoginNavigation";
+import BackgroundLogin from "@renderer/assets/images/BackgroundLogin.png";
+import VRapeutic from "@renderer/src/assets/images/VRapeutic.png"
+import { Spinner } from "@renderer/assets/icons/Spinner";
 import React, {useState} from 'react'
 import OTPInput from "react-otp-input";
 import { useParams } from "react-router-dom";
-import { config } from '../../config';
+import { config } from '@renderer/config';
 
 
 export default function OTP(props: any) {
@@ -24,9 +24,7 @@ export default function OTP(props: any) {
 
 const otpHandleChange = (otp: string)=>{
   setOtp(otp);
-  console.log(otp);
   if(otp.length === 6){
-    console.log(otp);
     fetch(`${config.apiURL}/api/v1/doctors/${params.userId}/validate_otp`,{
         method: 'POST',
         body: otp,
@@ -50,7 +48,6 @@ const resendOtp = ()=> {
 }
 
   return (
-    <>
        <Grid
                 templateColumns={[
                     "repeat(1, 1fr)",
@@ -189,6 +186,5 @@ const resendOtp = ()=> {
                     <LoginNavigation />
                 </GridItem>
             </Grid>
-    </>
   )
 }

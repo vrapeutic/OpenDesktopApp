@@ -3,11 +3,11 @@ import {ArrowBackIcon} from '@chakra-ui/icons'
 import React , {useEffect, useState} from 'react'
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
-import Educationinfo from './Educationinfo';
-import Generalinfo from './Generalinfo';
-import Progressbar from '../../theme/components/Progressbar';
+import Educationinfo from '@renderer/Educationinfo';
+import Generalinfo from '@renderer/Generalinfo';
+import Progressbar from '@renderer/theme/components/Progressbar';
 import Joi from 'joi';
-import { config } from '../../config';
+import { config } from '@renderer/config';
 
 
 
@@ -145,20 +145,6 @@ export default function Specialty(props: any) {
                    onClick={back}>
               Back</Button>
 
-              <Button 
-                   position="absolute" 
-                   w="214px"
-                   h="54px"
-                   top="200px"
-                   left="608px"
-                   bg="#FFFFFF"
-                   border="2px solid #4AA6CA"
-                   borderRadius="12px"
-                   color="#4AA6CA"
-                   fontFamily="Roboto"
-                   fontWeight="700"
-                   fontSize="18px">
-              Save as draft</Button>
 
             <Button
                    position="absolute" 

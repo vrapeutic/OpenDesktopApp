@@ -1,10 +1,10 @@
 import { Button, FormControl, Input, Text, Box, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter} from '@chakra-ui/react'
-import { Image } from '../../assets/icons/Image'
+import { Image } from '@renderer/assets/icons/Image'
 import React, { useRef, useState } from 'react'
-import OTP from './OTP';
+import OTP from '@renderer/OTP';
 import Joi from 'joi';
 import { useMutation } from '@tanstack/react-query';
-import { config } from '../../config';
+import { config } from '@renderer/config';
 
 export default function Uploadlogo(props:any) {
   const inputRef= useRef(null);
@@ -156,7 +156,6 @@ export default function Uploadlogo(props:any) {
                accept="image/png,image/jpeg"
                ref={inputRef}
                name="logo"
-              //  value={values}
                onChange={handleChange}
                hidden
                 />

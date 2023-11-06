@@ -25,6 +25,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
     const [data, setData] = useState({ identifier: "", password: "" });
     const [error, setError] = useState({ identifier: null, password: null });
     const [showPassword, setShowPassword] = useState(false);
+
     const [newAccount, setNewAccount] = useState(false);
     const loginMutation = useLoginMutation();
 
@@ -240,8 +241,8 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                     <Link
                         display="inline"
                         color="#3961FB"
-                        // href="https://site.vrpeutic.ca/request-demo/"
                         onClick={createNewAccount}
+                        href="https://site.vrpeutic.ca/request-demo/"
                     >
                         Create an Account
                     </Link>
@@ -267,6 +268,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
             >
                 2022 All Rights Reserved. VRapeutic.
             </Text>
+
 
             {newAccount && (
                 <Generalinfo />

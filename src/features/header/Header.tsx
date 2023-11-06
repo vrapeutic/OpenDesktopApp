@@ -5,12 +5,12 @@ import {
     InputGroup,
     InputLeftElement,
 } from "@chakra-ui/react";
-import { IcMenuClose } from "../../assets/icons/IcMenuClose";
-import { SeatchNormal } from "../../assets/icons/SearchNormal";
-import Icons from "./components/Icons";
-import User from "./components/User";
+import { IcMenuClose } from "@renderer/assets/icons/IcMenuClose";
+import { SeatchNormal } from "@renderer/assets/icons/SearchNormal";
+import Icons from "@renderer/components/Icons";
+import User from "@renderer/components/User";
 import { useState } from "react";
-import { IcMenuOpen } from "../../assets/icons/IcMenuOpen";
+import { IcMenuOpen } from "@renderer/assets/icons/IcMenuOpen";
 
 
 const Header = ({sideToggle}:any) => {
