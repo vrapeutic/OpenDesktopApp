@@ -11,7 +11,6 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
-import { config } from "../../config";
 export default function GeneralInfoForm({ onSubmit }) {
   const schema = joi.object({
     therapyCenterName: joi
@@ -27,10 +26,7 @@ export default function GeneralInfoForm({ onSubmit }) {
       .email({ tlds: { allow: false } })
       .required(),
     managerName: joi.string().min(3).max(30).required().label("managerName"),
-    personalEmail: joi
-      .string()
-      .email({ tlds: { allow: false } })
-      .required(),
+
     Bio: joi.string().required(),
     Description: joi.string().required(),
   });
@@ -184,39 +180,7 @@ export default function GeneralInfoForm({ onSubmit }) {
               )}
             />
           </GridItem>
-          <GridItem>
-            <Controller
-              control={control}
-              name="personalEmail"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    display="inline"
-                    m="0em"
-                    letterSpacing="0.256px"
-                    color="#15134B"
-                  >
-                    personalEmail
-                  </FormLabel>
-
-                  <Input
-                    {...field}
-                    id="personalEmail"
-                    autoComplete="personalEmail"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="email"
-                    mt="0.75em"
-                    mb="1em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
-            />
-          </GridItem>
+      
           <GridItem>
             <Controller
               control={control}
