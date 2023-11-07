@@ -13,18 +13,17 @@ import {
 import { joiResolver } from "@hookform/resolvers/joi";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import {config} from '../../config'
+import { config } from "../../config";
 import Progressbar from "../../theme/components/ProgressBar";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 export default function SpecialtyForm({ onSubmit }) {
   const schema = joi.object({
     specialtyInformation: joi.string().required().label("SpecialtyInformation"),
-    chooseSpecializations: joi
-      .string()
-      .required()
-      .label("chooseSpecializations"),
+    specializationschema: joi.array().required().label("specializationschema"),
   });
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     resolver: joiResolver(schema),
     mode: "onTouched",
   });
@@ -33,6 +32,7 @@ export default function SpecialtyForm({ onSubmit }) {
     alert(JSON.stringify(data));
     onSubmit(data);
   };
+
 
   const [specialistslist, setspecialistslist] = useState([]);
 
@@ -50,9 +50,27 @@ export default function SpecialtyForm({ onSubmit }) {
     }
   };
 
+  const animatedComponents = makeAnimated();
+
+
+  const [values, setValues] = useState([]);
+  const handleSpecializations = (options: any) => {
+    setValues([ ...options]);
+    setValue("specializationschema", [...options]);
+    console.log(values);
+  };
+  const specialties = specialistslist.map((speciality) => ({
+    id: speciality.id,
+    label: speciality.name,
+    value: speciality.id,
+  }));
+
+  console.log(values);
+
+
   return (
     <>
-        <Progressbar index={1} />
+      <Progressbar index={1} />
 
       <Box as="form" onSubmit={handleSubmit(FormonSubmit)}>
         <Grid
@@ -103,49 +121,28 @@ export default function SpecialtyForm({ onSubmit }) {
               )}
             />
           </GridItem>
+
           <GridItem>
             <Controller
+              name="specializationschema"
               control={control}
-              name="chooseSpecializations"
               render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    display="inline"
-                    m="0em"
-                    letterSpacing="0.256px"
-                    color="#15134B"
-                  >
-                    Choose specializations
-                  </FormLabel>
-                  <FormLabel
-                    pl="0.5em"
-                    display="inline"
-                    m="0em"
-                    fontSize="0.75em"
-                    letterSpacing="0.192px"
-                    color="#8D8D8D"
-                  >
-                    (like tags, for example, ADHD, Autism, etc.)
-                  </FormLabel>
-                  <Input
+                <FormControl isInvalid={!!error}>
+                  <Select
                     {...field}
-                    id="chooseSpecializations"
-                    autoComplete="chooseSpecializations"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="name"
-                    mt="0.75em"
-                    mb="5.1875em"
-                    borderRadius="8px"
+                    closeMenuOnSelect={false}
+                    components={animatedComponents}
+                    isMulti
+                    options={specialties}
+                    id="specializationschema"
+                    name="specializationschema"
+                    onChange={handleSpecializations}
                   />
                   {error && <Text color="red.500">{error.message}</Text>}
                 </FormControl>
               )}
             />
           </GridItem>
-
           <Button
             type="submit"
             bg="#4AA6CA"
