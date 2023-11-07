@@ -35,11 +35,7 @@ export default function ContactForm({
     mode: "onTouched",
   });
 
-  // const FormonSubmit = (data: object) => {
-  //   alert(JSON.stringify(data));
-  //   onSubmit(data);
-  //   onOpen();
-  // };
+
   const FormonSubmit = (data: object) => {
     alert(JSON.stringify(data));
     onSubmit(data);

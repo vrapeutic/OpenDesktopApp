@@ -27,40 +27,49 @@ export default function EductionIInfoForm({
     certification: joi.required().label("certification"),
   });
 
-  const inputRef = useRef(null);
-  const { control, handleSubmit, setError, clearErrors } = useForm({
+  const {
+    control,
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm({
     resolver: joiResolver(schema),
-    mode: "onTouched",
+    mode: "all",
   });
+  console.log(errors);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const handleCertificateChange = (event) => {
+  const [selectedFile, setSelectedFile] = useState([]);
+  console.log(getValues());
+  const handleCertificateChange = (event: { target: { files: any[] } }) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
-    clearErrors("certification");
-    if (file) {
-      if (file.type !== "application/pdf") {
-        setError("certification", {
-          type: "manual",
-          message: "Please upload a PDF file.",
-        });
-      }
+    var ext = file.name.split(".").pop();
+    if (ext == "pdf" || ext == "docx" || ext == "doc") {
+      setSelectedFile(file);
+      setValue("certification", file);
+      clearErrors("certification"); // Clear any previous certi
+    } else {
+      setError("certification", { message: "Please upload a PDF file." });
     }
   };
+  console.log(selectedFile);
 
-  const FormonSubmit = (data) => {
-    if (!selectedFile) {
+  const FormonSubmit = (data: { certification: any }) => {
+    if (selectedFile.length < 1) {
       setError("certification", {
         type: "manual",
         message: "Please upload a PDF file.",
       });
     } else {
-      clearErrors("certification");
-      data.certification = selectedFile.name;
+      clearErrors("certification"); // Clear any previous certification errors
+      data.certification = selectedFile;
       alert(JSON.stringify(data));
 
       onSubmit(data);
+      nextHandler();
     }
   };
 
@@ -101,45 +110,32 @@ export default function EductionIInfoForm({
             />
           </GridItem>
           <GridItem rowSpan={2}>
-            <Controller
-              control={control}
-              name="certification"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    fontFamily="Graphik LCG"
-                    fontWeight="400"
-                    fontSize="16px"
-                    lineHeight="16px"
-                    color="#15134B"
-                  >
-                    Certification
+            <>
+              <Button
+                h="128px"
+                w="174px"
+                border="2px solid #E8E8E8"
+                borderRadius="8px"
+                bg="#FFFFFF"
+              >
+                <FormControl>
+                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                    certification{" "}
                   </FormLabel>
-                  <Button
-                    h="128px"
-                    w="174px"
-                    border="2px solid #E8E8E8"
-                    borderRadius="8px"
-                    bg="#FFFFFF"
-                  >
-                    <Input
-                      {...field}
-                      id="certification"
-                      autoComplete="certification"
-                      type="file"
-                      accept=".pdf" // Update this line to accept PDF files
-                      ref={inputRef}
-                      name="certification"
-                      onChange={handleCertificateChange}
-                    />
-                  </Button>
-                  {selectedFile && (
-                    <Text mt="1em">Selected File: {selectedFile.name}</Text>
-                  )}
-                  {error && <Text color="red.500">{error.message}</Text>}
+                  <Input
+                    {...register("certification")}
+                    id="certification"
+                    autoComplete="certification"
+                    type="file"
+                    accept="application/pdf" // Update this line to accept PDF files
+                    onChange={(e) => handleCertificateChange(e)}
+                  />
                 </FormControl>
+              </Button>
+              {selectedFile && (
+                <Text mt="1em">Selected File: {selectedFile.name}</Text>
               )}
-            />
+            </>
           </GridItem>
           <GridItem>
             <Controller
