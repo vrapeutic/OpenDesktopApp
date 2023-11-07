@@ -1,7 +1,12 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { api, setApiToken } from "../../../api";
 import { setMe } from "../../../cache";
+=======
+import { api, setApiToken } from "@renderer/api";
+import { setMe } from "@renderer/cache";
+>>>>>>> 47e69242a8be75fe7faa93820def80c6dbd80d49
 
 type Params = {
     identifier: string;
