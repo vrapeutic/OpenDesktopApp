@@ -10,12 +10,18 @@ import {
   GridItem,
   Input,
   useDisclosure,
+  Flex,
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Uploadlogo from "./UploadLogoCenter";
 import Progressbar from "../../theme/components/ProgressBar";
 
-export default function ContactForm({ onSubmit }) {
+export default function ContactForm({
+  onSubmit,
+  nextHandler,
+  backHandler,
+  sliding,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const schema = joi.object({
     phoneNumber: joi.number().required().label("phoneNumber"),
@@ -29,6 +35,11 @@ export default function ContactForm({ onSubmit }) {
     mode: "onTouched",
   });
 
+  // const FormonSubmit = (data: object) => {
+  //   alert(JSON.stringify(data));
+  //   onSubmit(data);
+  //   onOpen();
+  // };
   const FormonSubmit = (data: object) => {
     alert(JSON.stringify(data));
     onSubmit(data);
@@ -150,6 +161,8 @@ export default function ContactForm({ onSubmit }) {
               )}
             />
           </GridItem>
+        </Grid>
+        <Flex flexDirection="row-reverse">
           <Button
             type="submit"
             bg="#4AA6CA"
@@ -163,9 +176,28 @@ export default function ContactForm({ onSubmit }) {
             fontSize="1.125em"
             fontWeight="700"
           >
-            submit
+            Next
           </Button>
-        </Grid>
+
+          {sliding === 1 ? null : (
+            <Button
+              onClick={backHandler}
+              bg="#F5F5F5"
+              borderRadius="0.75em"
+              w="13.375em"
+              h="3.375em"
+              mt="0em"
+              ml="1.5em"
+              mb="2em"
+              mr="auto"
+              color="#A0A0A0"
+              fontSize="1.125em"
+              fontWeight="700"
+            >
+              Back
+            </Button>
+          )}
+        </Flex>
       </Box>
       {onOpen && (
         <Uploadlogo isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} />

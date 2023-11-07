@@ -9,6 +9,7 @@ import {
   Grid,
   GridItem,
   Input,
+  Flex,
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
 import axios from "axios";
@@ -17,7 +18,12 @@ import { config } from "../../config";
 import Progressbar from "../../theme/components/ProgressBar";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-export default function SpecialtyForm({ onSubmit }) {
+export default function SpecialtyForm({
+  onSubmit,
+  nextHandler,
+  backHandler,
+  sliding,
+}) {
   const schema = joi.object({
     specialtyInformation: joi.string().required().label("SpecialtyInformation"),
     specializationschema: joi.array().required().label("specializationschema"),
@@ -31,8 +37,8 @@ export default function SpecialtyForm({ onSubmit }) {
   const FormonSubmit = (data: object) => {
     alert(JSON.stringify(data));
     onSubmit(data);
+    nextHandler();
   };
-
 
   const [specialistslist, setspecialistslist] = useState([]);
 
@@ -52,10 +58,9 @@ export default function SpecialtyForm({ onSubmit }) {
 
   const animatedComponents = makeAnimated();
 
-
   const [values, setValues] = useState([]);
   const handleSpecializations = (options: any) => {
-    setValues([ ...options]);
+    setValues([...options]);
     setValue("specializationschema", [...options]);
     console.log(values);
   };
@@ -66,7 +71,6 @@ export default function SpecialtyForm({ onSubmit }) {
   }));
 
   console.log(values);
-
 
   return (
     <>
@@ -143,6 +147,9 @@ export default function SpecialtyForm({ onSubmit }) {
               )}
             />
           </GridItem>
+        </Grid>
+
+        <Flex flexDirection="row-reverse">
           <Button
             type="submit"
             bg="#4AA6CA"
@@ -156,9 +163,28 @@ export default function SpecialtyForm({ onSubmit }) {
             fontSize="1.125em"
             fontWeight="700"
           >
-            submit
+            Next
           </Button>
-        </Grid>
+
+          {sliding === 1 ? null : (
+            <Button
+              onClick={backHandler}
+              bg="#F5F5F5"
+              borderRadius="0.75em"
+              w="13.375em"
+              h="3.375em"
+              mt="0em"
+              ml="1.5em"
+              mb="2em"
+              mr="auto"
+              color="#A0A0A0"
+              fontSize="1.125em"
+              fontWeight="700"
+            >
+              Back
+            </Button>
+          )}
+        </Flex>
       </Box>
     </>
   );

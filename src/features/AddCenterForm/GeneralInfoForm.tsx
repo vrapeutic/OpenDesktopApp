@@ -9,10 +9,16 @@ import {
   Grid,
   GridItem,
   Input,
+  Flex,
 } from "@chakra-ui/react";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Progressbar from "../../theme/components/ProgressBar";
-export default function GeneralInfoForm({ onSubmit }) {
+export default function GeneralInfoForm({
+  onSubmit,
+  nextHandler,
+  backHandler,
+  sliding,
+}) {
   const schema = joi.object({
     therapyCenterName: joi
       .string()
@@ -36,11 +42,12 @@ export default function GeneralInfoForm({ onSubmit }) {
   const FormonSubmit = (data: object) => {
     alert(JSON.stringify(data));
     onSubmit(data);
+    nextHandler();
   };
 
   return (
     <>
-    <Progressbar index={0} />
+      <Progressbar index={0} />
       <Box as="form" onSubmit={handleSubmit(FormonSubmit)}>
         <Grid
           m="2.625em 1.5em 0em 1.5em"
@@ -179,7 +186,8 @@ export default function GeneralInfoForm({ onSubmit }) {
               )}
             />
           </GridItem>
-
+        </Grid>
+        <Flex flexDirection="row-reverse">
           <Button
             type="submit"
             bg="#4AA6CA"
@@ -193,9 +201,28 @@ export default function GeneralInfoForm({ onSubmit }) {
             fontSize="1.125em"
             fontWeight="700"
           >
-            submit
+            Next
           </Button>
-        </Grid>
+
+          {sliding === 1 ? null : (
+            <Button
+              onClick={backHandler}
+              bg="#F5F5F5"
+              borderRadius="0.75em"
+              w="13.375em"
+              h="3.375em"
+              mt="0em"
+              ml="1.5em"
+              mb="2em"
+              mr="auto"
+              color="#A0A0A0"
+              fontSize="1.125em"
+              fontWeight="700"
+            >
+              Back
+            </Button>
+          )}
+        </Flex>
       </Box>
     </>
   );

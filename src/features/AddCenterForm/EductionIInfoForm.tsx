@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Grid,
@@ -14,7 +15,12 @@ import joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Progressbar from "../../theme/components/ProgressBar";
 
-export default function EductionIInfoForm({ onSubmit }) {
+export default function EductionIInfoForm({
+  onSubmit,
+  nextHandler,
+  backHandler,
+  sliding,
+}) {
   const schema = joi.object({
     registrationNumber: joi.number().required().label("Registration Number"),
     taxID: joi.number().required().label("Tax ID"),
@@ -32,7 +38,7 @@ export default function EductionIInfoForm({ onSubmit }) {
   const handleCertificateChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
-    clearErrors("certification"); 
+    clearErrors("certification");
     if (file) {
       if (file.type !== "application/pdf") {
         setError("certification", {
@@ -163,21 +169,42 @@ export default function EductionIInfoForm({ onSubmit }) {
           </GridItem>
         </Grid>
 
-        <Button
-          type="submit"
-          bg="#4AA6CA"
-          borderRadius="0.75em"
-          w="13.375em"
-          h="3.375em"
-          mt="0em"
-          mr="1.5em"
-          mb="2em"
-          color="#FFFFFF"
-          fontSize="1.125em"
-          fontWeight="700"
-        >
-          Submit
-        </Button>
+        <Flex flexDirection="row-reverse">
+          <Button
+            type="submit"
+            bg="#4AA6CA"
+            borderRadius="0.75em"
+            w="13.375em"
+            h="3.375em"
+            mt="0em"
+            mr="1.5em"
+            mb="2em"
+            color="#FFFFFF"
+            fontSize="1.125em"
+            fontWeight="700"
+          >
+            Next
+          </Button>
+
+          {sliding === 1 ? null : (
+            <Button
+              onClick={backHandler}
+              bg="#F5F5F5"
+              borderRadius="0.75em"
+              w="13.375em"
+              h="3.375em"
+              mt="0em"
+              ml="1.5em"
+              mb="2em"
+              mr="auto"
+              color="#A0A0A0"
+              fontSize="1.125em"
+              fontWeight="700"
+            >
+              Back
+            </Button>
+          )}
+        </Flex>
       </Box>
     </>
   );
