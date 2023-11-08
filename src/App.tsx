@@ -13,12 +13,6 @@ import Layout from "./shared/Layout";
 import Subscriptions from "./pages/Subscriptions";
 import Generalinfo from "./pages/SignUp/Generalinfo";
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 47e69242a8be75fe7faa93820def80c6dbd80d49
 function App() {
     const [isLoggedIn, setLoggedIn] = useState(false);
 
@@ -39,11 +33,7 @@ function App() {
     return (
         <MemoryRouter>
             <Routes>
-<<<<<<< HEAD
-                    <Route path="/" element={<Layout />}>
-=======
                 <Route path="/" element={<Layout />}>
->>>>>>> 47e69242a8be75fe7faa93820def80c6dbd80d49
                     <Route path="main_window" element={<Home />} />
                     <Route path="Kids" element={<Kids />} />
                     <Route
@@ -64,11 +54,6 @@ function App() {
             </Routes>
             <Generalinfo />
         </MemoryRouter>
-<<<<<<< HEAD
-
-       
-=======
->>>>>>> 47e69242a8be75fe7faa93820def80c6dbd80d49
     );
 }
 

@@ -15,11 +15,7 @@ export default function Layout() {
         <Flex height="inherit">
             {menuOpen ? <Sidebar /> : <Sideclose />}
             <Flex height="inherit" flexGrow="1" flexDir="column" bg="#F5F5F5">
-<<<<<<< HEAD
-                <Header sideToggle={MenuHandler}/>
-=======
                 <Header sideToggle={MenuHandler} />
->>>>>>> 47e69242a8be75fe7faa93820def80c6dbd80d49
                 <Outlet />
             </Flex>
         </Flex>
