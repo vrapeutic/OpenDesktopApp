@@ -52,13 +52,11 @@ export default function EductionIInfoForm({
     resolver: joiResolver(schema),
     mode: "all",
   });
-  console.log(errors);
 
   const [selectedFile, setSelectedFile] = useState("");
-  console.log(getValues());
   const handleCertificateChange = (event: { target: { files: any[] } }) => {
     const file = event.target.files[0];
-    var ext = file.name.split(".").pop();
+    const ext = file.name.split(".").pop();
     if (ext == "pdf") {
       setSelectedFile(file);
       setValue("certification", file);
@@ -67,7 +65,6 @@ export default function EductionIInfoForm({
       setError("certification", { message: "Please upload a PDF file." });
     }
   };
-  console.log(selectedFile);
 
   const FormonSubmit = (data: { certification: any }) => {
     if (selectedFile.length < 1) {

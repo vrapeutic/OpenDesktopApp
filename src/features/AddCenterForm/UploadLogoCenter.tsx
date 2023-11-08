@@ -26,7 +26,8 @@ import Congratulations from "./CongratulationsModal";
 
 export default function Uploadlogo(props: any) {
   const navigate = useNavigate();
-  const [loading , setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+
   const {
     isOpen: isOpenCongratulations,
     onOpen: onOpenCongratulations,
@@ -36,7 +37,9 @@ export default function Uploadlogo(props: any) {
   const toast = useToast();
   const [imagePreview, setImagePreview] = useState();
   const [logo, setLogo] = useState();
-  const [allData, setallData] = useState();
+  const [allData, setAllData] = useState();
+  const [locationData, setLocationData] = useState(null);
+
   const handleImageChange = (e: { target: { files: any[] } }) => {
     const file = e.target.files[0];
     setLogo(file);
@@ -44,83 +47,93 @@ export default function Uploadlogo(props: any) {
     setImagePreview(previewUrl);
   };
 
-  console.log(props.formData);
-  console.log(allData);
-
-  const [locationData, setLocationData] = useState(null);
-
   useEffect(() => {
     getLocation();
   }, []);
+
   async function getLocation() {
     const res = await axios.get("http://ip-api.com/json");
-    console.log(res);
     if (res.status === 200) setLocationData(res.data);
   }
 
   const FormonSubmit = () => {
-    setallData(props.onSubmit({ logo }));
-    console.log(allData);
-    SendDataToapi();
-    setLoading(true)
-
+    setAllData(props.onSubmit({ logo }));
+    SendDataToApi();
+    setLoading(true);
   };
 
-  const SendDataToapi = () => {
+  const createFormData = (socialLinks) => {
+    const formData = new FormData();
 
-    console.log(allData);
+    formData.append("name", props.formData.therapyCenterName);
+    formData.append("website", props.formData.Website);
+    DataTobesent.append("latitude", locationData?.lat);
+    DataTobesent.append("longitude", locationData?.lon);
+    formData.append("tax_id", props.formData.taxID);
+    formData.append("registration_number", props.formData.registrationNumber);
+    formData.append("logo", logo);
+    formData.append("certificate", props.formData.certification);
+    formData.append("email", props.formData.Email);
+    formData.append("phone_number", props.formData.phoneNumber);
+
+    props.formData.specializationschema.forEach((specialty) =>
+      formData.append("specialty_ids[]", specialty.id)
+    );
+
+    formData.append("social_links", JSON.stringify(socialLinks));
+
+    return formData;
+  };
+
+  const postFormData = (formData) => {
+    const token = getMe().token;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    return axios.post(`${config.apiURL}/centers`, formData, { headers });
+  };
+
+  const handleSuccess = (response) => {
+    props.onClose();
+    onOpenCongratulations();
+  };
+
+  const handleError = (error) => {
+    props.onClose();
+
+    toast({
+      title: "Error",
+      description: error.response.data.error,
+      status: "success",
+      duration: 9000,
+      position: "top-right",
+    });
+  };
+
+  const SendDataToApi = async () => {
     const socialLinksArray = [
       { link: props.formData.Website, link_type: "facebook" },
       { link: props.formData.Linkedin, link_type: "twitter" },
     ];
-    const DataTobesent = new FormData();
-    DataTobesent.append("name", props.formData.therapyCenterName);
-    DataTobesent.append("website", props.formData.Website);
-    DataTobesent.append("latitude", locationData?.lat);
-    DataTobesent.append("longitude", locationData?.lon);
-    DataTobesent.append("tax_id", props.formData.taxID);
-    DataTobesent.append(
-      "registration_number",
-      props.formData.registrationNumber
-    );
-    DataTobesent.append("logo", logo);
-    DataTobesent.append("certificate", props.formData.certification);
-    DataTobesent.append("email", props.formData.Email);
-    DataTobesent.append("phone_number", props.formData.phoneNumber);
-    props.formData.specializationschema.map((specialty) =>
-      DataTobesent.append("specialty_ids[]", specialty.id)
-    );
-    DataTobesent.append("social_links", JSON.stringify(socialLinksArray));
 
-    const getToken = getMe();
-    const Token = {
-      headers: {
-        Authorization: `Bearer ${getToken.token}`,
-      },
-    };
-    axios
-      .post(`${config.apiURL}/centers`, DataTobesent, Token)
-      .then((response) => {
-        onOpenCongratulations();
-        navigate("/");
-        props.onClose();
-      })
-      .catch((error) => {
-        console.log(error);
-        props.onClose();
-        navigate("/");
+    const formData = createFormData(socialLinksArray);
 
-        toast({
-          title: "Error",
-          description: error.response.data.error,
-          status: "success",
-          duration: 9000,
-          position: "top-right",
-        });
-      });
-      setLoading(false)
-
+    try {
+      const response = await postFormData(formData);
+      handleSuccess(response);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleCloseModal = () => {
+    onDeleteCongratulations();
+    navigate("/");
+  };
+
   return (
     <>
       <Box as="form" onSubmit={FormonSubmit}>
@@ -195,7 +208,7 @@ export default function Uploadlogo(props: any) {
                 Please upload your Therapy Logo
               </Text>
             </ModalBody>
-         
+
             <ModalFooter display="table-column">
               <FormControl>
                 <Button
@@ -213,7 +226,7 @@ export default function Uploadlogo(props: any) {
                   type="submit"
                   onClick={FormonSubmit}
                 >
-                {loading ? "Uploading Your Data" : "Upload"}  
+                  {loading ? "Uploading Your Data" : "Upload"}
                 </Button>
               </FormControl>
 
@@ -240,7 +253,7 @@ export default function Uploadlogo(props: any) {
       {onOpenCongratulations && (
         <Congratulations
           isOpen={isOpenCongratulations}
-          onClose={onDeleteCongratulations}
+          onClose={handleCloseModal}
         />
       )}
     </>

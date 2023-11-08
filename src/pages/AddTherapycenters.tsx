@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Button,
-  Collapse,
-  Divider,
-  Flex,
-  FormControl,
-  HStack,
-  Progress,
-  Stack,
-  Text,
+ 
 } from "@chakra-ui/react";
 import ContactForm from "../features/AddCenterForm/ContactForm";
 import EductionIInfoForm from "../features/AddCenterForm/EductionIInfoForm";
@@ -21,8 +13,7 @@ export default function AddTherapycenters() {
   const [sliding, setSliding] = useState(1);
   const [formData, setFormData] = useState({});
 
-  const handleFormSubmit = (data) => {
-    console.log(data);
+  const handleFormSubmit = (data:any) => {
     setFormData({ ...formData, ...data });
     return { ...formData, ...data }
   };
@@ -39,9 +30,7 @@ export default function AddTherapycenters() {
     }
   };
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+
 
 
   

@@ -1,8 +1,7 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import joi from "joi";
 import {
   Button,
-  FormControl,
   Text,
   Box,
   FormLabel,
@@ -54,7 +53,6 @@ export default function SpecialtyForm({
     try {
       const response = await axios.get(`${config.apiURL}/specialties`);
       setspecialistslist(response.data);
-      console.log(specialistslist);
     } catch (error) {
       console.error(error);
     }
@@ -66,7 +64,6 @@ export default function SpecialtyForm({
   const handleSpecializations = (options: any) => {
     setValues([...options]);
     setValue("specializationschema", [...options]);
-    console.log(values);
   };
   const specialties = specialistslist.map((speciality) => ({
     id: speciality.id,
@@ -74,7 +71,6 @@ export default function SpecialtyForm({
     value: speciality.id,
   }));
 
-  console.log(values);
 
   return (
     <>
