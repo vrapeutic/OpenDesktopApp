@@ -15,6 +15,7 @@ import ContactForm from "../features/AddCenterForm/ContactForm";
 import EductionIInfoForm from "../features/AddCenterForm/EductionIInfoForm";
 import GeneralInfoForm from "../features/AddCenterForm/GeneralInfoForm";
 import SpecialtyForm from "../features/AddCenterForm/SpecialtyForm";
+import { getMe } from "@renderer/cache";
 
 export default function AddTherapycenters() {
   const totalSteps = 4;
@@ -24,6 +25,7 @@ export default function AddTherapycenters() {
   const handleFormSubmit = (data) => {
     console.log(data);
     setFormData({ ...formData, ...data });
+    return { ...formData, ...data }
   };
 
   const nextHandler = () => {
@@ -42,6 +44,8 @@ export default function AddTherapycenters() {
     console.log(formData);
   }, [formData]);
 
+
+  
   const renderFormStep = () => {
     switch (sliding) {
       case 1:
@@ -78,12 +82,16 @@ export default function AddTherapycenters() {
             nextHandler={nextHandler}
             backHandler={backHandler}
             sliding={sliding}
+            formData={formData}
           />
         );
       default:
         return null;
     }
   };
+
+  const getToken = getMe()
+console.log(getToken.token)
 
   return (
     <>

@@ -13,26 +13,27 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { ImageLogo } from "../../assets/icons/Image";
 
 export default function Uploadlogo(props: any) {
   const [imagePreview, setImagePreview] = useState();
   const [logo, setLogo] = useState();
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e: { target: { files: any[] } }) => {
     const file = e.target.files[0];
     setLogo(file);
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
   };
 
-  const FormonSubmit = (logo) => {
-    props.onSubmit(logo);
-    console.log(logo);
+  const FormonSubmit = () => {
+    
+  const res =  props.onSubmit({ logo });
+    props.onClose();
+    console.log(props.formData)
+    console.log(res)
   };
-
-  console.log(logo);
 
   return (
     <>
@@ -79,14 +80,18 @@ export default function Uploadlogo(props: any) {
                   />
                 ) : (
                   <>
-                    <ImageLogo />
-                    <Input
-                      type="file"
-                      accept="image/png,image/jpeg"
-                      name="logo"
-                      onChange={handleImageChange}
-                      
-                    />
+                    <label>
+                      <ImageLogo />
+
+                      <Input
+                        type="file"
+                        accept="image/png,image/jpeg"
+                        name="logo"
+                        onChange={handleImageChange}
+                        style={{ display: "none" }}
+                        hidden
+                      />
+                    </label>
                   </>
                 )}
               </Text>
@@ -104,36 +109,25 @@ export default function Uploadlogo(props: any) {
                 Please upload your Therapy Logo
               </Text>
             </ModalBody>
-
+{/* 
             <ModalFooter display="table-column">
-              <form onSubmit={FormonSubmit}>
-                <FormControl>
-                  <Button
-                    h="54px"
-                    w="265px"
-                    top="-50px"
-                    left="18%"
-                    borderRadius="12px"
-                    bg="#00DEA3"
-                    color="#FFFFFF"
-                    fontFamily="Roboto"
-                    fontWeight="700"
-                    fontSize="18px"
-                    lineHeight="21.09px"
-                    type="submit"
-                  >
-                    Upload
-                    <Input
-                      type="file"
-                      accept="image/png,image/jpeg"
-                      name="logo"
-                      //  value={values}
-                      onChange={handleImageChange}
-                      hidden
-                    />
-                  </Button>
-                </FormControl>
-              </form>
+              <Button
+                h="54px"
+                w="265px"
+                top="-50px"
+                left="18%"
+                borderRadius="12px"
+                bg="#00DEA3"
+                color="#FFFFFF"
+                fontFamily="Roboto"
+                fontWeight="700"
+                fontSize="18px"
+                lineHeight="21.09px"
+                type="submit"
+                onClick={FormonSubmit}
+              >
+                Upload
+              </Button>
 
               <Button
                 w="39px"
@@ -150,46 +144,48 @@ export default function Uploadlogo(props: any) {
               >
                 Skip
               </Button>
-            </ModalFooter>
+            </ModalFooter> */}
+            <ModalFooter display="table-column">
+                <FormControl>
+          
+                <Button
+                h="54px"
+                w="265px"
+                top="-50px"
+                left="18%"
+                borderRadius="12px"
+                bg="#00DEA3"
+                color="#FFFFFF"
+                fontFamily="Roboto"
+                fontWeight="700"
+                fontSize="18px"
+                lineHeight="21.09px"
+                type="submit"
+                onClick={FormonSubmit}
+              >
+                Upload
+              </Button>
+           </FormControl>
+
+           <Button
+                  w="39px"
+                  h="18px"
+                  top="-30px"
+                  left="45%"
+                  bgColor="#FFFFFF"
+                  color="#595959"
+                  fontFamily="Graphik LCG"
+                  fontWeight="400"
+                  fontSize="18px"
+                  lineHeight="18px"
+                  onClick={props.onClose}
+                  >
+               Skip
+           </Button>
+                </ModalFooter>
           </ModalContent>
         </Modal>
       </Box>
-    </>
-  );
-}
-
-export function UploadLogos(props) {
-  const [imagePreview, setImagePreview] = useState(null);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const previewUrl = URL.createObjectURL(file);
-    setImagePreview(previewUrl);
-  };
-
-  return (
-    <>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}>
-        <ModalOverlay />
-
-        <ModalContent>
-          <ModalHeader>Upload Logo</ModalHeader>
-
-          <ModalBody>
-            {imagePreview && <img src={imagePreview} alt="Preview" />}
-
-            <Text>Please upload your Therapy Logo</Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <FormControl>
-              <Input type="file" onChange={handleImageChange} />
-            </FormControl>
-
-            <Button onClick={props.onClose}>Skip</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </>
   );
 }

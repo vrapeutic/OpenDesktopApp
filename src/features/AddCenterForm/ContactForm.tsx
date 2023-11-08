@@ -21,6 +21,7 @@ export default function ContactForm({
   nextHandler,
   backHandler,
   sliding,
+  formData,
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const schema = joi.object({
@@ -196,7 +197,7 @@ export default function ContactForm({
         </Flex>
       </Box>
       {onOpen && (
-        <Uploadlogo isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} />
+        <Uploadlogo isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} formData={formData} />
       )}
     </>
   );

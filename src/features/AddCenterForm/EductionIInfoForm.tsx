@@ -14,6 +14,7 @@ import { useForm, Controller } from "react-hook-form";
 import joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Progressbar from "../../theme/components/ProgressBar";
+import { ImageLogo } from "../../assets/icons/Image";
 
 export default function EductionIInfoForm({
   onSubmit,
@@ -111,27 +112,31 @@ export default function EductionIInfoForm({
           </GridItem>
           <GridItem rowSpan={2}>
             <>
-              <Button
-                h="128px"
-                w="174px"
-                border="2px solid #E8E8E8"
-                borderRadius="8px"
-                bg="#FFFFFF"
-              >
-                <FormControl>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                    certification{" "}
-                  </FormLabel>
-                  <Input
-                    {...register("certification")}
-                    id="certification"
-                    autoComplete="certification"
-                    type="file"
-                    accept="application/pdf" // Update this line to accept PDF files
-                    onChange={(e) => handleCertificateChange(e)}
-                  />
-                </FormControl>
-              </Button>
+            <FormControl>
+                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                  certification
+                </FormLabel>
+                <Button
+                  h="128px"
+                  w="174px"
+                  border="2px solid #E8E8E8"
+                  borderRadius="8px"
+                  bg="#FFFFFF"
+                >
+                  <label>
+                    <ImageLogo />
+                    <Input
+                      {...register("certification")}
+                      id="certification"
+                      autoComplete="certification"
+                      type="file"
+                      accept="application/pdf" // Update this line to accept PDF files
+                      onChange={(e) => handleCertificateChange(e)}
+                      style={{ display: "none" }}
+                    />
+                  </label>
+                </Button>
+              </FormControl>
               {selectedFile && (
                 <Text mt="1em">Selected File: {selectedFile.name}</Text>
               )}
