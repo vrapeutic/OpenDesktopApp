@@ -1,9 +1,5 @@
-import React from 'react'
+import React from 'react';
 
 export default function Assessmenttools() {
-  return (
-    <div>
-      Assessment tools
-    </div>
-  )
+  return <div>Assessment tools</div>;
 }

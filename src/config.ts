@@ -4,5 +4,5 @@ export const config = {
     'http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com',
   appEnv:
     ((window as any).envVars.APP_ENV as 'dev' | 'production' | 'staging') ??
-    'dev'
+    'dev',
 };

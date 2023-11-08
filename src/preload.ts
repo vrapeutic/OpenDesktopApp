@@ -4,11 +4,11 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 // pass all env variables to the renderer process
 contextBridge.exposeInMainWorld('envVars', {
-  ...process.env
+  ...process.env,
 });
 
 contextBridge.exposeInMainWorld('electronAPI', {
   getPassword: (key: string) => ipcRenderer.invoke('store:getPassword', [key]),
   setPassword: (key: string, password: string) =>
-    ipcRenderer.invoke('store:setPassword', [key, password])
+    ipcRenderer.invoke('store:setPassword', [key, password]),
 });

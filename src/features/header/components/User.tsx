@@ -1,7 +1,7 @@
-import { Flex, HStack } from "@chakra-ui/layout";
-import { Text, Image } from "@chakra-ui/react";
-import UserImage from "../../../assets/images/UserImage.png";
-import ArrowDowns from "./ArrowDowns";
+import { Flex, HStack } from '@chakra-ui/layout';
+import { Text, Image } from '@chakra-ui/react';
+import UserImage from '../../../assets/images/UserImage.png';
+import ArrowDowns from './ArrowDowns';
 
 const User = (props: any) => {
   return (
@@ -12,7 +12,8 @@ const User = (props: any) => {
             width="max-content"
             fontFamily="Inter"
             fontSize="1rem"
-            color="#0D062D">
+            color="#0D062D"
+          >
             Ahmed Sharaby
           </Text>
           <Flex justifyContent="flex-end">

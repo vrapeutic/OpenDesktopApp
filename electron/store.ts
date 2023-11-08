@@ -23,11 +23,11 @@ export default {
           ...credentials,
           {
             account,
-            password: safeStorage.decryptString(Buffer.from(buffer, 'latin1'))
-          }
+            password: safeStorage.decryptString(Buffer.from(buffer, 'latin1')),
+          },
         ];
       },
       [] as Array<{ account: string; password: string }>
     );
-  }
+  },
 };
