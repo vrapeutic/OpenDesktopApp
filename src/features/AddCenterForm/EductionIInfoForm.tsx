@@ -48,7 +48,7 @@ export default function EductionIInfoForm({
   const handleCertificateChange = (event: { target: { files: any[] } }) => {
     const file = event.target.files[0];
     var ext = file.name.split(".").pop();
-    if (ext == "pdf" || ext == "docx" || ext == "doc") {
+    if (ext == "pdf") {
       setSelectedFile(file);
       setValue("certification", file);
       clearErrors("certification"); // Clear any previous certi
@@ -67,7 +67,6 @@ export default function EductionIInfoForm({
     } else {
       clearErrors("certification"); // Clear any previous certification errors
       data.certification = selectedFile;
-      alert(JSON.stringify(data));
 
       onSubmit(data);
       nextHandler();
@@ -85,34 +84,27 @@ export default function EductionIInfoForm({
           gap="0em 1.5625em"
         >
           <GridItem>
-            <Controller
-              control={control}
-              name="registrationNumber"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                    Registration Number
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="registrationNumber"
-                    autoComplete="registrationNumber"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    mt="0.75em"
-                    mb="1em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
+            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+              Registration Number
+            </FormLabel>
+            <Input
+              {...register("registrationNumber")}
+              id="registrationNumber"
+              borderColor="#4965CA"
+              border="2px solid #E8E8E8"
+              _hover={{ border: "1px solid #4965CA" }}
+              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+              mt="0.75em"
+              mb="1em"
+              borderRadius="8px"
             />
+            {errors.registrationNumber && (
+              <Text color="red.500">{errors.registrationNumber.message}</Text>
+            )}
           </GridItem>
           <GridItem rowSpan={2}>
             <>
-            <FormControl>
+              <FormControl>
                 <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
                   certification
                 </FormLabel>
@@ -128,7 +120,6 @@ export default function EductionIInfoForm({
                     <Input
                       {...register("certification")}
                       id="certification"
-                      autoComplete="certification"
                       type="file"
                       accept="application/pdf" // Update this line to accept PDF files
                       onChange={(e) => handleCertificateChange(e)}
@@ -143,30 +134,23 @@ export default function EductionIInfoForm({
             </>
           </GridItem>
           <GridItem>
-            <Controller
-              control={control}
-              name="taxID"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                    Tax ID
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="taxID"
-                    autoComplete="taxID"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    mt="0.75em"
-                    mb="1em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
+            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+              Tax ID
+            </FormLabel>
+            <Input
+              {...register("taxID")}
+              id="taxID"
+              borderColor="#4965CA"
+              border="2px solid #E8E8E8"
+              _hover={{ border: "1px solid #4965CA" }}
+              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+              mt="0.75em"
+              mb="1em"
+              borderRadius="8px"
             />
+            {errors.taxID && (
+              <Text color="red.500">{errors.taxID.message}</Text>
+            )}
           </GridItem>
         </Grid>
 

@@ -29,13 +29,17 @@ export default function SpecialtyForm({
     specializationschema: joi.array().required().label("specializationschema"),
   });
 
-  const { control, handleSubmit, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
     resolver: joiResolver(schema),
     mode: "onTouched",
   });
 
   const FormonSubmit = (data: object) => {
-    alert(JSON.stringify(data));
     onSubmit(data);
     nextHandler();
   };
@@ -83,69 +87,56 @@ export default function SpecialtyForm({
           gap="0em 1.5625em"
         >
           <GridItem colSpan={2}>
-            <Controller
-              control={control}
-              name="specialtyInformation"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    display="inline"
-                    m="0em"
-                    letterSpacing="0.256px"
-                    color="#15134B"
-                  >
-                    Specialty information
-                  </FormLabel>
-                  <FormLabel
-                    pl="0.5em"
-                    display="inline"
-                    m="0em"
-                    fontSize="0.75em"
-                    letterSpacing="0.192px"
-                    color="#8D8D8D"
-                  >
-                    (description)
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="specialtyInformation"
-                    autoComplete="specialtyInformation"
-                    h="5.5em"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="text"
-                    mt="0.75em"
-                    mb="3.5em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
+            <FormLabel
+              display="inline"
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
+            >
+              Specialty information
+            </FormLabel>
+            <FormLabel
+              pl="0.5em"
+              display="inline"
+              m="0em"
+              fontSize="0.75em"
+              letterSpacing="0.192px"
+              color="#8D8D8D"
+            >
+              (description)
+            </FormLabel>
+            <Input
+              {...register("specialtyInformation")}
+              id="specialtyInformation"
+              h="5.5em"
+              borderColor="#4965CA"
+              border="2px solid #E8E8E8"
+              _hover={{ border: "1px solid #4965CA" }}
+              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+              type="text"
+              mt="0.75em"
+              mb="3.5em"
+              borderRadius="8px"
             />
+            {errors.specialtyInformation && (
+              <Text color="red.500">{errors.specialtyInformation.message}</Text>
+            )}
           </GridItem>
 
           <GridItem>
-            <Controller
+            <Select
+              {...register("specializationschema")}
+              closeMenuOnSelect={false}
+              components={animatedComponents}
+              isMulti
+              options={specialties}
+              id="specializationschema"
               name="specializationschema"
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isInvalid={!!error}>
-                  <Select
-                    {...field}
-                    closeMenuOnSelect={false}
-                    components={animatedComponents}
-                    isMulti
-                    options={specialties}
-                    id="specializationschema"
-                    name="specializationschema"
-                    onChange={handleSpecializations}
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
+              onChange={handleSpecializations}
             />
+            {errors.specializationschema && (
+              <Text color="red.500">{errors.specializationschema.message}</Text>
+            )}
           </GridItem>
         </Grid>
 

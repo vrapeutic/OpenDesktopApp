@@ -15,7 +15,6 @@ import ContactForm from "../features/AddCenterForm/ContactForm";
 import EductionIInfoForm from "../features/AddCenterForm/EductionIInfoForm";
 import GeneralInfoForm from "../features/AddCenterForm/GeneralInfoForm";
 import SpecialtyForm from "../features/AddCenterForm/SpecialtyForm";
-import { getMe } from "@renderer/cache";
 
 export default function AddTherapycenters() {
   const totalSteps = 4;
@@ -90,8 +89,7 @@ export default function AddTherapycenters() {
     }
   };
 
-  const getToken = getMe()
-console.log(getToken.token)
+
 
   return (
     <>

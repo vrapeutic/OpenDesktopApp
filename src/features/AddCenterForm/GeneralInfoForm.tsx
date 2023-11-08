@@ -34,7 +34,11 @@ export default function GeneralInfoForm({
       .required(),
     managerName: joi.string().min(3).max(30).required().label("managerName"),
   });
-  const { control, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: joiResolver(schema),
     mode: "onTouched",
   });
@@ -55,136 +59,108 @@ export default function GeneralInfoForm({
           gap="0em 1.5625em"
         >
           <GridItem>
-            <Controller
-              control={control}
-              name="therapyCenterName"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    display="inline"
-                    m="0em"
-                    letterSpacing="0.256px"
-                    color="#15134B"
-                  >
-                    therapyCenterName
-                  </FormLabel>
+            <FormLabel
+              display="inline"
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
+            >
+              therapyCenterName
+            </FormLabel>
 
-                  <Input
-                    {...field}
-                    id="therapyCenterName"
-                    autoComplete="therapyCenterName"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="text"
-                    mt="0.75em"
-                    mb="1em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
+            <Input
+              {...register("therapyCenterName")}
+              id="therapyCenterName"
+              borderColor="#4965CA"
+              border="2px solid #E8E8E8"
+              _hover={{ border: "1px solid #4965CA" }}
+              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+              type="text"
+              mt="0.75em"
+              mb="1em"
+              borderRadius="8px"
             />
+            {errors.therapyCenterName && (
+              <Text color="red.500">{errors.therapyCenterName.message}</Text>
+            )}
           </GridItem>
           <GridItem>
-            <Controller
-              control={control}
-              name="completeAddress"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    display="inline"
-                    m="0em"
-                    letterSpacing="0.256px"
-                    color="#15134B"
-                  >
-                    completeAddress
-                  </FormLabel>
+            <FormLabel
+              display="inline"
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
+            >
+              completeAddress
+            </FormLabel>
 
-                  <Input
-                    {...field}
-                    id="completeAddress"
-                    autoComplete="completeAddress"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="text"
-                    mt="0.75em"
-                    mb="1em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
+            <Input
+              {...register("completeAddress")}
+              id="completeAddress"
+              borderColor="#4965CA"
+              border="2px solid #E8E8E8"
+              _hover={{ border: "1px solid #4965CA" }}
+              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+              type="text"
+              mt="0.75em"
+              mb="1em"
+              borderRadius="8px"
             />
+            {errors.completeAddress && (
+              <Text color="red.500">{errors.completeAddress.message}</Text>
+            )}
           </GridItem>
           <GridItem>
-            <Controller
-              control={control}
-              name="Email"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    display="inline"
-                    m="0em"
-                    letterSpacing="0.256px"
-                    color="#15134B"
-                  >
-                    Email
-                  </FormLabel>
+            <FormLabel
+              display="inline"
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
+            >
+              Email
+            </FormLabel>
 
-                  <Input
-                    {...field}
-                    id="Email"
-                    autoComplete="Email"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="text"
-                    mt="0.75em"
-                    mb="1em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
+            <Input
+              {...register("Email")}
+              id="Email"
+              borderColor="#4965CA"
+              border="2px solid #E8E8E8"
+              _hover={{ border: "1px solid #4965CA" }}
+              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+              type="text"
+              mt="0.75em"
+              mb="1em"
+              borderRadius="8px"
             />
+            {errors.Email && (
+              <Text color="red.500">{errors.Email.message}</Text>
+            )}
           </GridItem>
           <GridItem>
-            <Controller
-              control={control}
-              name="managerName"
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel
-                    display="inline"
-                    m="0em"
-                    letterSpacing="0.256px"
-                    color="#15134B"
-                  >
-                    managerName
-                  </FormLabel>
+            <FormLabel
+              display="inline"
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
+            >
+              managerName
+            </FormLabel>
 
-                  <Input
-                    {...field}
-                    id="managerName"
-                    autoComplete="managerName"
-                    borderColor="#4965CA"
-                    border="2px solid #E8E8E8"
-                    _hover={{ border: "1px solid #4965CA" }}
-                    boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                    type="text"
-                    mt="0.75em"
-                    mb="1em"
-                    borderRadius="8px"
-                  />
-                  {error && <Text color="red.500">{error.message}</Text>}
-                </FormControl>
-              )}
+            <Input
+              {...register("managerName")}
+              id="managerName"
+              borderColor="#4965CA"
+              border="2px solid #E8E8E8"
+              _hover={{ border: "1px solid #4965CA" }}
+              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+              type="text"
+              mt="0.75em"
+              mb="1em"
+              borderRadius="8px"
             />
+            {errors.managerName && (
+              <Text color="red.500">{errors.managerName.message}</Text>
+            )}
           </GridItem>
         </Grid>
         <Flex flexDirection="row-reverse">
