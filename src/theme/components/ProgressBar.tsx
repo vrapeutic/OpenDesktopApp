@@ -80,7 +80,7 @@ const Progressbar = (props: any) => {
                         w="62px"
                         borderRadius="50%"
                         color="#FFFFFF"
-                      />{" "}
+                      />
                       <StepTitle style={{ width: "100px", marginLeft: "20px" }}>
                         {step.title}
                       </StepTitle>

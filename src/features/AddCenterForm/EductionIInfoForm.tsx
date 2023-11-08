@@ -43,7 +43,7 @@ export default function EductionIInfoForm({
   });
   console.log(errors);
 
-  const [selectedFile, setSelectedFile] = useState([]);
+  const [selectedFile, setSelectedFile] = useState("");
   console.log(getValues());
   const handleCertificateChange = (event: { target: { files: any[] } }) => {
     const file = event.target.files[0];

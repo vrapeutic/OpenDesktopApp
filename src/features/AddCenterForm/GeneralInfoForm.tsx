@@ -44,7 +44,6 @@ export default function GeneralInfoForm({
   });
 
   const FormonSubmit = (data: object) => {
-    alert(JSON.stringify(data));
     onSubmit(data);
     nextHandler();
   };

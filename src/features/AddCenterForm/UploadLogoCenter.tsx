@@ -12,6 +12,8 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { ImageLogo } from "../../assets/icons/Image";
@@ -19,7 +21,19 @@ import axios from "axios";
 import { config } from "../../config";
 import { getMe } from "@renderer/cache";
 import { setApiToken } from "@renderer/api";
+import { useNavigate } from "react-router-dom";
+import Congratulations from "./CongratulationsModal";
+
 export default function Uploadlogo(props: any) {
+  const navigate = useNavigate();
+  const [loading , setLoading] = useState(false)
+  const {
+    isOpen: isOpenCongratulations,
+    onOpen: onOpenCongratulations,
+    onClose: onDeleteCongratulations,
+  } = useDisclosure();
+
+  const toast = useToast();
   const [imagePreview, setImagePreview] = useState();
   const [logo, setLogo] = useState();
   const [allData, setallData] = useState();
@@ -30,34 +44,30 @@ export default function Uploadlogo(props: any) {
     setImagePreview(previewUrl);
   };
 
-
   console.log(props.formData);
   console.log(allData);
 
-  const [locationData, setLocationData] = useState(null)
-
+  const [locationData, setLocationData] = useState(null);
 
   useEffect(() => {
-        getLocation();
-    }, []);
-   async function getLocation() {
-        const res = await axios.get("http://ip-api.com/json");
-        console.log(res);
-        if (res.status === 200) 
-            setLocationData(res.data)
-    }
+    getLocation();
+  }, []);
+  async function getLocation() {
+    const res = await axios.get("http://ip-api.com/json");
+    console.log(res);
+    if (res.status === 200) setLocationData(res.data);
+  }
 
-
-
-    
   const FormonSubmit = () => {
     setallData(props.onSubmit({ logo }));
     console.log(allData);
     SendDataToapi();
-    props.onClose();
+    setLoading(true)
+
   };
 
   const SendDataToapi = () => {
+
     console.log(allData);
     const socialLinksArray = [
       { link: props.formData.Website, link_type: "facebook" },
@@ -91,11 +101,24 @@ export default function Uploadlogo(props: any) {
     axios
       .post(`${config.apiURL}/centers`, DataTobesent, Token)
       .then((response) => {
-        console.log("POST request successful:", response.data);
+        onOpenCongratulations();
+        navigate("/");
+        props.onClose();
       })
       .catch((error) => {
-        console.error("Error making POST request:", error);
+        console.log(error);
+        props.onClose();
+
+        toast({
+          title: "Error",
+          description: error.response.data.error,
+          status: "success",
+          duration: 9000,
+          position: "top-right",
+        });
       });
+      setLoading(false)
+
   };
   return (
     <>
@@ -171,42 +194,7 @@ export default function Uploadlogo(props: any) {
                 Please upload your Therapy Logo
               </Text>
             </ModalBody>
-            {/* 
-            <ModalFooter display="table-column">
-              <Button
-                h="54px"
-                w="265px"
-                top="-50px"
-                left="18%"
-                borderRadius="12px"
-                bg="#00DEA3"
-                color="#FFFFFF"
-                fontFamily="Roboto"
-                fontWeight="700"
-                fontSize="18px"
-                lineHeight="21.09px"
-                type="submit"
-                onClick={FormonSubmit}
-              >
-                Upload
-              </Button>
-
-              <Button
-                w="39px"
-                h="18px"
-                top="-30px"
-                left="45%"
-                bgColor="#FFFFFF"
-                color="#595959"
-                fontFamily="Graphik LCG"
-                fontWeight="400"
-                fontSize="18px"
-                lineHeight="18px"
-                onClick={props.onClose}
-              >
-                Skip
-              </Button>
-            </ModalFooter> */}
+         
             <ModalFooter display="table-column">
               <FormControl>
                 <Button
@@ -224,7 +212,7 @@ export default function Uploadlogo(props: any) {
                   type="submit"
                   onClick={FormonSubmit}
                 >
-                  Upload
+                {loading ? "Uploading Your Data" : "Upload"}  
                 </Button>
               </FormControl>
 
@@ -247,6 +235,13 @@ export default function Uploadlogo(props: any) {
           </ModalContent>
         </Modal>
       </Box>
+
+      {onOpenCongratulations && (
+        <Congratulations
+          isOpen={isOpenCongratulations}
+          onClose={onDeleteCongratulations}
+        />
+      )}
     </>
   );
 }

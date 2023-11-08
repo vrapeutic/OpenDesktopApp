@@ -128,7 +128,7 @@ export default function ContactForm({
               border="2px solid #E8E8E8"
               _hover={{ border: "1px solid #4965CA" }}
               boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-              mt="2.3125em"
+              mt="0.75em"
               mb="9.3125em"
               borderRadius="8px"
             />
