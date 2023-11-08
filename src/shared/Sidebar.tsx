@@ -94,13 +94,13 @@ export default function Sidebar() {
             icon: (
                 <Specialists
                     color={
-                        location.pathname === "/Specialists"
+                        location.pathname === "/Centers"
                             ? "#00DEA3"
                             : "#333333"
                     }
                 />
             ),
-            path: "/Specialists",
+            path: "/Centers",
         },
         {
             link: "Assessment tools",

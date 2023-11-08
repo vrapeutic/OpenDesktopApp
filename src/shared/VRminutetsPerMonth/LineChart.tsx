@@ -6,6 +6,7 @@ class LineChart extends Component {
   state: any = {series: [ ], options: { }}
   constructor(props: any) {
     super(props);
+      console.log(props);
       
     this.state = {
       series: [{

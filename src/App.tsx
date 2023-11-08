@@ -12,6 +12,15 @@ import { useEffect, useState } from "react";
 import Layout from "./shared/Layout";
 
 function App() {
+    const [center, setCenter] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleClick = (id: any) => {
+        setIsLoading(true);
+        setCenter(id)
+        console.log(center);
+        
+      }
     // const [isLoggedIn, setLoggedIn] = useState(false);
 
     // useEffect(() => {
@@ -31,17 +40,16 @@ function App() {
     return (
         <MemoryRouter>
             <Routes>
-                    <Route path="/" element={<Layout />}>
-                    <Route path="/doctors" element={<Home />} />
+                 <Route path="/" element={<Layout />}>
+                    <Route path="/doctors" element={<Home centerId={center} handleClick={handleClick} isLoading={isLoading}/>} />
                     <Route path="Kids" element={<Kids />} />
                     <Route
                         path="Theraputicmodules"
                         element={<Theraputicmodules />}
                     />
                     <Route path="Therapycenters" element={<Therapycenters />} />
-                    <Route path="Therapycenters" element={<Therapycenters />} />
                     <Route path="Branches" element={<Branches />} />
-                    <Route path="Specialists" element={<Specialists />} />
+                    <Route path="centers" element={<Specialists center={center}/>} />
                     <Route
                         path="Assessmenttools"
                         element={<Assessmenttools />}
