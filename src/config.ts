@@ -5,4 +5,4 @@ export const config = {
     appEnv:
         ((window as any).envVars.APP_ENV as "dev" | "production" | "staging") ??
         "dev",
-    };
+};
