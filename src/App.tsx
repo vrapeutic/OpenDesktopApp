@@ -10,6 +10,8 @@ import Setting from "./pages/Setting";
 import Login from "./features/auth/Login";
 import { useEffect, useState } from "react";
 import Layout from "./shared/Layout";
+import Subscriptions from "./pages/Subscriptions";
+import Generalinfo from "./pages/SignUp/Generalinfo";
 
 function App() {
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -46,9 +48,11 @@ function App() {
                         path="Assessmenttools"
                         element={<Assessmenttools />}
                     />
+                    <Route path="Subscriptions" element={<Subscriptions />} />
                     <Route path="setting" element={<Setting />} />
                 </Route>
             </Routes>
+            <Generalinfo />
         </MemoryRouter>
     );
 }
