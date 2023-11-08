@@ -26,9 +26,9 @@ export default function ContactForm({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const schema = joi.object({
     phoneNumber: joi.number().required().label("phoneNumber"),
-    socialMedia: joi.string().required().label("socialMedia"),
-    Website: joi.string().required().label("Website"),
-    Linkedin: joi.string().required().label("Linkedin"),
+    socialMedia: joi.string().required().uri({ scheme: ['http', 'https'] }).label("socialMedia"),
+    Website: joi.string().required().uri({ scheme: ['http', 'https'] }).label("Website"),
+    Linkedin: joi.string().required().uri({ scheme: ['http', 'https'] }).label("Linkedin"),
   });
 
   const {
@@ -108,7 +108,7 @@ export default function ContactForm({
               boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
               type="text"
               mt="0.75em"
-              mb="9.3125em"
+              mb="1em"
               borderRadius="8px"
             />
             {errors.Website && (
@@ -129,7 +129,7 @@ export default function ContactForm({
               _hover={{ border: "1px solid #4965CA" }}
               boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
               mt="0.75em"
-              mb="9.3125em"
+              mb="1em"
               borderRadius="8px"
             />
             {errors.Linkedin && (

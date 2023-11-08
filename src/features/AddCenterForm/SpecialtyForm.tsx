@@ -115,7 +115,7 @@ export default function SpecialtyForm({
               boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
               type="text"
               mt="0.75em"
-              mb="3.5em"
+              mb="1em"
               borderRadius="8px"
             />
             {errors.specialtyInformation && (

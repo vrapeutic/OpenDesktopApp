@@ -108,6 +108,7 @@ export default function Uploadlogo(props: any) {
       .catch((error) => {
         console.log(error);
         props.onClose();
+        navigate("/");
 
         toast({
           title: "Error",

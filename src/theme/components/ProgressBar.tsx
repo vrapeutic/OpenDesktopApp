@@ -29,7 +29,7 @@ const Progressbar = (props: any) => {
   };
 
   const title = {
-    marginTop: "25px",
+    marginTop: "35px",
     marginLeft: "30px",
     width: "120px",
   };

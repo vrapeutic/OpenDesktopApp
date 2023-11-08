@@ -10,7 +10,7 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Progressbar from "../../theme/components/ProgressBar";
@@ -25,11 +25,22 @@ export default function EductionIInfoForm({
   const schema = joi.object({
     registrationNumber: joi.number().required().label("Registration Number"),
     taxID: joi.number().required().label("Tax ID"),
-    certification: joi.required().label("certification"),
+    certification:  joi
+    .required()
+    .custom((value, helpers) => {
+      if (value) {
+        const ext = value.name.split('.').pop().toLowerCase();
+        if (ext === 'pdf') {
+          return value;
+        } else {
+          return helpers.error('Invalid file type. Please upload a PDF file.');
+        }
+      }
+      return value;
+    }),
   });
 
   const {
-    control,
     register,
     handleSubmit,
     setError,
@@ -131,6 +142,9 @@ export default function EductionIInfoForm({
               {selectedFile && (
                 <Text mt="1em">Selected File: {selectedFile.name}</Text>
               )}
+                {errors.certification && (
+              <Text color="red.500">{errors.certification.message}</Text>
+            )}
             </>
           </GridItem>
           <GridItem>
