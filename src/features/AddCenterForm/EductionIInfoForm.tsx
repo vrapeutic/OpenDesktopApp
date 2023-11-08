@@ -82,10 +82,9 @@ export default function EductionIInfoForm({
   };
 
   return (
-    <>
+    <Box bg="#FFFFFF" borderRadius="10px" m="5.875em 2.625em 5.875em 2.375em" as="form" onSubmit={handleSubmit(FormonSubmit)}>
       <Progressbar index={2} />
 
-      <Box as="form" onSubmit={handleSubmit(FormonSubmit)}>
         <Grid
           m="2.625em 1.5em 0em 1.5em"
           templateColumns="repeat(2, 1fr)"
@@ -202,6 +201,5 @@ export default function EductionIInfoForm({
           )}
         </Flex>
       </Box>
-    </>
   );
 }

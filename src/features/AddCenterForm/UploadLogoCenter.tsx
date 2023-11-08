@@ -67,8 +67,8 @@ export default function Uploadlogo(props: any) {
 
     formData.append("name", props.formData.therapyCenterName);
     formData.append("website", props.formData.Website);
-    DataTobesent.append("latitude", locationData?.lat);
-    DataTobesent.append("longitude", locationData?.lon);
+    formData.append("latitude", "44");
+    formData.append("longitude", "66");
     formData.append("tax_id", props.formData.taxID);
     formData.append("registration_number", props.formData.registrationNumber);
     formData.append("logo", logo);

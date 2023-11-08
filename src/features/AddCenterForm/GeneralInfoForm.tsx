@@ -48,9 +48,8 @@ export default function GeneralInfoForm({
   };
 
   return (
-    <>
-      <Progressbar index={0} />
-      <Box as="form" onSubmit={handleSubmit(FormonSubmit)}>
+    <Box bg="#FFFFFF" borderRadius="10px" m="5.875em 2.625em 5.875em 2.375em" as="form" onSubmit={handleSubmit(FormonSubmit)}>
+    <Progressbar index={0} />
         <Grid
           m="2.625em 1.5em 0em 1.5em"
           templateColumns="repeat(2, 1fr)"
@@ -198,6 +197,5 @@ export default function GeneralInfoForm({
           )}
         </Flex>
       </Box>
-    </>
   );
 }
