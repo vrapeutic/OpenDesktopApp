@@ -10,7 +10,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' 'electron/*.ts' --write"
+    "prettier-format": "prettier --config .prettierrc 'src/**/**/*.ts(x)' 'electron/*.ts' --write"
   },
   "keywords": [],
   "author": {

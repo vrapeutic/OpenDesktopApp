@@ -1,4 +1,4 @@
-import { Icon } from "@chakra-ui/react";
+import { Icon } from '@chakra-ui/react';
 
 export const EyeIcon = () => (
   <Icon
@@ -6,7 +6,8 @@ export const EyeIcon = () => (
     height="20px"
     viewBox="0 0 20 20"
     fill="none"
-    xmlns="http://www.w3.org/2000/svg">
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <g clipPath="url(#clip0_1625_1623)">
       <path
         d="M0.833334 10C0.833334 10 4.16667 3.33334 10 3.33334C15.8333 3.33334 19.1667 10 19.1667 10C19.1667 10 15.8333 16.6667 10 16.6667C4.16667 16.6667 0.833334 10 0.833334 10Z"

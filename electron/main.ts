@@ -29,9 +29,9 @@ const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     webPreferences: {
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
-    icon: path.resolve(__dirname, '../public/favicon.ico')
+    icon: path.resolve(__dirname, '../public/favicon.ico'),
   });
 
   mainWindow.maximize();

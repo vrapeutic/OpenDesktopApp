@@ -26,7 +26,7 @@ export function useLoginMutation(
       api
         .post<Params, AxiosResponse<Return>>('/api/v1/login', {
           email: params.identifier,
-          password: params.password
+          password: params.password,
         })
         .then((res) => res.data),
     {
@@ -37,7 +37,7 @@ export function useLoginMutation(
         setMe(params[0]);
         (window as any).electronAPI.setPassword('token', params[0].token);
         console.log('params: ', params);
-      }
+      },
     }
   );
 }

@@ -1,9 +1,5 @@
-import React from 'react'
+import React from 'react';
 
 export default function Subscriptions() {
-  return (
-    <div>
-      Subscriptions
-    </div>
-  )
+  return <div>Subscriptions</div>;
 }

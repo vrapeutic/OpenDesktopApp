@@ -6,8 +6,8 @@ import Button from '@renderer/theme/components/button';
 const theme = extendTheme({
   styles,
   components: {
-    Button
-  }
+    Button,
+  },
 });
 
 export default theme;
