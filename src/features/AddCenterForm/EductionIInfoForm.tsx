@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Progressbar from "../../theme/components/ProgressBar";
-import { ImageLogo } from "../../assets/icons/Image";
+import { Image } from "../../assets/icons/Image";
 
 export default function EductionIInfoForm({
   onSubmit,
@@ -123,7 +123,7 @@ export default function EductionIInfoForm({
                   bg="#FFFFFF"
                 >
                   <label>
-                    <ImageLogo />
+                    <Image />
                     <Input
                       {...register("certification")}
                       id="certification"

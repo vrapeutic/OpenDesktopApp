@@ -16,7 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ImageLogo } from "../../assets/icons/Image";
+import { Image } from "../../assets/icons/Image";
 import axios from "axios";
 import { config } from "../../config";
 import { getMe } from "@renderer/cache";
@@ -81,7 +81,7 @@ export default function Uploadlogo(props: any) {
       Authorization: `Bearer ${token}`,
     };
 
-    return axios.post(`${config.apiURL}/centers`, formData, { headers });
+    return axios.post(`${config.apiURL}/api/v1/centers`, formData, { headers });
   };
 
   const handleSuccess = (response) => {
@@ -170,7 +170,7 @@ export default function Uploadlogo(props: any) {
                 ) : (
                   <>
                     <label>
-                      <ImageLogo />
+                      <Image />
 
                       <Input
                         type="file"
