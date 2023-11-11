@@ -47,15 +47,6 @@ export default function Uploadlogo(props: any) {
     setImagePreview(previewUrl);
   };
 
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  async function getLocation() {
-    const res = await axios.get("http://ip-api.com/json");
-    if (res.status === 200) setLocationData(res.data);
-  }
-
   const FormonSubmit = () => {
     setAllData(props.onSubmit({ logo }));
     SendDataToApi();
@@ -67,8 +58,7 @@ export default function Uploadlogo(props: any) {
 
     formData.append("name", props.formData.therapyCenterName);
     formData.append("website", props.formData.Website);
-    formData.append("latitude", locationData?.lat);
-    formData.append("longitude", locationData?.lon);
+
     formData.append("tax_id", props.formData.taxID);
     formData.append("registration_number", props.formData.registrationNumber);
     formData.append("logo", logo);
