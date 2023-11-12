@@ -1,11 +1,11 @@
-import { Flex, HStack } from "@chakra-ui/layout";
+import { Flex, HStack } from '@chakra-ui/layout';
 
-import { Frame } from "@renderer/assets/icons/Frame";
-import { Refresh } from "@renderer/assets/icons/Refresh";
-import Notifications from "./Notifications";
-import MessageQuestions from "./MessageQuestions";
-import { useState } from "react";
-import { FullScreen } from "@renderer/assets/icons/FullScreen";
+import { Frame } from '@renderer/assets/icons/Frame';
+import { Refresh } from '@renderer/assets/icons/Refresh';
+import Notifications from './Notifications';
+import MessageQuestions from './MessageQuestions';
+import { useState } from 'react';
+import { FullScreen } from '@renderer/assets/icons/FullScreen';
 
 const Icons = (props: any) => {
   const [fullScreen, setFullScreen] = useState(true);

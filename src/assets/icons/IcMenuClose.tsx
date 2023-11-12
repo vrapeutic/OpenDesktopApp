@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Icon } from "@chakra-ui/react";
+=======
+import { Icon } from '@chakra-ui/react';
+>>>>>>> dev
 
 export const IcMenuClose = () => (
   <Icon
@@ -6,7 +10,12 @@ export const IcMenuClose = () => (
     height="44px"
     viewBox="0 0 44 44"
     fill="none"
+<<<<<<< HEAD
     xmlns="http://www.w3.org/2000/svg">
+=======
+    xmlns="http://www.w3.org/2000/svg"
+  >
+>>>>>>> dev
     <rect width="44px" height="44px" rx="6" fill="#39C3F9" fillOpacity="0.1" />
     <rect
       x="0.5"
