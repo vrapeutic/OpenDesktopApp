@@ -7,8 +7,8 @@ import { VRsessions } from '../../assets/icons/VRsessions';
 import { config } from '../../config';
 
 export default function StatistcsCards(props: any) {
-  const [kids, setKids] = useState({});
-  const [sessions, setSessions] = useState({});
+  const [kids, setKids] = useState<any>(new Object());
+  const [sessions, setSessions] = useState<any>(new Object());
 
   useEffect(() => {
     (async () => {

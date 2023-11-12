@@ -73,7 +73,7 @@ export default function Home() {
           Centers
         </MenuButton>
         <MenuList>
-          {centers.map((center) => (
+          {centers?.map((center) => (
             <MenuItem key={center.id} onClick={() => handleClick(center.id)}>
               {center.attributes.name}
             </MenuItem>
