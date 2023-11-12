@@ -1,20 +1,25 @@
+import { useState, Fragment } from 'react';
 import { Flex, Image, Box, Text, Link, VStack } from '@chakra-ui/react';
 import { Link as ReachLink, useLocation } from 'react-router-dom';
-import { Fragment } from 'react';
-import VRapeutic from '../../assets/images/VRapeutic.png';
-import logo1 from '../../assets/images/logo1.png';
-import { Dashboard } from '../../assets/icons/Dashboard';
-import { Assessmenttools } from '../../assets/icons/Assessmenttools';
-import { Branches } from '../../assets/icons/Branches';
-import { Kids } from '../../assets/icons/Kids';
-import { Setting } from '../../assets/icons/Setting';
-import { Specialists } from '../../assets/icons/Specialists';
-import { Therapycenters } from '../../assets/icons/Therapycenters';
-import { Theraputicmodules } from '../../assets/icons/Theraputicmodules';
-import { Lamp } from '../../assets/icons/Lamp';
-import { Subscriptions } from '../../assets/icons/Subscriptions';
+import { Subscriptions } from '../assets/icons/Subscriptions';
+import VRapeutic from '../assets/images/VRapeutic.png';
+import { Dashboard } from '../assets/icons/Dashboard';
+import { Assessmenttools } from '../assets/icons/Assessmenttools';
+import { Branches } from '../assets/icons/Branches';
+import { Kids } from '../assets/icons/Kids';
+import { Setting } from '../assets/icons/Setting';
+import { Specialists } from '../assets/icons/Specialists';
+import { Therapycenters } from '../assets/icons/Therapycenters';
+import { Theraputicmodules } from '../assets/icons/Theraputicmodules';
+import { Lamp } from '../assets/icons/Lamp';
+
+enum NavSize {
+  small = 'small',
+  large = 'large',
+}
 
 export default function Sidebar() {
+  const [navSize, changeNavSize] = useState(NavSize.large);
   const location = useLocation();
   const active = {
     color: '#00DEA3',
@@ -33,11 +38,9 @@ export default function Sidebar() {
     {
       link: 'Dashboard',
       icon: (
-        <Dashboard
-          color={location.pathname === '/main_window' ? '#00DEA3' : '#333333'}
-        />
+        <Dashboard color={location.pathname === '/' ? '#00DEA3' : '#333333'} />
       ),
-      path: '/main_window',
+      path: '/',
     },
     {
       link: 'Kids',
@@ -124,6 +127,7 @@ export default function Sidebar() {
       background="#FFFFFF"
       boxShadow="0px 3px 8px rgba(0, 0, 0, 0.08)"
       borderRadius="0px 20px 20px 0px;"
+      w={navSize == NavSize.small ? '93px' : '239px'}
       flexDir="column"
       justifyContent="space-between"
     >

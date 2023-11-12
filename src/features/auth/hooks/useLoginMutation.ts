@@ -1,25 +1,25 @@
-import { AxiosError, AxiosResponse } from "axios";
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { api, setApiToken } from "@renderer/api";
-import { setMe } from "@renderer/cache";
+import { AxiosError, AxiosResponse } from 'axios';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { api, setApiToken } from '@renderer/api';
+import { setMe } from '@renderer/cache';
 
 type Params = {
-    identifier: string;
-    password: string;
+  identifier: string;
+  password: string;
 };
 
 type Return = {
-    id: number;
-    address: string;
-    email: string;
-    name: string;
-    phone: string;
-    specialty: string;
-    token: string;
+  id: number;
+  address: string;
+  email: string;
+  name: string;
+  phone: string;
+  specialty: string;
+  token: string;
 };
 
 export function useLoginMutation(
-    options?: UseMutationOptions<Return, AxiosError, Params>
+  options?: UseMutationOptions<Return, AxiosError, Params>
 ) {
     return useMutation<Return, AxiosError, Params>(
         (params) =>

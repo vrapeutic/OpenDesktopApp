@@ -1,5 +1,5 @@
-import { useForm } from "react-hook-form";
-import joi from "joi";
+import { useForm } from 'react-hook-form';
+import joi from 'joi';
 import {
   Button,
   Text,
@@ -10,10 +10,10 @@ import {
   Input,
   useDisclosure,
   Flex,
-} from "@chakra-ui/react";
-import { joiResolver } from "@hookform/resolvers/joi";
-import Uploadlogo from "./UploadLogoCenter";
-import Progressbar from "../../theme/components/ProgressBar";
+} from '@chakra-ui/react';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Uploadlogo from './UploadLogoCenter';
+import Progressbar from '../../theme/components/ProgressBar';
 
 export default function ContactForm({
   onSubmit,
@@ -24,22 +24,22 @@ export default function ContactForm({
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const schema = joi.object({
-    phoneNumber: joi.number().required().label("phoneNumber"),
+    phoneNumber: joi.number().required().label('phoneNumber'),
     socialMedia: joi
       .string()
       .required()
-      .uri({ scheme: ["http", "https"] })
-      .label("socialMedia"),
+      .uri({ scheme: ['http', 'https'] })
+      .label('socialMedia'),
     Website: joi
       .string()
       .required()
-      .uri({ scheme: ["http", "https"] })
-      .label("Website"),
+      .uri({ scheme: ['http', 'https'] })
+      .label('Website'),
     Linkedin: joi
       .string()
       .required()
-      .uri({ scheme: ["http", "https"] })
-      .label("Linkedin"),
+      .uri({ scheme: ['http', 'https'] })
+      .label('Linkedin'),
   });
 
   const {
@@ -48,7 +48,7 @@ export default function ContactForm({
     formState: { errors },
   } = useForm({
     resolver: joiResolver(schema),
-    mode: "onTouched",
+    mode: 'onTouched',
   });
 
   const FormonSubmit = (data: object) => {
@@ -75,11 +75,11 @@ export default function ContactForm({
             Phone number 1
           </FormLabel>
           <Input
-            {...register("phoneNumber")}
+            {...register('phoneNumber')}
             id="phoneNumber"
             borderColor="#4965CA"
             border="2px solid #E8E8E8"
-            _hover={{ border: "1px solid #4965CA" }}
+            _hover={{ border: '1px solid #4965CA' }}
             boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
             type="text"
             mt="0.75em"
@@ -95,12 +95,12 @@ export default function ContactForm({
             Social media
           </FormLabel>
           <Input
-            {...register("socialMedia")}
+            {...register('socialMedia')}
             id="socialMedia"
             placeholder="Facebook.com/"
             borderColor="#4965CA"
             border="2px solid #E8E8E8"
-            _hover={{ border: "1px solid #4965CA" }}
+            _hover={{ border: '1px solid #4965CA' }}
             boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
             type="text"
             mt="0.75em"
@@ -109,18 +109,18 @@ export default function ContactForm({
           />
           {errors.socialMedia && (
             <Text color="red.500">{errors.socialMedia.message}</Text>
-          )}{" "}
+          )}{' '}
         </GridItem>
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
             Website
           </FormLabel>
           <Input
-            {...register("Website")}
+            {...register('Website')}
             id="Website"
             borderColor="#4965CA"
             border="2px solid #E8E8E8"
-            _hover={{ border: "1px solid #4965CA" }}
+            _hover={{ border: '1px solid #4965CA' }}
             boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
             type="text"
             mt="0.75em"
@@ -129,20 +129,20 @@ export default function ContactForm({
           />
           {errors.Website && (
             <Text color="red.500">{errors.Website.message}</Text>
-          )}{" "}
+          )}{' '}
         </GridItem>
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
             Linkedin
           </FormLabel>
           <Input
-            {...register("Linkedin")}
+            {...register('Linkedin')}
             id="Linkedin"
             autoComplete="Linkedin"
             placeholder="Linkedin.com/"
             borderColor="#4965CA"
             border="2px solid #E8E8E8"
-            _hover={{ border: "1px solid #4965CA" }}
+            _hover={{ border: '1px solid #4965CA' }}
             boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
             mt="0.75em"
             mb="1em"
@@ -150,7 +150,7 @@ export default function ContactForm({
           />
           {errors.Linkedin && (
             <Text color="red.500">{errors.Linkedin.message}</Text>
-          )}{" "}
+          )}{' '}
         </GridItem>
       </Grid>
       <Flex flexDirection="row-reverse">

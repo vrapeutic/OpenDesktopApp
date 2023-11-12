@@ -12,11 +12,11 @@ import {
   Button,
   IconButton,
   Circle,
-} from "@chakra-ui/react";
-import { Notification } from "@renderer/assets/icons/Notification";
-import { useState } from "react";
-import NotificationUserOne from "../../../assets/images/NotificationUserOne.png";
-import NotificationUserTwo from "../../../assets/images/NotificationUserTwo.png";
+} from '@chakra-ui/react';
+import { Notification } from '@renderer/assets/icons/Notification';
+import { useState } from 'react';
+import NotificationUserOne from '../../../assets/images/NotificationUserOne.png';
+import NotificationUserTwo from '../../../assets/images/NotificationUserTwo.png';
 
 const Notifications = (props: any) => {
   const [isActive, setIsActive] = useState(false);
@@ -45,20 +45,22 @@ const Notifications = (props: any) => {
         mt="9px"
         ml="24px"
         mr="-35px"
-        zIndex="100">
+        zIndex="100"
+      >
         +9
       </Circle>
       <Popover
         closeOnBlur={false}
         closeOnEsc={false}
         isLazy
-        placement="bottom-start">
+        placement="bottom-start"
+      >
         <PopoverTrigger>
           <IconButton
             onClick={activateHandler}
-            {...(isActive ? { bgColor: "#FFFFFF" } : { bgColor: "#F5F5F5" })}
+            {...(isActive ? { bgColor: '#FFFFFF' } : { bgColor: '#F5F5F5' })}
             icon={<Notification />}
-            aria-label={""}
+            aria-label={''}
           />
         </PopoverTrigger>
         <PopoverContent>
@@ -67,7 +69,8 @@ const Notifications = (props: any) => {
             pl="24px"
             pr="155px"
             pt="16px"
-            fontSize="0.875rem">
+            fontSize="0.875rem"
+          >
             Notification
           </PopoverHeader>
           <PopoverArrow />
@@ -79,7 +82,8 @@ const Notifications = (props: any) => {
             p="0"
             width="max-content"
             fontSize="0.75rem"
-            color="#A3ABBD">
+            color="#A3ABBD"
+          >
             Clear All
           </PopoverCloseButton>
           <PopoverBody p="0">
@@ -90,7 +94,8 @@ const Notifications = (props: any) => {
                   borderRadius="8px"
                   ml="4px"
                   mr="4px"
-                  mt="8px">
+                  mt="8px"
+                >
                   <Image
                     objectFit="contain"
                     ml="12px"
@@ -104,7 +109,8 @@ const Notifications = (props: any) => {
                       ml="11px"
                       fontSize="0.875rem"
                       color="#535353"
-                      textTransform="capitalize">
+                      textTransform="capitalize"
+                    >
                       Ahmed Sharaby
                     </Text>
                     <Text
@@ -113,7 +119,8 @@ const Notifications = (props: any) => {
                       mb="10px"
                       fontSize="0.75rem"
                       color="#838383"
-                      textTransform="capitalize">
+                      textTransform="capitalize"
+                    >
                       Doctor Ahmed has just finished a VR session with the child
                       Mohamed
                     </Text>
@@ -124,7 +131,8 @@ const Notifications = (props: any) => {
                   borderRadius="8px"
                   ml="4px"
                   mr="4px"
-                  mt="8px">
+                  mt="8px"
+                >
                   <Image
                     objectFit="contain"
                     ml="12px"
@@ -138,7 +146,8 @@ const Notifications = (props: any) => {
                       ml="11px"
                       fontSize="0.875rem"
                       color="#535353"
-                      textTransform="capitalize">
+                      textTransform="capitalize"
+                    >
                       Alert
                     </Text>
                     <Text
@@ -147,7 +156,8 @@ const Notifications = (props: any) => {
                       mb="10px"
                       fontSize="0.75rem"
                       color="#838383"
-                      textTransform="capitalize">
+                      textTransform="capitalize"
+                    >
                       Doctor Ahmed has just finished a VR session with the child
                       Mohamed
                     </Text>
@@ -158,7 +168,8 @@ const Notifications = (props: any) => {
                   borderRadius="8px"
                   ml="4px"
                   mr="4px"
-                  mt="8px">
+                  mt="8px"
+                >
                   <Image
                     objectFit="contain"
                     ml="12px"
@@ -172,7 +183,8 @@ const Notifications = (props: any) => {
                       ml="11px"
                       fontSize="0.875rem"
                       color="#535353"
-                      textTransform="capitalize">
+                      textTransform="capitalize"
+                    >
                       Ahmad Al-Kabbany
                     </Text>
                     <Text
@@ -181,7 +193,8 @@ const Notifications = (props: any) => {
                       mb="10px"
                       fontSize="0.75rem"
                       color="#838383"
-                      textTransform="capitalize">
+                      textTransform="capitalize"
+                    >
                       Doctor Ahmed has just finished a VR session with the child
                       Mohamed
                     </Text>
@@ -199,7 +212,8 @@ const Notifications = (props: any) => {
             mb="8px"
             mr="4px"
             mt="15px"
-            ml="4px">
+            ml="4px"
+          >
             View all
           </Button>
         </PopoverContent>

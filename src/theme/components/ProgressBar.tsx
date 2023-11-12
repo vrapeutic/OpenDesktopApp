@@ -1,4 +1,6 @@
+import React from 'react';
 import {
+  Text,
   Step,
   StepIcon,
   StepIndicator,
@@ -7,42 +9,44 @@ import {
   StepTitle,
   Stepper,
   Flex,
-  Text,
-} from "@chakra-ui/react";
-import { ArrowDown } from "../../assets/icons/ArrowDown";
+} from '@chakra-ui/react';
+import { Info } from '../../assets/icons/Info';
+import { Contact } from '../../assets/icons/Contact';
+import { Documents } from '../../assets/icons/Documents';
+import { Specialty } from '../../assets/icons/Specialty';
 
-const Progressbar = (props: any) => {
+export default function Progressbar(props: any) {
   const steps = [
-    { title: "General info", icon: <ArrowDown /> },
-    { title: "Specialty", icon: <ArrowDown /> },
-    { title: "Education info", icon: <ArrowDown /> },
-    { title: 'Contact', icon: <ArrowDown /> },
+    { title: 'General info', icon: <Info /> },
+    { title: 'Specialty', icon: <Specialty /> },
+    { title: 'Education info', icon: <Documents /> },
+    // { title: 'Contact', icon: <Contact /> },
   ];
 
   const activeStatus = {
-    backgroundColor: "#00DEA3",
-    height: "52px",
-    width: "52px",
-    borderRadius: "50%",
-    paddingTop: "22%",
-    color: "#00DEA3",
+    backgroundColor: '#00DEA3',
+    height: '52px',
+    width: '52px',
+    borderRadius: '50%',
+    paddingTop: '22%',
+    color: '#00DEA3',
   };
 
   const title = {
-    marginTop: "35px",
-    marginLeft: "30px",
-    width: "120px",
+    marginTop: '25px',
+    marginLeft: '30px',
+    width: '120px',
   };
 
   const inCompleteStatus = {
-    marginTop: "45px",
+    marginTop: '45px',
   };
 
   const inCompleteTitle = {
-    width: "150px",
-    marginTop: "20px",
-    marginLeft: "80px",
-    color: "#A0A0A0",
+    width: '150px',
+    marginTop: '20px',
+    marginLeft: '80px',
+    color: '#A0A0A0',
   };
 
   return (
@@ -80,8 +84,8 @@ const Progressbar = (props: any) => {
                         w="62px"
                         borderRadius="50%"
                         color="#FFFFFF"
-                      />
-                      <StepTitle style={{ width: "100px", marginLeft: "20px" }}>
+                      />{' '}
+                      <StepTitle style={{ width: '100px', marginLeft: '20px' }}>
                         {step.title}
                       </StepTitle>
                     </Flex>
@@ -92,7 +96,7 @@ const Progressbar = (props: any) => {
                       alignItems="center"
                       style={inCompleteStatus}
                     >
-                      {step.icon}{" "}
+                      {step.icon}{' '}
                       <StepTitle style={inCompleteTitle}>
                         {step.title}
                       </StepTitle>
@@ -104,7 +108,7 @@ const Progressbar = (props: any) => {
                       alignItems="center"
                       style={activeStatus}
                     >
-                      {step.icon}{" "}
+                      {step.icon}{' '}
                       <StepTitle style={title}>{step.title}</StepTitle>
                     </Flex>
                   }
@@ -128,6 +132,4 @@ const Progressbar = (props: any) => {
       </Stepper>
     </>
   );
-};
-
-export default Progressbar;
+}
