@@ -21,26 +21,23 @@ type Return = {
 export function useLoginMutation(
   options?: UseMutationOptions<Return, AxiosError, Params>
 ) {
-    return useMutation<Return, AxiosError, Params>(
-        (params) =>
-            api
-                .post<Params, AxiosResponse<Return>>("/sign_in", {
-                    email: params.identifier,
-                    password: params.password,
-                })
-                .then((res) => res.data),
-        {
-            ...options,
-            onSuccess: async (...params) => {
-                console.log(params);
-                setApiToken(params[0].token);
-                setMe(params[0]);
-                (window as any).electronAPI.setPassword(
-                    "token",
-                    params[0].token
-                );
-                console.log("params: ", params);
-            },
-        }
-    );
+  return useMutation<Return, AxiosError, Params>(
+    (params) =>
+      api
+        .post<Params, AxiosResponse<Return>>('/sign_in', {
+          email: params.identifier,
+          password: params.password,
+        })
+        .then((res) => res.data),
+    {
+      ...options,
+      onSuccess: async (...params) => {
+        console.log(params);
+        setApiToken(params[0].token);
+        setMe(params[0]);
+        (window as any).electronAPI.setPassword('token', params[0].token);
+        console.log('params: ', params);
+      },
+    }
+  );
 }

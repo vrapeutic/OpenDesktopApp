@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Box, Button, Grid, Text } from "@chakra-ui/react";
-import ContactForm from "../features/AddCenterForm/ContactForm";
-import EductionIInfoForm from "../features/AddCenterForm/EductionIInfoForm";
-import GeneralInfoForm from "../features/AddCenterForm/GeneralInfoForm";
-import SpecialtyForm from "../features/AddCenterForm/SpecialtyForm";
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Grid, Text } from '@chakra-ui/react';
+import ContactForm from '../features/AddCenterForm/ContactForm';
+import EductionIInfoForm from '../features/AddCenterForm/EductionIInfoForm';
+import GeneralInfoForm from '../features/AddCenterForm/GeneralInfoForm';
+import SpecialtyForm from '../features/AddCenterForm/SpecialtyForm';
 
 export default function Therapycenters() {
   const totalSteps = 5;
@@ -32,7 +32,7 @@ export default function Therapycenters() {
       case 1:
         return (
           <>
-            <Grid style={{ display: "flex", justifyContent: "space-between" }}>
+            <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Text
                 padding="12px 24px"
                 borderRadius="8px"
@@ -42,21 +42,21 @@ export default function Therapycenters() {
                 Therapy Centers
               </Text>
 
-                <Button
-                  w="143px"
-                  h="40px"
-                  ml="24px"
-                  mt="55px"
-                  padding="12px 24px"
-                  bg="#F5B50E"
-                  borderRadius="8px"
-                  fontSize="14px"
-                  fontFamily="Roboto"
-                  onClick={nextHandler}
-                  boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-                >
-                  Add Therapy
-                </Button>
+              <Button
+                w="143px"
+                h="40px"
+                ml="24px"
+                mt="55px"
+                padding="12px 24px"
+                bg="#F5B50E"
+                borderRadius="8px"
+                fontSize="14px"
+                fontFamily="Roboto"
+                onClick={nextHandler}
+                boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+              >
+                Add Therapy
+              </Button>
             </Grid>
           </>
         );
@@ -102,9 +102,5 @@ export default function Therapycenters() {
     }
   };
 
-  return (
-    <>
-        {renderFormStep()}
-    </>
-  );
+  return <>{renderFormStep()}</>;
 }
