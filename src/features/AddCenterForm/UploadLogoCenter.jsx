@@ -7,7 +7,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  Image,
   ModalHeader,
   ModalCloseButton,
   ModalBody,
@@ -15,16 +14,15 @@ import {
   useToast,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Image } from "../../assets/icons/Image";
 import axios from "axios";
 import { config } from "../../config";
-import { getMe } from "@renderer/cache";
-import { setApiToken } from "@renderer/api";
+import { getMe } from "../../cache";
 import { useNavigate } from "react-router-dom";
 import Congratulations from "./CongratulationsModal";
 
-export default function Uploadlogo(props: any) {
+export default function Uploadlogo(props) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -38,9 +36,8 @@ export default function Uploadlogo(props: any) {
   const [imagePreview, setImagePreview] = useState();
   const [logo, setLogo] = useState();
   const [allData, setAllData] = useState();
-  const [locationData, setLocationData] = useState(null);
 
-  const handleImageChange = (e: { target: { files: any[] } }) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     setLogo(file);
     const previewUrl = URL.createObjectURL(file);
@@ -84,7 +81,7 @@ export default function Uploadlogo(props: any) {
     return axios.post(`${config.apiURL}/api/v1/centers`, formData, { headers });
   };
 
-  const handleSuccess = (response) => {
+  const handleSuccess = () => {
     props.onClose();
     onOpenCongratulations();
   };
@@ -110,8 +107,8 @@ export default function Uploadlogo(props: any) {
     const formData = createFormData(socialLinksArray);
 
     try {
-      const response = await postFormData(formData);
-      handleSuccess(response);
+      await postFormData(formData);
+      handleSuccess();
     } catch (error) {
       handleError(error);
     } finally {

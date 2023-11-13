@@ -29,6 +29,16 @@ export const rules: Required<ModuleOptions>["rules"] = [
         },
     },
     {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-react'],
+          },
+        },
+    },
+    {
         test: /\.(png|woff|woff2|eot|ttf|svg|ico)$/, // to import images and fonts
         loader: "url-loader",
     },

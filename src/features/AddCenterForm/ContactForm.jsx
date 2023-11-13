@@ -51,7 +51,7 @@ export default function ContactForm({
     mode: 'onTouched',
   });
 
-  const FormonSubmit = (data: object) => {
+  const FormonSubmit = (data) => {
     onSubmit(data);
     onOpen();
   };

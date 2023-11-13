@@ -42,7 +42,7 @@ export default function GeneralInfoForm({
     mode: "onTouched",
   });
 
-  const FormonSubmit = (data: object) => {
+  const FormonSubmit = (data) => {
     onSubmit(data);
     nextHandler();
   };

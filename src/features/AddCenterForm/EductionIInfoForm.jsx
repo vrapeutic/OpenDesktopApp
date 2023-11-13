@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -52,26 +52,26 @@ export default function EductionIInfoForm({
   });
 
   const [selectedFile, setSelectedFile] = useState('');
-  const handleCertificateChange = (event: { target: { files: any[] } }) => {
+  const handleCertificateChange = (event) => {
     const file = event.target.files[0];
     const ext = file.name.split('.').pop();
     if (ext == 'pdf') {
       setSelectedFile(file);
       setValue('certification', file);
-      clearErrors('certification'); // Clear any previous certi
+      clearErrors('certification');
     } else {
       setError('certification', { message: 'Please upload a PDF file.' });
     }
   };
 
-  const FormonSubmit = (data: { certification: any }) => {
+  const FormonSubmit = (data) => {
     if (selectedFile.length < 1) {
       setError('certification', {
         type: 'manual',
         message: 'Please upload a PDF file.',
       });
     } else {
-      clearErrors('certification'); // Clear any previous certification errors
+      clearErrors('certification');
       data.certification = selectedFile;
 
       onSubmit(data);

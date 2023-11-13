@@ -38,7 +38,7 @@ export default function SpecialtyForm({
     mode: "onTouched",
   });
 
-  const FormonSubmit = (data: object) => {
+  const FormonSubmit = (data) => {
     onSubmit(data);
     nextHandler();
   };
@@ -61,7 +61,7 @@ export default function SpecialtyForm({
   const animatedComponents = makeAnimated();
 
   const [values, setValues] = useState([]);
-  const handleSpecializations = (options: any) => {
+  const handleSpecializations = (options) => {
     setValues([...options]);
     setValue("specializationschema", [...options]);
   };
