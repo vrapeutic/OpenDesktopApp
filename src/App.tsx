@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import Layout from './shared/Layout';
 import Subscriptions from './pages/Subscriptions';
 import Generalinfo from './pages/SignUp/Generalinfo';
+import ViewCenter from './pages/ViewCenter';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -42,6 +43,8 @@ function App() {
           <Route path="Assessmenttools" element={<Assessmenttools />} />
           <Route path="Subscriptions" element={<Subscriptions />} />
           <Route path="setting" element={<Setting />} />
+          <Route path="ViewCenter" element={<ViewCenter />} />
+
         </Route>
       </Routes>
       <Generalinfo />
