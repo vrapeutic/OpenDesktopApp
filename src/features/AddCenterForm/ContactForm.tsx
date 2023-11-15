@@ -13,15 +13,15 @@ import {
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Uploadlogo from './UploadLogoCenter';
-import Progressbar from '../../theme/components/ProgressBar';
+import Progressbar from '../../theme/components/ProgressBarAddCenter';
+import { TherapyFormProps } from './therapyFormInterface';
 
-export default function ContactForm({
+const ContactForm: React.FC<TherapyFormProps> = ({
   onSubmit,
-  nextHandler,
   backHandler,
   sliding,
   formData,
-}) {
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const schema = joi.object({
     phoneNumber: joi.number().required().label('phoneNumber'),
@@ -51,7 +51,12 @@ export default function ContactForm({
     mode: 'onTouched',
   });
 
-  const FormonSubmit = (data) => {
+  const FormonSubmit = (data: {
+    phoneNumber: number;
+    website: string;
+    linkedIn: string;
+    socialMedia: string;
+  }) => {
     onSubmit(data);
     onOpen();
   };
@@ -87,7 +92,7 @@ export default function ContactForm({
             borderRadius="8px"
           />
           {errors.phoneNumber && (
-            <Text color="red.500">{errors.phoneNumber.message}</Text>
+            <Text color="red.500">{errors.phoneNumber.message as string}</Text>
           )}
         </GridItem>
         <GridItem>
@@ -108,7 +113,7 @@ export default function ContactForm({
             borderRadius="8px"
           />
           {errors.socialMedia && (
-            <Text color="red.500">{errors.socialMedia.message}</Text>
+            <Text color="red.500">{errors.socialMedia.message as string}</Text>
           )}{' '}
         </GridItem>
         <GridItem>
@@ -128,7 +133,7 @@ export default function ContactForm({
             borderRadius="8px"
           />
           {errors.Website && (
-            <Text color="red.500">{errors.Website.message}</Text>
+            <Text color="red.500">{errors.Website.message as string}</Text>
           )}{' '}
         </GridItem>
         <GridItem>
@@ -149,7 +154,7 @@ export default function ContactForm({
             borderRadius="8px"
           />
           {errors.Linkedin && (
-            <Text color="red.500">{errors.Linkedin.message}</Text>
+            <Text color="red.500">{errors.Linkedin.message as string}</Text>
           )}{' '}
         </GridItem>
       </Grid>
@@ -199,4 +204,5 @@ export default function ContactForm({
       )}
     </Box>
   );
-}
+};
+export default ContactForm;

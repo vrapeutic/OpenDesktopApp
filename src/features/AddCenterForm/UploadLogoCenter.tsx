@@ -13,16 +13,22 @@ import {
   ModalFooter,
   useToast,
   useDisclosure,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { Image } from "../../assets/icons/Image";
-import axios from "axios";
-import { config } from "../../config";
-import { getMe } from "../../cache";
-import { useNavigate } from "react-router-dom";
-import Congratulations from "./CongratulationsModal";
+} from '@chakra-ui/react';
+import { useState } from 'react';
+import { Image } from '../../assets/icons/Image';
+import axios from 'axios';
+import { config } from '../../config';
+import { getMe } from '../../cache';
+import { useNavigate } from 'react-router-dom';
+import Congratulations from './CongratulationsModal';
+import { TherapyFormProps } from './therapyFormInterface';
 
-export default function Uploadlogo(props) {
+interface uploadLogoProps extends TherapyFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -33,11 +39,10 @@ export default function Uploadlogo(props) {
   } = useDisclosure();
 
   const toast = useToast();
-  const [imagePreview, setImagePreview] = useState();
-  const [logo, setLogo] = useState();
-  const [allData, setAllData] = useState();
+  const [imagePreview, setImagePreview] = useState('');
+  const [logo, setLogo] = useState<File>();
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
     setLogo(file);
     const previewUrl = URL.createObjectURL(file);
@@ -45,35 +50,38 @@ export default function Uploadlogo(props) {
   };
 
   const FormonSubmit = () => {
-    setAllData(props.onSubmit({ logo }));
     SendDataToApi();
     setLoading(true);
   };
 
-  const createFormData = (socialLinks) => {
+  const createFormData = (
+    socialLinks: { link: string; link_type: string }[]
+  ) => {
     const formData = new FormData();
 
-    formData.append("name", props.formData.therapyCenterName);
-    formData.append("website", props.formData.Website);
+    formData.append('name', props.formData.therapyCenterName);
+    formData.append('website', props.formData.Website);
 
-    formData.append("tax_id", props.formData.taxID);
-    formData.append("registration_number", props.formData.registrationNumber);
-    formData.append("logo", logo);
-    formData.append("certificate", props.formData.certification);
-    formData.append("email", props.formData.Email);
-    formData.append("phone_number", props.formData.phoneNumber);
+    formData.append('tax_id', props.formData.taxID);
+    formData.append('registration_number', props.formData.registrationNumber);
+    formData.append('logo', logo);
+    formData.append('certificate', props.formData.certification);
+    formData.append('email', props.formData.Email);
+    formData.append('phone_number', props.formData.phoneNumber);
 
-    props.formData.specializationschema.forEach((specialty) =>
-      formData.append("specialty_ids[]", specialty.id)
+    props.formData.specializationschema.forEach(
+      (specialty: { id: string | Blob }) =>
+        formData.append('specialty_ids[]', specialty.id)
     );
 
-    formData.append("social_links", JSON.stringify(socialLinks));
+    formData.append('social_links', JSON.stringify(socialLinks));
 
     return formData;
   };
 
-  const postFormData = (formData) => {
-    const token = getMe().token;
+  const postFormData = (formData: FormData) => {
+    const token = (window as any).electronAPI.getPassword('token');
+
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -86,22 +94,22 @@ export default function Uploadlogo(props) {
     onOpenCongratulations();
   };
 
-  const handleError = (error) => {
+  const handleError = (error: any) => {
     props.onClose();
 
     toast({
-      title: "Error",
+      title: 'Error',
       description: error.response.data.error,
-      status: "success",
+      status: 'success',
       duration: 9000,
-      position: "top-right",
+      position: 'top-right',
     });
   };
 
   const SendDataToApi = async () => {
     const socialLinksArray = [
-      { link: props.formData.Website, link_type: "facebook" },
-      { link: props.formData.Linkedin, link_type: "twitter" },
+      { link: props.formData.Website, link_type: 'facebook' },
+      { link: props.formData.Linkedin, link_type: 'twitter' },
     ];
 
     const formData = createFormData(socialLinksArray);
@@ -118,7 +126,7 @@ export default function Uploadlogo(props) {
 
   const handleCloseModal = () => {
     onDeleteCongratulations();
-    navigate("/");
+    navigate('/');
   };
 
   return (
@@ -173,8 +181,8 @@ export default function Uploadlogo(props) {
                         type="file"
                         accept="image/png,image/jpeg"
                         name="logo"
-                        onChange={handleImageChange}
-                        style={{ display: "none" }}
+                        onChange={(e) => handleImageChange(e)}
+                        style={{ display: 'none' }}
                         hidden
                       />
                     </label>
@@ -213,7 +221,7 @@ export default function Uploadlogo(props) {
                   type="submit"
                   onClick={FormonSubmit}
                 >
-                  {loading ? "Uploading Your Data" : "Upload"}
+                  {loading ? 'Uploading Your Data' : 'Upload'}
                 </Button>
               </FormControl>
 
@@ -245,4 +253,6 @@ export default function Uploadlogo(props) {
       )}
     </>
   );
-}
+};
+
+export default Uploadlogo;

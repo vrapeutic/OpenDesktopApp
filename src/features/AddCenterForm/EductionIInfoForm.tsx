@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import {
   Box,
   Button,
@@ -13,15 +13,16 @@ import {
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Progressbar from '../../theme/components/ProgressBar';
+import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import { Image } from '../../assets/icons/Image';
+import { TherapyFormProps } from './therapyFormInterface';
 
-export default function EductionIInfoForm({
+ const EductionIInfoForm:React.FC<TherapyFormProps>=({
   onSubmit,
   nextHandler,
   backHandler,
   sliding,
-}) {
+}) => {
   const schema = joi.object({
     registrationNumber: joi.number().required().label('Registration Number'),
     taxID: joi.number().required().label('Tax ID'),
@@ -43,7 +44,6 @@ export default function EductionIInfoForm({
     handleSubmit,
     setError,
     clearErrors,
-    getValues,
     setValue,
     formState: { errors },
   } = useForm({
@@ -51,8 +51,8 @@ export default function EductionIInfoForm({
     mode: 'all',
   });
 
-  const [selectedFile, setSelectedFile] = useState('');
-  const handleCertificateChange = (event) => {
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
     const ext = file.name.split('.').pop();
     if (ext == 'pdf') {
@@ -64,8 +64,8 @@ export default function EductionIInfoForm({
     }
   };
 
-  const FormonSubmit = (data) => {
-    if (selectedFile.length < 1) {
+  const FormonSubmit = (data: { certification:File }) => {
+    if (!selectedFile) {
       setError('certification', {
         type: 'manual',
         message: 'Please upload a PDF file.',
@@ -110,7 +110,7 @@ export default function EductionIInfoForm({
             borderRadius="8px"
           />
           {errors.registrationNumber && (
-            <Text color="red.500">{errors.registrationNumber.message}</Text>
+            <Text color="red.500">{errors.registrationNumber.message as string}</Text>
           )}
         </GridItem>
         <GridItem rowSpan={2}>
@@ -143,7 +143,7 @@ export default function EductionIInfoForm({
               <Text mt="1em">Selected File: {selectedFile.name}</Text>
             )}
             {errors.certification && (
-              <Text color="red.500">{errors.certification.message}</Text>
+              <Text color="red.500">{errors.certification.message as string}</Text>
             )}
           </>
         </GridItem>
@@ -162,7 +162,7 @@ export default function EductionIInfoForm({
             mb="1em"
             borderRadius="8px"
           />
-          {errors.taxID && <Text color="red.500">{errors.taxID.message}</Text>}
+          {errors.taxID && <Text color="red.500">{errors.taxID.message as string}</Text>}
         </GridItem>
       </Grid>
 
@@ -205,3 +205,4 @@ export default function EductionIInfoForm({
     </Box>
   );
 }
+export default  EductionIInfoForm
