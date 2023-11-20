@@ -48,7 +48,6 @@ function App() {
           <Route path="Subscriptions" element={<Subscriptions />} />
           <Route path="setting" element={<Setting />} />
           <Route path="ViewCenter" element={<ViewCenter />} />
-
         </Route>
       </Routes>
       <Generalinfo />
