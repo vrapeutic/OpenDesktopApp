@@ -158,7 +158,6 @@ export default function Generalinfo() {
         </form>
       </Box>
       {Next && <Specialty userData={userData} />} */}
-      mmmmmmmmmmmmmm
     </>
   );
 }

@@ -223,7 +223,7 @@ export default function Educationinfo(props: any) {
           userData={props.userData}
         />
       )} */}
-      mmmmmmmmmmmmmm
+      
     </>
   );
 }

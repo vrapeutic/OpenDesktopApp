@@ -13,6 +13,7 @@ import Layout from './shared/Layout';
 import Subscriptions from './pages/Subscriptions';
 import Generalinfo from './pages/SignUp/Generalinfo';
 import ViewCenter from './pages/ViewCenter';
+import EditCenter from './pages/EditCenter';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -38,8 +39,11 @@ function App() {
           <Route path="Theraputicmodules" element={<Theraputicmodules />} />
           <Route path="Therapycenters" element={<Therapycenters />} />
           <Route path="Therapycenters" element={<Therapycenters />} />
+
           <Route path="Branches" element={<Branches />} />
           <Route path="Specialists" element={<Specialists />} />
+          <Route path="editcenter" element={<EditCenter />} />
+
           <Route path="Assessmenttools" element={<Assessmenttools />} />
           <Route path="Subscriptions" element={<Subscriptions />} />
           <Route path="setting" element={<Setting />} />
