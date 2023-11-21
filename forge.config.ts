@@ -10,38 +10,44 @@ import { mainConfig } from "./webpack.main.config";
 import { rendererConfig } from "./webpack.renderer.config";
 
 const config: ForgeConfig = {
-    packagerConfig: {},
-    rebuildConfig: {},
-    makers: [
-        new MakerSquirrel({}),
-        new MakerZIP({}, ["darwin"]),
-        new MakerRpm({}),
-        new MakerDeb({}),
-    ],
-    plugins: [
-        new WebpackPlugin({
-            mainConfig,
-            devContentSecurityPolicy: "connect-src 'self' * 'unsafe-eval'",
-            renderer: {
-                config: rendererConfig,
-                entryPoints: [
-                    {
-                        html: "./src/index.html",
-                        js: "./src/index.tsx",
-                        name: "main_window",
-                        preload: { js: "./src/preload.ts" },
-                    },
-                ],
-            },
-        }),
-    ],
-    publishers: [
-        new PublisherGithub({
-            repository: { owner: "vrapeutic", name: "OpenDesktopApp" },
-            authToken: process.env.GH_TOKEN,
-            draft: true,
-        }),
-    ],
+  packagerConfig: {
+    icon: "./src/assets/images/SmallVRapeutic.ico",
+  },
+  rebuildConfig: {},
+  makers: [
+    new MakerSquirrel({ iconUrl: "./src/assets/images/SmallVRapeutic.ico" }),
+    new MakerZIP({}, ["darwin"]),
+    new MakerRpm({
+      options: { icon: "./src/assets/images/SmallVRapeutic.ico" },
+    }),
+    new MakerDeb({
+      options: { icon: "./src/assets/images/SmallVRapeutic.ico" },
+    }),
+  ],
+  plugins: [
+    new WebpackPlugin({
+      mainConfig,
+      devContentSecurityPolicy: "connect-src 'self' * 'unsafe-eval'",
+      renderer: {
+        config: rendererConfig,
+        entryPoints: [
+          {
+            html: "./src/index.html",
+            js: "./src/index.tsx",
+            name: "main_window",
+            preload: { js: "./src/preload.ts" },
+          },
+        ],
+      },
+    }),
+  ],
+  publishers: [
+    new PublisherGithub({
+      repository: { owner: "vrapeutic", name: "OpenDesktopApp" },
+      authToken: process.env.GH_TOKEN,
+      draft: true,
+    }),
+  ],
 };
 
 export default config;

@@ -13,7 +13,7 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import Educationinfo from '@renderer/pages/SignUp/Educationinfo';
 import Generalinfo from '@renderer/pages/SignUp/Generalinfo';
-import Progressbar from '@renderer/theme/components/Progressbar';
+import Progressbar from '../../theme/components/ProgressBarSignup';
 import Joi from 'joi';
 import { config } from '@renderer/config';
 

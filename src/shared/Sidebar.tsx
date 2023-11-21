@@ -1,6 +1,7 @@
+import { useState, Fragment } from 'react';
 import { Flex, Image, Box, Text, Link, VStack } from '@chakra-ui/react';
 import { Link as ReachLink, useLocation } from 'react-router-dom';
-import { useState, Fragment } from 'react';
+import { Subscriptions } from '../assets/icons/Subscriptions';
 import VRapeutic from '../assets/images/VRapeutic.png';
 import { Dashboard } from '../assets/icons/Dashboard';
 import { Assessmenttools } from '../assets/icons/Assessmenttools';
@@ -98,6 +99,15 @@ export default function Sidebar() {
         />
       ),
       path: '/Assessmenttools',
+    },
+    {
+      link: 'Subscriptions',
+      icon: (
+        <Subscriptions
+          color={location.pathname === '/Subscriptions' ? '#00DEA3' : '#333333'}
+        />
+      ),
+      path: '/Subscriptions',
     },
     {
       link: 'General settings',
