@@ -12,8 +12,10 @@ import {
   Tag,
   TagLabel,
   Img,
+  Flex,
+  Text,
 } from '@chakra-ui/react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Therapycenters() {
   const [centersList, setcentersList] = useState([]);
@@ -23,7 +25,7 @@ export default function Therapycenters() {
   }, []);
 
   const token = getMe()?.token;
-const headers = {
+  const headers = {
     Authorization: `Bearer ${token}`,
   };
 
@@ -43,37 +45,47 @@ const headers = {
   console.log(centersList);
   const navigate = useNavigate();
 
-
   const handleCenterClick = (center) => {
     console.log('Clicked Center Data:', center);
-    navigate("/ViewCenter", { state: center });
-
-  
+    navigate('/ViewCenter', { state: center });
   };
   return (
-    <Table variant="simple">
+    <Table
+      variant="simple"
+      background="#FFFFFF"
+      style={{ marginLeft: 10, marginRight: 10 }}
+    >
       <Thead>
         <Tr>
-          <Th>Logo & Name</Th>
+          <Th> Name</Th>
           <Th>Specialties</Th>
           <Th>Kids</Th>
         </Tr>
       </Thead>
       <Tbody>
-
         {centersList?.map((center) => (
-
-          <Tr key={center.id} onClick={() => handleCenterClick(center)}>
-
-            <Td>
-              <Img
-                src={center?.attributes?.logo?.url}
-                alt={center?.attributes?.name}
-                boxSize="50px"
-                borderRadius="full"
-                mr={2}
-              />
-              <span>{center?.attributes?.name}</span>
+          <Tr
+            key={center.id}
+            onClick={() => handleCenterClick(center)}
+            cursor={'pointer'}
+          >
+            <Td
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Flex direction="row" gap={2}>
+                <Img
+                  src={center?.attributes?.logo?.url}
+                  alt={center?.attributes?.name}
+                  boxSize="50px"
+                  borderRadius="full"
+                  mr={2}
+                />
+                <Text>{center?.attributes?.name}</Text>
+              </Flex>
             </Td>
             <Td>
               {center?.attributes?.specialties?.map((specialty) => (
@@ -83,7 +95,6 @@ const headers = {
               ))}
             </Td>
             <Td>{center?.attributes?.children_count}</Td>
-
           </Tr>
         ))}
       </Tbody>

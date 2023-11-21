@@ -65,10 +65,12 @@ import {
   TagLabel,
   Grid,
   GridItem,
+  Divider,
 } from '@chakra-ui/react';
 import { AiOutlineHeart, AiOutlineExclamationCircle } from 'react-icons/ai';
 import { BsTelephoneX } from 'react-icons/bs';
 import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { getMe } from '@renderer/cache';
 
 interface ProductCardProps {
   id: number;
@@ -96,6 +98,16 @@ const productsList: ProductCardProps[] = [
 
 const CardWithLogo = (centerData) => {
   console.log(centerData);
+
+  const facebookLink =
+    centerData?.centerData?.attributes.center_social_links.find(
+      (link) => link.link_type === 'facebook'
+    );
+  const linkedinLink =
+    centerData?.centerData?.attributes.center_social_links.find(
+      (link) => link.link_type === 'twitter'
+    );
+
   return (
     <Grid
       templateColumns="repeat(8, 1fr) repeat(2, 1fr) repeat(2, 1fr)"
@@ -103,102 +115,63 @@ const CardWithLogo = (centerData) => {
       background="#FFFFFF"
     >
       <GridItem colSpan={8} p={4}>
-        <Container maxW="7xl" p={{ base: 5, md: 12 }} margin="0 auto">
-          {/* <VStack spacing={4}> */}
-          {productsList.map((product, index) => (
-            // <Flex
-            //   key={index}
-            //   justify="space-between"
-            //   w="100%"
-            //   mb={{ base: 4, md: 8 }}
-            // >
+        {productsList.map((product, index) => (
+          <Stack
+            spacing={{ base: 0, md: 4 }}
+            direction={{ base: 'column', md: 'row' }}
+            p={2}
+            overflow="hidden"
+            pos="relative"
+          >
+            <Flex ml="0 !important">
+              <Image
+                rounded="md"
+                w={{ base: '100%', md: '18rem' }}
+                h="auto"
+                objectFit="cover"
+                src={centerData?.centerData.attributes?.logo?.url}
+                alt="product image"
+              />
+            </Flex>
             <Stack
-              spacing={{ base: 0, md: 4 }}
-              direction={{ base: 'column', md: 'row' }}
-              border="1px solid"
-              borderColor="gray.400"
-              p={2}
-              // rounded="md"
-              // w={{ base: 'auto', md: '2xl' }}
-              overflow="hidden"
-              pos="relative"
+              direction="column"
+              spacing={2}
+              w="100%"
+              mt={{ base: '5px !important', sm: 0 }}
             >
-              <Flex ml="0 !important">
-                <Image
-                  rounded="md"
-                  w={{ base: '100%', md: '18rem' }}
-                  h="auto"
-                  objectFit="cover"
-                  src={centerData?.centerData.attributes?.logo?.url}
-                  alt="product image"
-                />
+              <Flex justify="space-between">
+                <chakra.h3
+                  fontSize={{ base: 'lg', md: 'xl' }}
+                  fontWeight="bold"
+                >
+                  {centerData?.centerData.attributes?.name}
+                </chakra.h3>
+              </Flex>
+
+              <Flex color="gray.500">
+                {centerData?.centerData?.attributes?.specialties?.map(
+                  (specialty) => (
+                    <Tag key={specialty.id} size="sm" colorScheme="gray" mr={1}>
+                      <TagLabel>{specialty?.name}</TagLabel>{' '}
+                    </Tag>
+                  )
+                )}
               </Flex>
               <Stack
-                direction="column"
-                spacing={2}
-                w="100%"
-                mt={{ base: '5px !important', sm: 0 }}
+                direction={{ base: 'column-reverse', sm: 'row' }}
+                justify="space-between"
+                alignItems={{ base: 'flex-start', sm: 'center' }}
               >
-                <Flex justify="space-between">
-                  <chakra.h3
-                    fontSize={{ base: 'lg', md: 'xl' }}
-                    fontWeight="bold"
-                  >
-                    {centerData?.centerData.attributes?.name}
-                  </chakra.h3>
-                  <chakra.h3
-                    fontSize={{ base: 'lg', md: 'xl' }}
-                    fontWeight="bold"
-                  >
-                    {product.price}
-                  </chakra.h3>
-                </Flex>
-                <Box>
-                  <Text fontSize="lg" fontWeight="500">
-                    {product.location}
-                  </Text>
-                </Box>
-                <Flex color="gray.500">
-                  {centerData?.centerData?.attributes?.specialties?.map(
-                    (specialty) => (
-                      <Tag
-                        key={specialty.id}
-                        size="sm"
-                        colorScheme="gray"
-                        mr={1}
-                      >
-                        <TagLabel>{specialty?.name}</TagLabel>{' '}
-                      </Tag>
-                    )
-                  )}
-                </Flex>
-                <Stack
-                  direction={{ base: 'column-reverse', sm: 'row' }}
-                  justify="space-between"
-                  alignItems={{ base: 'flex-start', sm: 'center' }}
-                >
-                  <Text fontSize="sm" mt={{ base: 1, sm: 0 }}>
-                    Ceo : {product.updated_at}
-                  </Text>
-                  <Stack direction="row" spacing={1} mb="0 !important">
-                    <IconButton>
-                      <Icon as={AiOutlineHeart} w={4} h={4} />
-                    </IconButton>
-                    <IconButton spacing={2} bg="green.500" color="white">
-                      <Icon as={BsTelephoneX} w={4} h={4} />
-                      <Text fontSize="sm">Show Phone no.</Text>
-                    </IconButton>
-                  </Stack>
-                </Stack>
+                <Text fontSize="sm" mt={{ base: 1, sm: 0 }}>
+                  Ceo : Mostafa Elzohry
+                </Text>
               </Stack>
             </Stack>
-            // </Flex>
-          ))}
-          {/* </VStack> */}
-        </Container>
+          </Stack>
+        ))}
       </GridItem>
 
-      <GridItem colSpan={2} p={4}>
+      <GridItem colSpan={2}>
         <Text>Contact us</Text>
         <Text>Email: {centerData?.centerData.attributes?.email}</Text>
         <Text>Cal : {centerData?.centerData.attributes?.phone_number}</Text>
@@ -215,8 +188,7 @@ const CardWithLogo = (centerData) => {
           </IconButton>
         </Flex>
       </GridItem>
-
-      <GridItem colSpan={2} p={4}>
+      <GridItem colSpan={2}>
         <Text>Tax ID : {centerData?.centerData.attributes?.tax_id}</Text>
       </GridItem>
     </Grid>
