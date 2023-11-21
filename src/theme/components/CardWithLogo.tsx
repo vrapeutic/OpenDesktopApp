@@ -68,6 +68,7 @@ import {
 } from '@chakra-ui/react';
 import { AiOutlineHeart, AiOutlineExclamationCircle } from 'react-icons/ai';
 import { BsTelephoneX } from 'react-icons/bs';
+import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 interface ProductCardProps {
   id: number;
@@ -104,107 +105,119 @@ const CardWithLogo = (centerData) => {
       <GridItem colSpan={8} p={4}>
         <Container maxW="7xl" p={{ base: 5, md: 12 }} margin="0 auto">
           {/* <VStack spacing={4}> */}
-            {productsList.map((product, index) => (
-              // <Flex
-              //   key={index}
-              //   justify="space-between"
-              //   w="100%"
-              //   mb={{ base: 4, md: 8 }}
-              // >
-                <Stack
-                  spacing={{ base: 0, md: 4 }}
-                  direction={{ base: 'column', md: 'row' }}
-                  border="1px solid"
-                  borderColor="gray.400"
-                  p={2}
-                  // rounded="md"
-                  // w={{ base: 'auto', md: '2xl' }}
-                  overflow="hidden"
-                  pos="relative"
-                >
-                  <Flex ml="0 !important">
-                    <Image
-                      rounded="md"
-                      w={{ base: '100%', md: '18rem' }}
-                      h="auto"
-                      objectFit="cover"
-                      src={centerData?.centerData.attributes?.logo?.url}
-                      alt="product image"
-                    />
-                  </Flex>
-                  <Stack
-                    direction="column"
-                    spacing={2}
-                    w="100%"
-                    mt={{ base: '5px !important', sm: 0 }}
+          {productsList.map((product, index) => (
+            // <Flex
+            //   key={index}
+            //   justify="space-between"
+            //   w="100%"
+            //   mb={{ base: 4, md: 8 }}
+            // >
+            <Stack
+              spacing={{ base: 0, md: 4 }}
+              direction={{ base: 'column', md: 'row' }}
+              border="1px solid"
+              borderColor="gray.400"
+              p={2}
+              // rounded="md"
+              // w={{ base: 'auto', md: '2xl' }}
+              overflow="hidden"
+              pos="relative"
+            >
+              <Flex ml="0 !important">
+                <Image
+                  rounded="md"
+                  w={{ base: '100%', md: '18rem' }}
+                  h="auto"
+                  objectFit="cover"
+                  src={centerData?.centerData.attributes?.logo?.url}
+                  alt="product image"
+                />
+              </Flex>
+              <Stack
+                direction="column"
+                spacing={2}
+                w="100%"
+                mt={{ base: '5px !important', sm: 0 }}
+              >
+                <Flex justify="space-between">
+                  <chakra.h3
+                    fontSize={{ base: 'lg', md: 'xl' }}
+                    fontWeight="bold"
                   >
-                    <Flex justify="space-between">
-                      <chakra.h3
-                        fontSize={{ base: 'lg', md: 'xl' }}
-                        fontWeight="bold"
+                    {centerData?.centerData.attributes?.name}
+                  </chakra.h3>
+                  <chakra.h3
+                    fontSize={{ base: 'lg', md: 'xl' }}
+                    fontWeight="bold"
+                  >
+                    {product.price}
+                  </chakra.h3>
+                </Flex>
+                <Box>
+                  <Text fontSize="lg" fontWeight="500">
+                    {product.location}
+                  </Text>
+                </Box>
+                <Flex color="gray.500">
+                  {centerData?.centerData?.attributes?.specialties?.map(
+                    (specialty) => (
+                      <Tag
+                        key={specialty.id}
+                        size="sm"
+                        colorScheme="gray"
+                        mr={1}
                       >
-                        {centerData?.centerData.attributes?.name}
-                      </chakra.h3>
-                      <chakra.h3
-                        fontSize={{ base: 'lg', md: 'xl' }}
-                        fontWeight="bold"
-                      >
-                        {product.price}
-                      </chakra.h3>
-                    </Flex>
-                    <Box>
-                      <Text fontSize="lg" fontWeight="500">
-                        {product.location}
-                      </Text>
-                    </Box>
-                    <Flex color="gray.500">
-                      {centerData?.centerData?.attributes?.specialties?.map(
-                        (specialty) => (
-                          <Tag
-                            key={specialty.id}
-                            size="sm"
-                            colorScheme="gray"
-                            mr={1}
-                          >
-                            <TagLabel>{specialty?.name}</TagLabel>{' '}
-                          </Tag>
-                        )
-                      )}
-                    </Flex>
-                    <Stack
-                      direction={{ base: 'column-reverse', sm: 'row' }}
-                      justify="space-between"
-                      alignItems={{ base: 'flex-start', sm: 'center' }}
-                    >
-                      <Text fontSize="sm" mt={{ base: 1, sm: 0 }}>
-                        Ceo : {product.updated_at}
-                      </Text>
-                      <Stack direction="row" spacing={1} mb="0 !important">
-                        <IconButton>
-                          <Icon as={AiOutlineHeart} w={4} h={4} />
-                        </IconButton>
-                        <IconButton spacing={2} bg="green.500" color="white">
-                          <Icon as={BsTelephoneX} w={4} h={4} />
-                          <Text fontSize="sm">Show Phone no.</Text>
-                        </IconButton>
-                      </Stack>
-                    </Stack>
+                        <TagLabel>{specialty?.name}</TagLabel>{' '}
+                      </Tag>
+                    )
+                  )}
+                </Flex>
+                <Stack
+                  direction={{ base: 'column-reverse', sm: 'row' }}
+                  justify="space-between"
+                  alignItems={{ base: 'flex-start', sm: 'center' }}
+                >
+                  <Text fontSize="sm" mt={{ base: 1, sm: 0 }}>
+                    Ceo : {product.updated_at}
+                  </Text>
+                  <Stack direction="row" spacing={1} mb="0 !important">
+                    <IconButton>
+                      <Icon as={AiOutlineHeart} w={4} h={4} />
+                    </IconButton>
+                    <IconButton spacing={2} bg="green.500" color="white">
+                      <Icon as={BsTelephoneX} w={4} h={4} />
+                      <Text fontSize="sm">Show Phone no.</Text>
+                    </IconButton>
                   </Stack>
                 </Stack>
-              // </Flex>
-            ))}
+              </Stack>
+            </Stack>
+            // </Flex>
+          ))}
           {/* </VStack> */}
         </Container>
       </GridItem>
 
       <GridItem colSpan={2} p={4}>
-        Contact us
+        <Text>Contact us</Text>
         <Text>Email: {centerData?.centerData.attributes?.email}</Text>
         <Text>Cal : {centerData?.centerData.attributes?.phone_number}</Text>
+
+        <Flex direction="row" gap={2}>
+          <IconButton>
+            <Icon as={FaFacebook} w={4} h={4} />
+          </IconButton>
+          <IconButton>
+            <Icon as={FaLinkedin} w={4} h={4} />
+          </IconButton>
+          <IconButton>
+            <Icon as={FaTwitter} w={4} h={4} />
+          </IconButton>
+        </Flex>
       </GridItem>
 
       <GridItem colSpan={2} p={4}>
-        Tax iD
+        <Text>Tax ID : {centerData?.centerData.attributes?.tax_id}</Text>
       </GridItem>
     </Grid>
   );

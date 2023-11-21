@@ -13,12 +13,10 @@ const ViewCenter = () => {
     }
   }, [centerData]);
 
-  // console.log(centerData?.attributes?.logo?.url)
   return (
     <>
-      <HeaderWithButton />
-      <CardWithLogo centerData={centerData}
-/>
+      <HeaderWithButton  centerData={centerData} />
+      <CardWithLogo centerData={centerData} />
       <TabsViewCenter />
     </>
   );

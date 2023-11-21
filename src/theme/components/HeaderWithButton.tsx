@@ -2,7 +2,7 @@ import { HStack, Text, Grid, Button } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 
-export default function HeaderWithButton() {
+export default function HeaderWithButton(centerData) {
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -21,11 +21,11 @@ export default function HeaderWithButton() {
           ml="24px"
           mt="55px"
           padding="12px 24px"
-          bg="#F5B50E"
+          bg="#4AA6CA"
           borderRadius="8px"
           fontSize="14px"
           fontFamily="Roboto"
-          onClick={() => navigate('/editcenter')}
+          onClick={() => navigate('/editcenter', { state: centerData })}
           boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
         >
           Edit Center

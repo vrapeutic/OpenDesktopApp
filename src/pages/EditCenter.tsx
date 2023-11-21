@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -8,36 +8,41 @@ import {
   GridItem,
   HStack,
   Input,
-  Select,
   Stack,
   Text,
 } from '@chakra-ui/react';
+import Select from 'react-select';
+
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import makeAnimated from 'react-select/animated';
+import { Image } from '../assets/icons/Image';
+import { serialize } from 'object-to-formdata';
+import { getMe } from '@renderer/cache';
+import { config } from '../config';
 
 const EditCenter = () => {
+  const location = useLocation();
+  const centerData = location.state;
+  console.log(centerData);
+
   const schema = joi.object({
-    therapyCenterName: joi
-      .string()
-      .min(3)
-      .max(30)
-      .required()
-      .label('therapyCenterName'),
+    name: joi.string().min(3).max(30).required().label('name'),
     completeAddress: joi.string().required(),
-    Email: joi
+    email: joi
       .string()
       .email({ tlds: { allow: false } })
       .required(),
     managerName: joi.string().min(3).max(30).required().label('managerName'),
     specialtyInformation: joi.string().required().label('SpecialtyInformation'),
-    specializationschema: joi.array().required().label('specializationschema'),
-    registrationNumber: joi.number().required().label('Registration Number'),
-    taxID: joi.number().required().label('Tax ID'),
-    certification: joi.required().custom((value, helpers) => {
+    specialty_ids: joi.array().required().label('specialty_ids'),
+    registration_number: joi.number().required().label('registration_number'),
+    tax_id: joi.number().required().label('tax_id'),
+    certificate: joi.required().custom((value, helpers) => {
       if (value) {
         const ext = value.name.split('.').pop().toLowerCase();
         if (ext === 'pdf') {
@@ -48,7 +53,7 @@ const EditCenter = () => {
       }
       return value;
     }),
-    phoneNumber: joi.number().required().label('phoneNumber'),
+    phone_number: joi.number().required().label('phone_number'),
     socialMedia: joi
       .string()
       .required()
@@ -75,8 +80,25 @@ const EditCenter = () => {
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
+    defaultValues: {
+      name: centerData?.centerData.attributes?.name ?? '',
+      email: centerData?.centerData.attributes?.email ?? '',
+      phone_number: centerData?.centerData.attributes?.phone_number ?? null,
+      website: centerData?.centerData?.attributes?.website ?? '',
+      specialty_ids: centerData?.centerData?.attributes?.specialty_ids ?? [],
+      tax_id: centerData?.centerData?.attributes?.tax_id ?? null,
+      registration_number: centerData?.centerData?.attributes?.registration_number ?? null,
+      logo: centerData?.centerData?.attributes?.logo.url ?? null,
+      certificate: centerData?.centerData?.attributes?.certificate ?? null,
+      completeAddress: centerData?.centerData?.attributes?.completeAddress ?? '',
+      managerName: centerData?.centerData?.attributes?.managerName ?? '',
+      description: centerData?.centerData?.attributes?.description ?? '',
+      Linkedin: centerData?.centerData?.attributes?.Linkedin ?? '',
+      socialMedia: centerData?.centerData.attributes.socialMedia ?? '',
+    },
   });
-  const [specialistslist, setspecialistslist] = useState([]);
+  const [specialistsList, setSpecialistsList] = useState([]);
+  const animatedComponents = makeAnimated();
 
   useEffect(() => {
     getSpecialists();
@@ -87,57 +109,103 @@ const EditCenter = () => {
       const response = await axios.get(
         `http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/specialties`
       );
-      setspecialistslist(response.data);
+      setSpecialistsList(response.data);
     } catch (error) {
       console.error(error);
     }
   };
-  const handleSpecializations = (options) => {
-    setValue('specializationschema', [...options]);
+  const [imagePreview, setImagePreview] = useState(
+    centerData?.centerData.attributes?.logo?.url
+  );
+  const [logo, setLogo] = useState<File>();
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files[0];
+    setLogo(file);
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
   };
-  const specialties = specialistslist.map((speciality) => ({
+  const handleSpecializations = (options: any) => {
+    setValue('specialty_ids', [...options]);
+  };
+  const specialties = specialistsList.map((speciality) => ({
     id: speciality.id,
     label: speciality.name,
     value: speciality.id,
   }));
-  const [selectedFile, setSelectedFile] = useState();
-  const handleCertificateChange = (event) => {
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
     const ext = file.name.split('.').pop();
     if (ext === 'pdf') {
       setSelectedFile(file);
-      setValue('certification', file);
-      clearErrors('certification');
+      setValue('certificate', file);
+      clearErrors('certificate');
     } else {
-      setError('certification', { message: 'Please upload a PDF file.' });
+      setValue('certificate', null);
+      setSelectedFile(null);
+      setError('certificate', { message: 'Please upload a PDF file.' });
     }
   };
-  const FormOnSubmit = () => {};
 
   const navigate = useNavigate();
 
   const goBack = () => {
     navigate(-1);
   };
+  const EditFormData = (formData: FormData) => {
+    const token = getMe().token;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    return axios.put(
+      `${config.apiURL}/api/v1/centers/${centerData.attributes.id}`,
+      formData,
+      { headers }
+    );
+  };
+  const FormOnSubmit = async (data: any) => {
+    console.log(data);
+    const formData = serialize(
+      {
+        data,
+        logo,
+        social_links: [
+          { link: data.socialMedia, link_type: 'facebook' },
+          { link: data.Linkedin, link_type: 'twitter' },
+        ],
+        latitude: 33.3,
+        longitude: 33.3,
+      },
+      { indices: true }
+    );
+    try {
+      await EditFormData(formData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  console.log(centerData);
   return (
-    <Box
-      bg="#F5F5F5"
-      p="5.875em 2.625em 5.875em 2.375em"
-      as="form"
-      onSubmit={handleSubmit(FormOnSubmit)}
-    >
-        <HStack>
-          <ArrowBackIcon onClick={goBack}/>
-          <Text> Therapy Center</Text>
-        </HStack>
-      <Box bg="#FFFFFF" borderRadius={10} p={24}>
-        <Grid m="0 1.5em 0em 1.5em">
+    <Box bg="#F5F5F5" p="24px" as="form" onSubmit={handleSubmit(FormOnSubmit)}>
+      <HStack onClick={goBack}>
+        <ArrowBackIcon />
+        <Text> Therapy Center</Text>
+      </HStack>
+      <Box bg="#FFFFFF" borderRadius={10} p={'24px'}>
+        <Grid>
           <Text fontSize={20} mt={0}>
             General info
           </Text>
-          <HStack mb={32}>
-            <Box width={197} height={197}>
-              <img src="images/brandLogo.png" alt="brand_logo" />
+          <HStack mb={'32px'}>
+            <Box
+              width={197}
+              height={197}
+              alignItems={'center'}
+              display={'flex'}
+            >
+              <img src={imagePreview} alt="brand_logo" />
             </Box>
             <Button
               w={153}
@@ -146,10 +214,17 @@ const EditCenter = () => {
               border="none"
               borderRadius="8px"
               backgroundColor="#4AA6CA"
-              variant="solid"
               cursor="pointer"
             >
               Change logo
+              <Input
+                type="file"
+                accept="image/png,image/jpeg"
+                name="logo"
+                onChange={(e) => handleImageChange(e)}
+                style={{ display: 'none' }}
+                hidden
+              />
             </Button>
           </HStack>
 
@@ -160,8 +235,8 @@ const EditCenter = () => {
               </FormLabel>
 
               <Input
-                {...register('therapyCenterName')}
-                id="therapyCenterName"
+                {...register('name')}
+                id="name"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
                 border="1px solid #E8E8E8"
@@ -172,16 +247,18 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.therapyCenterName && (
-                <Text color="red.500">{errors.therapyCenterName.message}</Text>
+              {errors.name && (
+                <Text color="red.500">{errors.name.message as string}</Text>
               )}
             </GridItem>
             <GridItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Email
+              </FormLabel>
 
               <Input
-                {...register('Email')}
-                id="Email"
+                {...register('email')}
+                id="email"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
                 border="1px solid #E8E8E8"
@@ -192,8 +269,8 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.Email && (
-                <Text color="red.500">{errors.Email.message}</Text>
+              {errors.email && (
+                <Text color="red.500">{errors.email.message as string}</Text>
               )}
             </GridItem>
             <GridItem>
@@ -215,12 +292,16 @@ const EditCenter = () => {
                 height={'38px'}
               />
               {errors.completeAddress && (
-                <Text color="red.500">{errors.completeAddress.message}</Text>
+                <Text color="red.500">
+                  {errors.completeAddress.message as string}
+                </Text>
               )}
             </GridItem>
 
             <GridItem>
-              <FormLabel color="#15134B">manager Name</FormLabel>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                manager Name
+              </FormLabel>
 
               <Input
                 {...register('managerName')}
@@ -236,52 +317,13 @@ const EditCenter = () => {
                 height={'38px'}
               />
               {errors.managerName && (
-                <Text color="red.500">{errors.managerName.message}</Text>
+                <Text color="red.500">
+                  {errors.managerName.message as string}
+                </Text>
               )}
             </GridItem>
           </Grid>
-          <Grid>
-            <GridItem>
-              <FormLabel color="#15134B">bio</FormLabel>
-              <Input
-                {...register('bio')}
-                id="bio"
-                _hover={{ border: '1px solid #4965CA' }}
-                _focus={{ border: '1px solid #4965CA' }}
-                border="1px solid #E8E8E8"
-                type="text"
-                mt="0.75em"
-                mb="1em"
-                borderRadius="8px"
-                width={'100%'}
-                height={'78px'}
-                multiple
-              />
-              {errors.bio && <Text color="red.500">{errors.bio.message}</Text>}
-            </GridItem>
-          </Grid>
-          <Grid>
-            <GridItem>
-              <FormLabel color="#15134B">description</FormLabel>
-              <Input
-                {...register('description')}
-                id="description"
-                _hover={{ border: '1px solid #4965CA' }}
-                _focus={{ border: '1px solid #4965CA' }}
-                border="1px solid #E8E8E8"
-                type="text"
-                mt="0.75em"
-                mb="1em"
-                borderRadius="8px"
-                width={'100%'}
-                height={'78px'}
-                multiple
-              />
-              {errors.description && (
-                <Text color="red.500">{errors.description.message}</Text>
-              )}
-            </GridItem>
-          </Grid>
+
           <Text fontSize={20} mt={0}>
             Specialty
           </Text>
@@ -321,7 +363,9 @@ const EditCenter = () => {
                 multiple
               />
               {errors.description && (
-                <Text color="red.500">{errors.description.message}</Text>
+                <Text color="red.500">
+                  {errors.description.message as string}
+                </Text>
               )}
             </GridItem>
           </Grid>
@@ -346,15 +390,18 @@ const EditCenter = () => {
                 (like tags, for example, ADHD, Autism, etc.)
               </FormLabel>
               <Select
-                {...register('specializationschema')}
+                {...register('specialty_ids')}
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                isMulti
                 options={specialties}
-                id="specializationschema"
+                id="specialty_ids"
+                name="specialty_ids"
                 onChange={handleSpecializations}
-                size="lg"
               />
-              {errors.specializationschema && (
+              {errors.specialty_ids && (
                 <Text color="red.500">
-                  {errors.specializationschema.message}
+                  {errors.specialty_ids.message as string}
                 </Text>
               )}
             </GridItem>
@@ -368,8 +415,8 @@ const EditCenter = () => {
               <FormLabel color="#15134B">Registration Number</FormLabel>
 
               <Input
-                {...register('registrationNumber')}
-                id="registrationNumber"
+                {...register('registration_number')}
+                id="registration_number"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
                 border="1px solid #E8E8E8"
@@ -380,15 +427,17 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.registrationNumber && (
-                <Text color="red.500">{errors.registrationNumber.message}</Text>
+              {errors.registration_number && (
+                <Text color="red.500">
+                  {errors.registration_number.message as string}
+                </Text>
               )}
             </GridItem>
             <GridItem>
               <FormLabel color="#15134B">Tax ID</FormLabel>
               <Input
-                {...register('taxID')}
-                id="taxID"
+                {...register('tax_id')}
+                id="tax_id"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
                 border="1px solid #E8E8E8"
@@ -399,8 +448,8 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.Email && (
-                <Text color="red.500">{errors.Email.message}</Text>
+              {errors.tax_id && (
+                <Text color="red.500">{errors.tax_id.message as string}</Text>
               )}
             </GridItem>
           </Grid>
@@ -419,10 +468,10 @@ const EditCenter = () => {
                     bg="#FFFFFF"
                   >
                     <label>
-                      <ArrowBackIcon />
+                      <Image />
                       <Input
-                        {...register('certification')}
-                        id="certification"
+                        {...register('certificate')}
+                        id="certificate"
                         type="file"
                         accept="application/pdf" // Update this line to accept PDF files
                         onChange={(e) => handleCertificateChange(e)}
@@ -434,8 +483,10 @@ const EditCenter = () => {
                 {selectedFile && (
                   <Text mt="1em">Selected File: {selectedFile.name}</Text>
                 )}
-                {errors.certification && (
-                  <Text color="red.500">{errors.certification.message}</Text>
+                {errors.certificate && (
+                  <Text color="red.500">
+                    {errors.certificate.message as string}
+                  </Text>
                 )}
               </>
             </GridItem>
@@ -449,8 +500,8 @@ const EditCenter = () => {
                 Phone number 1
               </FormLabel>
               <Input
-                {...register('phoneNumber')}
-                id="phoneNumber"
+                {...register('phone_number')}
+                id="phone_number"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
                 border="1px solid #E8E8E8"
@@ -461,8 +512,10 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.phoneNumber && (
-                <Text color="red.500">{errors.phoneNumber.message}</Text>
+              {errors.phone_number && (
+                <Text color="red.500">
+                  {errors.phone_number.message as string}
+                </Text>
               )}
             </GridItem>
             <GridItem>
@@ -470,8 +523,8 @@ const EditCenter = () => {
                 Social media
               </FormLabel>
               <Input
-                {...register('socialMedia')}
-                id="socialMedia"
+                {...register('social_links')}
+                id="social_links"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
                 border="1px solid #E8E8E8"
@@ -482,8 +535,10 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.socialMedia && (
-                <Text color="red.500">{errors.socialMedia.message}</Text>
+              {errors.social_links && (
+                <Text color="red.500">
+                  {errors.social_links.message as string}
+                </Text>
               )}{' '}
             </GridItem>
             <GridItem>
@@ -491,8 +546,8 @@ const EditCenter = () => {
                 Website
               </FormLabel>
               <Input
-                {...register('Website')}
-                id="Website"
+                {...register('website')}
+                id="website"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
                 border="1px solid #E8E8E8"
@@ -503,8 +558,8 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.Website && (
-                <Text color="red.500">{errors.Website.message}</Text>
+              {errors.website && (
+                <Text color="red.500">{errors.website.message as string}</Text>
               )}{' '}
             </GridItem>
             <GridItem>
@@ -525,7 +580,7 @@ const EditCenter = () => {
                 height={'38px'}
               />
               {errors.Linkedin && (
-                <Text color="red.500">{errors.Linkedin.message}</Text>
+                <Text color="red.500">{errors.Linkedin.message as string}</Text>
               )}{' '}
             </GridItem>
           </Grid>
@@ -539,7 +594,7 @@ const EditCenter = () => {
               backgroundColor="#00DEA3"
               variant="solid"
               cursor="pointer"
-              marginInlineEnd={20}
+              type="submit"
             >
               Save change
             </Button>
@@ -552,6 +607,7 @@ const EditCenter = () => {
               cursor="pointer"
               color="#DD6969"
               variant="outline"
+              onClick={goBack}
             >
               Discard
             </Button>
