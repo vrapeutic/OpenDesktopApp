@@ -216,7 +216,7 @@ export default function Educationinfo(props: any) {
 
       {Back && <Specialty />}
 
-      {onOpen && (
+      {isOpen && (
         <Uploadlogo
           isOpen={isOpen}
           onClose={onClose}
