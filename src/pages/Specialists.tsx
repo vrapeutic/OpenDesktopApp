@@ -1,11 +1,24 @@
 import React, { useState, useEffect} from 'react'
 import { Button, Card, Flex, Grid, GridItem, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text,useDisclosure} from '@chakra-ui/react'
 import { config } from '../config';
+import Joi from 'joi';
 
 export default function Specialists(props: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState({
+    email: "",
+  });
   const [doctors, setDoctors] = useState([]);
+  const [errors, setErrors] = useState({
+    email: null,
+  });
+
+  const schema = Joi.object().keys({
+    email: Joi.string().email({
+      minDomainSegments: 2,
+      tlds: { allow: ['com', 'net', 'in', 'co'] },
+    }),
+  });
  
   useEffect(()=>{
     (async () => {
@@ -27,26 +40,34 @@ export default function Specialists(props: any) {
 
   const handleSubmit = async (event: any) =>{
     event.preventDefault();
-    const token = await (window as any).electronAPI.getPassword("token");
-    const data = new FormData();
-    data.append('email', email);
-    console.log(data.get("email"));
-  
-   fetch(`${config.apiURL}/api/v1/centers/3/invite_doctor`,{
-    method: 'POST',
-    body: data,
-    redirect: 'follow',
-    headers: {'Authorization': `Bearer ${token}`}
-    })
-   .then(response => response.text())
-   .then(result => {
-              console.log(result);
-              // console.log(centers);
-              })
-   .catch(error => console.log('error', error)); 
+    const { error } = schema.validate(email, { abortEarly: false });
+    console.log(error);
 
-   onClose();
-   }
+    if (error) {
+      const validationErrors: any = {};
+      error.details.forEach((detail) => {
+        validationErrors[detail.path[0]] = detail.message;
+      });
+      setErrors(validationErrors);
+      console.log(validationErrors);
+    } else {
+      console.log('form is valid');
+      const token = await (window as any).electronAPI.getPassword("token");
+      const data = new FormData();
+      data.append('email', email.email);
+      fetch(`${config.apiURL}/api/v1/centers/3/invite_doctor`,{
+        method: 'POST',
+        body: data,
+        redirect: 'follow',
+        headers: {'Authorization': `Bearer ${token}`}
+        })
+      .then(response => response.text())
+      .then(result => {console.log(result);})
+      .catch(error => console.log('error', error)); 
+       
+      onClose();
+    
+   }}
 
   return (
     <>
@@ -172,9 +193,11 @@ export default function Specialists(props: any) {
             <ModalBody>
                 <Input 
                    type="email"
-                   onChange={(e) => setEmail(e.target.value)}
+                   name="email"
+                   onChange={(e) => setEmail({email:e.target.value})}
                    />
             </ModalBody>
+            <Text fontSize="16px" color="red" ml="30px">{errors.email}</Text>
             <ModalFooter>
               <Button 
                   type="submit"
