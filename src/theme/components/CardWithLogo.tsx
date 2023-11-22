@@ -1,14 +1,31 @@
 import { PropsWithChildren } from 'react';
-import { chakra, Stack, Flex, Text, Image, Icon, StackProps, Tag, TagLabel, Grid, GridItem, Link, HStack } from '@chakra-ui/react';
+import {
+  chakra,
+  Stack,
+  Flex,
+  Text,
+  Image,
+  Icon,
+  StackProps,
+  Tag,
+  TagLabel,
+  Grid,
+  GridItem,
+  Link,
+  HStack,
+  Box,
+} from '@chakra-ui/react';
 import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
-  const facebookLink = centerData?.centerData?.attributes?.center_social_links.find(
-    (link: { link_type: string }) => link.link_type === 'facebook'
-  );
-  const linkedinLink = centerData?.centerData?.attributes?.center_social_links.find(
-    (link: { link_type: string }) => link.link_type === 'linkedin'
-  );
+  const facebookLink =
+    centerData?.centerData?.attributes?.center_social_links.find(
+      (link: { link_type: string }) => link.link_type === 'facebook'
+    );
+  const linkedinLink =
+    centerData?.centerData?.attributes?.center_social_links.find(
+      (link: { link_type: string }) => link.link_type === 'twitter'
+    );
 
   return (
     <Grid
@@ -24,16 +41,12 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
           overflow="hidden"
           pos="relative"
         >
-          <Flex>
-            <Image
-              rounded="md"
-              w={{ base: '100%', md: '18rem' }}
-              h="auto"
-              objectFit="cover"
+          <Box width={197} height={197} alignItems={'center'} display={'flex'}>
+            <img
               src={centerData?.centerData.attributes?.logo?.url}
-              alt="product image"
+              alt={centerData?.centerData.attributes?.name}
             />
-          </Flex>
+          </Box>
           <Stack
             direction="column"
             spacing={2}

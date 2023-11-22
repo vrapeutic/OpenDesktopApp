@@ -14,6 +14,7 @@ import {
   Img,
   Flex,
   Text,
+  Box,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
@@ -84,13 +85,15 @@ export default function Therapycenters() {
           >
             <Td>
               <Flex direction="row" gap={2}>
-                <Img
-                  src={center?.attributes?.logo?.url}
-                  alt={center?.attributes?.name}
-                  boxSize="50px"
-                  borderRadius="full"
-                  mr={2}
-                />
+              <Box
+                width={197}
+                height={197}
+                alignItems={'center'}
+                display={'flex'}
+              >
+                <img   src={center?.attributes?.logo?.url}  alt={center?.attributes?.name} />
+              </Box>
+               
                 <Text
                   style={{
                     display: 'flex',
