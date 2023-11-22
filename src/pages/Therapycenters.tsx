@@ -1,4 +1,4 @@
-import { getMe } from '@renderer/cache';
+import { getMe } from '../cache';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { config } from '../config';
@@ -45,10 +45,12 @@ export default function Therapycenters() {
   console.log(centersList);
   const navigate = useNavigate();
 
-  const handleCenterClick = (center) => {
+  const handleCenterClick = (center : object) => {
     console.log('Clicked Center Data:', center);
     navigate('/ViewCenter', { state: center });
   };
+
+
   return (
     <Table
       variant="simple"
@@ -69,13 +71,7 @@ export default function Therapycenters() {
             onClick={() => handleCenterClick(center)}
             cursor={'pointer'}
           >
-            <Td
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+            <Td>
               <Flex direction="row" gap={2}>
                 <Img
                   src={center?.attributes?.logo?.url}
@@ -84,11 +80,19 @@ export default function Therapycenters() {
                   borderRadius="full"
                   mr={2}
                 />
-                <Text>{center?.attributes?.name}</Text>
+                <Text
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  {center?.attributes?.name}
+                </Text>
               </Flex>
             </Td>
             <Td>
-              {center?.attributes?.specialties?.map((specialty) => (
+              {center?.attributes?.specialties?.map((specialty :object) => (
                 <Tag key={specialty.id} size="sm" colorScheme="gray" mr={1}>
                   <TagLabel>{specialty?.name}</TagLabel>
                 </Tag>

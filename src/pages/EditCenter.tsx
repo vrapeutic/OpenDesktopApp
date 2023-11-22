@@ -12,7 +12,6 @@ import {
   Text,
 } from '@chakra-ui/react';
 import Select from 'react-select';
-
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useForm } from 'react-hook-form';
@@ -22,27 +21,27 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import makeAnimated from 'react-select/animated';
 import { Image } from '../assets/icons/Image';
 import { serialize } from 'object-to-formdata';
-import { getMe } from '@renderer/cache';
+import { getMe } from '../cache';
 import { config } from '../config';
 
 const EditCenter = () => {
   const location = useLocation();
   const centerData = location.state;
-  console.log(centerData);
-
+  const socialMediaIndex = centerData?.attributes.center_social_links.find(
+    (link) => link.link_type === 'facebook'
+  );
+  const linkedIndex = centerData?.attributes.center_social_links.find(
+    (link) => link.link_type === 'twitter'
+  );
   const schema = joi.object({
     name: joi.string().min(3).max(30).required().label('name'),
-    completeAddress: joi.string().required(),
     email: joi
       .string()
       .email({ tlds: { allow: false } })
       .required(),
-    managerName: joi.string().min(3).max(30).required().label('managerName'),
-    specialtyInformation: joi.string().required().label('SpecialtyInformation'),
     specialty_ids: joi.array().required().label('specialty_ids'),
-    registration_number: joi.number().required().label('registration_number'),
     tax_id: joi.number().required().label('tax_id'),
-    certificate: joi.required().custom((value, helpers) => {
+    certificate: joi.custom((value, helpers) => {
       if (value) {
         const ext = value.name.split('.').pop().toLowerCase();
         if (ext === 'pdf') {
@@ -54,21 +53,13 @@ const EditCenter = () => {
       return value;
     }),
     phone_number: joi.number().required().label('phone_number'),
-    socialMedia: joi
-      .string()
-      .required()
-      .uri({ scheme: ['http', 'https'] })
-      .label('socialMedia'),
-    Website: joi
-      .string()
-      .required()
-      .uri({ scheme: ['http', 'https'] })
-      .label('Website'),
-    Linkedin: joi
-      .string()
-      .required()
-      .uri({ scheme: ['http', 'https'] })
-      .label('Linkedin'),
+    website: joi.string().required().label('website'),
+    socialMedia: joi.string().required().label('socialMedia'),
+    Linkedin: joi.string().required().label('Linkedin'),
+    completeAddress: joi.string().allow(''),
+    managerName: joi.string().allow('').max(30).label('managerName'),
+    specialtyInformation: joi.string().allow(''),
+    registrationNumber: joi.number().allow(null).label('Registration Number'),
   });
   const {
     register,
@@ -79,31 +70,50 @@ const EditCenter = () => {
     clearErrors,
   } = useForm({
     resolver: joiResolver(schema),
-    mode: 'onTouched',
+    mode: 'onChange',
     defaultValues: {
-      name: centerData?.centerData.attributes?.name ?? '',
-      email: centerData?.centerData.attributes?.email ?? '',
-      phone_number: centerData?.centerData.attributes?.phone_number ?? null,
-      website: centerData?.centerData?.attributes?.website ?? '',
-      specialty_ids: centerData?.centerData?.attributes?.specialty_ids ?? [],
-      tax_id: centerData?.centerData?.attributes?.tax_id ?? null,
-      registration_number: centerData?.centerData?.attributes?.registration_number ?? null,
-      logo: centerData?.centerData?.attributes?.logo.url ?? null,
-      certificate: centerData?.centerData?.attributes?.certificate ?? null,
-      completeAddress: centerData?.centerData?.attributes?.completeAddress ?? '',
-      managerName: centerData?.centerData?.attributes?.managerName ?? '',
-      description: centerData?.centerData?.attributes?.description ?? '',
-      Linkedin: centerData?.centerData?.attributes?.Linkedin ?? '',
-      socialMedia: centerData?.centerData.attributes.socialMedia ?? '',
+      name: centerData?.attributes?.name ?? '',
+      email: centerData?.attributes?.email ?? '',
+      phone_number: centerData?.attributes?.phone_number ?? null,
+      website: centerData?.attributes?.website ?? '',
+      specialty_ids: centerData?.attributes?.specialty_ids ?? [],
+      tax_id: centerData?.attributes?.tax_id ?? null,
+      certificate: centerData?.attributes?.certificate ?? null,
+      Linkedin:
+        centerData?.attributes.center_social_links[linkedIndex ?? 1].link ?? '',
+      socialMedia:
+        centerData?.attributes.center_social_links[socialMediaIndex ?? 0]
+          .link ?? '',
+      completeAddress: '',
+      managerName: '',
+      specialtyInformation: '',
+      registrationNumber: null,
     },
   });
   const [specialistsList, setSpecialistsList] = useState([]);
+  const [specialistIds, setspecialistIds] = useState([]);
   const animatedComponents = makeAnimated();
+  const [selectedFile, setSelectedFile] = useState<File>();
 
   useEffect(() => {
+    if (specialistIds) {
+      setValue('specialty_ids', specialistIds);
+    }
+  }, [specialistIds]);
+  useEffect(() => {
+    if (centerData) {
+      setspecialistIds(
+        centerData?.attributes?.specialties.map(
+          (specialty: { id: number | string; name: string }) => ({
+            id: specialty.id,
+            label: specialty.name,
+            value: specialty.id,
+          })
+        )
+      );
+    }
     getSpecialists();
   }, []);
-
   const getSpecialists = async () => {
     try {
       const response = await axios.get(
@@ -115,7 +125,7 @@ const EditCenter = () => {
     }
   };
   const [imagePreview, setImagePreview] = useState(
-    centerData?.centerData.attributes?.logo?.url
+    centerData?.attributes?.logo?.url
   );
   const [logo, setLogo] = useState<File>();
 
@@ -126,6 +136,7 @@ const EditCenter = () => {
     setImagePreview(previewUrl);
   };
   const handleSpecializations = (options: any) => {
+    setspecialistIds([...options]);
     setValue('specialty_ids', [...options]);
   };
   const specialties = specialistsList.map((speciality) => ({
@@ -133,7 +144,6 @@ const EditCenter = () => {
     label: speciality.name,
     value: speciality.id,
   }));
-  const [selectedFile, setSelectedFile] = useState<File>();
   const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
     const ext = file.name.split('.').pop();
@@ -160,36 +170,54 @@ const EditCenter = () => {
     };
 
     return axios.put(
-      `${config.apiURL}/api/v1/centers/${centerData.attributes.id}`,
+      `${config.apiURL}/api/v1/centers/${centerData.id}`,
       formData,
       { headers }
     );
   };
   const FormOnSubmit = async (data: any) => {
-    console.log(data);
     const formData = serialize(
       {
-        data,
+        ...data,
+        certificate: data.certificate ?? undefined,
+        completeAddress: data.completeAddress
+          ? data.completeAddress
+          : undefined,
+        managerName: data.managerName ? data.managerName : undefined,
+        specialtyInformation: data.specialtyInformation
+          ? data.specialtyInformation
+          : undefined,
+        registrationNumber: data.registrationNumber
+          ? data.registrationNumber
+          : undefined,
         logo,
-        social_links: [
+        Linkedin: undefined,
+        socialMedia: undefined,
+        specialty_ids: [],
+        social_links: JSON.stringify([
           { link: data.socialMedia, link_type: 'facebook' },
           { link: data.Linkedin, link_type: 'twitter' },
-        ],
-        latitude: 33.3,
-        longitude: 33.3,
+        ]),
+        latitude: centerData.attributes.latitude,
+        longitude: centerData.attributes.longitude,
       },
       { indices: true }
     );
+    specialistIds.forEach((specialty: { id: string | Blob }) =>
+      formData.append('specialty_ids[]', specialty.id)
+    );
+    console.log(formData);
+
     try {
       await EditFormData(formData);
     } catch (error) {
       console.error(error);
     }
   };
-  console.log(centerData);
+  console.log(errors);
   return (
     <Box bg="#F5F5F5" p="24px" as="form" onSubmit={handleSubmit(FormOnSubmit)}>
-      <HStack onClick={goBack}>
+      <HStack onClick={goBack} style={{ cursor: 'pointer' }}>
         <ArrowBackIcon />
         <Text> Therapy Center</Text>
       </HStack>
@@ -207,24 +235,42 @@ const EditCenter = () => {
             >
               <img src={imagePreview} alt="brand_logo" />
             </Box>
+
             <Button
-              w={153}
-              h={38}
-              color="#FFF"
-              border="none"
-              borderRadius="8px"
-              backgroundColor="#4AA6CA"
-              cursor="pointer"
+              style={{
+                width: '153px',
+                height: '38px',
+                color: '#FFF',
+                border: 'none',
+                borderRadius: '8px',
+                backgroundColor: '#4AA6CA',
+                cursor: 'pointer',
+                position: 'relative',
+              }}
             >
-              Change logo
-              <Input
-                type="file"
-                accept="image/png,image/jpeg"
-                name="logo"
-                onChange={(e) => handleImageChange(e)}
-                style={{ display: 'none' }}
-                hidden
-              />
+              <label
+                htmlFor="logo"
+                style={{
+                  width: '153px',
+                  height: '38px',
+                  cursor: 'pointer',
+                  position: 'absolute',
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                Change logo
+                <Input
+                  type="file"
+                  accept="image/png,image/jpeg"
+                  name="logo"
+                  id="logo"
+                  onChange={(e) => handleImageChange(e)}
+                  style={{ display: 'none' }}
+                  hidden
+                />
+              </label>
             </Button>
           </HStack>
 
@@ -291,11 +337,6 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.completeAddress && (
-                <Text color="red.500">
-                  {errors.completeAddress.message as string}
-                </Text>
-              )}
             </GridItem>
 
             <GridItem>
@@ -316,11 +357,6 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.managerName && (
-                <Text color="red.500">
-                  {errors.managerName.message as string}
-                </Text>
-              )}
             </GridItem>
           </Grid>
 
@@ -349,8 +385,8 @@ const EditCenter = () => {
                 (description)
               </FormLabel>
               <Input
-                {...register('description')}
-                id="description"
+                {...register('specialtyInformation')}
+                id="SpecialtyInformation"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
                 border="1px solid #E8E8E8"
@@ -362,11 +398,6 @@ const EditCenter = () => {
                 height={'78px'}
                 multiple
               />
-              {errors.description && (
-                <Text color="red.500">
-                  {errors.description.message as string}
-                </Text>
-              )}
             </GridItem>
           </Grid>
           <Grid templateColumns="repeat(2, 1fr)">
@@ -394,6 +425,7 @@ const EditCenter = () => {
                 closeMenuOnSelect={false}
                 components={animatedComponents}
                 isMulti
+                value={specialistIds}
                 options={specialties}
                 id="specialty_ids"
                 name="specialty_ids"
@@ -415,7 +447,7 @@ const EditCenter = () => {
               <FormLabel color="#15134B">Registration Number</FormLabel>
 
               <Input
-                {...register('registration_number')}
+                {...register('registrationNumber')}
                 id="registration_number"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
@@ -427,11 +459,6 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.registration_number && (
-                <Text color="red.500">
-                  {errors.registration_number.message as string}
-                </Text>
-              )}
             </GridItem>
             <GridItem>
               <FormLabel color="#15134B">Tax ID</FormLabel>
@@ -523,8 +550,8 @@ const EditCenter = () => {
                 Social media
               </FormLabel>
               <Input
-                {...register('social_links')}
-                id="social_links"
+                {...register('socialMedia')}
+                id="socialMedia"
                 _hover={{ border: '1px solid #4965CA' }}
                 _focus={{ border: '1px solid #4965CA' }}
                 border="1px solid #E8E8E8"
@@ -535,9 +562,9 @@ const EditCenter = () => {
                 width={'100%'}
                 height={'38px'}
               />
-              {errors.social_links && (
+              {errors.socialMedia && (
                 <Text color="red.500">
-                  {errors.social_links.message as string}
+                  {errors.socialMedia.message as string}
                 </Text>
               )}{' '}
             </GridItem>

@@ -17,7 +17,7 @@ const ViewCenter = () => {
     <>
       <HeaderWithButton  centerData={centerData} />
       <CardWithLogo centerData={centerData} />
-      <TabsViewCenter />
+      <TabsViewCenter  centerData={centerData}/>
     </>
   );
 };
