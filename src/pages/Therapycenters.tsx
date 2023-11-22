@@ -17,8 +17,20 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
+interface Center {
+  id: number;
+  attributes: {
+    name: string;
+    logo: {
+      url: string;
+    };
+    specialties: { id: number; name: string }[];
+    children_count: number;
+  };
+}
+
 export default function Therapycenters() {
-  const [centersList, setcentersList] = useState([]);
+  const [centersList, setcentersList] = useState<Center[]>([]);
 
   useEffect(() => {
     getCenters();
@@ -45,11 +57,10 @@ export default function Therapycenters() {
   console.log(centersList);
   const navigate = useNavigate();
 
-  const handleCenterClick = (center : object) => {
+  const handleCenterClick = (center: Center) => {
     console.log('Clicked Center Data:', center);
     navigate('/ViewCenter', { state: center });
   };
-
 
   return (
     <Table
@@ -92,7 +103,7 @@ export default function Therapycenters() {
               </Flex>
             </Td>
             <Td>
-              {center?.attributes?.specialties?.map((specialty :object) => (
+              {center?.attributes?.specialties?.map((specialty) => (
                 <Tag key={specialty.id} size="sm" colorScheme="gray" mr={1}>
                   <TagLabel>{specialty?.name}</TagLabel>
                 </Tag>

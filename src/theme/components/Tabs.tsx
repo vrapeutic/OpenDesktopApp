@@ -19,13 +19,34 @@ import { config } from '../../config';
 import { getMe } from '../../cache';
 import { useEffect, useState } from 'react';
 
-const TabsViewCenter = ({ centerData }) => {
+interface Doctor {
+  id: number;
+  attributes: {
+    name: string;
+    degree: string;
+    university: string;
+    photo: {
+      url: string;
+    };
+  };
+}
+
+interface Child {
+  id: number;
+  attributes: {
+    name: string;
+    email: string;
+    age: number;
+  };
+}
+
+const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
   const token = getMe()?.token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
-  const [childrenlist, setchildrenlist] = useState();
-  const [Doctorslist, setDoctorlist] = useState();
+  const [childrenlist, setchildrenlist] = useState<Child[] | undefined>();
+  const [Doctorslist, setDoctorlist] = useState<Doctor[] | undefined>();
 
   const getChildren = async () => {
     try {
@@ -62,10 +83,10 @@ const TabsViewCenter = ({ centerData }) => {
     <Tabs>
       <TabList>
         <Tab>Therapy info</Tab>
-        <Tab>Recent Activites </Tab>
+        <Tab>Recent Activities </Tab>
         <Tab>Subscriptions</Tab>
-        <Tab>Specilaists</Tab>
-        <Tab>kids</Tab>
+        <Tab>Specialists</Tab>
+        <Tab>Kids</Tab>
         <Tab>Widgets</Tab>
       </TabList>
 
@@ -74,7 +95,7 @@ const TabsViewCenter = ({ centerData }) => {
           <p>Therapy info</p>
         </TabPanel>
         <TabPanel>
-          <p>Recent Activites</p>
+          <p>Recent Activities</p>
         </TabPanel>
         <TabPanel>
           <p>Subscriptions</p>

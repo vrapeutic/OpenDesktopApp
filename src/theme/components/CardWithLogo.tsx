@@ -1,33 +1,14 @@
 import { PropsWithChildren } from 'react';
-import {
-  chakra,
-  Stack,
-  HStack,
-  Flex,
-  Text,
-  Image,
-  Icon,
-  StackProps,
-  Tag,
-  TagLabel,
-  Grid,
-  GridItem,
-  Link,
-} from '@chakra-ui/react';
+import { chakra, Stack, Flex, Text, Image, Icon, StackProps, Tag, TagLabel, Grid, GridItem, Link, HStack } from '@chakra-ui/react';
 import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
-const CardWithLogo = (centerData) => {
-  console.log(centerData);
-
-  const facebookLink =
-    centerData?.centerData?.attributes.center_social_links.find(
-      (link) => link.link_type === 'facebook'
-    );
-  const linkedinLink =
-    centerData?.centerData?.attributes.center_social_links.find(
-      (link) => link.link_type === 'twitter'
-    );
-  console.log('facebook link', facebookLink.link);
+const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
+  const facebookLink = centerData?.centerData?.attributes?.center_social_links.find(
+    (link: { link_type: string }) => link.link_type === 'facebook'
+  );
+  const linkedinLink = centerData?.centerData?.attributes?.center_social_links.find(
+    (link: { link_type: string }) => link.link_type === 'linkedin'
+  );
 
   return (
     <Grid
@@ -43,7 +24,7 @@ const CardWithLogo = (centerData) => {
           overflow="hidden"
           pos="relative"
         >
-          <Flex ml="0 !important">
+          <Flex>
             <Image
               rounded="md"
               w={{ base: '100%', md: '18rem' }}
@@ -67,7 +48,7 @@ const CardWithLogo = (centerData) => {
 
             <Flex color="gray.500">
               {centerData?.centerData?.attributes?.specialties?.map(
-                (specialty) => (
+                (specialty: { id: number; name: string }) => (
                   <Tag key={specialty.id} size="sm" colorScheme="gray" mr={1}>
                     <TagLabel>{specialty?.name}</TagLabel>{' '}
                   </Tag>
@@ -93,19 +74,19 @@ const CardWithLogo = (centerData) => {
         <Text>Cal : {centerData?.centerData.attributes?.phone_number}</Text>
 
         <Flex direction="row" gap={2}>
-          <Link display="inline" color="#3961FB" href={facebookLink.link}>
+          <Link display="inline" color="#3961FB" href={facebookLink?.link}>
             <IconButton>
               <Icon as={FaFacebook} w={4} h={4} />
-            </IconButton>{' '}
+            </IconButton>
           </Link>
 
-          <Link display="inline" color="#3961FB" href={linkedinLink.link}>
+          <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
             <IconButton>
               <Icon as={FaLinkedin} w={4} h={4} />
             </IconButton>
           </Link>
 
-          <Link display="inline" color="#3961FB" href={linkedinLink.link}>
+          <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
             <IconButton>
               <Icon as={FaTwitter} w={4} h={4} />
             </IconButton>

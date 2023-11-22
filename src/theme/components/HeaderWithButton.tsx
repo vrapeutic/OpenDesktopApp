@@ -2,12 +2,13 @@ import { HStack, Text, Grid, Button } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 
-export default function HeaderWithButton(centerData) {
+export default function HeaderWithButton({ centerData }: { centerData: object }) {
   const navigate = useNavigate();
 
   const goBack = () => {
     navigate(-1);
   };
+
   return (
     <>
       <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
