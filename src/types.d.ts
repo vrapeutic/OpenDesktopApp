@@ -5,4 +5,6 @@ type Me = {
   name: string;
   phone: string;
   specialty: string;
+  token: string;
+
 };
