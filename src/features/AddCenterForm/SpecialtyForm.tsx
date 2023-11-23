@@ -55,7 +55,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
 
   const getSpecialists = async () => {
     try {
-      const response = await axios.get(`${config.apiURL}/specialties`);
+      const response = await axios.get(`${config.apiURL}/api/v1/specialties`);
       setspecialistslist(response.data);
     } catch (error) {
       console.error(error);
