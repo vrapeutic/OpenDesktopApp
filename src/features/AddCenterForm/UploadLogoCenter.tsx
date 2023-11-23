@@ -80,8 +80,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
   };
 
   const postFormData = (formData: FormData) => {
-    const token = (window as any).electronAPI.getPassword('token');
-
+    const token = getMe().token;
     const headers = {
       Authorization: `Bearer ${token}`,
     };
