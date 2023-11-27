@@ -32,6 +32,7 @@ const createWindow = (): void => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       nodeIntegration: true,
+      contextIsolation:true
 
     },
     icon: path.resolve(__dirname, '../public/favicon.ico'),
@@ -51,19 +52,22 @@ const createWindow = (): void => {
   ipcMain.handle('store:getPassword', handleStoreGetPassword);
   ipcMain.handle('store:setPassword', handleStoreSetPassword);
   ipcMain.handle('commands', async (_, args) => {
-    console.log('running cli',_, args)
-    let result
-    exec(args, (err, stdout, stderr) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      result=stdout;
-      console.log(stdout);
-  });
-     console.log(result);
+    // console.log('running cli',_, args)
+    let d;
+    const result= await exec(args, (err, stdout, stderr) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          // result=stdout.toString();
+          // console.log(stdout);
+          d=stdout;
+          return stdout;
+       });
+     console.log(d);
      
-    return result;
+    //  console.log(JSON.stringify(result));
+    return JSON.stringify(result);
   })
 };
 
