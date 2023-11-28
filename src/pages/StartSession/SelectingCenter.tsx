@@ -85,11 +85,9 @@ export default function SelectingCenter(props: any) {
         
         
     }
-    const getVersion = async (command: string)=> {
-        // Use IPC API to query Electron's main thread and run this method
+    const execCommands = async (command: string)=> {
         const result = await (window as any).electron.commands(command)
-        console.log(result);
-        
+        console.log(result); 
       }
 
 
@@ -108,7 +106,7 @@ export default function SelectingCenter(props: any) {
             .catch(error => console.log('error', error));
 
            
-            getVersion("arp -a");  
+            execCommands("arp -a");  
               
 
       })();
