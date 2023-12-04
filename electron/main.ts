@@ -31,7 +31,7 @@ const createWindow = (): void => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
-    icon: path.resolve(__dirname, '../public/favicon.ico'),
+    icon: path.join(__dirname, '../assets/images/SmallVRapeutic.ico'),
   });
 
   mainWindow.maximize();
