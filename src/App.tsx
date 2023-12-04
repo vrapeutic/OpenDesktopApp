@@ -20,6 +20,8 @@ import ChooseBooksNum from './pages/StartSession/ViblioModule/ChooseBooksNum';
 import ChooseDistractorsNum from './pages/StartSession/ViblioModule/ChooseDistractorsNum';
 import ChoosePotsNumber2 from './pages/StartSession/GardendoModule/ChoosePotsNumber2';
 import MainMenu from './pages/StartSession/GardendoModule/MainMenu';
+import ModuleHome from './pages/StartSession/ArcheekoModule/ModuleHome';
+import ArcheekoChooseLevel from './pages/StartSession/ArcheekoModule/ArcheekoChooseLevel';
 
 
 
@@ -31,7 +33,6 @@ function App() {
   useEffect(() => {
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
-
       setLoggedIn(Boolean(token));
     })();
   }, []);
@@ -65,8 +66,11 @@ function App() {
         <Route path="PlayViblio" element={<PlayViblio />} />  
         <Route path="ChooseLevel" element={<ChooseLevel />} />  
         <Route path="ChooseBooksNum" element={<ChooseBooksNum />} /> 
-        <Route path="ChooseDistractorsNum" element={<ChooseDistractorsNum />} />    
+        <Route path="ChooseDistractorsNum" element={<ChooseDistractorsNum />} /> 
+        {/* Archeeko Module  */}  
+        <Route path="ModuleHome" element={<ModuleHome />} /> 
       </Routes>  
+      <ArcheekoChooseLevel />
     </MemoryRouter>
   );
 }

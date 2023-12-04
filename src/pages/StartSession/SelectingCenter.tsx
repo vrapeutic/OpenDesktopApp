@@ -106,7 +106,8 @@ export default function SelectingCenter(props: any) {
             .catch(error => console.log('error', error));
 
            
-            execCommands("arp -a");  
+            execCommands("adb connect 192.168.1.9:41257"); 
+            // execCommands("adb push D:/after_graduation/CV/formal_photo.jpg storage/emulated/0");
               
 
       })();
