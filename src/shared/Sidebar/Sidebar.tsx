@@ -34,10 +34,10 @@ export default function Sidebar() {
       link: 'Dashboard',
       icon: (
         <Dashboard
-          color={location.pathname === '/main_window' ? '#00DEA3' : '#333333'}
+          color={location.pathname === '/home' ? '#00DEA3' : '#333333'}
         />
       ),
-      path: '/main_window',
+      path: '/home',
     },
     {
       link: 'Kids',

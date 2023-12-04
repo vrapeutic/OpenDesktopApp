@@ -24,7 +24,7 @@ export function useLoginMutation(
   return useMutation<Return, AxiosError, Params>(
     (params) =>
       api
-        .post<Params, AxiosResponse<Return>>('/api/v1/login', {
+        .post<Params, AxiosResponse<Return>>('/sign_in', {
           email: params.identifier,
           password: params.password,
         })

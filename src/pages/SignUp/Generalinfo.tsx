@@ -11,7 +11,7 @@ import {
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import React, { useState } from 'react';
 import Specialty from './Specialty';
-import Progressbar from '../../theme/components/Progressbar';
+import Progressbar from '../../theme/components/ProgressBarSignup';
 import Joi from 'joi';
 
 export default function Generalinfo() {

@@ -9,9 +9,13 @@ export default {
     store.set(key, buffer.toString('latin1'));
   },
   getPassword: (key: string) => {
-    return safeStorage.decryptString(
-      Buffer.from(store.get(key) ?? '', 'latin1')
-    );
+    try {
+      return safeStorage.decryptString(
+        Buffer.from(store.get(key) ?? '', 'latin1')
+      );
+    } catch (e) {
+      return null;
+    }
   },
   deletePassword: (key: string) => {
     store.delete(key);

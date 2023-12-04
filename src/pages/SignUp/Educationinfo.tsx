@@ -14,7 +14,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import React, { useState, useRef } from 'react';
 import Specialty from '@renderer/pages/SignUp/Specialty';
 import { Image } from '@renderer/assets/icons/Image';
-import Progressbar from '@renderer/theme/components/Progressbar';
+import Progressbar from '../../theme/components/ProgressBarSignup';
 import Joi from 'joi';
 import Uploadlogo from '@renderer/pages/SignUp/Uploadlogo';
 
@@ -216,7 +216,7 @@ export default function Educationinfo(props: any) {
 
       {Back && <Specialty />}
 
-      {onOpen && (
+      {isOpen && (
         <Uploadlogo
           isOpen={isOpen}
           onClose={onClose}

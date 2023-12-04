@@ -14,13 +14,8 @@ const User = (props: any) => {
             fontSize="1rem"
             color="#0D062D"
           >
-            Ahmed Sharaby
+            Ahmed Sharaby Doctor
           </Text>
-          <Flex justifyContent="flex-end">
-            <Text fontFamily="Inter" fontSize="0.875rem" color="#787486">
-              Doctor
-            </Text>
-          </Flex>
         </Flex>
         <Image objectFit="contain" ml="12px" src={UserImage} alt="User Image" />
         <HStack>

@@ -2,15 +2,12 @@ import { Grid, GridItem } from '@chakra-ui/react';
 import LoginForm from '@renderer/features/auth/components/LoginForm';
 import LoginNavigation from '@renderer/features/auth/components/LoginNavigation';
 import BackgroundLogin from '../../assets/images/BackgroundLogin.png';
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({
-  setLoggedIn,
-}: {
-  setLoggedIn: (loggedIn: boolean) => void;
-}) => {
-  const onLoginSuccess = () => {
-    setLoggedIn(true);
-  };
+const Login = () => {
+  const navigate = useNavigate();
+
+  const onLoginSuccess = () => navigate('/');
 
   return (
     <>
