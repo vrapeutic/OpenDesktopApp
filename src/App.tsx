@@ -12,6 +12,8 @@ import Layout from './shared/Layout';
 import Subscriptions from './pages/Subscriptions';
 import Generalinfo from './pages/SignUp/Generalinfo';
 import { PrivateRoute } from './shared/PrivateRoute';
+import ViewCenter from './pages/ViewCenter';
+import EditCenter from './pages/EditCenter';
 
 function App() {
   return (
@@ -53,6 +55,14 @@ function App() {
           <Route
             path="setting"
             element={<PrivateRoute component={Setting} />}
+          />
+          <Route
+            path="editcenter"
+            element={<PrivateRoute component={EditCenter} />}
+          />
+          <Route
+            path="ViewCenter"
+            element={<PrivateRoute component={ViewCenter} />}
           />
         </Route>
       </Routes>
