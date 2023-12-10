@@ -20,7 +20,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="/" element={<Layout />}>
           <Route path="signup" element={<Generalinfo />} />
-          <Route path="home" element={<PrivateRoute component={Home}/>} />
+          <Route path="home" element={<PrivateRoute component={Home} />} />
           <Route path="Kids" element={<PrivateRoute component={Kids} />} />
           <Route
             path="Theraputicmodules"
@@ -40,7 +40,7 @@ function App() {
           />
           <Route
             path="Specialists"
-            element={<PrivateRoute component={Specialists}/>}
+            element={<PrivateRoute component={Specialists} />}
           />
           <Route
             path="Assessmenttools"

@@ -22,7 +22,7 @@ export default function Home() {
 
   useEffect(() => {
     (async () => {
-      const token = await (window as any).electronAPI.getPassword('token');  
+      const token = await (window as any).electronAPI.getPassword('token');
       fetch(`${config.apiURL}/api/v1/doctors/home_centers`, {
         method: 'Get',
         redirect: 'follow',
@@ -39,7 +39,7 @@ export default function Home() {
 
   const handleClick = (center: object) => {
     setIsLoading(true);
-    selectedCenter= Object.assign(selectedCenter,center);
+    selectedCenter = Object.assign(selectedCenter, center);
     console.log(center);
     console.log(selectedCenter);
   };
@@ -80,15 +80,11 @@ export default function Home() {
           ))}
         </MenuList>
       </Menu>
-      
-      <VRminutesCard  loading={isLoading}/>
-      <VRsessionsCard loading={isLoading}/>
-       
-      {isLoading && (
 
-         <StatistcsCards  loading={isLoading}/>
-         
-      )}
+      <VRminutesCard loading={isLoading} />
+      <VRsessionsCard loading={isLoading} />
+
+      {isLoading && <StatistcsCards />}
     </>
   );
 }

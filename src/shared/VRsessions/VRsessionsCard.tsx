@@ -1,12 +1,11 @@
 import { Card, CardBody, Text } from '@chakra-ui/react';
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import RadialChart from './RadialChart';
 import { dataContext } from '@renderer/shared/Provider';
 
 export default function VRsessionsCard(props: any) {
   const selectedCenter = useContext(dataContext);
   return (
-    
     <Card
       position="absolute"
       height="293px"
@@ -18,7 +17,6 @@ export default function VRsessionsCard(props: any) {
       borderRadius="10px"
     >
       <CardBody>
-        
         {props.loading && <RadialChart centerId={selectedCenter.id} />}
 
         {!props.loading && (
@@ -26,7 +24,6 @@ export default function VRsessionsCard(props: any) {
             Loading....
           </Text>
         )}
-        
       </CardBody>
     </Card>
   );

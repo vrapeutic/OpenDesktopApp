@@ -1,4 +1,4 @@
-import React, { useEffect, useState , useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Flex, Card, Box, Text } from '@chakra-ui/react';
 // import { Therapycenters } from '../../assets/icons/Therapycenters'
 // import { Specialists } from '../../assets/icons/Specialists'
@@ -11,16 +11,11 @@ export default function StatistcsCards() {
   const [kids, setKids] = useState<any>(new Object());
   const [sessions, setSessions] = useState<any>(new Object());
   const selectedCenter = useContext(dataContext);
-  
-  
 
   useEffect(() => {
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
       // console.log(token);
-      console.log(selectedCenter);
-      
-
       fetch(
         `${config.apiURL}/api/v1/doctors/kids_percentage?center_id=${selectedCenter.id}`,
         {

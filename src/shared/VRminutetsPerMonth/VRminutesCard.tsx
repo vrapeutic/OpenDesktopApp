@@ -1,5 +1,5 @@
 import { Card, CardBody, Text } from '@chakra-ui/react';
-import React,{useContext} from 'react';
+import React, { useContext } from 'react';
 import LineChart from './LineChart';
 import { dataContext } from '@renderer/shared/Provider';
 
@@ -17,7 +17,6 @@ export default function VRminutesCard(props: any) {
       borderRadius="10px"
     >
       <CardBody>
-        
         {props.loading && <LineChart centerId={selectedCenter.id} />}
 
         {!props.loading && (
@@ -25,7 +24,6 @@ export default function VRminutesCard(props: any) {
             Loading....
           </Text>
         )}
-        
       </CardBody>
     </Card>
   );
