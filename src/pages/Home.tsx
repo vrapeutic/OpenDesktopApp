@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
   Menu,
@@ -12,17 +12,17 @@ import VRsessionsCard from '../shared/VRsessions/VRsessionsCard';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { config } from '../config';
 import StatistcsCards from '../theme/components/StatistcsCards';
+import { dataContext } from '@renderer/shared/Provider';
 
 export default function Home() {
   const [centers, setCenters] = useState([]);
-  const [centerId, setCenterId] = useState('1');
+  // const [centerId, setCenterId] = useState('1');
   const [isLoading, setIsLoading] = useState(false);
+  let selectedCenter = useContext(dataContext);
 
   useEffect(() => {
     (async () => {
-      const token = await (window as any).electronAPI.getPassword('token');
-      // console.log(token);
-
+      const token = await (window as any).electronAPI.getPassword('token');  
       fetch(`${config.apiURL}/api/v1/doctors/home_centers`, {
         method: 'Get',
         redirect: 'follow',
@@ -31,16 +31,17 @@ export default function Home() {
         .then((response) => response.json())
         .then((result) => {
           setCenters(result.data);
-          // console.log(result.data);
-          // console.log(centers);
+          console.log(result.data);
         })
         .catch((error) => console.log('error', error));
     })();
   }, []);
 
-  const handleClick = (id: any) => {
+  const handleClick = (center: object) => {
     setIsLoading(true);
-    setCenterId(id);
+    selectedCenter= Object.assign(selectedCenter,center);
+    console.log(center);
+    console.log(selectedCenter);
   };
 
   return (
@@ -58,7 +59,6 @@ export default function Home() {
       >
         Home
       </Text>
-
       <Menu>
         <MenuButton
           as={Button}
@@ -74,17 +74,21 @@ export default function Home() {
         </MenuButton>
         <MenuList>
           {centers?.map((center) => (
-            <MenuItem key={center.id} onClick={() => handleClick(center.id)}>
+            <MenuItem key={center.id} onClick={() => handleClick(center)}>
               {center.attributes.name}
             </MenuItem>
           ))}
         </MenuList>
       </Menu>
+      
+      <VRminutesCard  loading={isLoading}/>
+      <VRsessionsCard loading={isLoading}/>
+       
+      {isLoading && (
 
-      <VRminutesCard centerId={centerId} loading={isLoading} />
-      <VRsessionsCard centerId={centerId} loading={isLoading} />
-
-      {isLoading && <StatistcsCards centerId={centerId} loading={isLoading} />}
+         <StatistcsCards  loading={isLoading}/>
+         
+      )}
     </>
   );
 }

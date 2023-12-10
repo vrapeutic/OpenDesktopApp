@@ -25,7 +25,7 @@ import { Subscriptions } from '../../assets/icons/Subscriptions';
 import SelectingCenter from '@renderer/pages/StartSession/SelectingCenter';
 
 export default function Sidebar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const location = useLocation();
   const active = {
     color: '#00DEA3',

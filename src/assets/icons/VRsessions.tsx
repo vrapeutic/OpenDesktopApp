@@ -1,4 +1,5 @@
 import { Icon } from '@chakra-ui/react';
+
 export const VRsessions = (props: any) => (
   <Icon
     width="23px"
