@@ -79,7 +79,7 @@ export default function Home() {
         </MenuList>
       </Menu>
 
-      <VRminutesCard loading={isLoading} />
+      <VRminutesCard />
       <VRsessionsCard loading={isLoading} />
 
       <StatistcsCards />

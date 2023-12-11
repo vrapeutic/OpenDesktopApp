@@ -26,7 +26,6 @@ export default function StatistcsCards() {
         .then((response) => response.json())
         .then((result) => {
           setKids(result);
-          //    console.log(result);
         })
         .catch((error) => console.log('error', error));
 

@@ -2,7 +2,7 @@ import { Card, CardBody, Text } from '@chakra-ui/react';
 import React from 'react';
 import LineChart from './LineChart';
 
-export default function VRminutesCard(props: any) {
+export default function VRminutesCard() {
   return (
     <Card
       position="absolute"
@@ -15,13 +15,7 @@ export default function VRminutesCard(props: any) {
       borderRadius="10px"
     >
       <CardBody>
-        {props.loading && <LineChart />}
-
-        {!props.loading && (
-          <Text textAlign="center" fontWeight="bold" marginTop="17%">
-            Loading....
-          </Text>
-        )}
+        <LineChart />
       </CardBody>
     </Card>
   );

@@ -86,7 +86,7 @@ class LineChart extends Component<any> {
         },
 
         noData: {
-          text: 'Loading...',
+          text: 'Select center to show chart...',
         },
 
         xaxis: {
@@ -170,6 +170,7 @@ class LineChart extends Component<any> {
       acc[`${key} ${year}`] = value;
       return acc;
     }, {});
+    if(center.id !== undefined){
 
     await fetch(
       `${config.apiURL}/api/v1/doctors/center_vr_minutes?center_id=${center.id}`,
@@ -191,7 +192,7 @@ class LineChart extends Component<any> {
         });
       })
       .catch((error) => console.log('error', error));
-  }
+  }}
   componentDidMount() {
     this.getData();
   }

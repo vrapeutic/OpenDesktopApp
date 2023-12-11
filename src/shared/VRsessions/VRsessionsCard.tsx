@@ -16,11 +16,23 @@ export default function VRsessionsCard(props: any) {
     >
       <CardBody>
         {props.loading && <RadialChart />}
-
         {!props.loading && (
-          <Text textAlign="center" fontWeight="bold" marginTop="17%">
-            Loading....
+          <>
+          <Text 
+              textAlign="left"
+              fontSize= '20px'
+            fontWeight= '500'
+            fontFamily= 'Graphik LCG'
+            color= '#00261C'
+            lineHeight= '20px'
+            left= '24px'
+            top= '24px'
+              
+              >VR Sessions Monthly Metrics</Text>
+          <Text textAlign="center" marginTop="25%">
+            Select center to show chart...
           </Text>
+          </>
         )}
       </CardBody>
     </Card>
