@@ -1,10 +1,8 @@
 import { Card, CardBody, Text } from '@chakra-ui/react';
-import React, { useContext } from 'react';
+import React from 'react';
 import RadialChart from './RadialChart';
-import { dataContext } from '@renderer/shared/Provider';
 
 export default function VRsessionsCard(props: any) {
-  const selectedCenter = useContext(dataContext);
   return (
     <Card
       position="absolute"
@@ -17,7 +15,7 @@ export default function VRsessionsCard(props: any) {
       borderRadius="10px"
     >
       <CardBody>
-        {props.loading && <RadialChart centerId={selectedCenter.id} />}
+        {props.loading && <RadialChart />}
 
         {!props.loading && (
           <Text textAlign="center" fontWeight="bold" marginTop="17%">

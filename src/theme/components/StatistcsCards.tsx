@@ -12,10 +12,9 @@ export default function StatistcsCards() {
   const [sessions, setSessions] = useState<any>(new Object());
   const selectedCenter = useContext(dataContext);
 
-  useEffect(() => {
-    (async () => {
-      const token = await (window as any).electronAPI.getPassword('token');
-      // console.log(token);
+  const fetchData = async () => {
+    const token = await (window as any).electronAPI.getPassword('token');
+    if (selectedCenter.id !== undefined) {
       fetch(
         `${config.apiURL}/api/v1/doctors/kids_percentage?center_id=${selectedCenter.id}`,
         {
@@ -45,8 +44,12 @@ export default function StatistcsCards() {
           // console.log(result);
         })
         .catch((error) => console.log('error', error));
-    })();
-  }, []);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <>

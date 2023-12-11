@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { config } from '../../config';
+import { dataContext } from '@renderer/shared/Provider';
 
 class LineChart extends Component<any> {
+  static contextType = dataContext;
   state: any = { series: [], options: {} };
   constructor(props: any) {
     super(props);
@@ -144,12 +146,11 @@ class LineChart extends Component<any> {
     };
   }
 
-  async componentDidMount() {
+  async getData() {
     const token = await (window as any).electronAPI.getPassword('token');
-
+    const center: any = this.context;
     const date = new Date();
     const year = date.getFullYear();
-
     const month = {
       January: 0,
       February: 0,
@@ -171,7 +172,7 @@ class LineChart extends Component<any> {
     }, {});
 
     await fetch(
-      `${config.apiURL}/api/v1/doctors/center_vr_minutes?center_id=${this.props.centerId}`,
+      `${config.apiURL}/api/v1/doctors/center_vr_minutes?center_id=${center.id}`,
       {
         method: 'Get',
         redirect: 'follow',
@@ -190,6 +191,15 @@ class LineChart extends Component<any> {
         });
       })
       .catch((error) => console.log('error', error));
+  }
+  componentDidMount() {
+    this.getData();
+  }
+
+  componentDidUpdate(prevState: any) {
+    if (prevState.series !== this.state.series) {
+      this.getData();
+    }
   }
 
   render() {

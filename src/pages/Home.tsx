@@ -16,7 +16,6 @@ import { dataContext } from '@renderer/shared/Provider';
 
 export default function Home() {
   const [centers, setCenters] = useState([]);
-  // const [centerId, setCenterId] = useState('1');
   const [isLoading, setIsLoading] = useState(false);
   let selectedCenter = useContext(dataContext);
 
@@ -31,7 +30,6 @@ export default function Home() {
         .then((response) => response.json())
         .then((result) => {
           setCenters(result.data);
-          console.log(result.data);
         })
         .catch((error) => console.log('error', error));
     })();
@@ -84,7 +82,7 @@ export default function Home() {
       <VRminutesCard loading={isLoading} />
       <VRsessionsCard loading={isLoading} />
 
-      {isLoading && <StatistcsCards />}
+      <StatistcsCards />
     </>
   );
 }

@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { config } from '../../config';
+import { dataContext } from '@renderer/shared/Provider';
 
 class RadialChart extends React.Component<any> {
+  static contextType = dataContext;
   state: any = { series: [], options: {}, id: '' };
   constructor(props: any) {
     super(props);
@@ -214,10 +216,12 @@ class RadialChart extends React.Component<any> {
     };
   }
 
-  async componentDidMount() {
+  async getData() {
     const token = await (window as any).electronAPI.getPassword('token');
+    const center: any = this.context;
+    // console.log(center);
     await fetch(
-      `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${this.props.centerId}`,
+      `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
       {
         method: 'Get',
         redirect: 'follow',
@@ -229,6 +233,16 @@ class RadialChart extends React.Component<any> {
         this.setState({ series: Object.values(result) });
       })
       .catch((error) => console.log('error', error));
+  }
+
+  componentDidMount() {
+    this.getData();
+  }
+
+  componentDidUpdate(prevState: any) {
+    if (prevState.series !== this.state.series) {
+      this.getData();
+    }
   }
 
   render() {
