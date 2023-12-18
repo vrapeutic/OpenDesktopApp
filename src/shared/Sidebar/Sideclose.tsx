@@ -33,9 +33,11 @@ export default function Sideclose() {
     {
       link: 'Dashboard',
       icon: (
-        <Dashboard color={location.pathname === '/' ? '#00DEA3' : '#333333'} />
+        <Dashboard
+          color={location.pathname === '/home' ? '#00DEA3' : '#333333'}
+        />
       ),
-      path: '/',
+      path: '/home',
     },
     {
       link: 'Kids',

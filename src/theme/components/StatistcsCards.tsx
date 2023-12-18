@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Flex, Card, Box, Text } from '@chakra-ui/react';
 // import { Therapycenters } from '../../assets/icons/Therapycenters'
 // import { Specialists } from '../../assets/icons/Specialists'
 import { Kids } from '../../assets/icons/Kids';
 import { VRsessions } from '../../assets/icons/VRsessions';
 import { config } from '../../config';
+import { dataContext } from '@renderer/shared/Provider';
 
-export default function StatistcsCards(props: any) {
+export default function StatistcsCards() {
   const [kids, setKids] = useState<any>(new Object());
   const [sessions, setSessions] = useState<any>(new Object());
+  const selectedCenter = useContext(dataContext);
 
-  useEffect(() => {
-    (async () => {
-      const token = await (window as any).electronAPI.getPassword('token');
-      // console.log(token);
-
+  const fetchData = async () => {
+    const token = await (window as any).electronAPI.getPassword('token');
+    if (selectedCenter.id !== undefined) {
       fetch(
-        `${config.apiURL}/api/v1/doctors/kids_percentage?center_id=${props.centerId}`,
+        `${config.apiURL}/api/v1/doctors/kids_percentage?center_id=${selectedCenter.id}`,
         {
           method: 'Get',
           redirect: 'follow',
@@ -26,12 +26,11 @@ export default function StatistcsCards(props: any) {
         .then((response) => response.json())
         .then((result) => {
           setKids(result);
-          //    console.log(result);
         })
         .catch((error) => console.log('error', error));
 
       fetch(
-        `${config.apiURL}/api/v1/doctors/sessions_percentage?center_id=${props.centerId}`,
+        `${config.apiURL}/api/v1/doctors/sessions_percentage?center_id=${selectedCenter.id}`,
         {
           method: 'Get',
           redirect: 'follow',
@@ -44,8 +43,12 @@ export default function StatistcsCards(props: any) {
           // console.log(result);
         })
         .catch((error) => console.log('error', error));
-    })();
-  }, []);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <>
