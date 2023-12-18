@@ -31,6 +31,6 @@
 
 1. Before you make a PR, you need to merge the latest version of the dev branch to your local branch and you may encounter this issue
 
-   ![Screen Shot 2023-11-12 at 8.06.46 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/e5618611-0847-4bc6-beaa-439cf2d5322e/88c371e7-cf89-4c52-a211-d0c07d979867/Screen_Shot_2023-11-12_at_8.06.46_PM.png)
+   ![Screen Shot 2023-11-12 at 8.06.46 PM.png](./docs/image.png)
 
    To solve this issue, you need to execute this command `git merge dev --allow-unrelated-histories`
