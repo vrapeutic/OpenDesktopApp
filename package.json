@@ -10,7 +10,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "prettier-format": "prettier --config .prettierrc 'src/**/**/*.ts(x)' 'electron/*.ts' --write"
+    "prettier-format": "prettier --config .prettierrc \"src/**/**/*.ts(x)\" \"electron/*.ts\" --write"
   },
   "keywords": [],
   "author": {
@@ -67,8 +67,10 @@
     "dotenv": "^16.0.3",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
+    "electron-winstaller": "^5.2.1",
     "framer-motion": "^10.12.4",
     "joi": "^17.9.2",
+    "object-to-formdata": "^4.5.1",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.2.0",

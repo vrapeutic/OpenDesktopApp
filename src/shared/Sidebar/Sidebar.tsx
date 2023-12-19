@@ -1,4 +1,13 @@
-import { Flex, Image, Box, Text, Link, VStack } from '@chakra-ui/react';
+import {
+  Flex,
+  Image,
+  Box,
+  Text,
+  Link,
+  VStack,
+  Button,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { Link as ReachLink, useLocation } from 'react-router-dom';
 import { Fragment } from 'react';
 import VRapeutic from '../../assets/images/VRapeutic.png';
@@ -13,8 +22,10 @@ import { Therapycenters } from '../../assets/icons/Therapycenters';
 import { Theraputicmodules } from '../../assets/icons/Theraputicmodules';
 import { Lamp } from '../../assets/icons/Lamp';
 import { Subscriptions } from '../../assets/icons/Subscriptions';
+import SelectingCenter from '@renderer/pages/StartSession/SelectingCenter';
 
 export default function Sidebar() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
   const active = {
     color: '#00DEA3',
@@ -242,8 +253,22 @@ export default function Sidebar() {
               New kid
             </Link>
           </Flex>
+          <Button
+            w="143px"
+            h="40px"
+            ml="24px"
+            mt="55px"
+            padding="12px 24px"
+            bg="#F5B50E"
+            color="#FFFFFF"
+            fontWeight="500"
+            onClick={onOpen}
+          >
+            Start a Session
+          </Button>
         </Box>
       </VStack>
+      {onOpen && <SelectingCenter isOpen={isOpen} onClose={onClose} />}
     </Flex>
   );
 }
