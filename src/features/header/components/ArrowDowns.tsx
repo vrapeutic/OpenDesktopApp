@@ -11,14 +11,21 @@ import {
   PopoverTrigger,
   HStack,
   Divider,
+  Link,
 } from '@chakra-ui/react';
 import { ArrowDown } from '@renderer/assets/icons/ArrowDown';
 import { Language } from '@renderer/assets/icons/Language';
 import { LogOut } from '@renderer/assets/icons/LogOut';
 import { Setting } from '@renderer/assets/icons/Setting';
 import { Users } from '@renderer/assets/icons/Users';
+import { useNavigate } from 'react-router-dom';
 
 const ArrowDowns = (props: any) => {
+  const navigate = useNavigate();
+  const logout = () =>{
+    localStorage.clear();
+    navigate('/login');
+  }
   return (
     <>
       <Popover
@@ -86,14 +93,16 @@ const ArrowDowns = (props: any) => {
             <HStack>
               <LogOut />
             </HStack>
-            <Text
+            <Link
               ml="12px"
               fontSize="0.875rem"
               color="#595959"
               letterSpacing="0.016em"
+              _hover={{textDecoration: 'none'}}
+              onClick={logout}
             >
               Log out
-            </Text>
+            </Link>
           </Flex>
         </PopoverContent>
       </Popover>
