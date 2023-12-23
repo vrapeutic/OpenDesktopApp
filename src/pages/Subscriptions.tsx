@@ -45,6 +45,7 @@ const Subscriptions: React.FC = () => {
 
   const handleFormSubmit = (data: any) => {
     setFormData({ ...formData, ...data });
+    console.log(formData)
     return { ...formData, ...data };
   };
 
@@ -88,25 +89,8 @@ const Subscriptions: React.FC = () => {
             sliding={sliding}
           />
         );
-      case 4:
-        return (
-          <EductionIInfoForm
-            onSubmit={handleFormSubmit}
-            nextHandler={nextHandler}
-            backHandler={backHandler}
-            sliding={sliding}
-          />
-        );
-      case 5:
-        return (
-          <ContactForm
-            onSubmit={handleFormSubmit}
-            nextHandler={nextHandler}
-            backHandler={backHandler}
-            sliding={sliding}
-            formData={formData}
-          />
-        );
+    
+     
       default:
         return null;
     }

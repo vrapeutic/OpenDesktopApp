@@ -30,11 +30,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
     Name: joi.string().min(3).max(30).required().label('Name'),
 
     Type: joi.string().required(),
-    // Email: joi
-    //   .string()
-    //   .email({ tlds: { allow: false } })
-    //   .required(),
-    Skills: joi.string().min(3).max(30).required().label('Skills'),
+  
     From: joi.number().required(),
     To: joi.number().required(),
     specializationschema: joi.array().required().label('specializationschema'),
@@ -230,7 +226,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Skills
+            specializationschema
           </FormLabel>
 {/* 
           <Input
