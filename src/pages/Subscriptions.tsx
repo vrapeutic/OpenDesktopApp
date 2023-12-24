@@ -25,6 +25,7 @@ import GeneralInfoForm from '../features/AddCenterForm/GeneralInfoForm';
 import SpecialtyForm from '../features/AddCenterForm/SpecialtyForm';
 import HeaderSpaceBetween from '../theme/components/HeaderSpaceBetween';
 import GeneralInfoModule from '@renderer/features/AddModuleForm/GeneralInfoModule';
+import SpecialtyFormModule from '@renderer/features/AddModuleForm/SpecialityFormModule';
 
 interface Center {
   id: number;
@@ -44,8 +45,9 @@ const Subscriptions: React.FC = () => {
   const [formData, setFormData] = useState({});
 
   const handleFormSubmit = (data: any) => {
-    setFormData({ ...formData, ...data });
-    console.log(formData)
+    // Use the previous state to ensure the latest form data is captured
+    setFormData(prevFormData => ({ ...prevFormData, ...data }));
+    console.log(formData); // Logging the form data to the console
     return { ...formData, ...data };
   };
 
@@ -82,7 +84,7 @@ const Subscriptions: React.FC = () => {
         );
       case 3:
         return (
-          <SpecialtyForm
+          <SpecialtyFormModule
             onSubmit={handleFormSubmit}
             nextHandler={nextHandler}
             backHandler={backHandler}

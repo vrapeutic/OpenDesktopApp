@@ -9,6 +9,7 @@ import {
   GridItem,
   Input,
   Flex,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Progressbar from '../../theme/components/ProgressBarAddCenter';
@@ -19,6 +20,8 @@ import axios from 'axios';
 import { config } from '@renderer/config';
 import makeAnimated from 'react-select/animated';
 import ProgressBarAddModule from '@renderer/theme/components/ProgressBarAddModule';
+import CongratulationsModule from './CongratulationsModuleAdmin';
+import { useNavigate } from 'react-router-dom';
 
 const GeneralInfoModule: React.FC<TherapyFormProps> = ({
   onSubmit,
@@ -32,8 +35,8 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
     Type: joi.string().required(),
   
     From: joi.number().required(),
-    To: joi.number().required(),
-    specializationschema: joi.array().required().label('specializationschema'),
+    To: joi.number().required().greater(joi.ref('From')).message('"To" must be greater than "From"').label('To'),
+        specializationschema: joi.array().required().label('specializationschema'),
 
   });
   const {
@@ -57,9 +60,12 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
 
   }) => {
     onSubmit(data);
-    nextHandler();
+    // onOpen();
+
+     nextHandler();
   };
 
+  // const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [specialistslist, setspecialistslist] = useState([]);
 
@@ -87,7 +93,9 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
     value: speciality.id,
   }));
 
+
   return (
+    <>
     <Box
       bg="#FFFFFF"
       borderRadius="10px"
@@ -293,6 +301,8 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
         )}
       </Flex>
     </Box>
+   
+    </>
   );
 };
 export default GeneralInfoModule;
