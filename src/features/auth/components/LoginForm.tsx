@@ -119,7 +119,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
               color="#4965CA"
               m="0px"
             >
-              Email or mobile number
+              Email or mobile number Email or mobile number
             </FormLabel>
             <InputGroup>
               <Input
