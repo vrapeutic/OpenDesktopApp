@@ -15,7 +15,7 @@ export default function VRsessionsCard(props: any) {
       borderRadius="10px"
     >
       <CardBody>
-        {props.loading && <RadialChart />}
+        {props.loading && <RadialChart refreshKey={props.refreshKey} />}
         {!props.loading && (
           <>
             <Text

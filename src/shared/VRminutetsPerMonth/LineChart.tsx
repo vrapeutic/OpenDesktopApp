@@ -1,154 +1,148 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { config } from '../../config';
+import { config } from '@renderer/config';
 import { dataContext } from '@renderer/shared/Provider';
 
-class LineChart extends Component<any> {
-  static contextType = dataContext;
-  state: any = { series: [], options: {} };
-  constructor(props: any) {
-    super(props);
+export default function LineChart(props: any) {
+  const center = useContext(dataContext);
+  const [lineChart, setLineChart] = useState<{ series: any; options: object }>({
+    series: [
+      {
+        name: 'Minutes',
+        data: [],
+      },
+    ],
 
-    this.state = {
-      series: [
-        {
-          name: 'Minutes',
-          data: [],
-        },
-      ],
-
-      options: {
-        chart: {
-          id: 'mychart',
-          height: 172.34,
-          type: 'line',
-          toolbar: {
-            show: true,
-            offsetX: 0,
-            offsetY: 0,
-            tools: {
-              download: '...',
-              selection: true,
-              zoom: false,
-              zoomin: false,
-              zoomout: false,
-              pan: false,
-              reset: false,
-              customIcons: [],
-            },
-            export: {
-              csv: {
-                filename: undefined,
-                columnDelimiter: ',',
-                headerCategory: 'category',
-                headerValue: 'value',
-                dateFormatter(timestamp: any) {
-                  return new Date(timestamp).toDateString();
-                },
-              },
-              svg: {
-                filename: undefined,
-              },
-              png: {
-                filename: undefined,
-              },
-            },
-            autoSelected: 'zoom',
-          },
-
-          dropShadow: {
-            enabled: true,
-            enabledOnSeries: undefined,
-            top: 12.29,
-            left: 0,
-            blur: 5,
-            color: 'rgb(86, 59, 255)',
-            opacity: 0.26,
-          },
-        },
-
-        stroke: {
-          width: 5,
-          curve: 'smooth',
-        },
-
-        title: {
-          text: 'Number of VR minutes per Month',
-          align: 'left',
-          style: {
-            left: '24px',
-            top: '24px',
-            fontFamily: 'Graphik LCG',
-            fontWeight: 500,
-            fontSize: 20,
-            lineHeight: 20,
-          },
-        },
-
-        noData: {
-          text: 'Select center to show chart...',
-        },
-
-        xaxis: {
-          categories: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-          ],
-        },
-
-        yaxis: {
-          show: false,
-        },
-
-        colors: ['#A93BFF'],
-
-        grid: {
+    options: {
+      chart: {
+        id: 'mychart',
+        height: 172.34,
+        type: 'line',
+        toolbar: {
           show: true,
-          borderColor: '#90A4AE',
-          strokeDashArray: 0,
-          position: 'back',
-          xaxis: {
-            lines: {
-              show: false,
+          offsetX: 0,
+          offsetY: 0,
+          tools: {
+            download: '...',
+            selection: true,
+            zoom: false,
+            zoomin: false,
+            zoomout: false,
+            pan: false,
+            reset: false,
+            customIcons: [],
+          },
+          export: {
+            csv: {
+              filename: undefined,
+              columnDelimiter: ',',
+              headerCategory: 'category',
+              headerValue: 'value',
+              dateFormatter(timestamp: any) {
+                return new Date(timestamp).toDateString();
+              },
+            },
+            svg: {
+              filename: undefined,
+            },
+            png: {
+              filename: undefined,
             },
           },
-          yaxis: {
-            lines: {
-              show: false,
-            },
-          },
-          row: {
-            colors: undefined,
-            opacity: 0.5,
-          },
-          column: {
-            colors: undefined,
-            opacity: 0.5,
-          },
-          padding: {
-            top: 35.1,
-            right: 24,
-            bottom: 0,
-            left: 24,
-          },
+          autoSelected: 'zoom',
+        },
+
+        dropShadow: {
+          enabled: true,
+          enabledOnSeries: undefined,
+          top: 12.29,
+          left: 0,
+          blur: 5,
+          color: 'rgb(86, 59, 255)',
+          opacity: 0.26,
         },
       },
-    };
-  }
 
-  async getData() {
+      stroke: {
+        width: 5,
+        curve: 'smooth',
+      },
+
+      title: {
+        text: 'Number of VR minutes per Month',
+        align: 'left',
+        style: {
+          left: '24px',
+          top: '24px',
+          fontFamily: 'Graphik LCG',
+          fontWeight: 500,
+          fontSize: 20,
+          lineHeight: 20,
+        },
+      },
+
+      noData: {
+        text: 'Select center to show chart...',
+      },
+
+      xaxis: {
+        categories: [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ],
+      },
+
+      yaxis: {
+        show: false,
+      },
+
+      colors: ['#A93BFF'],
+
+      grid: {
+        show: true,
+        borderColor: '#90A4AE',
+        strokeDashArray: 0,
+        position: 'back',
+        xaxis: {
+          lines: {
+            show: false,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: false,
+          },
+        },
+        row: {
+          colors: undefined,
+          opacity: 0.5,
+        },
+        column: {
+          colors: undefined,
+          opacity: 0.5,
+        },
+        padding: {
+          top: 35.1,
+          right: 24,
+          bottom: 0,
+          left: 24,
+        },
+      },
+    },
+  });
+
+  const getData = async () => {
     const token = await (window as any).electronAPI.getPassword('token');
-    const center: any = this.context;
     const date = new Date();
     const year = date.getFullYear();
     const month = {
@@ -181,7 +175,8 @@ class LineChart extends Component<any> {
       )
         .then((response) => response.json())
         .then((result) => {
-          this.setState({
+          setLineChart({
+            ...lineChart,
             series: [
               {
                 name: 'Minutes',
@@ -192,28 +187,19 @@ class LineChart extends Component<any> {
         })
         .catch((error) => console.log('error', error));
     }
-  }
-  componentDidMount() {
-    this.getData();
-  }
+  };
 
-  componentDidUpdate(prevState: any) {
-    if (prevState.series !== this.state.series) {
-      this.getData();
-    }
-  }
+  useEffect(() => {
+    getData();
+  }, [props.refreshKey]);
 
-  render() {
-    return (
-      <ReactApexChart
-        options={this.state.options}
-        series={this.state.series}
-        type="line"
-        height="228.32px"
-        width="557.12px"
-      />
-    );
-  }
+  return (
+    <ReactApexChart
+      options={lineChart.options}
+      series={lineChart.series}
+      type="line"
+      height="228.32px"
+      width="557.12px"
+    />
+  );
 }
-
-export default LineChart;

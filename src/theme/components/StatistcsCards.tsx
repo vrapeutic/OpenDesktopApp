@@ -7,7 +7,7 @@ import { VRsessions } from '../../assets/icons/VRsessions';
 import { config } from '../../config';
 import { dataContext } from '@renderer/shared/Provider';
 
-export default function StatistcsCards() {
+export default function StatistcsCards(props: any) {
   const [kids, setKids] = useState<any>(new Object());
   const [sessions, setSessions] = useState<any>(new Object());
   const selectedCenter = useContext(dataContext);
@@ -48,7 +48,7 @@ export default function StatistcsCards() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [props.refreshKey]);
 
   return (
     <>
