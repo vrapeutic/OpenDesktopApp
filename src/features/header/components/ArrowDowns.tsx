@@ -92,7 +92,7 @@ const ArrowDowns = (props: any) => {
               color="#595959"
               letterSpacing="0.016em"
             >
-              Log out
+              Log out ooooo
             </Text>
           </Flex>
         </PopoverContent>
