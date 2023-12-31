@@ -170,29 +170,29 @@ class LineChart extends Component<any> {
       acc[`${key} ${year}`] = value;
       return acc;
     }, {});
-    if(center.id !== undefined){
-
-    await fetch(
-      `${config.apiURL}/api/v1/doctors/center_vr_minutes?center_id=${center.id}`,
-      {
-        method: 'Get',
-        redirect: 'follow',
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        this.setState({
-          series: [
-            {
-              name: 'Minutes',
-              data: Object.values(Object.assign(months, result)),
-            },
-          ],
-        });
-      })
-      .catch((error) => console.log('error', error));
-  }}
+    if (center.id !== undefined) {
+      await fetch(
+        `${config.apiURL}/api/v1/doctors/center_vr_minutes?center_id=${center.id}`,
+        {
+          method: 'Get',
+          redirect: 'follow',
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          this.setState({
+            series: [
+              {
+                name: 'Minutes',
+                data: Object.values(Object.assign(months, result)),
+              },
+            ],
+          });
+        })
+        .catch((error) => console.log('error', error));
+    }
+  }
   componentDidMount() {
     this.getData();
   }

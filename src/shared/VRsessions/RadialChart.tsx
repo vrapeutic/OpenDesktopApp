@@ -219,21 +219,22 @@ class RadialChart extends React.Component<any> {
   async getData() {
     const token = await (window as any).electronAPI.getPassword('token');
     const center: any = this.context;
-    if(center.id !== undefined){
-    await fetch(
-      `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
-      {
-        method: 'Get',
-        redirect: 'follow',
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        this.setState({ series: Object.values(result) });
-      })
-      .catch((error) => console.log('error', error));
-  }}
+    if (center.id !== undefined) {
+      await fetch(
+        `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
+        {
+          method: 'Get',
+          redirect: 'follow',
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          this.setState({ series: Object.values(result) });
+        })
+        .catch((error) => console.log('error', error));
+    }
+  }
 
   componentDidMount() {
     this.getData();

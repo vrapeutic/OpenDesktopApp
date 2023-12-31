@@ -1,11 +1,12 @@
-import { Icon } from "@chakra-ui/react";
+import { Icon } from '@chakra-ui/react';
 export const LinkedInIcon = (props: any) => (
   <Icon
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
     viewBox="0 0 24 24"
-    fill="none">
+    fill="none"
+  >
     <path
       d="M21.6004 21.5997V14.5677C21.6004 11.1117 20.8564 8.47168 16.8244 8.47168C14.8804 8.47168 13.5844 9.52768 13.0564 10.5357H13.0084V8.78368H9.19238V21.5997H13.1764V15.2397C13.1764 13.5597 13.4884 11.9517 15.5524 11.9517C17.5924 11.9517 17.6164 13.8477 17.6164 15.3357V21.5757H21.6004V21.5997Z"
       fill="black"

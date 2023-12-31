@@ -176,7 +176,6 @@ export default function Specialty(props: any) {
       {Back && <Generalinfo />}
 
       {Next && <Educationinfo userData={props.userData} />} */}
-      
     </>
   );
 }
