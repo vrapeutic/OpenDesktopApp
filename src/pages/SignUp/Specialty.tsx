@@ -13,7 +13,7 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import Educationinfo from '@renderer/pages/SignUp/Educationinfo';
 import Generalinfo from '@renderer/pages/SignUp/Generalinfo';
-import Progressbar from '../../theme/components/ProgressBarSignup';
+import Progressbar from '@renderer/theme/components/ProgressBarSignup';
 import Joi from 'joi';
 import { config } from '@renderer/config';
 
@@ -86,7 +86,7 @@ export default function Specialty(props: any) {
   };
   return (
     <>
-      {/* <HStack position="absolute" left="291px" top="128px">
+      <HStack position="absolute" left="291px" top="128px">
         <Icon as={ArrowBackIcon} w="16px" h="16px" top="135px" />
         <Text
           top="128px"
@@ -175,7 +175,7 @@ export default function Specialty(props: any) {
 
       {Back && <Generalinfo />}
 
-      {Next && <Educationinfo userData={props.userData} />} */}
+      {Next && <Educationinfo userData={props.userData} />}
     </>
   );
 }
