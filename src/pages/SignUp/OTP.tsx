@@ -9,6 +9,7 @@ import {
   Button,
   HStack,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import LoginNavigation from '@renderer/features/auth/components/LoginNavigation';
 import BackgroundLogin from '@renderer/assets/images/BackgroundLogin.png';
@@ -16,14 +17,19 @@ import VRapeutic from '@renderer/assets/images/VRapeutic.png';
 import { Spinner } from '@renderer/assets/icons/Spinner';
 import React, { useState } from 'react';
 import OTPInput from 'react-otp-input';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { config } from '@renderer/config';
 import Congratulations from './Congratulations';
+import { setApiToken } from '@renderer/api';
+import { setMe } from '@renderer/cache';
 
 export default function OTP() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [otp, setOtp] = useState('');
   const location = useLocation();
+  const toast = useToast();
+  const [errormessage, seterrormessage] = useState();
+  const navigate = useNavigate();
 
   const input = {
     width: '60px',
@@ -33,6 +39,16 @@ export default function OTP() {
     marginRight: '8px',
   };
 
+  const handleError = (error: any) => {
+    toast({
+      title: 'Error',
+      description: error.response.data.error,
+      status: 'success',
+      duration: 9000,
+      position: 'top-right',
+    });
+  };
+
   const otpHandleChange = (otp: string) => {
     setOtp(otp);
     if (otp.length === 6) {
@@ -40,16 +56,47 @@ export default function OTP() {
         `${config.apiURL}/api/v1/doctors/${location.state.id}/validate_otp`,
         {
           method: 'POST',
-          body: otp,
+          body: JSON.stringify({ otp }), // sending the OTP as an object
+          headers: {
+            'Content-Type': 'application/json',
+          },
           redirect: 'follow',
         }
       )
-        .then((response) => response.text())
-        .then((result) => {
-          onOpen();
-          console.log(result);
+        .then((response) => {
+          console.log('response in response', response);
+          if (response.ok && response.status >= 200 && response.status < 300) {
+            // If response is successful (status code 200-299)
+            // onOpen();
+            navigate('/');
+            console.log(response);
+          } else {
+            // If response is not successful (status code outside 200-299)
+            console.log(`Error: ${response}`);
+
+            console.log(`Error: ${response.status} - ${response.statusText}`);
+          }
+          return response.text();
         })
-        .catch((error) => console.log('error', error));
+        .then(async (...params) => {
+          console.log('with name params', params);
+          const resultObject = JSON.parse(params[0]);
+          console.log('result object', resultObject);
+
+          const token = resultObject.token;
+
+          console.log('Accessing the token object params:', token);
+
+          setApiToken(token);
+          setMe(resultObject);
+          (window as any).electronAPI.setPassword('token', token);
+
+          if (resultObject.error) {
+            console.log('from result includes', 'OTP is not valid or expired');
+            seterrormessage('OTP is not valid or expired');
+          }
+        })
+        .catch((error) => console.error('error', error));
     }
   };
 
@@ -164,7 +211,7 @@ export default function OTP() {
                   Verifying
                 </Button>
               </HStack>
-
+              {errormessage && <Text color={'red'}>{errormessage}</Text>}
               <Button
                 width="149px"
                 height="59px"
