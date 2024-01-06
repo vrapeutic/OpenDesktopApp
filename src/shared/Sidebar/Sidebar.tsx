@@ -47,7 +47,7 @@ export default function Sidebar() {
   };
   console.log(location.pathname);
 
-  const sideItems = [
+  const sideItemsDoctor = [
     {
       link: 'Dashboard',
       icon: (
@@ -135,6 +135,18 @@ export default function Sidebar() {
     },
   ];
 
+  const sideItemsAdmin = [
+    {
+      link: 'Dashboard',
+      icon: (
+        <Dashboard
+          color={location.pathname === '/home' ? '#00DEA3' : '#333333'}
+        />
+      ),
+      path: '/home',
+    },
+  ];
+
   return (
     <Flex
       pos="sticky"
@@ -150,32 +162,57 @@ export default function Sidebar() {
           <Flex paddingY="27px">
             <Image src={VRapeutic} />
           </Flex>
-
-          {sideItems.map((item) => (
-            <Fragment key={item.path}>
-              <Box
-                position="absolute"
-                style={location.pathname === item.path ? Sidebar : null}
-              />
-              <Flex
-                mb="24px"
-                style={location.pathname === item.path ? active : null}
-              >
-                {item.icon}
-                <Link
-                  as={ReachLink}
-                  to={item.path}
-                  size="18px"
-                  ml="14px"
-                  _hover={{
-                    textDecoration: 'none',
-                  }}
-                >
-                  {item.link}
-                </Link>
-              </Flex>
-            </Fragment>
-          ))}
+          {adminBoolean
+            ? sideItemsAdmin.map((item) => (
+                <Fragment key={item.path}>
+                  <Box
+                    position="absolute"
+                    style={location.pathname === item.path ? Sidebar : null}
+                  />
+                  <Flex
+                    mb="24px"
+                    style={location.pathname === item.path ? active : null}
+                  >
+                    {item.icon}
+                    <Link
+                      as={ReachLink}
+                      to={item.path}
+                      size="18px"
+                      ml="14px"
+                      _hover={{
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {item.link}
+                    </Link>
+                  </Flex>
+                </Fragment>
+              ))
+            : sideItemsDoctor.map((item) => (
+                <Fragment key={item.path}>
+                  <Box
+                    position="absolute"
+                    style={location.pathname === item.path ? Sidebar : null}
+                  />
+                  <Flex
+                    mb="24px"
+                    style={location.pathname === item.path ? active : null}
+                  >
+                    {item.icon}
+                    <Link
+                      as={ReachLink}
+                      to={item.path}
+                      size="18px"
+                      ml="14px"
+                      _hover={{
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {item.link}
+                    </Link>
+                  </Flex>
+                </Fragment>
+              ))}
 
           <Flex
             justify="center"
