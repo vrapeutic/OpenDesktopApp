@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { Link as ReachLink, useLocation } from 'react-router-dom';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import VRapeutic from '../../assets/images/VRapeutic.png';
 import logo1 from '../../assets/images/logo1.png';
 import { Dashboard } from '../../assets/icons/Dashboard';
@@ -23,10 +23,17 @@ import { Theraputicmodules } from '../../assets/icons/Theraputicmodules';
 import { Lamp } from '../../assets/icons/Lamp';
 import { Subscriptions } from '../../assets/icons/Subscriptions';
 import SelectingCenter from '@renderer/pages/StartSession/SelectingCenter';
+import { useAdminContext } from '@renderer/Context/AdminContext';
 
 export default function Sidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
+  const { adminBoolean } = useAdminContext();
+  useEffect(() => {
+    // Log the value of adminBoolean when the component mounts or when it changes
+    console.log('Admin Context Value:', adminBoolean);
+  }, [adminBoolean]);
+
   const active = {
     color: '#00DEA3',
     fontWeight: '600',

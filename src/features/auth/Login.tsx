@@ -2,7 +2,7 @@ import { Grid, GridItem } from '@chakra-ui/react';
 import LoginNavigation from '@renderer/features/auth/components/LoginNavigation';
 import BackgroundLogin from '../../assets/images/BackgroundLogin.png';
 import { useNavigate } from 'react-router-dom';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import {
   Flex,
   Box,
@@ -18,19 +18,16 @@ import {
   InputRightElement,
   InputGroup,
 } from '@chakra-ui/react';
-import VRapeutic from '../../assets/images/VRapeutic.png'
+import VRapeutic from '../../assets/images/VRapeutic.png';
 import { EyeIcon } from '@renderer/assets/icons/EyeIcon';
 import { ArrowForwardIcon, CheckIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { useLoginMutation } from './hooks/useLoginMutation';
+import  { useAdminContext } from '@renderer/Context/AdminContext';
 const Login = () => {
-
   // const onLoginSuccess = () =>     navigate('/validateotp', {
   //   state: { id: userId, email: props.userData.email },
   // });
-
-
-
 
   const [data, setData] = useState({ identifier: '', password: '' });
   const [error, setError] = useState({ identifier: null, password: null });
@@ -39,14 +36,24 @@ const Login = () => {
   const navigate = useNavigate();
 
 
+
+  const { setAdminBoolean } = useAdminContext();
+
   const onLoginSuccess = (response: Return) => {
-    // Now you can access the response data here
-    console.log('onLoginSuccess:', response);
-  
+    console.log('onLoginSuccess my function:', response);
+
+    // Update the value in the AdminContext based on response.is_admin
+    setAdminBoolean(response.is_admin);
+
     // Perform any other actions you want to do on successful login
-    navigate('/validateotp', {
-      state: { id: response.doctor.id, email: response.doctor.attributes.email },
-    });
+    response.is_admin
+      ? navigate('/')
+      : navigate('/validateotp', {
+          state: {
+            id: response.doctor.id,
+            email: response.doctor.attributes.email,
+          },
+        });
   };
 
   const identifierSchema = Joi.alternatives()
@@ -96,9 +103,9 @@ const Login = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-  
+
     const result = schema.validate(data);
-  
+
     if (result.error) {
       // TODO: handle error
       console.log(result.error);
@@ -107,13 +114,10 @@ const Login = () => {
         onSuccess: (response) => {
           console.log('Login success:', response);
           onLoginSuccess(response); // Pass the response data to onLoginSuccess
-          
         },
-        onError: (e) => console.log('Login failed: ', e.message),
       });
     }
   };
-  
 
   return (
     <>
@@ -124,153 +128,161 @@ const Login = () => {
       >
         <GridItem bg="white">
           {/* <LoginForm onLoginSuccess={onLoginSuccess} /> */}
-          <Flex maxW="400px" marginX="auto" flexDirection="column" height="100%">
-      <Box maxW="23.75rem">
-        <Image src={VRapeutic} alt="VRapeutic logo" w="176px" pt="32px" />
-        <Heading
-          pt="69px"
-          letterSpacing="-0.01em"
-          fontFamily="inherit"
-          fontWeight="600"
-          fontSize="2rem"
-          color="#222631"
-        >
-          Welcome back
-        </Heading>
-        <Text fontSize="1rem" pt="19px" color="#58667E">
-          Please login or register to start using your VRapeutic account.
-        </Text>
-        <form onSubmit={onSubmit}>
-          <FormControl>
-            <FormLabel
-              pt="24px"
-              pb="12px"
-              fontSize="1rem"
-              color="#4965CA"
-              m="0px"
-            >
-              Email or mobile number
-            </FormLabel>
-            <InputGroup>
-              <Input
-                isInvalid={
-                  data.identifier.length > 0 && Boolean(error.identifier)
-                }
-                onChange={(e) => handleIdentifierChange(e.target.value)}
-                value={data.identifier}
-                type="email"
-                borderRadius="8px"
-                border="1px"
-                borderColor="#4965CA"
-                px="20px"
-                py="18px"
-                h="unset"
-                placeholder="0123 456 7890"
-              />
-              <InputRightElement
-                h="100%"
-                pr="11.33px"
-                children={
-                  data.identifier.length > 0 && !Boolean(error.identifier) ? (
-                    <CheckIcon color="#16C683" />
-                  ) : null
-                }
-              />
-            </InputGroup>
-            <FormLabel
-              pt="24px"
-              pb="12px"
-              fontSize="1rem"
-              color="#222631"
-              m="0px"
-            >
-              Password
-            </FormLabel>
-            <InputGroup>
-              <Input
-                isInvalid={data.password.length > 0 && Boolean(error.password)}
-                onChange={(e) => handlePasswordChange(e.target.value)}
-                value={data.password}
-                type={showPassword ? 'text' : 'password'}
-                borderRadius="8px"
-                border="1px"
-                borderColor="#E9EDF0"
-                px="20px"
-                py="18px"
-                h="unset"
-                letterSpacing="6px"
-                placeholder="Password"
-                _placeholder={{
-                  letterSpacing: 'initial',
-                }}
-              />
-              <InputRightElement
-                pr="10.83px"
-                h="100%"
-                cursor="pointer"
-                onClick={() => setShowPassword(!showPassword)}
-                children={<EyeIcon />}
-              />
-            </InputGroup>
-            <FormHelperText pt="12px" color="#C76565" fontSize="0.875rem">
-              Forgot Password ?
-            </FormHelperText>
-            <Button
-              type="submit"
-              w="380px"
-              h="73px"
-              mt="32px"
-              bg="#45A4C8"
-              _focus={{
-                boxShadow: '0px 4px 16px rgba(69, 164, 200, 0.24)',
-              }}
-              borderRadius="12px"
-              bgColor="#45A4C8"
-              padding="28px 32px"
-              color="white"
-              fontSize="1.5rem"
-              justifyContent="space-between"
-              rightIcon={<ArrowForwardIcon />}
-            >
-              Login
-            </Button>
-          </FormControl>
-        </form>
-        <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
-          New to VRapeutic?{' '}
-          <Link
-            display="inline"
-            color="#3961FB"
-            onClick={() => {
-              navigate('/signup');
-            }}
-            // href="https://site.vrpeutic.ca/request-demo/"
+          <Flex
+            maxW="400px"
+            marginX="auto"
+            flexDirection="column"
+            height="100%"
           >
-            Create an Account
-          </Link>
-        </Text>
-        <Text pt="12px" fontSize="0.75rem" color="#58667E">
-          By continuing you are agreeing to{' '}
-          <Link
-            display="inline"
-            color="#4F4F4F"
-            fontWeight="500"
-            textDecoration="underline"
-          >
-            Terms & Conditions
-          </Link>
-        </Text>
-      </Box>
-      <Text
-        position="relative"
-        marginTop="auto"
-        marginBottom="32px"
-        fontSize="0.75rem"
-        color="#000000"
-      >
-        2022 All Rights Reserved. VRapeutic.
-      </Text>
-    </Flex>
+            <Box maxW="23.75rem">
+              <Image src={VRapeutic} alt="VRapeutic logo" w="176px" pt="32px" />
+              <Heading
+                pt="69px"
+                letterSpacing="-0.01em"
+                fontFamily="inherit"
+                fontWeight="600"
+                fontSize="2rem"
+                color="#222631"
+              >
+                Welcome back
+              </Heading>
+              <Text fontSize="1rem" pt="19px" color="#58667E">
+                Please login or register to start using your VRapeutic account.
+              </Text>
+              <form onSubmit={onSubmit}>
+                <FormControl>
+                  <FormLabel
+                    pt="24px"
+                    pb="12px"
+                    fontSize="1rem"
+                    color="#4965CA"
+                    m="0px"
+                  >
+                    Email or mobile number
+                  </FormLabel>
+                  <InputGroup>
+                    <Input
+                      isInvalid={
+                        data.identifier.length > 0 && Boolean(error.identifier)
+                      }
+                      onChange={(e) => handleIdentifierChange(e.target.value)}
+                      value={data.identifier}
+                      type="email"
+                      borderRadius="8px"
+                      border="1px"
+                      borderColor="#4965CA"
+                      px="20px"
+                      py="18px"
+                      h="unset"
+                      placeholder="0123 456 7890"
+                    />
+                    <InputRightElement
+                      h="100%"
+                      pr="11.33px"
+                      children={
+                        data.identifier.length > 0 &&
+                        !Boolean(error.identifier) ? (
+                          <CheckIcon color="#16C683" />
+                        ) : null
+                      }
+                    />
+                  </InputGroup>
+                  <FormLabel
+                    pt="24px"
+                    pb="12px"
+                    fontSize="1rem"
+                    color="#222631"
+                    m="0px"
+                  >
+                    Password
+                  </FormLabel>
+                  <InputGroup>
+                    <Input
+                      isInvalid={
+                        data.password.length > 0 && Boolean(error.password)
+                      }
+                      onChange={(e) => handlePasswordChange(e.target.value)}
+                      value={data.password}
+                      type={showPassword ? 'text' : 'password'}
+                      borderRadius="8px"
+                      border="1px"
+                      borderColor="#E9EDF0"
+                      px="20px"
+                      py="18px"
+                      h="unset"
+                      letterSpacing="6px"
+                      placeholder="Password"
+                      _placeholder={{
+                        letterSpacing: 'initial',
+                      }}
+                    />
+                    <InputRightElement
+                      pr="10.83px"
+                      h="100%"
+                      cursor="pointer"
+                      onClick={() => setShowPassword(!showPassword)}
+                      children={<EyeIcon />}
+                    />
+                  </InputGroup>
+                  <FormHelperText pt="12px" color="#C76565" fontSize="0.875rem">
+                    Forgot Password ?
+                  </FormHelperText>
+                  <Button
+                    type="submit"
+                    w="380px"
+                    h="73px"
+                    mt="32px"
+                    bg="#45A4C8"
+                    _focus={{
+                      boxShadow: '0px 4px 16px rgba(69, 164, 200, 0.24)',
+                    }}
+                    borderRadius="12px"
+                    bgColor="#45A4C8"
+                    padding="28px 32px"
+                    color="white"
+                    fontSize="1.5rem"
+                    justifyContent="space-between"
+                    rightIcon={<ArrowForwardIcon />}
+                  >
+                    Login
+                  </Button>
+                </FormControl>
+              </form>
+              <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
+                New to VRapeutic?{' '}
+                <Link
+                  display="inline"
+                  color="#3961FB"
+                  onClick={() => {
+                    navigate('/signup');
+                  }}
+                  // href="https://site.vrpeutic.ca/request-demo/"
+                >
+                  Create an Account
+                </Link>
+              </Text>
+              <Text pt="12px" fontSize="0.75rem" color="#58667E">
+                By continuing you are agreeing to{' '}
+                <Link
+                  display="inline"
+                  color="#4F4F4F"
+                  fontWeight="500"
+                  textDecoration="underline"
+                >
+                  Terms & Conditions
+                </Link>
+              </Text>
+            </Box>
+            <Text
+              position="relative"
+              marginTop="auto"
+              marginBottom="32px"
+              fontSize="0.75rem"
+              color="#000000"
+            >
+              2022 All Rights Reserved. VRapeutic.
+            </Text>
+          </Flex>
         </GridItem>
         <GridItem
           bgImage={BackgroundLogin}
