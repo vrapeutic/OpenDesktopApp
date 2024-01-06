@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { Link as ReachLink, useLocation } from 'react-router-dom';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import VRapeutic from '../../assets/images/VRapeutic.png';
 import logo1 from '../../assets/images/logo1.png';
 import { Dashboard } from '../../assets/icons/Dashboard';
@@ -23,10 +23,17 @@ import { Theraputicmodules } from '../../assets/icons/Theraputicmodules';
 import { Lamp } from '../../assets/icons/Lamp';
 import { Subscriptions } from '../../assets/icons/Subscriptions';
 import SelectingCenter from '@renderer/pages/StartSession/SelectingCenter';
+import { useAdminContext } from '@renderer/Context/AdminContext';
 
 export default function Sidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
+  const { adminBoolean } = useAdminContext();
+  useEffect(() => {
+    // Log the value of adminBoolean when the component mounts or when it changes
+    console.log('Admin Context Value:', adminBoolean);
+  }, [adminBoolean]);
+
   const active = {
     color: '#00DEA3',
     fontWeight: '600',
@@ -40,7 +47,7 @@ export default function Sidebar() {
   };
   console.log(location.pathname);
 
-  const sideItems = [
+  const sideItemsDoctor = [
     {
       link: 'Dashboard',
       icon: (
@@ -128,6 +135,18 @@ export default function Sidebar() {
     },
   ];
 
+  const sideItemsAdmin = [
+    {
+      link: 'Dashboard',
+      icon: (
+        <Dashboard
+          color={location.pathname === '/home' ? '#00DEA3' : '#333333'}
+        />
+      ),
+      path: '/home',
+    },
+  ];
+
   return (
     <Flex
       pos="sticky"
@@ -143,32 +162,57 @@ export default function Sidebar() {
           <Flex paddingY="27px">
             <Image src={VRapeutic} />
           </Flex>
-
-          {sideItems.map((item) => (
-            <Fragment key={item.path}>
-              <Box
-                position="absolute"
-                style={location.pathname === item.path ? Sidebar : null}
-              />
-              <Flex
-                mb="24px"
-                style={location.pathname === item.path ? active : null}
-              >
-                {item.icon}
-                <Link
-                  as={ReachLink}
-                  to={item.path}
-                  size="18px"
-                  ml="14px"
-                  _hover={{
-                    textDecoration: 'none',
-                  }}
-                >
-                  {item.link}
-                </Link>
-              </Flex>
-            </Fragment>
-          ))}
+          {adminBoolean
+            ? sideItemsAdmin.map((item) => (
+                <Fragment key={item.path}>
+                  <Box
+                    position="absolute"
+                    style={location.pathname === item.path ? Sidebar : null}
+                  />
+                  <Flex
+                    mb="24px"
+                    style={location.pathname === item.path ? active : null}
+                  >
+                    {item.icon}
+                    <Link
+                      as={ReachLink}
+                      to={item.path}
+                      size="18px"
+                      ml="14px"
+                      _hover={{
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {item.link}
+                    </Link>
+                  </Flex>
+                </Fragment>
+              ))
+            : sideItemsDoctor.map((item) => (
+                <Fragment key={item.path}>
+                  <Box
+                    position="absolute"
+                    style={location.pathname === item.path ? Sidebar : null}
+                  />
+                  <Flex
+                    mb="24px"
+                    style={location.pathname === item.path ? active : null}
+                  >
+                    {item.icon}
+                    <Link
+                      as={ReachLink}
+                      to={item.path}
+                      size="18px"
+                      ml="14px"
+                      _hover={{
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {item.link}
+                    </Link>
+                  </Flex>
+                </Fragment>
+              ))}
 
           <Flex
             justify="center"

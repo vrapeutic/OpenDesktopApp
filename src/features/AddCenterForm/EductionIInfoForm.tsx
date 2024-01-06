@@ -17,7 +17,7 @@ import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import { Image } from '../../assets/icons/Image';
 import { TherapyFormProps } from './therapyFormInterface';
 
- const EductionIInfoForm:React.FC<TherapyFormProps>=({
+const EductionIInfoForm: React.FC<TherapyFormProps> = ({
   onSubmit,
   nextHandler,
   backHandler,
@@ -64,7 +64,7 @@ import { TherapyFormProps } from './therapyFormInterface';
     }
   };
 
-  const FormonSubmit = (data: { certification:File }) => {
+  const FormonSubmit = (data: { certification: File }) => {
     if (!selectedFile) {
       setError('certification', {
         type: 'manual',
@@ -110,7 +110,9 @@ import { TherapyFormProps } from './therapyFormInterface';
             borderRadius="8px"
           />
           {errors.registrationNumber && (
-            <Text color="red.500">{errors.registrationNumber.message as string}</Text>
+            <Text color="red.500">
+              {errors.registrationNumber.message as string}
+            </Text>
           )}
         </GridItem>
         <GridItem rowSpan={2}>
@@ -143,7 +145,9 @@ import { TherapyFormProps } from './therapyFormInterface';
               <Text mt="1em">Selected File: {selectedFile.name}</Text>
             )}
             {errors.certification && (
-              <Text color="red.500">{errors.certification.message as string}</Text>
+              <Text color="red.500">
+                {errors.certification.message as string}
+              </Text>
             )}
           </>
         </GridItem>
@@ -162,7 +166,9 @@ import { TherapyFormProps } from './therapyFormInterface';
             mb="1em"
             borderRadius="8px"
           />
-          {errors.taxID && <Text color="red.500">{errors.taxID.message as string}</Text>}
+          {errors.taxID && (
+            <Text color="red.500">{errors.taxID.message as string}</Text>
+          )}
         </GridItem>
       </Grid>
 
@@ -204,5 +210,5 @@ import { TherapyFormProps } from './therapyFormInterface';
       </Flex>
     </Box>
   );
-}
-export default  EductionIInfoForm
+};
+export default EductionIInfoForm;

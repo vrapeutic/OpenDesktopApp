@@ -12,10 +12,11 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
-import { Link as ReachLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
 export default function Congratulations(props: any) {
+  const navigate = useNavigate();
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -89,11 +90,10 @@ export default function Congratulations(props: any) {
               onClick={props.onClose}
             >
               <Link
-                as={ReachLink}
-                to={'/main_window'}
                 _hover={{
                   textDecoration: 'none',
                 }}
+                onClick={() => navigate('/home')}
               >
                 Go to home
               </Link>
