@@ -11,24 +11,24 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import LoginNavigation from '@renderer/features/auth/components/LoginNavigation';
-import BackgroundLogin from '@renderer/assets/images/BackgroundLogin.png';
-import VRapeutic from '@renderer/assets/images/VRapeutic.png';
-import { Spinner } from '@renderer/assets/icons/Spinner';
+import LoginNavigation from '../../features/auth/components/LoginNavigation';
+import BackgroundLogin from '../../assets/images/BackgroundLogin.png';
+import VRapeutic from '../../assets/images/VRapeutic.png';
+import { Spinner } from '../..//assets/icons/Spinner';
 import React, { useState } from 'react';
 import OTPInput from 'react-otp-input';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { config } from '@renderer/config';
+import { config } from '../..//config';
 import Congratulations from './Congratulations';
-import { setApiToken } from '@renderer/api';
-import { setMe } from '@renderer/cache';
+import { setApiToken } from '../..//api';
+import { setMe } from '../..//cache';
 
 export default function OTP() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [otp, setOtp] = useState('');
   const location = useLocation();
   const toast = useToast();
-  const [errormessage, seterrormessage] = useState();
+  const [errormessage, seterrormessage] = useState<string | undefined>(undefined)
   const navigate = useNavigate();
 
   const input = {

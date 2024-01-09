@@ -1,5 +1,5 @@
 import { Grid, GridItem } from '@chakra-ui/react';
-import LoginNavigation from '@renderer/features/auth/components/LoginNavigation';
+import LoginNavigation from '../../features/auth/components/LoginNavigation';
 import BackgroundLogin from '../../assets/images/BackgroundLogin.png';
 import { useNavigate } from 'react-router-dom';
 import { FormEvent, useContext, useState } from 'react';
@@ -19,15 +19,13 @@ import {
   InputGroup,
 } from '@chakra-ui/react';
 import VRapeutic from '../../assets/images/VRapeutic.png';
-import { EyeIcon } from '@renderer/assets/icons/EyeIcon';
+import { EyeIcon } from '../../assets/icons/EyeIcon';
 import { ArrowForwardIcon, CheckIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { useLoginMutation } from './hooks/useLoginMutation';
-import  { useAdminContext } from '@renderer/Context/AdminContext';
+import  { useAdminContext } from '../../Context/AdminContext';
 const Login = () => {
-  // const onLoginSuccess = () =>     navigate('/validateotp', {
-  //   state: { id: userId, email: props.userData.email },
-  // });
+ 
 
   const [data, setData] = useState({ identifier: '', password: '' });
   const [error, setError] = useState({ identifier: null, password: null });
@@ -39,13 +37,11 @@ const Login = () => {
 
   const { setAdminBoolean } = useAdminContext();
 
-  const onLoginSuccess = (response: Return) => {
+  const onLoginSuccess = (response:any) => {
     console.log('onLoginSuccess my function:', response);
 
-    // Update the value in the AdminContext based on response.is_admin
     setAdminBoolean(response.is_admin);
 
-    // Perform any other actions you want to do on successful login
     response.is_admin
       ? navigate('/')
       : navigate('/validateotp', {
@@ -179,12 +175,7 @@ const Login = () => {
                     <InputRightElement
                       h="100%"
                       pr="11.33px"
-                      children={
-                        data.identifier.length > 0 &&
-                        !Boolean(error.identifier) ? (
-                          <CheckIcon color="#16C683" />
-                        ) : null
-                      }
+                 
                     />
                   </InputGroup>
                   <FormLabel
