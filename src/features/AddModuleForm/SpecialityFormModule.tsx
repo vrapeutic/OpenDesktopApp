@@ -70,7 +70,8 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
 
   const [selectedFile, setSelectedFile] = useState<File>();
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
@@ -87,87 +88,32 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   };
 
   const FormonSubmit = (data: { certification: File }) => {
-    if (!selectedFile) {
-      setError('certification', {
-        type: 'manual',
-        message: 'Please upload an image file.',
-      });
-    } else {
-      clearErrors('certification');
-      data.certification = selectedFile;
-
-      onSubmit(data);
-      SendDataToApi();
-      setLoading(true);
-      console.log('Updated FormData in SpecialtyFormModule:', formData);
-
-      // onOpen();
-    }
-  };
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(
-      'Updated FormData in SpecialtyFormModule in use effect',
-      formData
-    );
-  }, [formData]);
-
-  const handleCloseModal = () => {
-    console.log('handle close modal');
-    onClose();
-    navigate('/');
+    onSubmit(data);
+    SendDataToApi(data);
+    setLoading(true);
+    console.log('Updated FormData in SpecialtyFormModule:', formData);
   };
 
-
-
-
-
-
-
-
-    
-  // const FormonSubmit = () => {
-  //   SendDataToApi();
-  //   setLoading(true);
-  // };
-
-  const createFormData = (
-   
-  ) => {
-    console.log("form data in create form data",formData)
+  const createFormData = (data) => {
+    console.log('form data in create form data', formData);
     const formDataTobesent = new FormData();
 
     formDataTobesent.append('name', formData.Name);
     formDataTobesent.append('version', formData.Version);
 
     formDataTobesent.append('technology', formData.Technology);
-    
-    
-    formData.specializationschema.forEach(
-      (specialty: { id: string | Blob }) =>
-      formDataTobesent.append('targeted_skill_ids[]', specialty.id)
-      );
-      formDataTobesent.append('min_age', formData.From);
-      formDataTobesent.append('max_age', formData.To);
-      formDataTobesent.append('image', formData.certification);
 
+    formData.specializationschema.forEach((specialty: { id: string | Blob }) =>
+      formDataTobesent.append('targeted_skill_ids[]', specialty.id)
+    );
+    formDataTobesent.append('min_age', data.From);
+    formDataTobesent.append('max_age', data.To);
+    formDataTobesent.append('image', data.certification);
 
     return formDataTobesent;
   };
-
-  const postFormData = (formDatasent: FormData) => {
-    const headers = {
-      otp: `${formData.Otp}`,
-    };
-
-    return axios.post(`http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/software_modules`, formDatasent, { headers });
-  };
-
-  const SendDataToApi = async () => {
- 
-
-    const formDatasent = createFormData();
+  const SendDataToApi = async (data) => {
+    const formDatasent = createFormData(data);
 
     try {
       await postFormData(formDatasent);
@@ -179,12 +125,20 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
     }
   };
 
+  const postFormData = (formDatasent: FormData) => {
+    const headers = {
+      otp: `${formData.Otp}`,
+    };
 
-  const toast = useToast();
+    return axios.post(
+      `http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/software_modules`,
+      formDatasent,
+      { headers }
+    );
+  };
+
 
   const handleError = (error: any) => {
-
-
     toast({
       title: 'Error',
       description: error.response.data.error,
@@ -193,6 +147,13 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       position: 'top-right',
     });
   };
+
+  const handleCloseModal = () => {
+    console.log('handle close modal');
+    onClose();
+    navigate('/');
+  };
+
   return (
     <>
       <Box
@@ -315,7 +276,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
         </Grid>
 
         <Flex flexDirection="row-reverse">
-        <Button
+          <Button
             type="submit"
             bg="#4AA6CA"
             borderRadius="0.75em"
