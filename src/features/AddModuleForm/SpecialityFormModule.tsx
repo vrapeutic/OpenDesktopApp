@@ -113,7 +113,7 @@ const SpecialtyFormModule: React.FC<TherapyFormProps> = ({
           templateColumns="repeat(2, 1fr)"
           gap="0em 1.5625em"
         >
-          <GridItem>
+          {/* <GridItem>
             <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
               Registration Number
             </FormLabel>
@@ -188,6 +188,111 @@ const SpecialtyFormModule: React.FC<TherapyFormProps> = ({
             {errors.taxID && (
               <Text color="red.500">{errors.taxID.message as string}</Text>
             )}
+          </GridItem> */}
+
+
+          <GridItem>
+          <FormLabel
+            display="inline"
+            mb="1em"
+            letterSpacing="0.256px"
+            color="#15134B"
+          >
+            Age Range
+          </FormLabel>
+          <Grid gap={2} templateColumns="repeat(2, 1fr)">
+            <GridItem>
+              <FormLabel
+                display="inline"
+                m="0em"
+                letterSpacing="0.256px"
+                color="#15134B"
+                fontSize={12}
+              >
+                From
+              </FormLabel>
+
+              <Input
+                {...register('From')}
+                id="From"
+                borderColor="#4965CA"
+                border="2px solid #E8E8E8"
+                _hover={{ border: '1px solid #4965CA' }}
+                boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+              />
+              {errors.From && (
+                <Text color="red.500">{errors.From.message as string}</Text>
+              )}
+            </GridItem>
+            <GridItem>
+              <FormLabel
+                display="inline"
+                m="0em"
+                letterSpacing="0.256px"
+                color="#15134B"
+                fontSize={12}
+              >
+                To
+              </FormLabel>
+
+              <Input
+                {...register('To')}
+                id="To"
+                borderColor="#4965CA"
+                border="2px solid #E8E8E8"
+                _hover={{ border: '1px solid #4965CA' }}
+                boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+              />
+              {errors.To && (
+                <Text color="red.500">{errors.To.message as string}</Text>
+              )}
+            </GridItem>
+          </Grid>
+        </GridItem>
+
+        <GridItem rowSpan={2}>
+            <>
+              <FormControl>
+                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                  certification
+                </FormLabel>
+                <Button
+                  h="128px"
+                  w="174px"
+                  border="2px solid #E8E8E8"
+                  borderRadius="8px"
+                  bg="#FFFFFF"
+                >
+                  <label>
+                    <Image />
+                    <Input
+                      {...register('certification')}
+                      id="certification"
+                      type="file"
+                      accept="application/pdf" // Update this line to accept PDF files
+                      onChange={(e) => handleCertificateChange(e)}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+                </Button>
+              </FormControl>
+              {selectedFile && (
+                <Text mt="1em">Selected File: {selectedFile.name}</Text>
+              )}
+              {errors.certification && (
+                <Text color="red.500">
+                  {errors.certification.message as string}
+                </Text>
+              )}
+            </>
           </GridItem>
         </Grid>
 
