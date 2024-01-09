@@ -11,7 +11,6 @@ import {
 import { Link as ReachLink, useLocation } from 'react-router-dom';
 import { Fragment, useEffect } from 'react';
 import VRapeutic from '../../assets/images/VRapeutic.png';
-import logo1 from '../../assets/images/logo1.png';
 import { Dashboard } from '../../assets/icons/Dashboard';
 import { Assessmenttools } from '../../assets/icons/Assessmenttools';
 import { Branches } from '../../assets/icons/Branches';
@@ -22,8 +21,8 @@ import { Therapycenters } from '../../assets/icons/Therapycenters';
 import { Theraputicmodules } from '../../assets/icons/Theraputicmodules';
 import { Lamp } from '../../assets/icons/Lamp';
 import { Subscriptions } from '../../assets/icons/Subscriptions';
-import SelectingCenter from '@renderer/pages/StartSession/SelectingCenter';
-import { useAdminContext } from '@renderer/Context/AdminContext';
+import SelectingCenter from '../../pages/StartSession/SelectingCenter';
+import { useAdminContext } from '../../Context/AdminContext';
 
 export default function Sidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -64,17 +63,7 @@ export default function Sidebar() {
       ),
       path: '/Kids',
     },
-    {
-      link: 'Theraputic Modules',
-      icon: (
-        <Theraputicmodules
-          color={
-            location.pathname === '/Theraputicmodules' ? '#00DEA3' : '#333333'
-          }
-        />
-      ),
-      path: '/Theraputicmodules',
-    },
+  
     {
       link: 'Therapy Centers',
       icon: (
@@ -144,6 +133,17 @@ export default function Sidebar() {
         />
       ),
       path: '/home',
+    },
+    {
+      link: 'Theraputic Modules',
+      icon: (
+        <Theraputicmodules
+          color={
+            location.pathname === '/Theraputicmodules' ? '#00DEA3' : '#333333'
+          }
+        />
+      ),
+      path: '/Theraputicmodules',
     },
   ];
 

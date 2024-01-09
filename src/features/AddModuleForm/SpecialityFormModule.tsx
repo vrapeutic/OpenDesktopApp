@@ -66,6 +66,8 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedFile, setSelectedFile] = useState<File>();
+
+
   const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
     const ext = file.name.split('.').pop()?.toLowerCase();
@@ -232,7 +234,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
         </Grid>
 
         <Flex flexDirection="row-reverse">
-          <Button
+        <Button
             type="submit"
             bg="#4AA6CA"
             borderRadius="0.75em"
