@@ -10,6 +10,7 @@ import {
   Input,
   Text,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
@@ -19,6 +20,8 @@ import { AddModuleFormProps } from './ModuleFormInterface';
 import ProgressBarAddModule from '../../theme/components/ProgressBarAddModule';
 import { useNavigate } from 'react-router-dom';
 import CongratulationsModuleAdmin from './CongratulationsModuleAdmin';
+import axios from 'axios';
+import { config } from 'dotenv';
 
 const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   onSubmit,
@@ -66,6 +69,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedFile, setSelectedFile] = useState<File>();
+  const [loading, setLoading] = useState(false);
 
 
   const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -93,9 +97,11 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       data.certification = selectedFile;
 
       onSubmit(data);
+      SendDataToApi();
+      setLoading(true);
       console.log('Updated FormData in SpecialtyFormModule:', formData);
 
-      onOpen();
+      // onOpen();
     }
   };
   const navigate = useNavigate();
@@ -111,6 +117,81 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
     console.log('handle close modal');
     onClose();
     navigate('/');
+  };
+
+
+
+
+
+
+
+
+    
+  // const FormonSubmit = () => {
+  //   SendDataToApi();
+  //   setLoading(true);
+  // };
+
+  const createFormData = (
+   
+  ) => {
+    console.log("form data in create form data",formData)
+    const formDataTobesent = new FormData();
+
+    formDataTobesent.append('name', formData.Name);
+    formDataTobesent.append('version', formData.Version);
+
+    formDataTobesent.append('technology', formData.Technology);
+    
+    
+    formData.specializationschema.forEach(
+      (specialty: { id: string | Blob }) =>
+      formDataTobesent.append('targeted_skill_ids[]', specialty.id)
+      );
+      formDataTobesent.append('min_age', formData.From);
+      formDataTobesent.append('max_age', formData.To);
+      formDataTobesent.append('image', formData.certification);
+
+
+    return formDataTobesent;
+  };
+
+  const postFormData = (formDatasent: FormData) => {
+    const headers = {
+      otp: `${formData.Otp}`,
+    };
+
+    return axios.post(`http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/software_modules`, formDatasent, { headers });
+  };
+
+  const SendDataToApi = async () => {
+ 
+
+    const formDatasent = createFormData();
+
+    try {
+      await postFormData(formDatasent);
+      onOpen();
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const toast = useToast();
+
+  const handleError = (error: any) => {
+
+
+    toast({
+      title: 'Error',
+      description: error.response.data.error,
+      status: 'success',
+      duration: 9000,
+      position: 'top-right',
+    });
   };
   return (
     <>
@@ -247,7 +328,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-            Next
+            {loading ? 'Uploading Your Data' : 'Submit'}
           </Button>
 
           {sliding === 1 ? null : (
