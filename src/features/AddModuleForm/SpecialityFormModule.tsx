@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent,  useState } from 'react';
 import {
   Box,
   Button,
@@ -21,11 +21,11 @@ import ProgressBarAddModule from '../../theme/components/ProgressBarAddModule';
 import { useNavigate } from 'react-router-dom';
 import CongratulationsModuleAdmin from './CongratulationsModuleAdmin';
 import axios from 'axios';
-import { config } from 'dotenv';
+import { config } from '../../config';
 
 const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   onSubmit,
-  nextHandler,
+  
   backHandler,
   sliding,
   formData,
@@ -87,14 +87,14 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
     }
   };
 
-  const FormonSubmit = (data: { certification: File }) => {
+  const FormonSubmit = (data:object) => {
     onSubmit(data);
     SendDataToApi(data);
     setLoading(true);
     console.log('Updated FormData in SpecialtyFormModule:', formData);
   };
 
-  const createFormData = (data) => {
+  const createFormData = (data:any) => {
     console.log('form data in create form data', formData);
     const formDataTobesent = new FormData();
 
@@ -106,13 +106,13 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
     formData.specializationschema.forEach((specialty: { id: string | Blob }) =>
       formDataTobesent.append('targeted_skill_ids[]', specialty.id)
     );
-    formDataTobesent.append('min_age', data.From);
+    formDataTobesent.append('min_age', data.From) ;
     formDataTobesent.append('max_age', data.To);
     formDataTobesent.append('image', data.certification);
 
     return formDataTobesent;
   };
-  const SendDataToApi = async (data) => {
+  const SendDataToApi = async (data:object) => {
     const formDatasent = createFormData(data);
 
     try {
@@ -131,7 +131,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
     };
 
     return axios.post(
-      `http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/software_modules`,
+      `${config.apiURL}/api/v1/software_modules`,
       formDatasent,
       { headers }
     );
