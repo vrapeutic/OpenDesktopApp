@@ -82,7 +82,7 @@ export default function Generalinfo() {
 
   return (
     <>
-      {/* <HStack position="absolute" left="291px" top="128px">
+      <HStack position="absolute" left="291px" top="128px">
         <Icon as={ArrowBackIcon} w="16px" h="16px" top="135px" />
         <Text
           top="128px"
@@ -157,7 +157,7 @@ export default function Generalinfo() {
           </FormControl>
         </form>
       </Box>
-      {Next && <Specialty userData={userData} />} */}
+      {Next && <Specialty userData={userData} />}
     </>
   );
 }

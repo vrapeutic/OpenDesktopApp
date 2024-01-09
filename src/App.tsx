@@ -1,4 +1,5 @@
-import { Routes, Route, MemoryRouter } from 'react-router-dom';
+import { Routes, Route, MemoryRouter, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import Home from './pages/Home';
 import Kids from './pages/Kids';
 import Theraputicmodules from './pages/Theraputicmodules';
@@ -11,60 +12,41 @@ import Login from './features/auth/Login';
 import Layout from './shared/Layout';
 import Subscriptions from './pages/Subscriptions';
 import Generalinfo from './pages/SignUp/Generalinfo';
-import { PrivateRoute } from './shared/PrivateRoute';
 import ViewCenter from './pages/ViewCenter';
 import EditCenter from './pages/EditCenter';
+import OTP from './pages/SignUp/OTP';
+import Uploadlogo from './pages/SignUp/Uploadlogo';
 
 function App() {
+  useEffect(() => {
+    const token = (window as any).electronAPI.getPassword('token');
+    console.log('token: ', token);
+    if (!token) {
+      // Redirect to login if token is not present
+      window.location.replace('/login');
+    }
+  }, []);
+
   return (
     <MemoryRouter>
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="/" element={<Layout />}>
           <Route path="signup" element={<Generalinfo />} />
-          <Route path="home" element={<PrivateRoute component={Home} />} />
-          <Route path="Kids" element={<PrivateRoute component={Kids} />} />
-          <Route
-            path="Theraputicmodules"
-            element={<PrivateRoute component={Theraputicmodules} />}
-          />
-          <Route
-            path="Therapycenters"
-            element={<PrivateRoute component={Therapycenters} />}
-          />
-          <Route
-            path="Therapycenters"
-            element={<PrivateRoute component={Therapycenters} />}
-          />
-          <Route
-            path="Branches"
-            element={<PrivateRoute component={Branches} />}
-          />
-          <Route
-            path="Specialists"
-            element={<PrivateRoute component={Specialists} />}
-          />
-          <Route
-            path="Assessmenttools"
-            element={<PrivateRoute component={Assessmenttools} />}
-          />
-          <Route
-            path="Subscriptions"
-            element={<PrivateRoute component={Subscriptions} />}
-          />
-          <Route
-            path="setting"
-            element={<PrivateRoute component={Setting} />}
-          />
-          <Route
-            path="editcenter"
-            element={<PrivateRoute component={EditCenter} />}
-          />
-          <Route
-            path="ViewCenter"
-            element={<PrivateRoute component={ViewCenter} />}
-          />
+          <Route path="home" element={<Home />} />
+          <Route path="Kids" element={<Kids />} />
+          <Route path="Theraputicmodules" element={<Theraputicmodules />} />
+          <Route path="Therapycenters" element={<Therapycenters />} />
+          <Route path="Branches" element={<Branches />} />
+          <Route path="Specialists" element={<Specialists />} />
+          <Route path="Assessmenttools" element={<Assessmenttools />} />
+          <Route path="Subscriptions" element={<Subscriptions />} />
+          <Route path="setting" element={<Setting />} />
+          <Route path="editcenter" element={<EditCenter />} />
+          <Route path="ViewCenter" element={<ViewCenter />} />
+          {/* Add more routes as needed */}
         </Route>
+        <Route path="validateotp" element={<OTP />} />
       </Routes>
     </MemoryRouter>
   );

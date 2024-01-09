@@ -1,4 +1,5 @@
 import {
+  Flex,
   Button,
   FormControl,
   Input,
@@ -14,16 +15,17 @@ import {
 } from '@chakra-ui/react';
 import { Image } from '@renderer/assets/icons/Image';
 import React, { useRef, useState } from 'react';
-import OTP from '@renderer/pages/SignUp/OTP';
 import Joi from 'joi';
 import { useMutation } from '@tanstack/react-query';
 import { config } from '@renderer/config';
+import { useNavigate } from 'react-router-dom';
 
 export default function Uploadlogo(props: any) {
   const inputRef = useRef(null);
   const [values, setValues] = useState([]);
   const [errors, setErrors] = useState(null);
-
+  const [userId, setUserId] = useState('');
+  const navigate = useNavigate();
   const schema = Joi.array().required();
 
   const postData = async (user: any) => {
@@ -46,8 +48,11 @@ export default function Uploadlogo(props: any) {
       body: data,
       redirect: 'follow',
     })
-      .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((response) => response.json())
+      .then((result) => {
+        setUserId(result.data.id);
+        console.log(result);
+      })
       .catch((error) => console.log('error', error));
   };
 
@@ -90,6 +95,9 @@ export default function Uploadlogo(props: any) {
       props.userData.photo = values[0];
       console.log(props.userData);
       mutate(props.userData);
+      navigate('/validateotp', {
+        state: { id: userId, email: props.userData.email },
+      });
     }
   };
 
@@ -111,54 +119,22 @@ export default function Uploadlogo(props: any) {
             </ModalHeader>
             <ModalCloseButton marginLeft="100px" />
           </Box>
-          <ModalBody>
-            <Text
-              position="absolute"
-              h="271px"
-              w="271px"
-              top="20%"
-              left="19%"
-              border="2px solid #E8E8E8"
-              borderRadius="50%"
-              bg="#F9F9F9"
-              padding="23%"
-            >
-              <Image />
-            </Text>
-
-            <Text
-              position="absolute"
-              top="445px"
-              left="18%"
-              fontFamily="Graphik LCG"
-              fontSize="18px"
-              fontWeight="400"
-              lineHeight="18px"
-              color="#595959"
-            >
-              Please upload your profile picture
-            </Text>
-          </ModalBody>
-
-          <ModalFooter display="table-column">
-            <form onSubmit={handleSubmit}>
-              <FormControl>
+          <form onSubmit={handleSubmit}>
+            <FormControl>
+              <ModalBody>
                 <Button
-                  h="54px"
-                  w="265px"
-                  top="-50px"
-                  left="18%"
-                  borderRadius="12px"
-                  bg="#00DEA3"
-                  color="#FFFFFF"
-                  fontFamily="Roboto"
-                  fontWeight="700"
-                  fontSize="18px"
-                  lineHeight="21.09px"
-                  type="submit"
+                  position="absolute"
+                  h="271px"
+                  w="271px"
+                  top="20%"
+                  left="19%"
+                  border="2px solid #E8E8E8"
+                  borderRadius="50%"
+                  bg="#F9F9F9"
+                  padding="23%"
                   onClick={() => inputRef.current.click()}
                 >
-                  Upload
+                  <Image />
                   <Input
                     type="file"
                     accept="image/png,image/jpeg"
@@ -168,29 +144,63 @@ export default function Uploadlogo(props: any) {
                     hidden
                   />
                 </Button>
-              </FormControl>
-            </form>
 
-            <Button
-              w="39px"
-              h="18px"
-              top="-30px"
-              left="45%"
-              bgColor="#FFFFFF"
-              color="#595959"
-              fontFamily="Graphik LCG"
-              fontWeight="400"
-              fontSize="18px"
-              lineHeight="18px"
-              onClick={props.onClose}
-            >
-              Skip
-            </Button>
-          </ModalFooter>
+                <Text
+                  position="absolute"
+                  top="300px"
+                  left="18%"
+                  fontFamily="Graphik LCG"
+                  fontSize="18px"
+                  fontWeight="400"
+                  lineHeight="18px"
+                  color="#595959"
+                >
+                  Please upload your profile picture
+                </Text>
+              </ModalBody>
+
+              <Flex flexDirection="column">
+                <Button
+                  h="54px"
+                  w="265px"
+                  top="330px"
+                  left="18%"
+                  borderRadius="12px"
+                  bg="#00DEA3"
+                  color="#FFFFFF"
+                  fontFamily="Roboto"
+                  fontWeight="700"
+                  fontSize="18px"
+                  lineHeight="21.09px"
+                  type="submit"
+                >
+                  Submit
+                </Button>
+
+                <Button
+                  w="39px"
+                  h="18px"
+                  top="360px"
+                  left="43%"
+                  bgColor="#FFFFFF"
+                  color="#595959"
+                  fontFamily="Graphik LCG"
+                  fontWeight="400"
+                  fontSize="18px"
+                  lineHeight="18px"
+                  onClick={() => {
+                    navigate('/validateotp', {
+                      state: { id: userId, email: props.userData.email },
+                    });
+                  }}
+                >
+                  Skip
+                </Button>
+              </Flex>
+            </FormControl>
+          </form>
         </ModalContent>
       </Modal>
-
-      {props.onClose && <OTP userData={props.userData} />}
     </>
   );
 }

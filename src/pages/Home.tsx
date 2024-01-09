@@ -17,6 +17,7 @@ import { dataContext } from '@renderer/shared/Provider';
 export default function Home() {
   const [centers, setCenters] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   let selectedCenter = useContext(dataContext);
 
   useEffect(() => {
@@ -38,8 +39,7 @@ export default function Home() {
   const handleClick = (center: object) => {
     setIsLoading(true);
     selectedCenter = Object.assign(selectedCenter, center);
-    console.log(center);
-    console.log(selectedCenter);
+    setRefreshKey((oldKey) => oldKey + 1);
   };
 
   return (
@@ -79,10 +79,9 @@ export default function Home() {
         </MenuList>
       </Menu>
 
-      <VRminutesCard />
-      <VRsessionsCard loading={isLoading} />
-
-      <StatistcsCards />
+      <VRminutesCard refreshKey={refreshKey} />
+      <VRsessionsCard loading={isLoading} refreshKey={refreshKey} />
+      <StatistcsCards refreshKey={refreshKey} />
     </>
   );
 }

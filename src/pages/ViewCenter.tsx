@@ -15,9 +15,9 @@ const ViewCenter = () => {
 
   return (
     <>
-      <HeaderWithButton  centerData={centerData} />
+      <HeaderWithButton centerData={centerData} />
       <CardWithLogo centerData={centerData} />
-      <TabsViewCenter  centerData={centerData}/>
+      <TabsViewCenter centerData={centerData} />
     </>
   );
 };
