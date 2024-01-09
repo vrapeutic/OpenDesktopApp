@@ -30,7 +30,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
 
     Technology: joi.string().required(),
     Version: joi.number().required(),
-
+    Otp: joi.string().required(),
     specializationschema: joi.array().required().label('specializationschema'),
   });
   const {
@@ -83,6 +83,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
     label: speciality.name,
     value: speciality.id,
   }));
+
 
   return (
     <>
@@ -179,6 +180,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
             )}
           </GridItem>
 
+
           <GridItem>
             <FormLabel
               display="inline"
@@ -186,7 +188,35 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
               letterSpacing="0.256px"
               color="#15134B"
             >
-              specializationschema
+             Otp
+            </FormLabel>
+
+            <Input
+              {...register('Otp')}
+              id="Otp"
+              borderColor="#4965CA"
+              border="2px solid #E8E8E8"
+              _hover={{ border: '1px solid #4965CA' }}
+              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+              type="text"
+              mt="0.75em"
+              mb="1em"
+              borderRadius="8px"
+            />
+            {errors.Otp && (
+              <Text color="red.500">{errors.Otp.message as string}</Text>
+            )}
+          </GridItem>
+
+
+          <GridItem>
+            <FormLabel
+              display="inline"
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
+            >
+              Skills
             </FormLabel>
 
             <Select

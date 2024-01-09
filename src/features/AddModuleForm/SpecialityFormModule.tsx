@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -14,23 +14,27 @@ import {
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import { Image } from '../../assets/icons/Image';
-import { TherapyFormProps } from './therapyFormInterface';
-import ProgressBarAddModule from '@renderer/theme/components/ProgressBarAddModule';
+import { AddModuleFormProps } from './ModuleFormInterface';
+import ProgressBarAddModule from '../../theme/components/ProgressBarAddModule';
 import { useNavigate } from 'react-router-dom';
-import CongratulationsModule from './CongratulationsModuleAdmin';
 import CongratulationsModuleAdmin from './CongratulationsModuleAdmin';
 
-const SpecialtyFormModule: React.FC<TherapyFormProps> = ({
+const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   onSubmit,
   nextHandler,
   backHandler,
   sliding,
+  formData,
 }) => {
   const schema = joi.object({
-    registrationNumber: joi.number().required().label('Registration Number'),
-    taxID: joi.number().required().label('Tax ID'),
+    From: joi.number().required(),
+    To: joi
+      .number()
+      .required()
+      .greater(joi.ref('From'))
+      .message('"To" must be greater than "From"')
+      .label('To'),
     certification: joi.required().custom((value, helpers) => {
       if (value) {
         const ext = value.name.split('.').pop().toLowerCase();
@@ -87,10 +91,19 @@ const SpecialtyFormModule: React.FC<TherapyFormProps> = ({
       data.certification = selectedFile;
 
       onSubmit(data);
+      console.log('Updated FormData in SpecialtyFormModule:', formData);
+
       onOpen();
     }
   };
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(
+      'Updated FormData in SpecialtyFormModule in use effect',
+      formData
+    );
+  }, [formData]);
 
   const handleCloseModal = () => {
     console.log('handle close modal');
@@ -113,152 +126,74 @@ const SpecialtyFormModule: React.FC<TherapyFormProps> = ({
           templateColumns="repeat(2, 1fr)"
           gap="0em 1.5625em"
         >
-          {/* <GridItem>
-            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-              Registration Number
-            </FormLabel>
-            <Input
-              {...register('registrationNumber')}
-              id="registrationNumber"
-              borderColor="#4965CA"
-              border="2px solid #E8E8E8"
-              _hover={{ border: '1px solid #4965CA' }}
-              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-              mt="0.75em"
+          <GridItem>
+            <FormLabel
+              display="inline"
               mb="1em"
-              borderRadius="8px"
-            />
-            {errors.registrationNumber && (
-              <Text color="red.500">
-                {errors.registrationNumber.message as string}
-              </Text>
-            )}
-          </GridItem>
-          <GridItem rowSpan={2}>
-            <>
-              <FormControl>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  certification
-                </FormLabel>
-                <Button
-                  h="128px"
-                  w="174px"
-                  border="2px solid #E8E8E8"
-                  borderRadius="8px"
-                  bg="#FFFFFF"
+              letterSpacing="0.256px"
+              color="#15134B"
+            >
+              Age Range
+            </FormLabel>
+            <Grid gap={2} templateColumns="repeat(2, 1fr)">
+              <GridItem>
+                <FormLabel
+                  display="inline"
+                  m="0em"
+                  letterSpacing="0.256px"
+                  color="#15134B"
+                  fontSize={12}
                 >
-                  <label>
-                    <Image />
-                    <Input
-                      {...register('certification')}
-                      id="certification"
-                      type="file"
-                      accept="application/pdf" // Update this line to accept PDF files
-                      onChange={(e) => handleCertificateChange(e)}
-                      style={{ display: 'none' }}
-                    />
-                  </label>
-                </Button>
-              </FormControl>
-              {selectedFile && (
-                <Text mt="1em">Selected File: {selectedFile.name}</Text>
-              )}
-              {errors.certification && (
-                <Text color="red.500">
-                  {errors.certification.message as string}
-                </Text>
-              )}
-            </>
+                  From
+                </FormLabel>
+
+                <Input
+                  {...register('From')}
+                  id="From"
+                  borderColor="#4965CA"
+                  border="2px solid #E8E8E8"
+                  _hover={{ border: '1px solid #4965CA' }}
+                  boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+                  type="text"
+                  mt="0.75em"
+                  mb="1em"
+                  borderRadius="8px"
+                />
+                {errors.From && (
+                  <Text color="red.500">{errors.From.message as string}</Text>
+                )}
+              </GridItem>
+              <GridItem>
+                <FormLabel
+                  display="inline"
+                  m="0em"
+                  letterSpacing="0.256px"
+                  color="#15134B"
+                  fontSize={12}
+                >
+                  To
+                </FormLabel>
+
+                <Input
+                  {...register('To')}
+                  id="To"
+                  borderColor="#4965CA"
+                  border="2px solid #E8E8E8"
+                  _hover={{ border: '1px solid #4965CA' }}
+                  boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+                  type="text"
+                  mt="0.75em"
+                  mb="1em"
+                  borderRadius="8px"
+                />
+                {errors.To && (
+                  <Text color="red.500">{errors.To.message as string}</Text>
+                )}
+              </GridItem>
+            </Grid>
           </GridItem>
-          <GridItem>
-            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-              Tax ID
-            </FormLabel>
-            <Input
-              {...register('taxID')}
-              id="taxID"
-              borderColor="#4965CA"
-              border="2px solid #E8E8E8"
-              _hover={{ border: '1px solid #4965CA' }}
-              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-              mt="0.75em"
-              mb="1em"
-              borderRadius="8px"
-            />
-            {errors.taxID && (
-              <Text color="red.500">{errors.taxID.message as string}</Text>
-            )}
-          </GridItem> */}
 
-
-          <GridItem>
-          <FormLabel
-            display="inline"
-            mb="1em"
-            letterSpacing="0.256px"
-            color="#15134B"
-          >
-            Age Range
-          </FormLabel>
-          <Grid gap={2} templateColumns="repeat(2, 1fr)">
-            <GridItem>
-              <FormLabel
-                display="inline"
-                m="0em"
-                letterSpacing="0.256px"
-                color="#15134B"
-                fontSize={12}
-              >
-                From
-              </FormLabel>
-
-              <Input
-                {...register('From')}
-                id="From"
-                borderColor="#4965CA"
-                border="2px solid #E8E8E8"
-                _hover={{ border: '1px solid #4965CA' }}
-                boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                type="text"
-                mt="0.75em"
-                mb="1em"
-                borderRadius="8px"
-              />
-              {errors.From && (
-                <Text color="red.500">{errors.From.message as string}</Text>
-              )}
-            </GridItem>
-            <GridItem>
-              <FormLabel
-                display="inline"
-                m="0em"
-                letterSpacing="0.256px"
-                color="#15134B"
-                fontSize={12}
-              >
-                To
-              </FormLabel>
-
-              <Input
-                {...register('To')}
-                id="To"
-                borderColor="#4965CA"
-                border="2px solid #E8E8E8"
-                _hover={{ border: '1px solid #4965CA' }}
-                boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                type="text"
-                mt="0.75em"
-                mb="1em"
-                borderRadius="8px"
-              />
-              {errors.To && (
-                <Text color="red.500">{errors.To.message as string}</Text>
-              )}
-            </GridItem>
-          </Grid>
-        </GridItem>
-
-        <GridItem rowSpan={2}>
+          <GridItem rowSpan={2}>
             <>
               <FormControl>
                 <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">

@@ -51,6 +51,10 @@ const Subscriptions: React.FC = () => {
     return { ...formData, ...data };
   };
 
+  useEffect(() => {
+    console.log("Updated FormData:", formData);
+  }, [formData]); // Log data when formData changes
+
   const nextHandler = () => {
     if (sliding < totalSteps) {
       setSliding(sliding + 1);
@@ -89,6 +93,7 @@ const Subscriptions: React.FC = () => {
             nextHandler={nextHandler}
             backHandler={backHandler}
             sliding={sliding}
+            formData={formData}
           />
         );
     
