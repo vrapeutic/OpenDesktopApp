@@ -119,6 +119,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       await postFormData(formDatasent);
       onOpen();
     } catch (error) {
+      console.log("error in request",error)
       handleError(error);
     } finally {
       setLoading(false);
@@ -141,8 +142,8 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   const handleError = (error: any) => {
     toast({
       title: 'Error',
-      description: error.response.data.error,
-      status: 'success',
+      description: error.response.data,
+      status: 'error',
       duration: 9000,
       position: 'top-right',
     });
@@ -241,7 +242,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
             <>
               <FormControl>
                 <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  certification
+                  Profile image
                 </FormLabel>
                 <Button
                   h="128px"
