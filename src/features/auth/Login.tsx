@@ -23,7 +23,7 @@ import { EyeIcon } from '@renderer/assets/icons/EyeIcon';
 import { ArrowForwardIcon, CheckIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { useLoginMutation } from './hooks/useLoginMutation';
-import  { useAdminContext } from '@renderer/Context/AdminContext';
+import { useAdminContext } from '@renderer/Context/AdminContext';
 const Login = () => {
   // const onLoginSuccess = () =>     navigate('/validateotp', {
   //   state: { id: userId, email: props.userData.email },
@@ -34,8 +34,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLoginMutation();
   const navigate = useNavigate();
-
-
 
   const { setAdminBoolean } = useAdminContext();
 
