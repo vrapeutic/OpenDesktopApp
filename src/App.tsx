@@ -16,12 +16,15 @@ import ViewCenter from './pages/ViewCenter';
 import EditCenter from './pages/EditCenter';
 import OTP from './pages/SignUp/OTP';
 import Uploadlogo from './pages/SignUp/Uploadlogo';
+import { useAdminContext } from './Context/AdminContext';
 
 function App() {
+  const { adminBoolean } = useAdminContext();
   useEffect(() => {
     const token = (window as any).electronAPI.getPassword('token');
     console.log('token: ', token);
-    if (!token) {
+    if (!token && !adminBoolean) {
+      console.log("redirect to login in app")
       // Redirect to login if token is not present
       window.location.replace('/login');
     }

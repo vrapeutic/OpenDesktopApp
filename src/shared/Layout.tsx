@@ -4,11 +4,13 @@ import Header from '@renderer/features/header/Header';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar/Sidebar';
 import Sideclose from './Sidebar/Sideclose';
+import { useAdminContext } from '@renderer/Context/AdminContext';
 
 export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const { adminBoolean } = useAdminContext(); 
 
   useEffect(() => {
     (async () => {
@@ -16,11 +18,13 @@ export default function Layout() {
 
       const token = await (window as any).electronAPI.getPassword('token');
       console.log('token: ', token);
-      if (!token) {
+
+      if (!token && !adminBoolean) {
+        console.log("redirect to login in layout");
         navigate('/login');
       }
     })();
-  }, [location.pathname]);
+  }, [location.pathname, adminBoolean]);
 
   const MenuHandler = () => {
     setMenuOpen(!menuOpen);

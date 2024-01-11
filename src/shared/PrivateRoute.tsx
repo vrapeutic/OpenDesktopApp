@@ -11,15 +11,15 @@ export const PrivateRoute: React.FC<Props> = ({
 }) => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    (async () => {
-      const token = await (window as any).electronAPI.getPassword('token');
-      console.log('token: ', token);
-      if (!token) {
-        navigate('/login');
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const token = await (window as any).electronAPI.getPassword('token');
+  //     console.log('token: ', token);
+  //     if (!token) {
+  //       navigate('/login');
+  //     }
+  //   })();
+  // }, []);
 
   return <RouteComponent />;
 };
