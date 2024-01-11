@@ -1,8 +1,6 @@
 import {
   Flex,
-  Button,
   Text,
-  Image,
   Popover,
   PopoverBody,
   IconButton,
@@ -13,17 +11,21 @@ import {
   Divider,
   Link,
 } from '@chakra-ui/react';
+import { clearApiToken } from '@renderer/api';
 import { ArrowDown } from '@renderer/assets/icons/ArrowDown';
 import { Language } from '@renderer/assets/icons/Language';
 import { LogOut } from '@renderer/assets/icons/LogOut';
 import { Setting } from '@renderer/assets/icons/Setting';
 import { Users } from '@renderer/assets/icons/Users';
 import { useNavigate } from 'react-router-dom';
+import { clear } from '@renderer/cache';
 
-const ArrowDowns = (props: any) => {
+const ArrowDowns = () => {
   const navigate = useNavigate();
   const logout = () => {
-    localStorage.clear();
+    clearApiToken();
+    clear();
+    (window as any).electronAPI.deletePassword('token');
     navigate('/login');
   };
   return (

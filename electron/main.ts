@@ -25,6 +25,11 @@ const handleStoreSetPassword = (event: IpcMainInvokeEvent, args: any[]) => {
   return store.setPassword(key, password);
 };
 
+const handleStoreDeletePassword = (event: IpcMainInvokeEvent, args: any[]) => {
+  const key = args[0];
+  return store.deletePassword(key);
+};
+
 const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -47,6 +52,7 @@ const createWindow = (): void => {
   //
   ipcMain.handle('store:getPassword', handleStoreGetPassword);
   ipcMain.handle('store:setPassword', handleStoreSetPassword);
+  ipcMain.handle('store:deletePassword', handleStoreDeletePassword);
 };
 
 // This method will be called when Electron has finished
