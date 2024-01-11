@@ -9,10 +9,11 @@ import {
   GridItem,
   Input,
   Flex,
+  Select as SelectChakra
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { TherapyFormProps } from '../AddCenterForm/therapyFormInterface';
-import Select from 'react-select';
+ import Select from 'react-select';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { config } from '../../config';
@@ -85,6 +86,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
   }));
 
 
+ 
   return (
     <>
       <Box
@@ -136,21 +138,19 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
               Technology
             </FormLabel>
 
-            <Input
-              {...register('Technology')}
-              id="Technology"
-              borderColor="#4965CA"
-              border="2px solid #E8E8E8"
-              _hover={{ border: '1px solid #4965CA' }}
-              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-              type="text"
-              mt="0.75em"
-              mb="1em"
-              borderRadius="8px"
-            />
-            {errors.Technology && (
-              <Text color="red.500">{errors.Technology.message as string}</Text>
-            )}
+            <SelectChakra
+         
+            {...register('Technology')}
+            id="Technology"
+            name="Technology"
+          >
+            <option value='virtual_reality'>virtual reality</option>
+            <option value='two_dimensional'>two dimensional</option>
+          </SelectChakra>
+          {errors.Technology && (
+            <Text color="red.500">{errors.Technology.message as string}</Text>
+          )}
+       
           </GridItem>
 
           <GridItem>
