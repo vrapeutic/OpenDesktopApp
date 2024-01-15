@@ -22,14 +22,18 @@ import { config } from '../..//config';
 import Congratulations from './Congratulations';
 import { setApiToken } from '../..//api';
 import { setMe } from '../..//cache';
+import { useAdminContext } from '@renderer/Context/AdminContext';
 
 export default function OTP() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [otp, setOtp] = useState('');
   const location = useLocation();
   const toast = useToast();
-  const [errormessage, seterrormessage] = useState<string | undefined>(undefined)
+  const [errormessage, seterrormessage] = useState<string | undefined>(
+    undefined
+  );
   const navigate = useNavigate();
+  const { setOtp: setContextOtp } = useAdminContext();
 
   const input = {
     width: '60px',
@@ -48,55 +52,87 @@ export default function OTP() {
       position: 'top-right',
     });
   };
-
+  console.log('location state in otp', location.state);
   const otpHandleChange = (otp: string) => {
     setOtp(otp);
     if (otp.length === 6) {
-      fetch(
-        `${config.apiURL}/api/v1/doctors/${location.state.id}/validate_otp`,
-        {
-          method: 'POST',
-          body: JSON.stringify({ otp }), // sending the OTP as an object
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          redirect: 'follow',
-        }
-      )
-        .then((response) => {
-          console.log('response in response', response);
-          if (response.ok && response.status >= 200 && response.status < 300) {
-            // If response is successful (status code 200-299)
-            // onOpen();
-            navigate('/');
-            console.log(response);
-          } else {
-            // If response is not successful (status code outside 200-299)
-            console.log(`Error: ${response}`);
+      if (location.state.admin) {
+        // If location.state.admin is true, set otp in the context and make a GET request
+        setContextOtp(otp);
 
-            console.log(`Error: ${response.status} - ${response.statusText}`);
+        // Make a GET request to the specified URL
+        fetch(
+          'http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/software_modules',
+          {
+            headers: {
+              otp: `${otp}`,
+            },
           }
-          return response.text();
-        })
-        .then(async (...params) => {
-          console.log('with name params', params);
-          const resultObject = JSON.parse(params[0]);
-          console.log('result object', resultObject);
-
-          const token = resultObject.token;
-
-          console.log('Accessing the token object params:', token);
-
-          setApiToken(token);
-          setMe(resultObject);
-          (window as any).electronAPI.setPassword('token', token);
-
-          if (resultObject.error) {
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('GET request response:', data);
+            navigate('/');
+            // Add your logic here for handling the GET request response
+          })
+        
+          .catch((error) => {
+            console.log('GET request error:', error)
             console.log('from result includes', 'OTP is not valid or expired');
             seterrormessage('OTP is not valid or expired');
+          });
+      } else {
+        // If location.state.admin is false, proceed with your existing logic for OTP validation
+        fetch(
+          `${config.apiURL}/api/v1/doctors/${location.state.id}/validate_otp`,
+          {
+            method: 'POST',
+            body: JSON.stringify({ otp }), // sending the OTP as an object
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
           }
-        })
-        .catch((error) => console.error('error', error));
+        )
+          .then((response) => {
+            console.log('response in response', response);
+            if (response.ok && response.status >= 200 && response.status < 300) {
+              // If response is successful (status code 200-299)
+              // onOpen();
+              navigate('/');
+              console.log(response);
+            } else {
+              // If response is not successful (status code outside 200-299)
+              console.log(`Error: ${response}`);
+  
+              console.log(`Error: ${response.status} - ${response.statusText}`);
+            }
+            return response.text();
+          })
+          .then(async (...params) => {
+            console.log('with name params', params);
+            const resultObject = JSON.parse(params[0]);
+            console.log('result object', resultObject);
+  
+            const token = resultObject.token;
+  
+            console.log('Accessing the token object params:', token);
+  
+            setApiToken(token);
+            setMe(resultObject);
+            (window as any).electronAPI.setPassword('token', token);
+  
+            // if (resultObject.error) {
+            //   console.log('from result includes', 'OTP is not valid or expired');
+            //   seterrormessage('OTP is not valid or expired');
+            // }
+          })
+          .catch((error) => {
+            console.log('GET request error:', error)
+            console.log('from result includes', 'OTP is not valid or expired');
+            seterrormessage('OTP is not valid or expired');
+          });
+      }
     }
   };
 

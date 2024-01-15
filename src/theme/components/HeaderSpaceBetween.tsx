@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/button';
 import { Grid, Text } from '@chakra-ui/layout';
-
+import { useAdminContext } from '../../Context/AdminContext';
 interface SubscriptionsProps {
   Title: string;
   ButtonText: string;
@@ -8,6 +8,10 @@ interface SubscriptionsProps {
 }
 
 function HeaderSpaceBetween({ Title, ButtonText , onClickFunction }: SubscriptionsProps) {
+
+  const { otp } = useAdminContext();
+
+  console.log('OTP value in AnotherComponent:', otp);
   return (
     <>
       <Grid

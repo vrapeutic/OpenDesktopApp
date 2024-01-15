@@ -41,11 +41,19 @@ const Login = () => {
     setAdminBoolean(response.is_admin);
 
     response.is_admin
-      ? navigate('/')
-      : navigate('/validateotp', {
+      ? navigate('/validateotp', {
+        state: {
+          id: null,
+          email: null,
+          admin: response.is_admin
+        },
+      })
+      : 
+      navigate('/validateotp', {
           state: {
             id: response.doctor.id,
             email: response.doctor.attributes.email,
+            admin: response.is_admin
           },
         });
   };
