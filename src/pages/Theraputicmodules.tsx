@@ -1,9 +1,27 @@
-
-
 import { useState, useEffect } from 'react';
 import HeaderSpaceBetween from '../theme/components/HeaderSpaceBetween';
 import GeneralInfoModule from '../features/AddModuleForm/GeneralInfoModule';
 import SpecialtyFormModule from '../features/AddModuleForm/SpecialityFormModule';
+import {
+  Box,
+  Button,
+  Flex,
+  Table,
+  Tag,
+  TagLabel,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
+} from '@chakra-ui/react';
+import ModuleModal from '@renderer/features/auth/components/ModuleModal';
+import { useNavigate } from 'react-router-dom';
+import { config } from '@renderer/config';
+import axios from 'axios';
+import { useAdminContext } from '@renderer/Context/AdminContext';
 
 interface Center {
   id: number;
@@ -24,13 +42,13 @@ const Theraputicmodules: React.FC = () => {
 
   const handleFormSubmit = (data: any) => {
     // Use the previous state to ensure the latest form data is captured
-    setFormData(prevFormData => ({ ...prevFormData, ...data }));
+    setFormData((prevFormData) => ({ ...prevFormData, ...data }));
     console.log(formData); // Logging the form data to the console
     return { ...formData, ...data };
   };
 
   useEffect(() => {
-    console.log("Updated FormData:", formData);
+    console.log('Updated FormData:', formData);
   }, [formData]); // Log data when formData changes
 
   const nextHandler = () => {
@@ -44,16 +62,113 @@ const Theraputicmodules: React.FC = () => {
       setSliding(sliding - 1);
     }
   };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
+  const handleCloseModal = () => {
+    onClose();
+  };
+
+  const [softwaremodules, setsoftwaremodules] = useState<Center[]>([]);
+  const { otp } = useAdminContext();
+
+  useEffect(() => {
+    getModules();
+  }, []);
+
+  const headers = {
+    otp: `${otp}`,
+  };
+  const getModules = async () => {
+    try {
+      const response = await axios.get(
+        `${config.apiURL}/api/v1/software_modules`,
+        { headers }
+      );
+      console.log('response modules', response);
+      setsoftwaremodules(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  console.log('software modules state', softwaremodules);
   const renderFormStep = () => {
     switch (sliding) {
       case 1:
         return (
-          <HeaderSpaceBetween
-            Title={'therapeutic modules'}
-            ButtonText={'Add New Module'}
-            onClickFunction={nextHandler}
-          />
+          <>
+            <HeaderSpaceBetween
+              Title={'therapeutic modules'}
+              ButtonText={'Add New Module'}
+              onClickFunction={nextHandler}
+            />
+            {/* <Button onClick={onOpen}>open modal</Button> */}
+            {onOpen && (
+              <ModuleModal isOpen={isOpen} onClose={handleCloseModal} />
+            )}
+            <Table
+              variant="simple"
+              background="#FFFFFF"
+              style={{ marginLeft: 10, marginRight: 10 }}
+            >
+              <Thead>
+                <Tr>
+                  <Th> Name</Th>
+                  <Th> Assign</Th>
+              
+                  <Th>Specialties</Th>
+                  <Th>Technology</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {softwaremodules?.map((Module) => (
+                  <Tr
+                    key={Module.id}
+                    // onClick={() => handleCenterClick(center)}
+                    cursor={'pointer'}
+                  >
+                    <Td>
+                      <Flex direction="row" gap={2}>
+                        <Box
+                          width={197}
+                          height={197}
+                          alignItems={'center'}
+                          display={'flex'}
+                        >
+                          <img
+                            src={Module?.attributes.image?.url}
+                            alt={Module?.attributes.name}
+                          />
+                        </Box>
+
+                        <Text
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          {Module?.attributes.name}
+                        </Text>
+                      </Flex>
+                    </Td>
+                    <Td><Button onClick={onOpen}>Assign to center</Button></Td>
+
+                    <Td>
+                      {Module?.attributes.targeted_skills?.map((skill) => (
+                        <Tag key={skill.id} size="sm" colorScheme="gray" mr={1}>
+                          <TagLabel>{skill?.name}</TagLabel>
+                        </Tag>
+                      ))}
+                    </Td>
+                    <Td>{Module?.attributes.technology}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </>
         );
       case 2:
         return (
@@ -74,13 +189,11 @@ const Theraputicmodules: React.FC = () => {
             formData={formData}
           />
         );
-    
-     
+
       default:
         return null;
     }
   };
-
 
   return <>{renderFormStep()}</>;
 };
