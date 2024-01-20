@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import CongratulationsModuleAdmin from './CongratulationsModuleAdmin';
 import axios from 'axios';
 import { config } from '../../config';
+import { useAdminContext } from '@renderer/Context/AdminContext';
 
 const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   onSubmit,
@@ -72,6 +73,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+  const { otp } = useAdminContext();
 
   const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
@@ -128,7 +130,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
 
   const postFormData = (formDatasent: FormData) => {
     const headers = {
-      otp: `${formData.Otp}`,
+      otp: `${otp}`,
     };
 
     return axios.post(

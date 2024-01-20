@@ -17,11 +17,11 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import ModuleModal from '@renderer/features/auth/components/ModuleModal';
+import ModuleModal from '../features/auth/components/ModuleModal';
 import { useNavigate } from 'react-router-dom';
-import { config } from '@renderer/config';
+import { config } from '../config';
 import axios from 'axios';
-import { useAdminContext } from '@renderer/Context/AdminContext';
+import { useAdminContext } from '../Context/AdminContext';
 
 interface Center {
   id: number;
@@ -32,6 +32,10 @@ interface Center {
     };
     specialties: { id: number; name: string }[];
     children_count: number;
+    image?: { url: string }; // Make 'image' property optional
+    targeted_skills?: { name: string ,  id: number;
+    }[]; // Make 'targeted_skills' property optional
+    technology?: string; // Make 'technology' property optional
   };
 }
 
@@ -39,6 +43,12 @@ const Theraputicmodules: React.FC = () => {
   const totalSteps = 3;
   const [sliding, setSliding] = useState(1);
   const [formData, setFormData] = useState({});
+  const [softwaremodules, setsoftwaremodules] = useState<Center[]>([]);
+  const [selectedModuleId, setSelectedModuleId] = useState(null);
+
+  const { otp } = useAdminContext();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
   const handleFormSubmit = (data: any) => {
     // Use the previous state to ensure the latest form data is captured
@@ -62,17 +72,13 @@ const Theraputicmodules: React.FC = () => {
       setSliding(sliding - 1);
     }
   };
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const navigate = useNavigate();
+
 
   const handleCloseModal = () => {
     onClose();
   };
 
-  const [softwaremodules, setsoftwaremodules] = useState<Center[]>([]);
-  const [selectedModuleId, setSelectedModuleId] = useState(null);
 
-  const { otp } = useAdminContext();
 
   useEffect(() => {
     getModules();
@@ -101,34 +107,33 @@ const Theraputicmodules: React.FC = () => {
       case 1:
         return (
           <>
-            <HeaderSpaceBetween
-              Title={'therapeutic modules'}
-              ButtonText={'Add New Module'}
-              onClickFunction={nextHandler}
-            />
-            {/* <Button onClick={onOpen}>open modal</Button> */}
-            {onOpen && (
+          <HeaderSpaceBetween
+            Title={'therapeutic modules'}
+            ButtonText={'Add New Module'}
+            onClickFunction={nextHandler}
+          />
+               {onOpen && (
               <ModuleModal
                 isOpen={isOpen}
                 onClose={handleCloseModal}
                 selectedModuleId={selectedModuleId}
               />
             )}
-            <Table
-              variant="simple"
-              background="#FFFFFF"
-              style={{ marginLeft: 10, marginRight: 10 }}
-            >
-              <Thead>
-                <Tr>
-                  <Th>Name</Th>
-                  <Th>Assign</Th>
-                  <Th>Specialties</Th>
-                  <Th>Technology</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {softwaremodules?.map((Module) =>
+          <Table
+            variant="simple"
+            background="#FFFFFF"
+            style={{ marginLeft: 10, marginRight: 10 }}
+          >
+            <Thead>
+              <Tr>
+                <Th>Name</Th>
+                <Th>Assign</Th>
+                <Th>Specialties</Th>
+                <Th>Technology</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+            {softwaremodules?.map((Module) =>
                   Module?.attributes.image?.url ? (
                     <Tr key={Module.id} cursor={'pointer'}>
                       <Td>
@@ -167,24 +172,19 @@ const Theraputicmodules: React.FC = () => {
                       </Td>
                       <Td>
                         {Module?.attributes.targeted_skills?.map((skill) => (
-                          <Tag
-                            key={skill.id}
-                            size="sm"
-                            colorScheme="gray"
-                            mr={1}
-                          >
+                          <Tag key={skill.id} size="sm" colorScheme="gray" mr={1}>
                             <TagLabel>{skill?.name}</TagLabel>
                           </Tag>
                         ))}
                       </Td>
                       <Td>{Module?.attributes.technology}</Td>
                     </Tr>
-                  ) : null
-                )}
-              </Tbody>
-            </Table>
-          </>
-        );
+            ) : null
+            )}
+          </Tbody>
+        </Table>
+      </>
+    );
       case 2:
         return (
           <GeneralInfoModule

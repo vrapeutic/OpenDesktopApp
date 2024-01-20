@@ -31,7 +31,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
 
     Technology: joi.string().required(),
     Version: joi.number().required(),
-    Otp: joi.string().required(),
+    // Otp: joi.string().required(),
     specializationschema: joi.array().required().label('specializationschema'),
   });
   const {
@@ -181,7 +181,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
           </GridItem>
 
 
-          <GridItem>
+          {/* <GridItem>
             <FormLabel
               display="inline"
               m="0em"
@@ -206,7 +206,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
             {errors.Otp && (
               <Text color="red.500">{errors.Otp.message as string}</Text>
             )}
-          </GridItem>
+          </GridItem> */}
 
 
           <GridItem>
