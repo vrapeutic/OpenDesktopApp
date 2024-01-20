@@ -23,7 +23,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { config } from '@renderer/config';
 import { useAdminContext } from '@renderer/Context/AdminContext';
-
 export default function ModuleModal(props: any) {
     const [startDate, setStartDate] = useState(new Date());
     const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -56,6 +55,7 @@ export default function ModuleModal(props: any) {
     };
   
     const handleAssign = async () => {
+        console.log("is switch on value",isSwitchOn)
         if (isSwitchOn && selectedCenter) {
           try {
             // Send a request to the API to assign the center to the module
@@ -83,12 +83,12 @@ export default function ModuleModal(props: any) {
         props.onClose();
       };
     
-      useEffect(() => {
-        if (isSwitchOn) {
-            handleAssign()
-          console.log('Switch is ON, do something...');
-        }
-      }, [isSwitchOn]);
+    //   useEffect(() => {
+    //     if (isSwitchOn) {
+    //         handleAssign()
+    //       console.log('Switch is ON, do something...');
+    //     }
+    //   }, [isSwitchOn]);
   
 
       const handleError = (error: any) => {
@@ -116,13 +116,34 @@ export default function ModuleModal(props: any) {
       };
     return (
       <>
-      <Modal isOpen={props.isOpen} onClose={props.onClose} size={'xl'}>
-          <ModalOverlay />
-          <ModalContent bgColor="#FFFFFF" borderRadius="10px">
-            {CentersData?.map((center) => (
-              <ModalBody key={center.id}>
+  <Modal isOpen={props.isOpen} onClose={props.onClose} size={'2xl'}>{/* Increase the width of the modal */}
+        <ModalOverlay />
+        <ModalContent bgColor="#FFFFFF" borderRadius="10px">
+
+          {/* Header Boxes */}
+          <Flex justify="space-between" p={4} mb={4} bg="blue.500" borderRadius="8px">
+            <Box>
+              <Text color="white" fontSize="lg" fontWeight="bold">
+                Center Name: {/* Add logic to display center name here */}
+              </Text>
+            </Box>
+            <Box>
+              <Text color="white" fontSize="lg" fontWeight="bold">
+                Status: {/* Add logic to display status here */}
+              </Text>
+            </Box>
+            <Box>
+              <Text color="white" fontSize="lg" fontWeight="bold">
+                Valid Until: {/* Add logic to display valid until date here */}
+              </Text>
+            </Box>
+          </Flex>
+
+          {CentersData?.map((center) => (
+          
+              <ModalBody>
                 <Flex>
-                  <Box w="33%" borderRight="1px solid rgba(0, 0, 0, 0.08)">
+                  <Box w="40%" borderRight="1px solid rgba(0, 0, 0, 0.08)">{/* Increase the width of the center box */}
                     <Box p="4">
                       <Text
                         fontFamily="Graphik LCG"
@@ -135,33 +156,39 @@ export default function ModuleModal(props: any) {
                       </Text>
                     </Box>
                   </Box>
-  
-                  <Box w="33%" borderRight="1px solid rgba(0, 0, 0, 0.08)">
+
+                  <Box w="20%" borderRight="1px solid rgba(0, 0, 0, 0.08)">{/* Decrease the width of the switch box */}
                     <Stack direction="row">
                       <Switch
                         colorScheme="teal"
                         size="lg"
                         onChange={() => {
                           setSelectedCenter(center);
-                          setIsSwitchOn(!isSwitchOn);
+                          setIsSwitchOn(true);
+                          if (isSwitchOn) {
+                            handleAssign()
+                          console.log('Switch is ON, do something...');
+                        }
                         }}
                       />
                     </Stack>
                   </Box>
-  
-                  <Box w="33%">
+
+                  <Box w="40%">
                     <DatePicker
                       showIcon
                       selected={startDate}
                       onChange={(date) => setStartDate(date)}
+                      style={{ width: '80%', margin: 'auto' }} 
                     />
                   </Box>
                 </Flex>
               </ModalBody>
-            ))}
           
-          </ModalContent>
-        </Modal>
+          ))}
+
+        </ModalContent>
+      </Modal>
       </>
     );
   }
