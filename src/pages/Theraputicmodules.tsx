@@ -108,11 +108,11 @@ const Theraputicmodules: React.FC = () => {
             />
             {/* <Button onClick={onOpen}>open modal</Button> */}
             {onOpen && (
-               <ModuleModal
-               isOpen={isOpen}
-               onClose={handleCloseModal}
-               selectedModuleId={selectedModuleId}
-             />
+              <ModuleModal
+                isOpen={isOpen}
+                onClose={handleCloseModal}
+                selectedModuleId={selectedModuleId}
+              />
             )}
             <Table
               variant="simple"
@@ -121,66 +121,66 @@ const Theraputicmodules: React.FC = () => {
             >
               <Thead>
                 <Tr>
-                  <Th> Name</Th>
-                  <Th> Assign</Th>
-
+                  <Th>Name</Th>
+                  <Th>Assign</Th>
                   <Th>Specialties</Th>
                   <Th>Technology</Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {softwaremodules?.map((Module) => (
-                  <Tr
-                    key={Module.id}
-                    // onClick={() => handleCenterClick(center)}
-                    cursor={'pointer'}
-                  >
-                    <Td>
-                      <Flex direction="row" gap={2}>
-                        <Box
-                          width={197}
-                          height={197}
-                          alignItems={'center'}
-                          display={'flex'}
-                        >
-                          <img
-                            src={Module?.attributes.image?.url}
-                            alt={Module?.attributes.name}
-                          />
-                        </Box>
-
-                        <Text
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
+                {softwaremodules?.map((Module) =>
+                  Module?.attributes.image?.url ? (
+                    <Tr key={Module.id} cursor={'pointer'}>
+                      <Td>
+                        <Flex direction="row" gap={2}>
+                          <Box
+                            width={197}
+                            height={197}
+                            alignItems={'center'}
+                            display={'flex'}
+                          >
+                            <img
+                              src={Module?.attributes.image?.url}
+                              alt={Module?.attributes.name}
+                            />
+                          </Box>
+                          <Text
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}
+                          >
+                            {Module?.attributes.name}
+                          </Text>
+                        </Flex>
+                      </Td>
+                      <Td>
+                        <Button
+                          onClick={() => {
+                            setSelectedModuleId(Module.id);
+                            onOpen();
                           }}
                         >
-                          {Module?.attributes.name}
-                        </Text>
-                      </Flex>
-                    </Td>
-                    <Td>
-                      <Button
-                        onClick={() => {
-                          setSelectedModuleId(Module.id);
-                          onOpen();
-                        }}
-                      >
-                        Assign to center
-                      </Button>
-                    </Td>
-
-                    <Td>
-                      {Module?.attributes.targeted_skills?.map((skill) => (
-                        <Tag key={skill.id} size="sm" colorScheme="gray" mr={1}>
-                          <TagLabel>{skill?.name}</TagLabel>
-                        </Tag>
-                      ))}
-                    </Td>
-                    <Td>{Module?.attributes.technology}</Td>
-                  </Tr>
-                ))}
+                          Assign to center
+                        </Button>
+                      </Td>
+                      <Td>
+                        {Module?.attributes.targeted_skills?.map((skill) => (
+                          <Tag
+                            key={skill.id}
+                            size="sm"
+                            colorScheme="gray"
+                            mr={1}
+                          >
+                            <TagLabel>{skill?.name}</TagLabel>
+                          </Tag>
+                        ))}
+                      </Td>
+                      <Td>{Module?.attributes.technology}</Td>
+                    </Tr>
+                  ) : null
+                )}
               </Tbody>
             </Table>
           </>

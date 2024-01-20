@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   Stack,
   Switch,
+  useToast,
   Text,
 } from '@chakra-ui/react';
 import { Link as ReachLink } from 'react-router-dom';
@@ -29,7 +30,8 @@ export default function ModuleModal(props: any) {
     const [selectedCenter, setSelectedCenter] = useState(null);
     const [CentersData, setCentersData] = useState([]);
     const [selectedModuleId, setSelectedModuleId] = useState(props.selectedModuleId);
-    
+    const toast = useToast();
+
     console.log("selected module id", props.selectedModuleId)
     const { otp } = useAdminContext();
   
@@ -69,9 +71,11 @@ export default function ModuleModal(props: any) {
   
             // Log the response from the API
             console.log('API Response:', response.data);
-  
+            handleSuccess()
+
           } catch (error) {
-            console.error('Error assigning center to module:', error);
+            console.log('Error assigning center to module:', error);
+            handleError(error)
           }
         }
     
@@ -86,6 +90,30 @@ export default function ModuleModal(props: any) {
         }
       }, [isSwitchOn]);
   
+
+      const handleError = (error: any) => {
+       
+    
+        toast({
+          title: 'Error',
+          description: error.response.data.error,
+          status: 'error',
+          duration: 9000,
+          position: 'top-right',
+        });
+      };
+
+      const handleSuccess = () => {
+       
+    
+        toast({
+          title: 'Success',
+          description: "Assigned Successfully",
+          status: 'success',
+          duration: 9000,
+          position: 'top-right',
+        });
+      };
     return (
       <>
       <Modal isOpen={props.isOpen} onClose={props.onClose} size={'xl'}>

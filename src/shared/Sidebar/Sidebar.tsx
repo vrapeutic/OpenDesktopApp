@@ -125,15 +125,7 @@ export default function Sidebar() {
   ];
 
   const sideItemsAdmin = [
-    {
-      link: 'Dashboard',
-      icon: (
-        <Dashboard
-          color={location.pathname === '/home' ? '#00DEA3' : '#333333'}
-        />
-      ),
-      path: '/home',
-    },
+    
     {
       link: 'Theraputic Modules',
       icon: (
