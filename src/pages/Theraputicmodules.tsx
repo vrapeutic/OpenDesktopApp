@@ -70,6 +70,8 @@ const Theraputicmodules: React.FC = () => {
   };
 
   const [softwaremodules, setsoftwaremodules] = useState<Center[]>([]);
+  const [selectedModuleId, setSelectedModuleId] = useState(null);
+
   const { otp } = useAdminContext();
 
   useEffect(() => {
@@ -106,7 +108,11 @@ const Theraputicmodules: React.FC = () => {
             />
             {/* <Button onClick={onOpen}>open modal</Button> */}
             {onOpen && (
-              <ModuleModal isOpen={isOpen} onClose={handleCloseModal} />
+               <ModuleModal
+               isOpen={isOpen}
+               onClose={handleCloseModal}
+               selectedModuleId={selectedModuleId}
+             />
             )}
             <Table
               variant="simple"
@@ -117,7 +123,7 @@ const Theraputicmodules: React.FC = () => {
                 <Tr>
                   <Th> Name</Th>
                   <Th> Assign</Th>
-              
+
                   <Th>Specialties</Th>
                   <Th>Technology</Th>
                 </Tr>
@@ -154,7 +160,16 @@ const Theraputicmodules: React.FC = () => {
                         </Text>
                       </Flex>
                     </Td>
-                    <Td><Button onClick={onOpen}>Assign to center</Button></Td>
+                    <Td>
+                      <Button
+                        onClick={() => {
+                          setSelectedModuleId(Module.id);
+                          onOpen();
+                        }}
+                      >
+                        Assign to center
+                      </Button>
+                    </Td>
 
                     <Td>
                       {Module?.attributes.targeted_skills?.map((skill) => (

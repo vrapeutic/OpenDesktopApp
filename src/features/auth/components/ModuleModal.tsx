@@ -28,6 +28,9 @@ export default function ModuleModal(props: any) {
     const [isSwitchOn, setIsSwitchOn] = useState(false);
     const [selectedCenter, setSelectedCenter] = useState(null);
     const [CentersData, setCentersData] = useState([]);
+    const [selectedModuleId, setSelectedModuleId] = useState(props.selectedModuleId);
+    
+    console.log("selected module id", props.selectedModuleId)
     const { otp } = useAdminContext();
   
     useEffect(() => {
@@ -50,23 +53,43 @@ export default function ModuleModal(props: any) {
       }
     };
   
-    const handleAssign = () => {
-      if (isSwitchOn && selectedCenter) {
-        // Log the data (center and date)
-        console.log('Assigned data:', {
-          center: selectedCenter.attributes.name,
-          date: startDate,
-        });
-      }
+    const handleAssign = async () => {
+        if (isSwitchOn && selectedCenter) {
+          try {
+            // Send a request to the API to assign the center to the module
+            const response = await axios.post(
+              `${config.apiURL}/api/v1/admins/assign_center_module`,
+              {
+                center_id: selectedCenter.id,
+                software_module_id: props.selectedModuleId,
+                end_date: startDate, // Assuming endDate is the selected date
+              },
+              { headers }
+            );
   
-      // Close the modal
-      props.onClose();
-    };
+            // Log the response from the API
+            console.log('API Response:', response.data);
+  
+          } catch (error) {
+            console.error('Error assigning center to module:', error);
+          }
+        }
+    
+        // Close the modal
+        props.onClose();
+      };
+    
+      useEffect(() => {
+        if (isSwitchOn) {
+            handleAssign()
+          console.log('Switch is ON, do something...');
+        }
+      }, [isSwitchOn]);
   
     return (
       <>
-        <Modal isOpen={props.isOpen} onClose={props.onClose} size={'xl'}>
-        <ModalOverlay />
+      <Modal isOpen={props.isOpen} onClose={props.onClose} size={'xl'}>
+          <ModalOverlay />
           <ModalContent bgColor="#FFFFFF" borderRadius="10px">
             {CentersData?.map((center) => (
               <ModalBody key={center.id}>
@@ -90,7 +113,10 @@ export default function ModuleModal(props: any) {
                       <Switch
                         colorScheme="teal"
                         size="lg"
-                        onChange={() => {setSelectedCenter(center),setIsSwitchOn(true)}}
+                        onChange={() => {
+                          setSelectedCenter(center);
+                          setIsSwitchOn(!isSwitchOn);
+                        }}
                       />
                     </Stack>
                   </Box>
@@ -105,33 +131,7 @@ export default function ModuleModal(props: any) {
                 </Flex>
               </ModalBody>
             ))}
-            <ModalFooter  display="table-column" marginTop={10}>
-              <Button
-                h="54px"
-                w="265px"
-                top="-50px"
-                left="18%"
-                borderRadius="12px"
-                bg="#00DEA3"
-                color="#FFFFFF"
-                fontFamily="Roboto"
-                fontWeight="700"
-                fontSize="18px"
-                lineHeight="21.09px"
-                textDecoration="none"
-                onClick={handleAssign}
-              >
-                <Link
-                  as={ReachLink}
-                  to={'/'}
-                  _hover={{
-                    textDecoration: 'none',
-                  }}
-                >
-                  Assign
-                </Link>
-              </Button>
-            </ModalFooter>
+          
           </ModalContent>
         </Modal>
       </>
