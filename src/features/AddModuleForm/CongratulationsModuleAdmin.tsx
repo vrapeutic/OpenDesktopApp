@@ -1,4 +1,4 @@
-import { CheckIcon } from '@chakra-ui/icons';
+import { CheckIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -11,12 +11,11 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-} from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import React from 'react';
+} from "@chakra-ui/react";
+import { Link as ReachLink } from "react-router-dom";
 
-export default function Congratulations(props: any) {
-  const navigate = useNavigate();
+export default function CongratulationsModuleAdmin(props: any) {
+  console.log(props)
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -69,7 +68,7 @@ export default function Congratulations(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-              Your profile has been created successfully
+              Your Module has been created successfully
             </Text>
           </ModalBody>
 
@@ -90,10 +89,11 @@ export default function Congratulations(props: any) {
               onClick={props.onClose}
             >
               <Link
+                as={ReachLink}
+                to={"/"}
                 _hover={{
-                  textDecoration: 'none',
+                  textDecoration: "none",
                 }}
-                onClick={() => navigate('/home')}
               >
                 Go to home
               </Link>

@@ -8,41 +8,41 @@ import {
   Stepper,
   Flex,
   Text,
-} from "@chakra-ui/react";
-import { ArrowDown } from "../../assets/icons/ArrowDown";
+} from '@chakra-ui/react';
+import { ArrowDown } from '../../assets/icons/ArrowDown';
 
 const ProgressBarAddCenter = (props: any) => {
   const steps = [
-    { title: "General info", icon: <ArrowDown /> },
-    { title: "Specialty", icon: <ArrowDown /> },
-    { title: "Education info", icon: <ArrowDown /> },
+    { title: 'General info', icon: <ArrowDown /> },
+    { title: 'Specialty', icon: <ArrowDown /> },
+    { title: 'Education info', icon: <ArrowDown /> },
     { title: 'Contact', icon: <ArrowDown /> },
   ];
 
   const activeStatus = {
-    backgroundColor: "#00DEA3",
-    height: "52px",
-    width: "52px",
-    borderRadius: "50%",
-    paddingTop: "22%",
-    color: "#00DEA3",
+    backgroundColor: '#00DEA3',
+    height: '52px',
+    width: '52px',
+    borderRadius: '50%',
+    paddingTop: '22%',
+    color: '#00DEA3',
   };
 
   const title = {
-    marginTop: "35px",
-    marginLeft: "30px",
-    width: "120px",
+    marginTop: '35px',
+    marginLeft: '30px',
+    width: '120px',
   };
 
   const inCompleteStatus = {
-    marginTop: "45px",
+    marginTop: '45px',
   };
 
   const inCompleteTitle = {
-    width: "150px",
-    marginTop: "20px",
-    marginLeft: "80px",
-    color: "#A0A0A0",
+    width: '150px',
+    marginTop: '20px',
+    marginLeft: '80px',
+    color: '#A0A0A0',
   };
 
   return (
@@ -81,7 +81,7 @@ const ProgressBarAddCenter = (props: any) => {
                         borderRadius="50%"
                         color="#FFFFFF"
                       />
-                      <StepTitle style={{ width: "100px", marginLeft: "20px" }}>
+                      <StepTitle style={{ width: '100px', marginLeft: '20px' }}>
                         {step.title}
                       </StepTitle>
                     </Flex>
@@ -92,7 +92,7 @@ const ProgressBarAddCenter = (props: any) => {
                       alignItems="center"
                       style={inCompleteStatus}
                     >
-                      {step.icon}{" "}
+                      {step.icon}{' '}
                       <StepTitle style={inCompleteTitle}>
                         {step.title}
                       </StepTitle>
@@ -104,7 +104,7 @@ const ProgressBarAddCenter = (props: any) => {
                       alignItems="center"
                       style={activeStatus}
                     >
-                      {step.icon}{" "}
+                      {step.icon}{' '}
                       <StepTitle style={title}>{step.title}</StepTitle>
                     </Flex>
                   }

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { config } from '../config';
@@ -24,6 +23,7 @@ import ContactForm from '../features/AddCenterForm/ContactForm';
 import EductionIInfoForm from '../features/AddCenterForm/EductionIInfoForm';
 import GeneralInfoForm from '../features/AddCenterForm/GeneralInfoForm';
 import SpecialtyForm from '../features/AddCenterForm/SpecialtyForm';
+import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
 
 interface Center {
   id: number;
@@ -204,7 +204,7 @@ const TherapyCenters: React.FC = () => {
     if (sliding === 1) {
       return (
         <>
-          <Grid
+          {/* <Grid
             style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -235,7 +235,12 @@ const TherapyCenters: React.FC = () => {
             >
               Add Therapy
             </Button>
-          </Grid>
+          </Grid> */}
+          <HeaderSpaceBetween
+          Title='Therapy Centers'
+          ButtonText='Add Therapy'
+          onClickFunction={nextHandler}
+          />
           {showTable && renderTable()}
         </>
       );

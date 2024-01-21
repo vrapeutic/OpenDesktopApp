@@ -1,4 +1,4 @@
-import { CheckIcon } from "@chakra-ui/icons";
+import { CheckIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -11,8 +11,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-} from "@chakra-ui/react";
-import { Link as ReachLink } from "react-router-dom";
+} from '@chakra-ui/react';
+import { Link as ReachLink } from 'react-router-dom';
 
 export default function CongratulationWithEditCenter(props: any) {
   return (
@@ -89,9 +89,9 @@ export default function CongratulationWithEditCenter(props: any) {
             >
               <Link
                 as={ReachLink}
-                to={"/Therapycenters"}
+                to={'/Therapycenters'}
                 _hover={{
-                  textDecoration: "none",
+                  textDecoration: 'none',
                 }}
               >
                 Go to Centers

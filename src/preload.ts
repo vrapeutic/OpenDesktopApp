@@ -11,4 +11,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getPassword: (key: string) => ipcRenderer.invoke('store:getPassword', [key]),
   setPassword: (key: string, password: string) =>
     ipcRenderer.invoke('store:setPassword', [key, password]),
+  deletePassword: (key: string) => ipcRenderer.invoke('store:deletePassword', [key]),
 });

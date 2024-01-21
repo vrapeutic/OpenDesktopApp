@@ -49,6 +49,13 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
     setImagePreview(previewUrl);
   };
 
+
+
+
+
+
+
+  
   const FormonSubmit = () => {
     SendDataToApi();
     setLoading(true);
@@ -88,23 +95,6 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
     return axios.post(`${config.apiURL}/api/v1/centers`, formData, { headers });
   };
 
-  const handleSuccess = () => {
-    props.onClose();
-    onOpenCongratulations();
-  };
-
-  const handleError = (error: any) => {
-    props.onClose();
-
-    toast({
-      title: 'Error',
-      description: error.response.data.error,
-      status: 'success',
-      duration: 9000,
-      position: 'top-right',
-    });
-  };
-
   const SendDataToApi = async () => {
     const socialLinksArray = [
       { link: props.formData.Website, link_type: 'facebook' },
@@ -121,6 +111,42 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
     } finally {
       setLoading(false);
     }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  const handleSuccess = () => {
+    props.onClose();
+    onOpenCongratulations();
+  };
+
+  const handleError = (error: any) => {
+    props.onClose();
+
+    toast({
+      title: 'Error',
+      description: error.response.data.error,
+      status: 'success',
+      duration: 9000,
+      position: 'top-right',
+    });
   };
 
   const handleCloseModal = () => {

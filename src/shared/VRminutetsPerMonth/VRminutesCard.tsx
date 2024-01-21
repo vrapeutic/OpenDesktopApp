@@ -1,8 +1,8 @@
-import { Card, CardBody, Text } from '@chakra-ui/react';
+import { Card, CardBody } from '@chakra-ui/react';
 import React from 'react';
 import LineChart from './LineChart';
 
-export default function VRminutesCard() {
+export default function VRminutesCard(props: any) {
   return (
     <Card
       position="absolute"
@@ -15,7 +15,7 @@ export default function VRminutesCard() {
       borderRadius="10px"
     >
       <CardBody>
-        <LineChart />
+        <LineChart refreshKey={props.refreshKey} />
       </CardBody>
     </Card>
   );
