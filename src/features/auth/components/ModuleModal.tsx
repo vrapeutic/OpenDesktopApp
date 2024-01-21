@@ -16,6 +16,7 @@ import axios from 'axios';
 import { config } from '../../../config';
 import { useAdminContext } from '../../../Context/AdminContext';
 import DatePicker from 'react-datepicker';
+import { Grid } from '@chakra-ui/react';
 
 interface Center {
   id: number;
@@ -109,20 +110,20 @@ export default function ModuleModal(props: ModuleModalProps): JSX.Element {
       <Modal isOpen={props.isOpen} onClose={props.onClose} size={'2xl'}>
         <ModalOverlay />
         <ModalContent bgColor="#FFFFFF" borderRadius="10px">
-          {/* Header Boxes */}
-          <Flex
-            justify="space-between"
+          <Grid
+            templateColumns="repeat(3, 1fr)" 
             p={4}
             mb={4}
             bg="blue.500"
             borderRadius="8px"
+            gap={4} 
           >
             <Box>
               <Text
                 color="white"
                 fontSize="lg"
                 fontWeight="bold"
-               
+                textAlign="center"
               >
                 Center Name
               </Text>
@@ -132,7 +133,7 @@ export default function ModuleModal(props: ModuleModalProps): JSX.Element {
                 color="white"
                 fontSize="lg"
                 fontWeight="bold"
-         
+                textAlign="center"
               >
                 Status
               </Text>
@@ -142,12 +143,12 @@ export default function ModuleModal(props: ModuleModalProps): JSX.Element {
                 color="white"
                 fontSize="lg"
                 fontWeight="bold"
-             
+                textAlign="center"
               >
                 Valid Until
               </Text>
             </Box>
-          </Flex>
+          </Grid>
 
           {centersData.map((center) => (
             <ModalBody key={center.id}>
