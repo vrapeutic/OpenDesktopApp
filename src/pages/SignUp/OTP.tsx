@@ -237,7 +237,7 @@ export default function OTP() {
                   Code is valid for 30 minutes
                 </Text>
 
-                <Button
+                {/* <Button
                   isLoading
                   loadingText="Verifying"
                   color="#3961FB"
@@ -245,7 +245,7 @@ export default function OTP() {
                   spinner={<Spinner />}
                 >
                   Verifying
-                </Button>
+                </Button> */}
               </HStack>
               {errormessage && <Text color={'red'}>{errormessage}</Text>}
               <Button
