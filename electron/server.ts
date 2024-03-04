@@ -11,7 +11,7 @@ app.get('/', (req:Request, res:Response) => {
 console.log("dfghjk")
 
 const Server = http.createServer(app);
-Server.listen(9000, () => {
+Server.listen(3001, () => {
     console.log('Express server running on port 9000');
 });
 

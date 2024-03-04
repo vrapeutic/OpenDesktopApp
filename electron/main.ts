@@ -18,6 +18,10 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+Server.listen(3001, () => {
+    console.log('Express server running on port 9000');
+});
+
 
 const handleStoreGetPassword = (event: IpcMainInvokeEvent, args: any[]) => {
   const key = args[0];
