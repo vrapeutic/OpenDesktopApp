@@ -134,10 +134,11 @@ const TherapyCenters: React.FC = () => {
 
   const renderTable = () => {
     return (
+      <Box style={{margin:18}}>
       <Table
         variant="simple"
         background="#FFFFFF"
-        style={{ marginLeft: 10, marginRight: 10 }}
+      
       >
         <Thead>
           <Tr>
@@ -190,6 +191,7 @@ const TherapyCenters: React.FC = () => {
           ))}
         </Tbody>
       </Table>
+      </Box>
     );
   };
 

@@ -3,11 +3,12 @@ require('dotenv').config();
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from 'electron';
 import * as path from 'path'; 
 import store from './store';
-import server from './server';
+// import server from './server';
+// const PORT:any = process.env.PORT || 3000;
+// server.listen(PORT, '192.168.1.2', () => {
 
-server.listen(3000, '192.168.1.8', () => {
-  console.log('Server running at http://192.168.1.8:3000/');
-});
+//   console.log('Server running at  192.168.1.2');
+// });
 
 // Rest of your main file code...
 
