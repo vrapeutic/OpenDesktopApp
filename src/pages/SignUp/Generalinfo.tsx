@@ -7,6 +7,8 @@ import {
   FormLabel,
   Input,
   Button,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import React, { useState } from 'react';
@@ -96,66 +98,79 @@ export default function Generalinfo() {
         </Text>
       </HStack>
 
-      <Box
-        position="absolute"
-        top="189px"
-        left="277px"
-        w="1121px"
-        h="742px"
-        borderRadius="10px"
-        bg="#FFFFFF"
-      >
+      <Box bg="#FFFFFF" borderRadius="10px" m={{ base: "5.875em 0.625em", md: "5.875em 2.625em 5.875em 2.375em" }} as="form">
         <Progressbar index={0} />
-        <form encType="multipart/form-data" onSubmit={handleSubmit}>
-          <FormControl w="1073px" h="392px" top="202px" left="24px">
-            <FormLabel>Name</FormLabel>
-            <Input
-              type="text"
-              marginBottom="10px"
-              name="name"
-              value={values.name}
-              onChange={handleChange}
-            />
-
-            <div>{errors.name}</div>
-
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="email"
-              marginBottom="10px"
-              name="email"
-              value={values.email}
-              onChange={handleChange}
-            />
-
-            <div>{errors.email}</div>
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="text"
-              marginBottom="10px"
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-            />
-            <div>{errors.password}</div>
-            <Button
-              w="214px"
-              h="54px"
-              top="80px"
-              left="853px"
-              bg="#4AA6CA"
-              borderRadius="12px"
-              color="#FFFFFF"
-              fontFamily="Roboto"
-              fontWeight="700"
-              fontSize="18px"
-              type="submit"
-              //  onClick={next}
-            >
-              Next
-            </Button>
-          </FormControl>
-        </form>
+        <Grid m={{ base: "2.625em 1em", md: "2.625em 1.5em 0em 1.5em" }} templateColumns={{ base: "1fr", md: "repeat(1, 1fr)" }} gap="0em 1.5625em">
+          <form encType="multipart/form-data" onSubmit={handleSubmit}>
+            <FormControl>
+              <GridItem>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  borderColor="#4965CA"
+                  border="2px solid #E8E8E8"
+                  _hover={{ border: '1px solid #4965CA' }}
+                  boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+                  type="text"
+                  mt="0.75em"
+                  mb="1em"
+                  borderRadius="8px"
+                  name="name"
+                  value={values.name}
+                  onChange={handleChange}
+                />
+                <div>{errors.name}</div>
+              </GridItem>
+              <GridItem>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  type="email"
+                  borderColor="#4965CA"
+                  border="2px solid #E8E8E8"
+                  _hover={{ border: '1px solid #4965CA' }}
+                  boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+                  mt="0.75em"
+                  mb="1em"
+                  borderRadius="8px"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                />
+                <div>{errors.email}</div>
+              </GridItem>
+              <GridItem>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  type="password"
+                  borderColor="#4965CA"
+                  border="2px solid #E8E8E8"
+                  _hover={{ border: '1px solid #4965CA' }}
+                  boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+                  mt="0.75em"
+                  mb="1em"
+                  borderRadius="8px"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                />
+                <div>{errors.password}</div>
+              </GridItem>
+              <Button
+                w="214px"
+                h="54px"
+                mt="1em"
+                bg="#4AA6CA"
+                borderRadius="12px"
+                color="#FFFFFF"
+                fontFamily="Roboto"
+                fontWeight="700"
+                fontSize="18px"
+                type="submit"
+              >
+                Next
+              </Button>
+            </FormControl>
+          </form>
+        </Grid>
       </Box>
       {Next && <Specialty userData={userData} />}
     </>
