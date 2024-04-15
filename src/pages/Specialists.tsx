@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
+  Box,
   Button,
   Card,
   Flex,
@@ -13,12 +14,21 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Table,
+  Tag,
+  TagLabel,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
+  Tr,
   useDisclosure,
 } from '@chakra-ui/react';
 import { config } from '../config';
 import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
+import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
 
 export default function Specialists() {
   const selectedCenter = useContext(dataContext);
@@ -93,7 +103,7 @@ export default function Specialists() {
 
   return (
     <>
-      <Text
+      {/* <Text
         position="absolute"
         alignItems="center"
         left="279px"
@@ -124,94 +134,67 @@ export default function Specialists() {
         onClick={onOpen}
       >
         Add Specialist
-      </Button>
+      </Button> */}
+      <HeaderSpaceBetween
+        Title="Specialists"
+        ButtonText="Add Specialist"
+        onClickFunction={onOpen}
+      />
 
-      <Grid
-        position="absolute"
-        height="40px"
-        width="1121px"
-        top="195px"
-        left="279px"
-        borderRadius="10px"
-        backgroundColor="#FFFFFF"
-        templateColumns="repeat(7, 1fr)"
-        alignItems="center"
-        color="#787486"
-        fontSize="14px"
-        fontFamily="Inter"
-        fontWeight="500"
-        lineHeight="24px"
-      >
-        <GridItem colSpan={2} style={{ marginLeft: '15px' }}>
-          Name
-        </GridItem>
-        <GridItem>Speciality</GridItem>
-        <GridItem>Education</GridItem>
-        <GridItem>Joined in</GridItem>
-        <GridItem>Therapy center</GridItem>
-        <GridItem>Sessions</GridItem>
-      </Grid>
+      <Table variant="simple" background="#FFFFFF">
+        <Thead>
+          <Tr>
+            <Th>Name</Th>
+            <Th>Speciality</Th>
+            <Th>Education</Th>
+            <Th>Joined in</Th>
+            <Th>Therapy center</Th>
+            <Th>Sessions</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {doctors?.map((doctor) => (
+            <Tr key={doctor.id} cursor={'pointer'}>
+              <Td>
+                <Flex direction="row" gap={2}>
+                  <Box
+                    width={197}
+                    height={197}
+                    alignItems={'center'}
+                    display={'flex'}
+                  >
+                    <img
+                      src={doctor.attributes['photo_url']}
+                      alt={doctor.attributes.name}
+                    />
+                  </Box>
 
-      <Flex flexDirection="column" position="absolute" top="247px" left="279px">
-        {doctors.map((doctor) => (
-          <Card
-            height="112px"
-            width="1121px"
-            borderRadius="10px"
-            backgroundColor="#FFFFFF"
-            justifyContent="center"
-            margin="10px 0px"
-            key={doctor.id}
-          >
-            <Grid
-              templateColumns="repeat(7, 1fr)"
-              color="#595959"
-              fontSize="16px"
-              fontFamily="Graphik LCG"
-              fontWeight="500"
-              lineHeight="16px"
-              alignItems="center"
-              gap={3}
-            >
-              <GridItem
-                colSpan={2}
-                style={{ color: '#15134B', marginLeft: '15px' }}
-              >
-                <Flex style={{ alignItems: 'center' }}>
-                  <Image
-                    src={doctor.attributes['photo_url']}
-                    width="40px"
-                    height="40px"
-                    borderRadius="50%"
-                  />
-                  <Text style={{ marginLeft: '10px' }}>
+                  <Text
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
                     {doctor.attributes.name}
                   </Text>
                 </Flex>
-              </GridItem>
-              <GridItem
-                style={{
-                  backgroundColor: '#F3F3F3',
-                  fontSize: '10px',
-                  borderRadius: '10px',
-                  padding: '5px 0px',
-                  height: '42px',
-                  width: '120px',
-                  textAlign: 'center',
-                }}
-              >
-                {doctor.attributes['specialties'].map(
-                  (speciality: any) => speciality.name
-                )}
-              </GridItem>
-              <GridItem>{doctor.attributes.degree}</GridItem>
-              <GridItem>{doctor.attributes['join_date'].slice(0, 10)}</GridItem>
-              <GridItem>{selectedCenter.attributes.name}</GridItem>
-              <GridItem>{doctor.attributes['number_of_sessions']}</GridItem>
-            </Grid>
-          </Card>
-        ))}
-      </Flex>
+              </Td>
+              <Td>
+                {doctor?.attributes?.specialties?.map((specialty: any) => (
+                  <Tag key={specialty.id} size="sm" colorScheme="gray" mr={1}>
+                    <TagLabel>{specialty?.name}</TagLabel>
+                  </Tag>
+                ))}
+              </Td>
+              <Td>{doctor.attributes.degree}</Td>
+              <Td>{doctor.attributes['join_date'].slice(0, 10)}</Td>
+              <Td>{selectedCenter.attributes.name}</Td>
+              <Td>{doctor.attributes['number_of_sessions']}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
 
       {onOpen && (
         <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>

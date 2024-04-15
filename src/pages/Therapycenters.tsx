@@ -137,7 +137,6 @@ const TherapyCenters: React.FC = () => {
       <Table
         variant="simple"
         background="#FFFFFF"
-        style={{ marginLeft: 10, marginRight: 10 }}
       >
         <Thead>
           <Tr>
@@ -204,38 +203,7 @@ const TherapyCenters: React.FC = () => {
     if (sliding === 1) {
       return (
         <>
-          {/* <Grid
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginTop: sliding === 1 ? '0' : '55px',
-            }}
-          >
-            <Text
-              padding="12px 24px"
-              borderRadius="8px"
-              fontSize="14px"
-              fontFamily="Roboto"
-            >
-              Therapy Centers
-            </Text>
-
-            <Button
-              w="143px"
-              h="40px"
-              ml="24px"
-              mt="55px"
-              padding="12px 24px"
-              bg="#F5B50E"
-              borderRadius="8px"
-              fontSize="14px"
-              fontFamily="Roboto"
-              onClick={() => nextHandler()}
-              boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-            >
-              Add Therapy
-            </Button>
-          </Grid> */}
+          
           <HeaderSpaceBetween
           Title='Therapy Centers'
           ButtonText='Add Therapy'
