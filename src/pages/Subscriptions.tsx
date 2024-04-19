@@ -15,6 +15,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Switch,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -22,11 +23,22 @@ import img from '../assets/images/vr.png';
 import Joi from 'joi';
 
 export default function Subscriptions() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenVR,
+    onOpen: onOpenVR,
+    onClose: onCloseVR,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenModal,
+    onOpen: onOpenModal,
+    onClose: onCloseModal,
+  } = useDisclosure();
+
   const [values, setValues] = useState({
     modalText: '',
     id: '',
   });
+
   const [errors, setErrors] = useState({
     modalText: null,
     id: null,
@@ -56,11 +68,10 @@ export default function Subscriptions() {
         validationErrors[detail.path[0]] = detail.message;
       });
       setErrors(validationErrors);
-    }else{
-      setErrors({modalText: null,
-        id: null});
+    } else {
+      setErrors({ modalText: null, id: null });
 
-      console.log("hhhhhhhhhh");
+      console.log('hhhhhhhhhh');
     }
   };
 
@@ -82,7 +93,8 @@ export default function Subscriptions() {
         alignItems="center"
         color="#787486"
         fontSize="14px"
-        fontFamily="Inter"
+     
+        fontFamily="Graphik LCG"
         fontWeight="500"
         lineHeight="24px"
       >
@@ -106,9 +118,13 @@ export default function Subscriptions() {
         </GridItem>
       </Grid>
 
-      <DataTable onOpen={onOpen} />
-      {onOpen && (
-        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
+      <DataTable onOpenVR={onOpenVR} onOpenModal={onOpenModal} />
+      {onOpenVR && (
+        <Modal
+          isOpen={isOpenVR}
+          onClose={onCloseVR}
+          closeOnOverlayClick={false}
+        >
           <ModalOverlay />
           <ModalContent>
             {/* <ModalHeader>VR Headset Model</ModalHeader> */}
@@ -117,15 +133,30 @@ export default function Subscriptions() {
                 <Text fontSize="16px" color="black" my="4">
                   VR Headset Model
                 </Text>
-                <Input type="text" name="modalText" onChange={handleChange}  value={values.modalText}/>
-                <Text fontSize="16px" color="red">
+                <Input
+                  type="text"
+                  name="modalText"
+                  onChange={handleChange}
+                  value={values.modalText}
+                  
+          fontFamily="Graphik LCG"
+                />
+                <Text fontSize="16px" color="red" 
+          fontFamily="Graphik LCG">
                   {errors.modalText}
                 </Text>
-                <Text fontSize="16px" color="black" my="4">
+                <Text fontSize="16px" color="black" my="4" 
+          fontFamily="Graphik LCG">
                   Device ID
                 </Text>
-                <Input type="text" name="id" onChange={handleChange}  value={values.id} />
-                <Text fontSize="16px" color="red">
+                <Input
+                  type="text"
+                  name="id"
+                  onChange={handleChange}
+                  value={values.id}
+                />
+                <Text fontSize="16px" color="red" 
+          fontFamily="Graphik LCG">
                   {errors.id}
                 </Text>
               </ModalBody>
@@ -140,10 +171,11 @@ export default function Subscriptions() {
                   bg="#F5B50E"
                   borderRadius="8px"
                   fontSize="14px"
-                  fontFamily="Roboto"
                   boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                   color={'white'}
-                  onClick={() => onClose()}
+                  onClick={() => onCloseVR()}
+                  
+          fontFamily="Graphik LCG"
                 >
                   Cancel
                 </Button>
@@ -156,9 +188,11 @@ export default function Subscriptions() {
                   bg="#F5B50E"
                   borderRadius="8px"
                   fontSize="14px"
-                  fontFamily="Roboto"
+              
                   boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                   color={'white'}
+                  
+          fontFamily="Graphik LCG"
                 >
                   Add
                 </Button>
@@ -167,10 +201,71 @@ export default function Subscriptions() {
           </ModalContent>
         </Modal>
       )}
+      {onOpenModal && (
+        <Modal
+          isOpen={isOpenModal}
+          onClose={onCloseModal}
+          closeOnOverlayClick={false}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Assign a module to a center</ModalHeader>
+            <Grid
+              py="2"
+              mx="18"
+              my="3"
+              borderRadius="10px"
+              backgroundColor="#F9F9F9"
+              templateColumns="repeat(5, 1fr)"
+              alignItems="center"
+              color="#4A4A4A99"
+              fontSize="14px"
+           
+              fontWeight="500"
+              lineHeight="24px"
+              
+          fontFamily="Graphik LCG"
+            >
+              <GridItem colSpan={2} textAlign={'center'}>
+                Module Name
+              </GridItem>
+              <GridItem colSpan={1} textAlign={'center'}>
+                Status
+              </GridItem>
+              <GridItem colSpan={2} textAlign={'center'}>
+                Valid
+              </GridItem>
+            </Grid>
+            <DataModal ModalName="Module 1" date="14 May 2022" />
+            <DataModal ModalName="Module 2" date="14 May 2022" />
+            <DataModal ModalName="Module 3" date="14 May 2022" />
+            <ModalFooter>
+            <Button
+              type="button"
+              w="110px"
+              h="40px"
+              padding="10px"
+              margin="5px"
+              bg="#F5B50E"
+              borderRadius="8px"
+              fontSize="14px"
+   
+              fontFamily="Graphik LCG"
+              boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+              color={'white'}
+              onClick={() => onCloseModal()}
+            >
+              Cancel
+            </Button>
+          </ModalFooter>
+          </ModalContent>
+  
+        </Modal>
+      )}
     </>
   );
 }
-const DataTable = ({ onOpen }) => {
+const DataTable = ({ onOpenVR, onOpenModal }: any) => {
   return (
     <Grid
       py="3"
@@ -182,11 +277,14 @@ const DataTable = ({ onOpen }) => {
       alignItems="center"
       color="#787486"
       fontSize="14px"
-      fontFamily="Inter"
+    
       fontWeight="500"
+      
+      fontFamily="Graphik LCG"
       lineHeight="24px"
     >
-      <GridItem colSpan={3} style={{ marginLeft: '15px' }}>
+      <GridItem colSpan={3} style={{ marginLeft: '15px' }} 
+          fontFamily="Graphik LCG">
         <Flex>
           <Box>
             <Image
@@ -199,8 +297,10 @@ const DataTable = ({ onOpen }) => {
             />
           </Box>
 
-          <Box display="flex" flexDirection="column" alignItems="center" px="2">
-            <Text fontSize="16" textAlign={'start'}>
+          <Box display="flex" flexDirection="column" alignItems="center" px="2" 
+          fontFamily="Graphik LCG">
+            <Text fontSize="16" textAlign={'start'} 
+          fontFamily="Graphik LCG">
               {' '}
               VRapeutic Therapy Center
             </Text>
@@ -212,10 +312,12 @@ const DataTable = ({ onOpen }) => {
                 margin="5px"
                 bg="#F5B50E"
                 borderRadius="8px"
-                fontSize="14px"
-                fontFamily="Roboto"
+                fontSize="12px"
+            
+          fontFamily="Graphik LCG"
                 boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                 color={'white'}
+                onClick={() => onOpenModal()}
               >
                 Assign a module
               </Button>
@@ -226,11 +328,12 @@ const DataTable = ({ onOpen }) => {
                 margin="5px"
                 bg="#F5B50E"
                 borderRadius="8px"
-                fontSize="14px"
-                fontFamily="Roboto"
+                fontSize="12px"
+             
+          fontFamily="Graphik LCG"
                 boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                 color={'white'}
-                onClick={onOpen}
+                onClick={() => onOpenVR()}
               >
                 Assign a headset
               </Button>
@@ -238,7 +341,8 @@ const DataTable = ({ onOpen }) => {
           </Box>
         </Flex>
       </GridItem>
-      <GridItem colSpan={1} textAlign={'center'} display={'flex'}>
+      <GridItem colSpan={1} textAlign={'center'} display={'flex'} 
+          fontFamily="Graphik LCG">
         <Button
           rounded="md"
           p="2"
@@ -249,6 +353,8 @@ const DataTable = ({ onOpen }) => {
             fontSize: 16,
             fontWeight: '400',
           }}
+          
+          fontFamily="Graphik LCG"
         >
           ADHD
         </Button>
@@ -262,6 +368,8 @@ const DataTable = ({ onOpen }) => {
             fontSize: 16,
             fontWeight: '400',
           }}
+          
+          fontFamily="Graphik LCG"
         >
           Richo
         </Button>
@@ -271,6 +379,7 @@ const DataTable = ({ onOpen }) => {
         textAlign={'center'}
         fontSize={'16'}
         color={'#707EAE'}
+
       >
         AUC - Egypt
       </GridItem>
@@ -282,6 +391,63 @@ const DataTable = ({ onOpen }) => {
       </GridItem>
       <GridItem colSpan={1} textAlign={'center'} fontSize={'16'}>
         700
+      </GridItem>
+    </Grid>
+  );
+};
+
+interface DataModal {
+  ModalName: string;
+  date: string;
+}
+const DataModal: React.FC<DataModal> = ({ ModalName, date }) => {
+  return (
+    <Grid
+      py="3"
+      mx="18"
+      my="1"
+      borderRadius="10px"
+      backgroundColor="#F9F9F9"
+      templateColumns="repeat(5, 1fr)"
+      alignItems="center"
+      color="#787486"
+      fontSize="14px"
+      
+      fontFamily="Graphik LCG"
+      fontWeight="500"
+      lineHeight="24px"
+    >
+      <GridItem colSpan={2} textAlign={'center'} color={'#15134B'} 
+          fontFamily="Graphik LCG">
+        <Box
+          backgroundColor="#3575FF29"
+          borderRadius="15px"
+          mx="15"
+          py="1"
+          color={'#15134B'}
+          textAlign={'center'}
+
+        >
+          {ModalName}
+        </Box>
+      </GridItem>
+      <GridItem colSpan={1} direction="row" align="center" 
+          fontFamily="Graphik LCG">
+        <Switch size="md" />
+      </GridItem>
+      <GridItem colSpan={2} 
+          fontFamily="Graphik LCG">
+        <Box
+          backgroundColor="#3575FF29"
+          borderRadius="15px"
+          mx="15"
+          py="1"
+
+          color={'#15134B'}
+          textAlign={'center'}
+        >
+          {date}
+        </Box>
       </GridItem>
     </Grid>
   );
