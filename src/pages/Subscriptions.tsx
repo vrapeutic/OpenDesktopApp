@@ -226,13 +226,16 @@ export default function Subscriptions() {
               
           fontFamily="Graphik LCG"
             >
-              <GridItem colSpan={2} textAlign={'center'}>
+              <GridItem colSpan={2} textAlign={'center'} 
+          fontFamily="Graphik LCG">
                 Module Name
               </GridItem>
-              <GridItem colSpan={1} textAlign={'center'}>
+              <GridItem colSpan={1} textAlign={'center'} 
+          fontFamily="Graphik LCG">
                 Status
               </GridItem>
-              <GridItem colSpan={2} textAlign={'center'}>
+              <GridItem colSpan={2} textAlign={'center'} 
+          fontFamily="Graphik LCG">
                 Valid
               </GridItem>
             </Grid>
@@ -304,7 +307,8 @@ const DataTable = ({ onOpenVR, onOpenModal }: any) => {
               {' '}
               VRapeutic Therapy Center
             </Text>
-            <Box display="flex" flexDirection="row">
+            <Box display="flex" flexDirection="row"
+          fontFamily="Graphik LCG">
               <Button
                 w="110px"
                 h="40px"
@@ -380,6 +384,7 @@ const DataTable = ({ onOpenVR, onOpenModal }: any) => {
         fontSize={'16'}
         color={'#707EAE'}
 
+        fontFamily="Graphik LCG"
       >
         AUC - Egypt
       </GridItem>
@@ -427,11 +432,13 @@ const DataModal: React.FC<DataModal> = ({ ModalName, date }) => {
           color={'#15134B'}
           textAlign={'center'}
 
+          fontFamily="Graphik LCG"
         >
           {ModalName}
         </Box>
       </GridItem>
-      <GridItem colSpan={1} direction="row" align="center" 
+      <GridItem colSpan={1} direction="row" align="center " 
+          fontFamily="Graphik LCG"
           fontFamily="Graphik LCG">
         <Switch size="md" />
       </GridItem>
