@@ -75,15 +75,15 @@ export default function Sidebar() {
       ),
       path: '/Therapycenters',
     },
-    {
-      link: 'Branches',
-      icon: (
-        <Branches
-          color={location.pathname === '/Branches' ? '#00DEA3' : '#333333'}
-        />
-      ),
-      path: '/Branches',
-    },
+    // {
+    //   link: 'Branches',
+    //   icon: (
+    //     <Branches
+    //       color={location.pathname === '/Branches' ? '#00DEA3' : '#333333'}
+    //     />
+    //   ),
+    //   path: '/Branches',
+    // },
     {
       link: 'Specialists',
       icon: (
@@ -93,17 +93,17 @@ export default function Sidebar() {
       ),
       path: '/Specialists',
     },
-    {
-      link: 'Assessment tools',
-      icon: (
-        <Assessmenttools
-          color={
-            location.pathname === '/Assessmenttools' ? '#00DEA3' : '#333333'
-          }
-        />
-      ),
-      path: '/Assessmenttools',
-    },
+    // {
+    //   link: 'Assessment tools',
+    //   icon: (
+    //     <Assessmenttools
+    //       color={
+    //         location.pathname === '/Assessmenttools' ? '#00DEA3' : '#333333'
+    //       }
+    //     />
+    //   ),
+    //   path: '/Assessmenttools',
+    // },
     {
       link: 'Subscriptions',
       icon: (
@@ -113,15 +113,15 @@ export default function Sidebar() {
       ),
       path: '/Subscriptions',
     },
-    {
-      link: 'General settings',
-      icon: (
-        <Setting
-          color={location.pathname === '/Setting' ? '#00DEA3' : '#333333'}
-        />
-      ),
-      path: '/Setting',
-    },
+    // {
+    //   link: 'General settings',
+    //   icon: (
+    //     <Setting
+    //       color={location.pathname === '/Setting' ? '#00DEA3' : '#333333'}
+    //     />
+    //   ),
+    //   path: '/Setting',
+    // },
   ];
 
   const sideItemsAdmin = [

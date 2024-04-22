@@ -103,38 +103,6 @@ export default function Specialists() {
 
   return (
     <>
-      {/* <Text
-        position="absolute"
-        alignItems="center"
-        left="279px"
-        top="129px"
-        fontFamily="Graphik LCG"
-        fontSize="29px"
-        fontWeight="500"
-        lineHeight="29px"
-        letterSpacing="-0.01em"
-      >
-        Specialists
-      </Text>
-
-      <Button
-        position="absolute"
-        width="123px"
-        height="40px"
-        top="129px"
-        left="994px"
-        borderRadius="8px"
-        backgroundColor="#F5B50E"
-        color="#FFFFFF"
-        fontSize="14px"
-        fontWeight="700"
-        fontFamily="Roboto"
-        lineHeight="16.41px"
-        padding="16px"
-        onClick={onOpen}
-      >
-        Add Specialist
-      </Button> */}
       <HeaderSpaceBetween
         Title="Specialists"
         ButtonText="Add Specialist"
@@ -197,7 +165,7 @@ export default function Specialists() {
       </Table>
 
       {onOpen && (
-        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
+        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={true}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Enter the doctor's email</ModalHeader>
