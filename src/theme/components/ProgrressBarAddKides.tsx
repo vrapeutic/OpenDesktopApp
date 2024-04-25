@@ -53,8 +53,8 @@ import {Documents} from '../../assets/icons/Documents';
         <Stepper
           index={props.index}
           position="relative"
-          top="27px"
-         
+        
+         my="15px"
           w="80%"
           h="101px"
           colorScheme="whatsapp"

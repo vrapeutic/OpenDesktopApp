@@ -17,6 +17,7 @@ import EditCenter from './pages/EditCenter';
 import OTP from './pages/SignUp/OTP';
 import Uploadlogo from './pages/SignUp/Uploadlogo';
 import { useAdminContext } from './Context/AdminContext';
+import ViewKids from './pages/ViewKids';
 
 function App() {
   const { adminBoolean } = useAdminContext();
@@ -47,6 +48,7 @@ function App() {
           <Route path="setting" element={<Setting />} />
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />
+          <Route path="ViewKids" element={<ViewKids />} />
           {/* Add more routes as needed */}
         </Route>
         <Route path="validateotp" element={<OTP />} />

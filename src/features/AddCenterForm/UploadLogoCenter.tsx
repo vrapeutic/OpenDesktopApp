@@ -113,24 +113,6 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
   const handleSuccess = () => {
     props.onClose();

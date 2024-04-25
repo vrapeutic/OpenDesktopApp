@@ -1,78 +1,80 @@
-import React, { useState } from 'react';
-import { Box, Grid, GridItem, Image, Text } from '@chakra-ui/react';
+import React, { useContext, useState, useEffect } from 'react';
+import {
+  Box,
+  Grid,
+  GridItem,
+  Image,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
 import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
 import img from '../assets/images/Person3.png';
 import GeneralInfoFormKids from '@renderer/features/AddCenterForm/GeneralInformKids';
-import SpecialtyForm from '@renderer/features/AddCenterForm/SpecialtyForm';
-import EductionIInfoForm from '@renderer/features/AddCenterForm/EductionIInfoForm';
-import ContactForm from '@renderer/features/AddCenterForm/ContactForm';
+import Congratulations from './SignUp/Congratulations';
+import { config } from '../config';
+import { dataContext } from '@renderer/shared/Provider';
+import { useNavigate } from 'react-router-dom';
 
 
 
-
-
-interface Kides {
+interface Kids {
   id: number;
   attributes: {
     name: string;
-    logo: {
-      url: string;
-    };
-    specialties: { id: number; name: string }[];
-    children_count: number;
+    email: string;
+    age: string;
   };
 }
 
-
-
-
-
 export default function Kids() {
-
   const totalSteps = 5;
   const [sliding, setSliding] = useState(1);
   const [formData, setFormData] = useState({});
-  const [centersList, setCentersList] = useState<Kides[]>([]);
+  const [kidsList, setKidsList] = useState<Kids[]>([]);
   const [showTable, setShowTable] = useState(true);
+  const selectedCenter = useContext(dataContext);
+
+  const {
+    isOpen: isOpenCongratulations,
+    onOpen: onOpenCongratulations,
+    onClose: onDeleteCongratulations,
+  } = useDisclosure();
+
+  const handleCloseModal = () => {
+    onDeleteCongratulations();
+    setShowTable(true);
+    console.log('handle succcess');
+  };
   const renderFormStep = () => {
     switch (sliding) {
       case 2:
         return (
-          <GeneralInfoFormKids
-            onSubmit={handleFormSubmit}
-            nextHandler={nextHandler}
-            backHandler={backHandler}
-            sliding={sliding}
-          />
+          <>
+            <GeneralInfoFormKids
+              onSubmit={handleFormSubmit}
+              nextHandler={nextHandler}
+              backHandler={backHandler}
+              sliding={sliding}
+            />
+          </>
         );
       case 3:
         return (
-          <SpecialtyFormModule
-            onSubmit={handleFormSubmit}
-            nextHandler={nextHandler}
-            backHandler={backHandler}
-            sliding={sliding}
-          />
+          <>
+            <GeneralInfoFormKids
+              onSubmit={handleFormSubmit}
+              nextHandler={nextHandler}
+              backHandler={backHandler}
+              sliding={sliding}
+            />
+            <Congratulations
+              isOpen={isOpenCongratulations}
+              onClose={handleCloseModal}
+              kids={true}
+            />
+          </>
         );
-      case 4:
-        return (
-          <EductionIInfoForm
-            onSubmit={handleFormSubmit}
-            nextHandler={nextHandler}
-            backHandler={backHandler}
-            sliding={sliding}
-          />
-        );
-      case 5:
-        return (
-          <ContactForm
-            onSubmit={handleFormSubmit}
-            nextHandler={nextHandler}
-            backHandler={backHandler}
-            sliding={sliding}
-            formData={formData}
-          />
-        );
+
       default:
         return null;
     }
@@ -81,6 +83,7 @@ export default function Kids() {
     if (sliding < totalSteps) {
       setSliding(sliding + 1);
       setShowTable(false);
+      onOpenCongratulations();
     }
   };
 
@@ -98,69 +101,94 @@ export default function Kids() {
     return { ...formData, ...data };
   };
 
+  console.log(selectedCenter);
+  useEffect(() => {
+    (async () => {
+      const token = await (window as any).electronAPI.getPassword('token');
+
+      fetch(`${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids`, {
+        method: 'Get',
+        redirect: 'follow',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+if(result.data){
+  setKidsList(result.data);
+}
+         
+        })
+        .catch((error) => console.log('error', error));
+    })();
+  }, []);
+
   return (
-    <>{showTable?<>
-    <HeaderSpaceBetween
-        Title=" Kids"
-        ButtonText="Add New Kids"
-        onClickFunction={nextHandler}
-      />
-     <Grid
-        py="2"
-        mx="18"
-        my="3"
-        borderRadius="10px"
-        backgroundColor="#FFFFFF"
-        templateColumns="repeat(5, 1fr)"
-        alignItems="center"
-        color="#787486"
-        fontSize="14px"
-        fontFamily="Graphik LCG"
-        fontWeight="500"
-        lineHeight="24px"
-      >
-        <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
-          Name
-        </GridItem>
-        <GridItem colSpan={1} textAlign={'center'}>
-          Age
-        </GridItem>
-        <GridItem colSpan={1} textAlign={'center'}>
-          Diagnosis
-        </GridItem>
-        <GridItem colSpan={1} textAlign={'center'}>
-          Jion in
-        </GridItem>
-        <GridItem colSpan={1} textAlign={'center'}>
-          Sessions{' '}
-        </GridItem>
-      </Grid>
-      <TableData />
-    
-    </>:<>
-    
-   { renderFormStep()}
-    
-    
-    </>
-    }
-
-  
-      
-
-     
+    <>
+      {showTable ? (
+        <>
+          <HeaderSpaceBetween
+            Title=" Kids"
+            ButtonText="Add New Kids"
+            onClickFunction={nextHandler}
+          />
+          <Grid
+            py="2"
+            mx="18"
+            my="3"
+            borderRadius="10px"
+            backgroundColor="#FFFFFF"
+            templateColumns="repeat(5, 1fr)"
+            alignItems="center"
+            color="#787486"
+            fontSize="14px"
+            fontFamily="Graphik LCG"
+            fontWeight="500"
+            lineHeight="24px"
+          >
+            <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
+              Name
+            </GridItem>
+            <GridItem colSpan={1} textAlign={'center'}>
+              Age
+            </GridItem>
+            <GridItem colSpan={1} textAlign={'center'}>
+              Diagnosis
+            </GridItem>
+            <GridItem colSpan={1} textAlign={'center'}>
+              Jion in
+            </GridItem>
+            <GridItem colSpan={1} textAlign={'center'}>
+              Sessions{' '}
+            </GridItem>
+          </Grid>
+          {selectedCenter &&
+            kidsList.map((kid) => (
+              <>
+                <TableData  id={kid.id} name={kid.attributes.name} age={kid.attributes.age}/>
+              </>
+            ))}
+        </>
+      ) : (
+        <>{renderFormStep()}</>
+      )}
     </>
   );
 }
- interface  TableData{    
+interface TableData {
   name: string;
   age: any;
-  diagnosis: string;
-  jion_in: string;
-  sessions: string;
-  
- }
-const TableData = () => {
+  diagnosis?: string;
+  jion_in?: string;
+  sessions?: string;
+  id:any
+}
+const TableData = ({name,age,id}) => {
+  const navigate = useNavigate();
+  const handleKids = (Kids:any) => {
+    console.log('Clicked Center Data:', Kids);
+    navigate('/ViewKids', { state: Kids });
+  };
   return (
     <Grid
       py="3"
@@ -175,6 +203,7 @@ const TableData = () => {
       fontWeight="500"
       fontFamily="Graphik LCG"
       lineHeight="24px"
+      onClick={()=>handleKids(id)}
     >
       <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
         <Box display={'flex'} alignItems={'center'}>
@@ -197,7 +226,7 @@ const TableData = () => {
             lineHeight={'16px'}
             letterSpacing={'1.6%'}
           >
-            Yahya Alaa
+           {name}
           </Text>
         </Box>
       </GridItem>
@@ -212,7 +241,7 @@ const TableData = () => {
           lineHeight={'16px'}
           letterSpacing={'1.6%'}
         >
-          6 Years
+         {age} Years
         </Text>
       </GridItem>
       <GridItem

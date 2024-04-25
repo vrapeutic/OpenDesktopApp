@@ -17,6 +17,7 @@ import React from 'react';
 
 export default function Congratulations(props: any) {
   const navigate = useNavigate();
+  console.log(props.kids)
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -89,7 +90,22 @@ export default function Congratulations(props: any) {
               textDecoration="none"
               onClick={props.onClose}
             >
-              <Link
+              
+              {
+
+
+             props.kids? 
+             <Link
+             _hover={{
+               textDecoration: 'none',
+             }}
+             onClick={() => navigate('/Kids')}
+           >
+            Check now
+           </Link>
+             
+            :
+                <Link
                 _hover={{
                   textDecoration: 'none',
                 }}
@@ -97,6 +113,9 @@ export default function Congratulations(props: any) {
               >
                 Go to home
               </Link>
+              
+            }
+              
             </Button>
           </ModalFooter>
         </ModalContent>
