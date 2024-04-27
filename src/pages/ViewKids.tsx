@@ -1,10 +1,9 @@
 import  { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import TabsViewCenter from '../theme/components/Tabs';
-import HeaderWithButton from '../theme/components/HeaderWithButton';
-import CardWithLogo from '../theme/components/CardWithLogo';
 import HeaderWithArrow from '@renderer/theme/components/HeaderWithArrow';
 import { Box } from '@chakra-ui/react';
+import ProfileKid from '@renderer/theme/components/ProfileKid';
+import TabsKids from '@renderer/theme/components/TabsKids';
 const ViewKids= () => {
   const location = useLocation();
   const centerData = location.state;
@@ -18,8 +17,8 @@ const ViewKids= () => {
   return (
     <Box px={31}>
       <HeaderWithArrow title={"Kid Profile"} bntTitle={"Edit Profile"} />
-      <CardWithLogo centerData={centerData} />
-      <TabsViewCenter centerData={centerData} />
+      <ProfileKid />
+      <TabsKids />
     </Box>
   );
 };
