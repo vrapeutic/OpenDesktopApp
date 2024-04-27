@@ -137,6 +137,11 @@ export default function LineChart(props: any) {
           bottom: 0,
           left: 24,
         },
+        chart: {
+          height: '100%',
+          width: '100%',
+          type: 'line',
+        },
       },
     },
   });
@@ -194,12 +199,14 @@ export default function LineChart(props: any) {
   }, [props.refreshKey]);
 
   return (
-    <ReactApexChart
-      options={lineChart.options}
-      series={lineChart.series}
-      type="line"
-      height="228.32px"
-      width="557.12px"
-    />
+    <div style={{ width: '100%', height: '100%' }}>
+      <ReactApexChart
+        options={lineChart.options}
+        series={lineChart.series}
+        type="line"
+        height="100%"
+        width="100%"
+      />
+    </div>
   );
 }

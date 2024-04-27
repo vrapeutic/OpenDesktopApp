@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
+  Flex,
   Menu,
   MenuButton,
   MenuItem,
@@ -78,9 +79,17 @@ export default function Home() {
           ))}
         </MenuList>
       </Menu>
-
+      <Flex
+      width="90%"
+      justifyContent="space-between" 
+      padding="20px"
+      marginBottom="20px"
+      flexWrap="wrap" 
+      
+    >
       <VRminutesCard refreshKey={refreshKey} />
       <VRsessionsCard loading={isLoading} refreshKey={refreshKey} />
+      </Flex>
       <StatistcsCards refreshKey={refreshKey} />
     </>
   );
