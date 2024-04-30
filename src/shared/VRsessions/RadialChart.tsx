@@ -1,218 +1,395 @@
-// // problems in width
-// import React, { useEffect, useState, useContext } from 'react';
-// import ReactApexChart from 'react-apexcharts';
+// import { useEffect, useState, useContext } from 'react';
 // import { config } from '@renderer/config';
 // import { dataContext } from '@renderer/shared/Provider';
+// import { RadialBarChart, RadialBar, Legend } from "recharts";
 
 // export default function RadialChart(props: any) {
 //   const center = useContext(dataContext);
-//   const [radialChart, setRadialChart] = useState<{
-//     series: any;
-//     options: object;
-//   }>({
-//     series: [],
-//     options: {
-//       chart: {
-//         height: "auto",
-//         width: "auto",
-//         type: 'radialBar',
-//         toolbar: {
-//           show: true,
-//           offsetX: 0,
-//           offsetY: 0,
-//           tools: {
-//             download: '...',
-//             selection: true,
-//             zoom: false,
-//             zoomin: false,
-//             zoomout: false,
-//             pan: false,
-//             reset: false,
-//             customIcons: [],
-//           },
-//           export: {
-//             csv: {
-//               filename: undefined,
-//               columnDelimiter: ',',
-//               headerCategory: 'category',
-//               headerValue: 'value',
-//               dateFormatter(timestamp: any) {
-//                 return new Date(timestamp).toDateString();
-//               },
-//             },
-//             svg: {
-//               filename: undefined,
-//             },
-//             png: {
-//               filename: undefined,
-//             },
-//           },
-//           autoSelected: 'zoom',
-//         },
-//       },
+//   const [radialChart, setRadialChart] = useState([]);
 
-//       title: {
-//         text: 'VR Sessions Monthly Metrics',
-//         align: 'left',
-//         offsetX: 0,
-//         offsetY: 0,
-//         floating: false,
-//         style: {
-//           fontSize: '20px',
-//           fontWeight: '500',
-//           fontFamily: 'Graphik LCG',
-//           color: '#00261C',
-//           lineHeight: '20px',
-//           left: '24px',
-//           top: '24px',
-//         },
+//   const getData = async () => {
+//     const token = await (window as any).electronAPI.getPassword('token');
+//     if (center.id !== undefined) {
+//       await fetch(
+//         `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
+//         {
+//           method: 'Get',
+//           redirect: 'follow',
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       )
+//       .then((response) => {
+//         console.log("response", response);
+//         return response.json();
+//       })
+//       .then((result) => {
+//         console.log("result", result);
+//         // Transform result object into an array of objects for the chart
+//         const chartData = Object.entries(result).map(([name, value]) => ({
+//           name,
+//           uv: value,
+//         }));
+//         setRadialChart(chartData);
+//       })
+//       .catch((error) => console.log('error', error));
+//     }
+//   };
 
-//         noData: {
-//           text: 'Loading...',
-//         },
-//       },
-//       stroke: {
-//         lineCap: 'round',
-//         width: -15,
-//       },
-//       colors: ['#A93BFF', '#FF7049', '#20C997'],
-//       legend: {
-//         show: true,
-//         showForSingleSeries: false,
-//         showForNullSeries: true,
-//         showForZeroSeries: true,
-//         position: 'right',
-//         horizontalAlign: 'center',
-//         floating: false,
-//         fontSize: '1rem',
-//         fontFamily: 'Roboto',
-//         fontWeight: 700,
-//         lineHeight: '16.41px',
-//         formatter: function (seriesName: string, opts: any) {
-//           return `${seriesName} : ${opts.w.globals.series[opts.seriesIndex]}%`;
-//         },
+//   useEffect(() => {
+//     getData();
+//   }, [props.refreshKey]);
 
-//         inverseOrder: false,
-//         width: "auto",
-//         height: "auto",
-//         tooltipHoverFormatter: undefined,
-//         customLegendItems: [
-//           'good session percentage',
-//           'vr percentage',
-//           'kids using vr percentage ',
-//         ],
-//         offsetX: -1,
-//         offsetY: 40,
-//         labels: {
-//           colors: '#5A5881',
-//           useSeriesColors: false,
-//         },
-//         markers: {
-//           width: 0,
-//           height: 0,
-//           strokeWidth: 0,
-//           strokeColor: '#fff',
-//           fillColors: undefined,
-//           radius: 50,
-//           customHTML: undefined,
-//           onClick: undefined,
-//           offsetX: 0,
-//           offsetY: 0,
-//         },
-//         itemMargin: {
-//           horizontal: 2,
-//           vertical: 6,
-//         },
-//         onItemClick: {
-//           toggleDataSeries: false,
-//         },
-//         onItemHover: {
-//           highlightDataSeries: false,
-//         },
-//       },
-//       plotOptions: {
-//         stroke: {
-//           show: true,
-//           curve: 'smooth',
-//           lineCap: 'round',
-//           colors: undefined,
-//           width: 4,
-//           dashArray: 0,
-//         },
+//   return (
+//     <RadialBarChart
+//       width={500}
+//       height={300}
+//       cx={150}
+//       cy={150}
+//       innerRadius={20}
+//       outerRadius={140}
+//       barSize={10}
+//       data={radialChart} // Pass radialChart directly
+//     >
+//       <RadialBar
+//         minAngle={15}
+//         label={{ position: "insideStart", fill: "#fff" }}
+//         background
+//         clockWise
+//         dataKey="uv"
+//       />
+//       <Legend
+//         iconSize={10}
+//         width={120}
+//         height={140}
+//         layout="vertical"
+//         verticalAlign="middle"
+//       />
+//     </RadialBarChart>
+//   );
+// }
+// import { useState, useEffect } from "react";
+// import { RadialBarChart, RadialBar, Legend } from "recharts";
 
-//         radialBar: {
-//           inverseOrder: false,
-//           startAngle: 0,
-//           endAngle: 360,
-//           offsetX: 0,
-//           offsetY: 20,
-//           hollow: {
-//             margin: 3,
-//             size: '1%',
-//             background: 'transparent',
-//             image: undefined,
-//             imageWidth: "auto",
-//             imageHeight: "auto",
-//             imageOffsetX: 0,
-//             imageOffsetY: 0,
-//             imageClipped: true,
-//             position: 'front',
-//             dropShadow: {
-//               enabled: false,
-//               top: 0,
-//               left: 0,
-//               blur: 3,
-//               opacity: 0.5,
-//             },
-//           },
-//           track: {
-//             show: true,
-//             startAngle: 0,
-//             endAngle: 360,
-//             background: '#f2f2f2',
-//             strokeWidth: '75%',
-//             opacity: 1,
-//             margin: 13,
-//             dropShadow: {
-//               enabled: false,
-//               top: 0,
-//               left: 0,
-//               blur: 0,
-//               color: 'rgb(86, 59, 255)',
-//               opacity: 0.26,
-//             },
-//           },
-//           dataLabels: {
-//             show: false,
-//             name: {
-//               show: true,
-//               fontSize: '16px',
-//               fontFamily: undefined,
-//               fontWeight: 600,
-//               color: undefined,
-//               offsetY: -10,
-//             },
-//             value: {
-//               show: false,
-//               fontSize: '14px',
-//               fontFamily: undefined,
-//               fontWeight: 400,
-//               color: undefined,
-//               offsetY: 16,
-//             },
-//             total: {
-//               show: false,
-//               label: 'Total',
-//               color: '#373d3f',
-//               fontSize: '16px',
-//               fontFamily: undefined,
-//               fontWeight: 600,
-//             },
-//           },
-//         },
-//       },
-//     },
-//   });
+// export default function RadialChart() {
+//   const [radialChart, setRadialChart] = useState([
+//     { name: "good_session_percentage", uv: 50 },
+//     { name: "kids_using_vr_percentage", uv: 30 },
+//     { name: "vr_percentage", uv: 20 },
+//   ]);
+
+//   const [legendPosition, setLegendPosition] = useState({ left: 'auto', right: 0 });
+
+//   useEffect(() => {
+//     const calculateLegendPosition = () => {
+//       const chartWidth = 500; // Width of the RadialBarChart
+//       const cardWidth = Math.min(window.innerWidth * 0.9, 606); // Max width of the card (90% of window width or 606px, whichever is smaller)
+//       const legendWidth = 120; // Width of the Legend component
+//       const margin = 20; // Margin between legend and chart
+//       const availableWidth = cardWidth - chartWidth - margin;
+
+//       if (availableWidth >= legendWidth) {
+//         // If there's enough space to fit the legend beside the chart
+//         setLegendPosition({ left: chartWidth + margin, right: 'auto' });
+//       } else {
+//         // If there's not enough space, align legend to the right
+//         setLegendPosition({ left: 'auto', right: 0 });
+//       }
+//     };
+
+//     calculateLegendPosition();
+
+//     window.addEventListener('resize', calculateLegendPosition);
+
+//     return () => {
+//       window.removeEventListener('resize', calculateLegendPosition);
+//     };
+//   }, []);
+
+//   return (
+//     <RadialBarChart
+//       width={500}
+//       height={300}
+//       cx={150}
+//       cy={150}
+//       innerRadius={20}
+//       outerRadius={140}
+//       barSize={10}
+//       data={radialChart}
+//     >
+//       <RadialBar
+//         minAngle={15}
+//         label={{ position: "insideEnd", fill: "#fff" }} // Adjust position to insideEnd
+//         background
+//         clockWise
+//         dataKey="uv"
+//       />
+//       <Legend
+//         iconSize={10}
+//         width={120}
+//         height={140}
+//         layout="vertical"
+//         align="right" // Align legend to the right
+//         verticalAlign="middle"
+//         wrapperStyle={{ ...legendPosition, top: "50%", transform: "translate(0, -50%)" }} // Position legend dynamically
+//       />
+//     </RadialBarChart>
+//   );
+// }
+
+
+
+// import { useState, useEffect } from "react";
+// import { RadialBarChart, RadialBar, Legend } from "recharts";
+
+// export default function RadialChart() {
+//   const [radialChart, setRadialChart] = useState([
+//     { name: "good_session_percentage", uv: 50 },
+//     { name: "kids_using_vr_percentage", uv: 30 },
+//     { name: "vr_percentage", uv: 20 },
+//   ]);
+
+//   const [legendPosition, setLegendPosition] = useState({ left: 'auto', right: 0 });
+
+//   useEffect(() => {
+//     const calculateLegendPosition = () => {
+//       const chartWidth = 500; // Width of the RadialBarChart
+//       const cardWidth = 480; // Width of the Card component
+//       const legendWidth = 120; // Width of the Legend component
+//       const margin = 20; // Margin between legend and chart
+//       const availableWidth = cardWidth - chartWidth - margin;
+
+//       if (availableWidth >= legendWidth) {
+//         // If there's enough space to fit the legend beside the chart
+//         setLegendPosition({ left: chartWidth + margin, right: 'auto' });
+//       } else {
+//         // If there's not enough space, align legend to the right
+//         setLegendPosition({ left: 'auto', right: 0 });
+//       }
+//     };
+
+//     calculateLegendPosition();
+
+//     window.addEventListener('resize', calculateLegendPosition);
+
+//     return () => {
+//       window.removeEventListener('resize', calculateLegendPosition);
+//     };
+//   }, []);
+
+//   return (
+//     <RadialBarChart
+//       width={500}
+//       height={300}
+//       cx={150}
+//       cy={150}
+//       innerRadius={20}
+//       outerRadius={140}
+//       barSize={10}
+//       data={radialChart}
+//     >
+//       <RadialBar
+//         minAngle={15}
+//         label={{ position: "insideEnd", fill: "#fff" }} // Adjust position to insideEnd
+//         background
+//         clockWise
+//         dataKey="uv"
+//       />
+//       <Legend
+//         iconSize={10}
+//         width={120}
+//         height={140}
+//         layout="vertical"
+//         align="right" // Align legend to the right
+//         verticalAlign="middle"
+//         wrapperStyle={{ ...legendPosition, position: "absolute", top: "50%", transform: "translate(0, -50%)" }} // Position legend dynamically
+//       />
+//     </RadialBarChart>
+//   );
+// }
+
+// import React, { PureComponent } from 'react';
+// import { RadialBarChart, RadialBar, Legend, ResponsiveContainer } from 'recharts';
+
+// const data = [
+//   // {
+//   //   name: 'test test',
+//   //   uv: 31.47,
+//   //   pv: 2400,
+//   //   fill: '#8884d8',
+//   // },
+//   // {
+//   //   name: '25-29',
+//   //   uv: 26.69,
+//   //   pv: 4567,
+//   //   fill: '#83a6ed',
+//   // },
+
+//   {
+//     name: '40-49',
+//     uv: 50 * 0.3,
+//     fill: '#a4de6c',
+//   },
+//   {
+//     name: '50+',
+//     uv: 50 * 0.2,
+//     fill: '#d0ed57',
+//   },
+//   {
+//     name: 'unknow',
+//     uv: 50 * 0.5,
+//     fill: '#ffc658',
+//   },
+// ];
+
+// const style = {
+//   top: '50%',
+//   right: 0,
+//   transform: 'translate(0, -50%)',
+//   lineHeight: '24px',
+// };
+
+//  export default function RadialChart() {
+ 
+//     return (
+//       <ResponsiveContainer width="100%" height="100%">
+//         <RadialBarChart cx="30%" cy="50%" innerRadius="10%" outerRadius="80%" barSize={10} data={data}>
+//           <RadialBar
+//             minAngle={15}
+//             label={{ position: 'insideStart', fill: '#fff' }}
+//             background
+//             clockWise
+//             dataKey="uv"
+//           />
+//           <Legend iconSize={10} layout="vertical" verticalAlign="middle" wrapperStyle={style} />
+//         </RadialBarChart>
+//       </ResponsiveContainer>
+//     );
+//   }
+
+
+// import React, { PureComponent, useContext, useEffect, useState } from 'react';
+// import { RadialBarChart, RadialBar, Legend, ResponsiveContainer } from 'recharts';
+// import { dataContext } from '../Provider';
+// import { config } from '@renderer/config';
+
+// const data = [
+//   // {
+//   //   name: 'test test',
+//   //   uv: 31.47,
+//   //   pv: 2400,
+//   //   fill: '#8884d8',
+//   // },
+//   // {
+//   //   name: '25-29',
+//   //   uv: 26.69,
+//   //   pv: 4567,
+//   //   fill: '#83a6ed',
+//   // },
+
+//   {
+//     name: '40-49',
+//     uv: 50 * 0.3,
+//     fill: '#a4de6c',
+//   },
+//   {
+//     name: '50+',
+//     uv: 50 * 0.2,
+//     fill: '#d0ed57',
+//   },
+//   {
+//     name: 'unknow',
+//     uv: 50 * 0.5,
+//     fill: '#ffc658',
+//   },
+// ];
+
+
+
+//  export default function RadialChart(props: any) {
+ 
+//     const center = useContext(dataContext);
+//     const [radialChart, setRadialChart] = useState({});
+
+//     const getData = async () => {
+//       const token = await (window as any).electronAPI.getPassword('token');
+//       if (center.id !== undefined) {
+//         await fetch(
+//           `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
+//           {
+//             method: 'Get',
+//             redirect: 'follow',
+//             headers: { Authorization: `Bearer ${token}` },
+//           }
+//         )
+//           .then((response) => response.json())
+//           .then((result) => {
+//             console.log("result", result);
+//             const formattedData = Object.entries(result).map(([name, percentage]) => ({ name, uv: percentage, fill: getRandomColor() })); // Mapping result object to desired format
+//             setRadialChart({ series: formattedData }); // Updated to set formatted data to radialChart state
+//           })
+//           .catch((error) => console.log('error', error));
+//       }
+//     };
+
+//     const getRandomColor = () => {
+//       // Function to generate random color
+//       return '#' + Math.floor(Math.random()*16777215).toString(16);
+//     };
+//   useEffect(() => {
+//     getData();
+//   }, [props.refreshKey]);
+
+
+//   const data = [
+//     { name: '40-49', uv: 33, fill: '#a4de6c' },
+//     { name: '50+', uv: 55, fill: '#d0ed57' },
+//     { name: 'unknown', uv: 88, fill: '#ffc658' }
+//   ];
+//   const style = {
+//     top: '50%',
+//     right: 0,
+//     transform: 'translate(0, -50%)',
+//     lineHeight: '24px',
+//   };
+  
+//   console.log("radial chart data",radialChart)
+
+//     return (
+//       <>
+
+//       {/* <RadialBarChart cx="30%" cy="50%" innerRadius="10%" outerRadius="80%" barSize={10} data={data}>
+//           <RadialBar
+//             minAngle={15}
+//             label={{ position: 'insideStart', fill: '#fff' }}
+//             background
+//             clockWise
+//             dataKey="uv"
+//           />
+//           <Legend iconSize={10} layout="vertical" verticalAlign="middle" wrapperStyle={style} />
+//         </RadialBarChart> */}
+//       <ResponsiveContainer width="100%" height="100%">
+        
+//          <RadialBarChart cx="30%" cy="50%" innerRadius="10%" outerRadius="80%" barSize={10} data={data}>
+
+//   <RadialBar
+//     minAngle={15}
+//     label={{ position: "insideEnd", fill: "#fff" }}
+//     background
+//     clockWise
+//     dataKey="uv"
+//     fill="#8884d8"
+//   />
+//             <Legend iconSize={10} layout="vertical" verticalAlign="middle" wrapperStyle={style} />
+
+// </RadialBarChart>
+//       </ResponsiveContainer>
+//       </>
+//     );
+//   }
+
+// export default function RadialChart(props: any) {
+//   const center = useContext(dataContext);
+//   const [radialChart, setRadialChart] = useState({});
 
 //   const getData = async () => {
 //     const token = await (window as any).electronAPI.getPassword('token');
@@ -227,1143 +404,243 @@
 //       )
 //         .then((response) => response.json())
 //         .then((result) => {
-//           setRadialChart({ ...radialChart, series: Object.values(result) });
+//           console.log('result', result);
+//           const formattedData = Object.entries(result).map(
+//             ([name, percentage]) => ({
+//               name,
+//               uv: percentage,
+//               fill: getRandomColor(),
+//             })
+//           ); // Mapping result object to desired format
+//           setRadialChart({ series: formattedData }); // Updated to set formatted data to radialChart state
 //         })
 //         .catch((error) => console.log('error', error));
 //     }
 //   };
 
+//   const getRandomColor = () => {
+//     // Function to generate random color
+//     return '#' + Math.floor(Math.random() * 16777215).toString(16);
+//   };
+  
 //   useEffect(() => {
 //     getData();
 //   }, [props.refreshKey]);
 
+//   const style = {
+//     top: '50%',
+//     right: 0,
+//     transform: 'translate(0, -50%)',
+//     lineHeight: '24px',
+//   };
+
+//   console.log('radial chart data', radialChart);
+
 //   return (
-//     <ReactApexChart
-//       options={radialChart.options}
-//       series={radialChart.series}
-//       type="radialBar"
-//       height="231.43px"
-//       width="431.56px"
-//     />
+//     <>
+//       <ResponsiveContainer width="100%" height="100%">
+//         <RadialBarChart
+//           cx="30%"
+//           cy="50%"
+//           innerRadius="10%"
+//           outerRadius="80%"
+//           barSize={10}
+//           data={radialChart.series || []} // Use radialChart.series instead of static data
+//         >
+//           <RadialBar
+//             minAngle={15}
+//             label={{ position: 'insideEnd', fill: '#fff' }}
+//             background
+//             clockWise
+//             dataKey="uv"
+//             fill="#8884d8"
+//           />
+//           <Legend
+//             iconSize={10}
+//             layout="vertical"
+//             verticalAlign="middle"
+//             wrapperStyle={style}
+//           />
+//         </RadialBarChart>
+//       </ResponsiveContainer>
+//     </>
 //   );
 // }
 
 
-//// scroll and hide the chart
-
-// import React, { useEffect, useState, useContext } from 'react';
-// import ReactApexChart from 'react-apexcharts';
-// import { config } from '@renderer/config';
-// import { dataContext } from '@renderer/shared/Provider';
-
 // export default function RadialChart(props: any) {
 //   const center = useContext(dataContext);
-//   const [radialChart, setRadialChart] = useState<{
-//     series: any;
-//     options: object;
-//   }>({
-//     series: [],
-//     options: {
-//       chart: {
-//         height: '100%',
-//         width: '100%',
-//         type: 'radialBar',
-//       },
-//       title: {
-//         text: 'VR Sessions Monthly Metrics',
-//         align: 'left',
-//         offsetX: 0,
-//         offsetY: 0,
-//         floating: false,
-//         style: {
-//           fontSize: '20px',
-//           fontWeight: '500',
-//           fontFamily: 'Graphik LCG',
-//           color: '#00261C',
-//           lineHeight: '20px',
-//           left: '24px',
-//           top: '24px',
-//         },
-//         noData: {
-//           text: 'Loading...',
-//         },
-//       },
-//       stroke: {
-//         lineCap: 'round',
-//         width: -15,
-//       },
-//       colors: ['#A93BFF', '#FF7049', '#20C997'],
-//       legend: {
-//         show: true,
-//         showForSingleSeries: false,
-//         showForNullSeries: true,
-//         showForZeroSeries: true,
-//         position: 'right',
-//         horizontalAlign: 'center',
-//         floating: false,
-//         fontSize: '16px',
-//         fontFamily: 'Roboto',
-//         fontWeight: 700,
-//         lineHeight: '16.41px',
-//         formatter: function (seriesName: string, opts: any) {
-//           return `${seriesName} : ${opts.w.globals.series[opts.seriesIndex]}%`;
-//         },
-//         inverseOrder: false,
-//         width: 'auto',
-//         height: '200px', // Set a fixed height for the legend container
-//         tooltipHoverFormatter: undefined,
-//         customLegendItems: [
-//           'good session percentage',
-//           'vr percentage',
-//           'kids using vr percentage ',
-//         ],
-//         offsetX: -1,
-//         offsetY: 40,
-//         labels: {
-//           colors: '#5A5881',
-//           useSeriesColors: false,
-//         },
-//         markers: {
-//           width: 0,
-//           height: 0,
-//           strokeWidth: 0,
-//           strokeColor: '#fff',
-//           fillColors: undefined,
-//           radius: 30,
-//           customHTML: undefined,
-//           onClick: undefined,
-//           offsetX: 0,
-//           offsetY: 0,
-//         },
-//         itemMargin: {
-//           horizontal: 2,
-//           vertical: 6,
-//         },
-//         onItemClick: {
-//           toggleDataSeries: false,
-//         },
-//         onItemHover: {
-//           highlightDataSeries: false,
-//         },
-//       },
-//       plotOptions: {
-//         stroke: {
-//           show: true,
-//           curve: 'smooth',
-//           lineCap: 'round',
-//           colors: undefined,
-//           width: 4,
-//           dashArray: 0,
-//         },
-//         radialBar: {
-//           inverseOrder: false,
-//           startAngle: 0,
-//           endAngle: 360,
-//           offsetX: 0,
-//           offsetY: 20,
-//           hollow: {
-//             margin: 3,
-//             size: '1%',
-//             background: 'transparent',
-//             image: undefined,
-//             imageWidth: 150,
-//             imageHeight: 150,
-//             imageOffsetX: 0,
-//             imageOffsetY: 0,
-//             imageClipped: true,
-//             position: 'front',
-//             dropShadow: {
-//               enabled: false,
-//               top: 0,
-//               left: 0,
-//               blur: 3,
-//               opacity: 0.5,
-//             },
-//           },
-//           track: {
-//             show: true,
-//             startAngle: 0,
-//             endAngle: 360,
-//             background: '#f2f2f2',
-//             strokeWidth: '75%',
-//             opacity: 1,
-//             margin: 13,
-//             dropShadow: {
-//               enabled: false,
-//               top: 0,
-//               left: 0,
-//               blur: 0,
-//               color: 'rgb(86, 59, 255)',
-//               opacity: 0.26,
-//             },
-//           },
-//           dataLabels: {
-//             show: false,
-//             name: {
-//               show: true,
-//               fontSize: '16px',
-//               fontFamily: undefined,
-//               fontWeight: 600,
-//               color: undefined,
-//               offsetY: -10,
-//             },
-//             value: {
-//               show: false,
-//               fontSize: '14px',
-//               fontFamily: undefined,
-//               fontWeight: 400,
-//               color: undefined,
-//               offsetY: 16,
-//             },
-//             total: {
-//               show: false,
-//               label: 'Total',
-//               color: '#373d3f',
-//               fontSize: '16px',
-//               fontFamily: undefined,
-//               fontWeight: 600,
-//             },
-//           },
-//         },
-//       },
-//     },
-//   });
+//   const [radialChart, setRadialChart] = useState([]);
 
-//   useEffect(() => {
-//     const getData = async () => {
-//       const token = await (window as any).electronAPI.getPassword('token');
-//       if (center.id !== undefined) {
-//         await fetch(
+//   const getData = async () => {
+//     const token = await (window as any).electronAPI.getPassword('token');
+//     if (center.id !== undefined) {
+//       try {
+//         const response = await fetch(
 //           `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
 //           {
 //             method: 'Get',
 //             redirect: 'follow',
 //             headers: { Authorization: `Bearer ${token}` },
 //           }
-//         )
-//           .then((response) => response.json())
-//           .then((result) => {
-//             setRadialChart((prevChart) => ({
-//               ...prevChart,
-//               series: Object.values(result),
-//             }));
+//         );
+//         const result = await response.json();
+//         const formattedData = Object.entries(result).map(
+//           ([name, percentage]) => ({
+//             name,
+//             uv: percentage,
+//             fill: getRandomColor(),
 //           })
-//           .catch((error) => console.log('error', error));
+//         );
+//         setRadialChart(formattedData);
+//       } catch (error) {
+//         console.error('Error fetching data:', error);
 //       }
-//     };
-//     getData();
-//   }, [center.id, props.refreshKey]);
+//     }
+//   };
 
-//   return (
-//     <div style={{ width: '100%', height: '100%' }}>
-//       <ReactApexChart
-//         options={radialChart.options}
-//         series={radialChart.series}
-//         type="radialBar"
-//         height="100%"
-//         width="100%"
-//       />
-//     </div>
-//   );
-// }
-
-
-// import React, { useEffect, useState, useContext } from 'react';
-// import ReactApexChart from 'react-apexcharts';
-// import { config } from '@renderer/config';
-// import { dataContext } from '@renderer/shared/Provider';
-
-// export default function RadialChart(props: any) {
-//   const center = useContext(dataContext);
-//   const [seriesData, setSeriesData] = useState<any[]>([]);
-//   const [isLoading, setIsLoading] = useState(true);
+//   const getRandomColor = () => {
+//     return '#' + Math.floor(Math.random() * 16777215).toString(16);
+//   };
 
 //   useEffect(() => {
-//     const getData = async () => {
-//       const token = await (window as any).electronAPI.getPassword('token');
-//       if (center.id !== undefined) {
-//         await fetch(
-//           `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
-//           {
-//             method: 'GET',
-//             headers: { Authorization: `Bearer ${token}` },
-//           }
-//         )
-//           .then((response) => response.json())
-//           .then((result) => {
-//             setSeriesData(Object.values(result));
-//             setIsLoading(false);
-//           })
-//           .catch((error) => console.log('error', error));
-//       }
-//     };
 //     getData();
-//   }, [center.id, props.refreshKey]);
+//   }, [props.refreshKey]);
+
+//   const style = {
+//     top: '50%',
+//     right: 0,
+//     transform: 'translate(0, -50%)',
+//     lineHeight: '24px',
+//   };
+
+//   console.log('radial chart data', radialChart);
 
 //   return (
-//     <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-//       {isLoading ? (
-//         <div>Loading...</div>
-//       ) : (
-//         <ReactApexChart
-//           options={{
-//             chart: {
-//               height: '100%',
-//               width: '100%',
-//               type: 'radialBar',
-//             },
-//             title: {
-//               text: 'VR Sessions Monthly Metrics',
-//               align: 'left',
-//               offsetX: 0,
-//               offsetY: 0,
-//               floating: false,
-//               style: {
-//                 fontSize: '20px',
-//                 fontWeight: '500',
-//                 fontFamily: 'Graphik LCG',
-//                 color: '#00261C',
-//                 lineHeight: '20px',
-//                 left: '24px',
-//                 top: '24px',
-//               },
-//               noData: {
-//                 text: 'Loading...',
-//               },
-//             },
-//             stroke: {
-//               lineCap: 'round',
-//               width: -15,
-//             },
-//             colors: ['#A93BFF', '#FF7049', '#20C997'],
-//             legend: {
-//               show: true,
-//               showForSingleSeries: false,
-//               showForNullSeries: true,
-//               showForZeroSeries: true,
-//               position: 'right',
-//               horizontalAlign: 'center',
-//               floating: false,
-//               fontSize: '16px',
-//               fontFamily: 'Roboto',
-//               fontWeight: 700,
-//               lineHeight: '16.41px',
-//               formatter: function (seriesName: string, opts: any) {
-//                 return `${seriesName} : ${opts.w.globals.series[opts.seriesIndex]}%`;
-//               },
-//               inverseOrder: false,
-//               width: 'auto',
-//               height: 'auto',
-//               tooltipHoverFormatter: undefined,
-//               customLegendItems: [
-//                 'good session percentage',
-//                 'vr percentage',
-//                 'kids using vr percentage ',
-//               ],
-//               offsetX: -1,
-//               offsetY: 40,
-//               labels: {
-//                 colors: '#5A5881',
-//                 useSeriesColors: false,
-//               },
-//               markers: {
-//                 width: 0,
-//                 height: 0,
-//                 strokeWidth: 0,
-//                 strokeColor: '#fff',
-//                 fillColors: undefined,
-//                 radius: 30,
-//                 customHTML: undefined,
-//                 onClick: undefined,
-//                 offsetX: 0,
-//                 offsetY: 0,
-//               },
-//               itemMargin: {
-//                 horizontal: 2,
-//                 vertical: 6,
-//               },
-//               onItemClick: {
-//                 toggleDataSeries: false,
-//               },
-//               onItemHover: {
-//                 highlightDataSeries: false,
-//               },
-//             },
-//             plotOptions: {
-//               stroke: {
-//                 show: true,
-//                 curve: 'smooth',
-//                 lineCap: 'round',
-//                 colors: undefined,
-//                 width: 4,
-//                 dashArray: 0,
-//               },
-//               radialBar: {
-//                 inverseOrder: false,
-//                 startAngle: 0,
-//                 endAngle: 360,
-//                 offsetX: 0,
-//                 offsetY: 20,
-//                 hollow: {
-//                   margin: 3,
-//                   size: '1%',
-//                   background: 'transparent',
-//                   image: undefined,
-//                   imageWidth: 150,
-//                   imageHeight: 150,
-//                   imageOffsetX: 0,
-//                   imageOffsetY: 0,
-//                   imageClipped: true,
-//                   position: 'front',
-//                   dropShadow: {
-//                     enabled: false,
-//                     top: 0,
-//                     left: 0,
-//                     blur: 3,
-//                     opacity: 0.5,
-//                   },
-//                 },
-//                 track: {
-//                   show: true,
-//                   background: '#f2f2f2',
-//                   strokeWidth: '75%',
-//                   margin: 13,
-//                 },
-//                 dataLabels: {
-//                   show: false,
-//                 },
-//               },
-//             },
-//           }}
-//           series={seriesData}
-//           type="radialBar"
-//           height="100%"
-//           width="100%"
+//     <ResponsiveContainer width="100%" height="100%">
+//       <RadialBarChart
+//         cx="30%"
+//         cy="50%"
+//         innerRadius="10%"
+//         outerRadius="80%"
+//         barSize={10}
+//         data={radialChart}
+//       >
+//         <RadialBar
+//           minAngle={15}
+//           label={{ position: 'insideEnd', fill: '#fff' }}
+//           background
+//           clockWise
+//           dataKey="uv"
+//           fill="#8884d8"
 //         />
-//       )}
-//     </div>
+//         <Legend
+//           iconSize={10}
+//           layout="vertical"
+//           verticalAlign="middle"
+//           wrapperStyle={style}
+//           formatter={(value, entry) => (
+//             <span style={{ fontSize: '12px' }}>{entry.payload.name}</span>
+//           )}
+//         />
+//       </RadialBarChart>
+//     </ResponsiveContainer>
 //   );
 // }
 
-
-
-// RadialChart.js
-
-// import React, { useEffect, useState, useContext } from 'react';
-// import ReactApexChart from 'react-apexcharts';
-// import { config } from '@renderer/config';
-// import { dataContext } from '@renderer/shared/Provider';
-
-// export default function RadialChart(props: any) {
-//   const center = useContext(dataContext);
-//   const [radialChart, setRadialChart] = useState<{
-//     series: any;
-//     options: object;
-//   }>({
-//     series: [],
-//     options: {
-//       chart: {
-//         height: 181,
-//         width: 181,
-//         type: 'radialBar',
-//         toolbar: {
-//           show: true,
-//           offsetX: 0,
-//           offsetY: 0,
-//           tools: {
-//             download: '...',
-//             selection: true,
-//             zoom: false,
-//             zoomin: false,
-//             zoomout: false,
-//             pan: false,
-//             reset: false,
-//             customIcons: [],
-//           },
-//           export: {
-//             csv: {
-//               filename: undefined,
-//               columnDelimiter: ',',
-//               headerCategory: 'category',
-//               headerValue: 'value',
-//               dateFormatter(timestamp: any) {
-//                 return new Date(timestamp).toDateString();
-//               },
-//             },
-//             svg: {
-//               filename: undefined,
-//             },
-//             png: {
-//               filename: undefined,
-//             },
-//           },
-//           autoSelected: 'zoom',
-//         },
-//       },
-
-//       title: {
-//         text: 'VR Sessions Monthly Metrics',
-//         align: 'left',
-//         offsetX: 0,
-//         offsetY: 0,
-//         floating: false,
-//         style: {
-//           fontSize: '20px',
-//           fontWeight: '500',
-//           fontFamily: 'Graphik LCG',
-//           color: '#00261C',
-//           lineHeight: '20px',
-//           left: '24px',
-//           top: '24px',
-//         },
-
-//         noData: {
-//           text: 'Loading...',
-//         },
-//       },
-//       stroke: {
-//         lineCap: 'round',
-//         width: -15,
-//       },
-//       colors: ['#A93BFF', '#FF7049', '#20C997'],
-//       legend: {
-//         show: true,
-//         showForSingleSeries: false,
-//         showForNullSeries: true,
-//         showForZeroSeries: true,
-//         position: 'right',
-//         horizontalAlign: 'center',
-//         floating: false,
-//         fontSize: '16px',
-//         fontFamily: 'Roboto',
-//         fontWeight: 700,
-//         lineHeight: '16.41px',
-//         formatter: function (seriesName: string, opts: any) {
-//           return `${seriesName} : ${opts.w.globals.series[opts.seriesIndex]}%`;
-//         },
-
-//         inverseOrder: false,
-//         width: 215.56,
-//         height: 147.97,
-//         tooltipHoverFormatter: undefined,
-//         customLegendItems: [
-//           'good session percentage',
-//           'vr percentage',
-//           'kids using vr percentage ',
-//         ],
-//         offsetX: -1,
-//         offsetY: 40,
-//         labels: {
-//           colors: '#5A5881',
-//           useSeriesColors: false,
-//         },
-//         markers: {
-//           width: 0,
-//           height: 0,
-//           strokeWidth: 0,
-//           strokeColor: '#fff',
-//           fillColors: undefined,
-//           radius: 30,
-//           customHTML: undefined,
-//           onClick: undefined,
-//           offsetX: 0,
-//           offsetY: 0,
-//         },
-//         itemMargin: {
-//           horizontal: 2,
-//           vertical: 6,
-//         },
-//         onItemClick: {
-//           toggleDataSeries: false,
-//         },
-//         onItemHover: {
-//           highlightDataSeries: false,
-//         },
-//       },
-//       plotOptions: {
-//         stroke: {
-//           show: true,
-//           curve: 'smooth',
-//           lineCap: 'round',
-//           colors: undefined,
-//           width: 4,
-//           dashArray: 0,
-//         },
-
-//         radialBar: {
-//           inverseOrder: false,
-//           startAngle: 0,
-//           endAngle: 360,
-//           offsetX: 0,
-//           offsetY: 20,
-//           hollow: {
-//             margin: 3,
-//             size: '1%',
-//             background: 'transparent',
-//             image: undefined,
-//             imageWidth: 150,
-//             imageHeight: 150,
-//             imageOffsetX: 0,
-//             imageOffsetY: 0,
-//             imageClipped: true,
-//             position: 'front',
-//             dropShadow: {
-//               enabled: false,
-//               top: 0,
-//               left: 0,
-//               blur: 3,
-//               opacity: 0.5,
-//             },
-//           },
-//           track: {
-//             show: true,
-//             startAngle: 0,
-//             endAngle: 360,
-//             background: '#f2f2f2',
-//             strokeWidth: '75%',
-//             opacity: 1,
-//             margin: 13,
-//             dropShadow: {
-//               enabled: false,
-//               top: 0,
-//               left: 0,
-//               blur: 0,
-//               color: 'rgb(86, 59, 255)',
-//               opacity: 0.26,
-//             },
-//           },
-//           dataLabels: {
-//             show: false,
-//             name: {
-//               show: true,
-//               fontSize: '16px',
-//               fontFamily: undefined,
-//               fontWeight: 600,
-//               color: undefined,
-//               offsetY: -10,
-//             },
-//             value: {
-//               show: false,
-//               fontSize: '14px',
-//               fontFamily: undefined,
-//               fontWeight: 400,
-//               color: undefined,
-//               offsetY: 16,
-//             },
-//             total: {
-//               show: false,
-//               label: 'Total',
-//               color: '#373d3f',
-//               fontSize: '16px',
-//               fontFamily: undefined,
-//               fontWeight: 600,
-//             },
-//           },
-//         },
-//       },
-//     },
-//   });
-
-//   const getData = async () => {
-//     const token = await (window as any).electronAPI.getPassword('token');
-//     if (center.id !== undefined) {
-//       await fetch(
-//         `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
-//         {
-//           method: 'Get',
-//           redirect: 'follow',
-//           headers: { Authorization: `Bearer ${token}` },
-//         }
-//       )
-//         .then((response) => response.json())
-//         .then((result) => {
-//           setRadialChart({ ...radialChart, series: Object.values(result) });
-//         })
-//         .catch((error) => console.log('error', error));
-//     }
-//   };
-
-//   useEffect(() => {
-//     getData();
-//   }, [props.refreshKey]);
-
-//   return (
-//     <ReactApexChart
-//       options={radialChart.options}
-//       series={radialChart.series}
-//       type="radialBar"
-//       height="231.43px"
-//       width="431.56px"
-//     />
-//   );
-// }
-
-
-// import React, { useEffect, useState, useContext } from 'react';
-// import ReactApexChart from 'react-apexcharts';
-// import { config } from '@renderer/config';
-// import { dataContext } from '@renderer/shared/Provider';
-
-// export default function RadialChart(props: any) {
-//   const center = useContext(dataContext);
-//   const [radialChart, setRadialChart] = useState<{
-//     series: any;
-//     options: object;
-//   }>({
-//     series: [],
-//     options: {
-//       chart: {
-//         height: '400px', // Fixed height
-//         width: '100%',
-//         type: 'radialBar',
-//       },
-//       title: {
-//         text: 'VR Sessions Monthly Metrics',
-//         align: 'left',
-//         offsetX: 0,
-//         offsetY: 0,
-//         floating: false,
-//         style: {
-//           fontSize: '20px',
-//           fontWeight: '500',
-//           fontFamily: 'Graphik LCG',
-//           color: '#00261C',
-//           lineHeight: '20px',
-//           left: '24px',
-//           top: '24px',
-//         },
-//         noData: {
-//           text: 'Loading...',
-//         },
-//       },
-//       stroke: {
-//         lineCap: 'round',
-//         width: -15,
-//       },
-//       colors: ['#A93BFF', '#FF7049', '#20C997'],
-//       legend: {
-//         show: true,
-//         showForSingleSeries: false,
-//         showForNullSeries: true,
-//         showForZeroSeries: true,
-//         position: 'right',
-//         horizontalAlign: 'center',
-//         floating: false,
-//         fontSize: '16px',
-//         fontFamily: 'Roboto',
-//         fontWeight: 700,
-//         lineHeight: '16.41px',
-//         formatter: function (seriesName: string, opts: any) {
-//           return `${seriesName} : ${opts.w.globals.series[opts.seriesIndex]}%`;
-//         },
-//         inverseOrder: false,
-//         width: 'auto',
-//         height: '200px', // Set a fixed height for the legend container
-//         tooltipHoverFormatter: undefined,
-//         customLegendItems: [
-//           'good session percentage',
-//           'vr percentage',
-//           'kids using vr percentage ',
-//         ],
-//         offsetX: -1,
-//         offsetY: 40,
-//         labels: {
-//           colors: '#5A5881',
-//           useSeriesColors: false,
-//         },
-//         markers: {
-//           width: 0,
-//           height: 0,
-//           strokeWidth: 0,
-//           strokeColor: '#fff',
-//           fillColors: undefined,
-//           radius: 30,
-//           customHTML: undefined,
-//           onClick: undefined,
-//           offsetX: 0,
-//           offsetY: 0,
-//         },
-//         itemMargin: {
-//           horizontal: 2,
-//           vertical: 6,
-//         },
-//         onItemClick: {
-//           toggleDataSeries: false,
-//         },
-//         onItemHover: {
-//           highlightDataSeries: false,
-//         },
-//       },
-//       plotOptions: {
-//         stroke: {
-//           show: true,
-//           curve: 'smooth',
-//           lineCap: 'round',
-//           colors: undefined,
-//           width: 4,
-//           dashArray: 0,
-//         },
-//         radialBar: {
-//           inverseOrder: false,
-//           startAngle: 0,
-//           endAngle: 360,
-//           offsetX: 0,
-//           offsetY: 20,
-//           hollow: {
-//             margin: 3,
-//             size: '1%',
-//             background: 'transparent',
-//             image: undefined,
-//             imageWidth: 150,
-//             imageHeight: 150,
-//             imageOffsetX: 0,
-//             imageOffsetY: 0,
-//             imageClipped: true,
-//             position: 'front',
-//             dropShadow: {
-//               enabled: false,
-//               top: 0,
-//               left: 0,
-//               blur: 3,
-//               opacity: 0.5,
-//             },
-//           },
-//           track: {
-//             show: true,
-//             startAngle: 0,
-//             endAngle: 360,
-//             background: '#f2f2f2',
-//             strokeWidth: '75%',
-//             opacity: 1,
-//             margin: 13,
-//             dropShadow: {
-//               enabled: false,
-//               top: 0,
-//               left: 0,
-//               blur: 0,
-//               color: 'rgb(86, 59, 255)',
-//               opacity: 0.26,
-//             },
-//           },
-//           dataLabels: {
-//             show: false,
-//             name: {
-//               show: true,
-//               fontSize: '16px',
-//               fontFamily: undefined,
-//               fontWeight: 600,
-//               color: undefined,
-//               offsetY: -10,
-//             },
-//             value: {
-//               show: false,
-//               fontSize: '14px',
-//               fontFamily: undefined,
-//               fontWeight: 400,
-//               color: undefined,
-//               offsetY: 16,
-//             },
-//             total: {
-//               show: false,
-//               label: 'Total',
-//               color: '#373d3f',
-//               fontSize: '16px',
-//               fontFamily: undefined,
-//               fontWeight: 600,
-//             },
-//           },
-//         },
-//       },
-//     },
-//   });
-
-//   useEffect(() => {
-//     const getData = async () => {
-//       const token = await (window as any).electronAPI.getPassword('token');
-//       if (center.id !== undefined) {
-//         await fetch(
-//           `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
-//           {
-//             method: 'Get',
-//             redirect: 'follow',
-//             headers: { Authorization: `Bearer ${token}` },
-//           }
-//         )
-//           .then((response) => response.json())
-//           .then((result) => {
-//             setRadialChart((prevChart) => ({
-//               ...prevChart,
-//               series: Object.values(result),
-//             }));
-//           })
-//           .catch((error) => console.log('error', error));
-//       }
-//     };
-//     getData();
-//   }, [center.id, props.refreshKey]);
-
-//   return (
-//     <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-//       <ReactApexChart
-//         options={radialChart.options}
-//         series={radialChart.series}
-//         type="radialBar"
-//         height="100%"
-//         width="100%"
-//       />
-//     </div>
-//   );
-// }
-
-
-// the old one
-import React, { useEffect, useState, useContext } from 'react';
-import ReactApexChart from 'react-apexcharts';
+import { useEffect, useState, useContext } from 'react';
+import {
+  ResponsiveContainer,
+  RadialBarChart,
+  RadialBar,
+  Legend,
+} from 'recharts';
+import { useBreakpointValue } from '@chakra-ui/react';
 import { config } from '@renderer/config';
-import { dataContext } from '@renderer/shared/Provider';
+import { dataContext } from '../Provider';
 
 export default function RadialChart(props: any) {
   const center = useContext(dataContext);
-  const [radialChart, setRadialChart] = useState<{
-    series: any;
-    options: object;
-  }>({
-    series: [],
-    options: {
-      chart: {
-        height: 181,
-        width: 181,
-        type: 'radialBar',
-        toolbar: {
-          show: true,
-          offsetX: 0,
-          offsetY: 0,
-          tools: {
-            download: '...',
-            selection: true,
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            pan: false,
-            reset: false,
-            customIcons: [],
-          },
-          export: {
-            csv: {
-              filename: undefined,
-              columnDelimiter: ',',
-              headerCategory: 'category',
-              headerValue: 'value',
-              dateFormatter(timestamp: any) {
-                return new Date(timestamp).toDateString();
-              },
-            },
-            svg: {
-              filename: undefined,
-            },
-            png: {
-              filename: undefined,
-            },
-          },
-          autoSelected: 'zoom',
-        },
-      },
-
-      title: {
-        text: 'VR Sessions Monthly Metrics',
-        align: 'left',
-        offsetX: 0,
-        offsetY: 0,
-        floating: false,
-        style: {
-          fontSize: '20px',
-          fontWeight: '500',
-          fontFamily: 'Graphik LCG',
-          color: '#00261C',
-          lineHeight: '20px',
-          left: '24px',
-          top: '24px',
-        },
-
-        noData: {
-          text: 'Loading...',
-        },
-      },
-      stroke: {
-        lineCap: 'round',
-        width: -15,
-      },
-      colors: ['#A93BFF', '#FF7049', '#20C997'],
-      legend: {
-        show: true,
-        showForSingleSeries: false,
-        showForNullSeries: true,
-        showForZeroSeries: true,
-        position: 'right',
-        horizontalAlign: 'center',
-        floating: false,
-        fontSize: '16px',
-        fontFamily: 'Roboto',
-        fontWeight: 700,
-        lineHeight: '16.41px',
-        formatter: function (seriesName: string, opts: any) {
-          return `${seriesName} : ${opts.w.globals.series[opts.seriesIndex]}%`;
-        },
-
-        inverseOrder: false,
-        width: 215.56,
-        height: 147.97,
-        tooltipHoverFormatter: undefined,
-        customLegendItems: [
-          'good session percentage',
-          'vr percentage',
-          'kids using vr percentage ',
-        ],
-        offsetX: -1,
-        offsetY: 40,
-        labels: {
-          colors: '#5A5881',
-          useSeriesColors: false,
-        },
-        markers: {
-          width: 0,
-          height: 0,
-          strokeWidth: 0,
-          strokeColor: '#fff',
-          fillColors: undefined,
-          radius: 30,
-          customHTML: undefined,
-          onClick: undefined,
-          offsetX: 0,
-          offsetY: 0,
-        },
-        itemMargin: {
-          horizontal: 2,
-          vertical: 6,
-        },
-        onItemClick: {
-          toggleDataSeries: false,
-        },
-        onItemHover: {
-          highlightDataSeries: false,
-        },
-      },
-      plotOptions: {
-        stroke: {
-          show: true,
-          curve: 'smooth',
-          lineCap: 'round',
-          colors: undefined,
-          width: 4,
-          dashArray: 0,
-        },
-
-        radialBar: {
-          inverseOrder: false,
-          startAngle: 0,
-          endAngle: 360,
-          offsetX: 0,
-          offsetY: 20,
-          hollow: {
-            margin: 3,
-            size: '1%',
-            background: 'transparent',
-            image: undefined,
-            imageWidth: 150,
-            imageHeight: 150,
-            imageOffsetX: 0,
-            imageOffsetY: 0,
-            imageClipped: true,
-            position: 'front',
-            dropShadow: {
-              enabled: false,
-              top: 0,
-              left: 0,
-              blur: 3,
-              opacity: 0.5,
-            },
-          },
-          track: {
-            show: true,
-            startAngle: 0,
-            endAngle: 360,
-            background: '#f2f2f2',
-            strokeWidth: '75%',
-            opacity: 1,
-            margin: 13,
-            dropShadow: {
-              enabled: false,
-              top: 0,
-              left: 0,
-              blur: 0,
-              color: 'rgb(86, 59, 255)',
-              opacity: 0.26,
-            },
-          },
-          dataLabels: {
-            show: false,
-            name: {
-              show: true,
-              fontSize: '16px',
-              fontFamily: undefined,
-              fontWeight: 600,
-              color: undefined,
-              offsetY: -10,
-            },
-            value: {
-              show: false,
-              fontSize: '14px',
-              fontFamily: undefined,
-              fontWeight: 400,
-              color: undefined,
-              offsetY: 16,
-            },
-            total: {
-              show: false,
-              label: 'Total',
-              color: '#373d3f',
-              fontSize: '16px',
-              fontFamily: undefined,
-              fontWeight: 600,
-            },
-          },
-        },
-      },
-    },
-  });
+  const [radialChart, setRadialChart] = useState([]);
 
   const getData = async () => {
     const token = await (window as any).electronAPI.getPassword('token');
     if (center.id !== undefined) {
-      await fetch(
-        `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
-        {
-          method: 'Get',
-          redirect: 'follow',
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          setRadialChart({ ...radialChart, series: Object.values(result) });
-        })
-        .catch((error) => console.log('error', error));
+      try {
+        const response = await fetch(
+          `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
+          {
+            method: 'Get',
+            redirect: 'follow',
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const result = await response.json();
+        const formattedData = Object.entries(result).map(
+          ([name, percentage]) => ({
+            name,
+            uv: percentage,
+            fill: getRandomColor(),
+          })
+        );
+        setRadialChart(formattedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     }
+  };
+
+  const getRandomColor = () => {
+    return '#' + Math.floor(Math.random() * 16777215).toString(16);
   };
 
   useEffect(() => {
     getData();
   }, [props.refreshKey]);
 
+  const legendFontSize = useBreakpointValue({ base: '10px', md: '0.7rem', lg: '0.8rem', xl: '1.2rem', '2xl': '1.2rem' });
+
+  const style = {
+    top: '50%', 
+    right: 0,
+    transform: 'translate(0, -50%)',
+    lineHeight: '24px',
+  };
   return (
-    <ReactApexChart
-      options={radialChart.options}
-      series={radialChart.series}
-      type="radialBar"
-      height="231.43px"
-      width="431.56px"
-    />
+    <ResponsiveContainer width="100%" height="100%">
+      <RadialBarChart
+        cx="20%"
+        cy="50%"
+        innerRadius="10%"
+        outerRadius="80%"
+        barSize={10}
+        data={radialChart}
+      >
+        <RadialBar
+          minAngle={15}
+          label={{ position: 'insideEnd', fill: '#fff' }}
+          background
+          clockWise
+          dataKey="uv"
+          fill="#8884d8"
+        />
+        <Legend
+          iconSize={10}
+          layout="vertical"
+          verticalAlign="middle"
+          wrapperStyle={style}
+          formatter={(value, entry) => (
+            <span style={{ fontSize: legendFontSize }}>{entry.payload.name}</span>
+          )}
+        />
+      </RadialBarChart>
+    </ResponsiveContainer>
   );
 }
+
+
+
+
+
 
 

@@ -62,18 +62,22 @@ export default function VRsessionsCard(props: any) {
 
   return (
     <Flex
-      width={{ base: '100%', md: '50%', lg: '35.33%' }}
-      padding="20px"
-      marginBottom="20px"
+      width={{ base: '100%', md: '48%', lg: '44%' }}
     >
-      <Card
+      {/* <Card
         backgroundColor="#FFFFFF"
         boxShadow="0px 20px 45px #F0EDF7"
         borderRadius="10px"
-        width="100%" // Make the card take up the full width of its container
-        maxWidth="606px" // Limit the maximum width of the card
-        height={cardHeight} // Set the height dynamically
-      >
+        width="100%" 
+        height={cardHeight} 
+      > */}
+
+<Card
+  backgroundColor="#FFFFFF"
+  boxShadow="0px 20px 45px #F0EDF7"
+  borderRadius="10px"
+  width="100%" 
+>
         <CardBody>
           {props.loading && <RadialChart refreshKey={props.refreshKey} />}
           {!props.loading && (
