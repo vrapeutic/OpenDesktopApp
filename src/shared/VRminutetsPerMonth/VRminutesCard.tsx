@@ -1,4 +1,4 @@
-import { Box, Card, CardBody, Flex } from '@chakra-ui/react';
+import { Box, Card, CardBody, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 import LineChart from './LineChart';
 
@@ -17,7 +17,27 @@ export default function VRminutesCard(props: any) {
         maxWidth="606px" // Limit the maximum width of the card
       >
         <CardBody>
-          <LineChart refreshKey={props.refreshKey} />
+        {props.loading && <LineChart refreshKey={props.refreshKey} />}
+          {!props.loading && (
+            <>
+              <Text
+                textAlign="left"
+                fontSize="20px"
+                fontWeight="500"
+                fontFamily="Graphik LCG"
+                color="#00261C"
+                lineHeight="20px"
+                left="24px"
+                top="24px"
+              >
+                VR Sessions Monthly Metrics
+              </Text>
+              <Text textAlign="center" marginTop="25%">
+                Select center to show chart...
+              </Text>
+            </>
+          )}
+          
         </CardBody>
       </Card>
     </Flex>

@@ -16,6 +16,7 @@ import {
   Box,
   Button,
   Grid,
+  Heading,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { getMe } from '../cache';
@@ -134,61 +135,73 @@ const TherapyCenters: React.FC = () => {
 
   const renderTable = () => {
     return (
-      <Table
-        variant="simple"
-        background="#FFFFFF"
-      >
-        <Thead>
-          <Tr>
-            <Th> Name</Th>
-            <Th>Specialties</Th>
-            <Th>Kids</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {centersList?.map((center) => (
-            <Tr
-              key={center.id}
-              onClick={() => handleCenterClick(center)}
-              cursor={'pointer'}
-            >
-              <Td>
-                <Flex direction="row" gap={2}>
-                  <Box
-                    width={197}
-                    height={197}
-                    alignItems={'center'}
-                    display={'flex'}
-                  >
-                    <img
-                      src={center?.attributes?.logo?.url}
-                      alt={center?.attributes?.name}
-                    />
-                  </Box>
+      <>
+        {centersList.length == 0 ? (
+          <Box textAlign="center" py={10} px={6}>
+            <Heading fontSize="2rem" mt={3} mb={2}>
+              You don't have Centers yet
+            </Heading>
+          </Box>
+        ) : (
+          <Table variant="simple" background="#FFFFFF">
+            <Thead>
+              <Tr>
+                <Th> Name</Th>
+                <Th>Specialties</Th>
+                <Th>Kids</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {centersList?.map((center) => (
+                <Tr
+                  key={center.id}
+                  onClick={() => handleCenterClick(center)}
+                  cursor={'pointer'}
+                >
+                  <Td>
+                    <Flex direction="row" gap={2}>
+                      <Box
+                        width={197}
+                        height={197}
+                        alignItems={'center'}
+                        display={'flex'}
+                      >
+                        <img
+                          src={center?.attributes?.logo?.url}
+                          alt={center?.attributes?.name}
+                        />
+                      </Box>
 
-                  <Text
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    {center?.attributes?.name}
-                  </Text>
-                </Flex>
-              </Td>
-              <Td>
-                {center?.attributes?.specialties?.map((specialty) => (
-                  <Tag key={specialty.id} size="sm" colorScheme="gray" mr={1}>
-                    <TagLabel>{specialty?.name}</TagLabel>
-                  </Tag>
-                ))}
-              </Td>
-              <Td>{center?.attributes?.children_count}</Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+                      <Text
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        {center?.attributes?.name}
+                      </Text>
+                    </Flex>
+                  </Td>
+                  <Td>
+                    {center?.attributes?.specialties?.map((specialty) => (
+                      <Tag
+                        key={specialty.id}
+                        size="sm"
+                        colorScheme="gray"
+                        mr={1}
+                      >
+                        <TagLabel>{specialty?.name}</TagLabel>
+                      </Tag>
+                    ))}
+                  </Td>
+                  <Td>{center?.attributes?.children_count}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        )}
+      </>
     );
   };
 
@@ -203,11 +216,10 @@ const TherapyCenters: React.FC = () => {
     if (sliding === 1) {
       return (
         <>
-          
           <HeaderSpaceBetween
-          Title='Therapy Centers'
-          ButtonText='Add Therapy'
-          onClickFunction={nextHandler}
+            Title="Therapy Centers"
+            ButtonText="Add Therapy"
+            onClickFunction={nextHandler}
           />
           {showTable && renderTable()}
         </>
