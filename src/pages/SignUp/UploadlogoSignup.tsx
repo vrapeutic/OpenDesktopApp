@@ -68,12 +68,9 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
   };
 
   const postFormData = (formData: FormData) => {
-    const token = getMe().token;
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
+ 
 
-    return axios.post(`${config.apiURL}/api/v1/doctors`, formData, { headers });
+    return axios.post(`${config.apiURL}/api/v1/doctors`, formData);
   };
 
   const SendDataToApi = async () => {
@@ -96,7 +93,7 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
 
   const handleError = (error: any) => {
     props.onClose();
-
+     console.log("errrrrror",error)
     toast({
       title: 'Error',
       description: error.response.data.error,

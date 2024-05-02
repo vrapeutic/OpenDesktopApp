@@ -18,13 +18,14 @@ import ProgressBarSignup from '../../theme/components/ProgressBarSignup';
 const GeneralInfoSignup: React.FC<SignupFormProps> = ({
   onSubmit,
   nextHandler,
+  formData
 }) => {
   const schema = Joi.object({
     Name: Joi.string()
-      .alphanum()
+     
       .min(3)
       .max(30)
-      .regex(/^\s*\w+(?:[^\w,]+\w+)*[^,\w]*$/)
+    
       .required(),
     Email: Joi.string()
       .email({ tlds: { allow: false } })
@@ -38,7 +39,9 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
+  
   });
+
 
   const FormonSubmit = (data: {
     Name: string;
@@ -114,6 +117,8 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
               mt="0.75em"
               mb="1em"
               borderRadius="8px"
+          
+
             />
             {errors.Email && (
               <Text color="red.500">{errors.Email.message as string}</Text>
@@ -141,6 +146,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
               mt="0.75em"
               mb="1em"
               borderRadius="8px"
+
             />
             {errors.Password && (
               <Text color="red.500">{errors.Password.message as string}</Text>

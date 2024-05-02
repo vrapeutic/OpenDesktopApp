@@ -92,6 +92,7 @@ const Signup: React.FC = () => {
             nextHandler={nextHandler}
             backHandler={backHandler}
             sliding={sliding}
+            formData={formData}
           />
         );
       case 2:
