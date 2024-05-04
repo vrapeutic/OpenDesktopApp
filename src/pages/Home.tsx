@@ -20,6 +20,7 @@ import { config } from '../config';
 import StatistcsCards from '../theme/components/StatistcsCards';
 import { dataContext } from '@renderer/shared/Provider';
 import { Link as ReachLink } from 'react-router-dom';
+import LineChartLineChart from '@renderer/shared/VRminutetsPerMonth/LineChart';
 
 export default function Home() {
   const [centers, setCenters] = useState([]);
@@ -96,6 +97,7 @@ export default function Home() {
               ))}
             </MenuList>
           </Menu>
+
           <Flex
             width="90%"
             justifyContent="space-between"
@@ -106,7 +108,9 @@ export default function Home() {
             <VRminutesCard loading={isLoading} refreshKey={refreshKey} />
             <VRsessionsCard loading={isLoading} refreshKey={refreshKey} />
           </Flex>
+          
           <StatistcsCards refreshKey={refreshKey} />
+          
         </>
       )}
     </>

@@ -1,15 +1,34 @@
 import { Box, Card, CardBody, Flex, Text } from '@chakra-ui/react';
-import React from 'react';
-import LineChart from './LineChart';
+
+import LineChartLineChart from './LineChart';
 
 export default function VRminutesCard(props: any) {
   return (
-    <Flex
-      width={{ base: '100%', md: '50%', lg: '50.33%' }}
-      padding="20px"
-      marginBottom="20px"
-    >
-      <Card
+    <>
+     
+      <Flex
+        width={{ base: '100%', md: '50%', lg: '50.33%' }}
+        padding="20px"
+        marginBottom="20px"
+      >
+        <Card
+          backgroundColor="#FFFFFF"
+          boxShadow="0px 20px 45px #F0EDF7"
+          borderRadius="10px"
+          width="100%"
+          maxWidth="606px"
+        >
+          <CardBody>
+            <LineChartLineChart />
+          </CardBody>
+        </Card>
+      </Flex>
+    </>
+  );
+}
+
+
+ {/* <Card
         backgroundColor="#FFFFFF"
         boxShadow="0px 20px 45px #F0EDF7"
         borderRadius="10px"
@@ -17,7 +36,7 @@ export default function VRminutesCard(props: any) {
         maxWidth="606px" // Limit the maximum width of the card
       >
         <CardBody>
-        {props.loading && <LineChart refreshKey={props.refreshKey} />}
+        {props.loading && <LineChartLineChart  />}
           {!props.loading && (
             <>
               <Text
@@ -39,7 +58,4 @@ export default function VRminutesCard(props: any) {
           )}
           
         </CardBody>
-      </Card>
-    </Flex>
-  );
-}
+      </Card> */}
