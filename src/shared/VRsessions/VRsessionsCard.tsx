@@ -43,7 +43,6 @@
 //   );
 // }
 
-
 import { Box, Card, CardBody, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 import RadialChart from './RadialChart';
@@ -61,9 +60,7 @@ export default function VRsessionsCard(props: any) {
   }, [props.loading]);
 
   return (
-    <Flex
-      width={{ base: '100%', md: '48%', lg: '44%' }}
-    >
+    <Flex width={{ base: '100%', md: '48%', lg: '44%' }}>
       {/* <Card
         backgroundColor="#FFFFFF"
         boxShadow="0px 20px 45px #F0EDF7"
@@ -72,12 +69,12 @@ export default function VRsessionsCard(props: any) {
         height={cardHeight} 
       > */}
 
-<Card
-  backgroundColor="#FFFFFF"
-  boxShadow="0px 20px 45px #F0EDF7"
-  borderRadius="10px"
-  width="100%" 
->
+      <Card
+        backgroundColor="#FFFFFF"
+        boxShadow="0px 20px 45px #F0EDF7"
+        borderRadius="10px"
+        width="100%"
+      >
         <CardBody>
           {props.loading && <RadialChart refreshKey={props.refreshKey} />}
           {!props.loading && (
@@ -104,4 +101,3 @@ export default function VRsessionsCard(props: any) {
     </Flex>
   );
 }
-
