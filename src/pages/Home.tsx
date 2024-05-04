@@ -20,7 +20,6 @@ import { config } from '../config';
 import StatistcsCards from '../theme/components/StatistcsCards';
 import { dataContext } from '@renderer/shared/Provider';
 import { Link as ReachLink } from 'react-router-dom';
-import LineChartLineChart from '@renderer/shared/VRminutetsPerMonth/LineChart';
 
 export default function Home() {
   const [centers, setCenters] = useState([]);
@@ -108,123 +107,13 @@ export default function Home() {
             <VRminutesCard loading={isLoading} refreshKey={refreshKey} />
             <VRsessionsCard loading={isLoading} refreshKey={refreshKey} />
           </Flex>
-          
+
           <StatistcsCards refreshKey={refreshKey} />
-          
         </>
       )}
     </>
   );
 }
-
-
-// import React, { useState, useEffect, useContext } from 'react';
-// import { Box, Text, Spinner, Button, Menu, MenuButton, MenuList, MenuItem, Flex, Heading , Link } from '@chakra-ui/react';
-// import { ChevronDownIcon } from '@chakra-ui/icons';
-// import { config } from '../config';
-// import StatistcsCards from '../theme/components/StatistcsCards';
-// import { dataContext } from '@renderer/shared/Provider';
-// import { Link as ReachLink } from 'react-router-dom';
-// import VRminutesCard from '../shared/VRminutetsPerMonth/VRminutesCard';
-// import VRsessionsCard from '../shared/VRsessions/VRsessionsCard';
-
-// function Home() {
-//   const [centers, setCenters] = useState([]);
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [refreshKey, setRefreshKey] = useState(0);
-//   const selectedCenter = useContext(dataContext);
-
-//   const handleClick = (center) => {
-//     setIsLoading(true);
-//     Object.assign(selectedCenter, center);
-//     setRefreshKey((oldKey) => oldKey + 1);
-//   };
-
-//   useEffect(() => {
-//     const fetchCenters = async () => {
-//       try {
-//         const token = await (window as any).electronAPI.getPassword('token');
-//         const response = await fetch(`${config.apiURL}/api/v1/doctors/home_centers`, {
-//           method: 'GET',
-//           headers: { Authorization: `Bearer ${token}` },
-//         });
-//         if (!response.ok) {
-//           throw new Error('Failed to fetch centers');
-//         }
-//         const data = await response.json();
-//         setCenters(data.data);
-//       } catch (error) {
-//         console.error('Error fetching centers:', error);
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-    
-//     fetchCenters();
-//   }, []);
-
-//   return (
-//     <>
-//       {isLoading ? (
-//         <Box textAlign="center" py={10} px={6}>
-//           <Spinner />
-//         </Box>
-//       ) : centers.length === 0 ? (
-//         <NotFound />
-//       ) : (
-//         <>
-//           <Text
-//             position="absolute"
-//             alignItems="center"
-//             left="279px"
-//             top="129px"
-//             fontFamily="Graphik LCG"
-//             fontSize="29px"
-//             fontWeight="500"
-//             lineHeight="29px"
-//             letterSpacing="-0.01em"
-//           >
-//             Home
-//           </Text>
-//           <Menu>
-//             <MenuButton
-//               as={Button}
-//               rightIcon={<ChevronDownIcon />}
-//               bgColor="#FFFFFF"
-//               border="2px solid #00DEA3"
-//               borderRadius="8px"
-//               color="#00DEA3"
-//               marginLeft="200px"
-//               marginTop="45px"
-//             >
-//               Centers
-//             </MenuButton>
-//             <MenuList>
-//               {centers.map((center) => (
-//                 <MenuItem key={center.id} onClick={() => handleClick(center)}>
-//                   {center.attributes.name}
-//                 </MenuItem>
-//               ))}
-//             </MenuList>
-//           </Menu>
-//           <Flex
-//             width="90%"
-//             justifyContent="space-between"
-//             padding="20px"
-//             marginBottom="20px"
-//             flexWrap="wrap"
-//           >
-//             <VRminutesCard   loading={isLoading}/>
-//             <VRsessionsCard loading={isLoading} refreshKey={refreshKey} />
-//           </Flex>
-//           <StatistcsCards refreshKey={refreshKey} />
-//         </>
-//       )}
-//     </>
-//   );
-// }
-
-// export default Home;
 
 export function NotFound() {
   return (
