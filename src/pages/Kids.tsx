@@ -9,12 +9,11 @@ import {
 } from '@chakra-ui/react';
 import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
 import img from '../assets/images/Person3.png';
-import GeneralInfoFormKids from '@renderer/features/AddCenterForm/GeneralInformKids';
+import GeneralInfoFormKids from '@renderer/features/AddKids/GeneralInformKids';
 import Congratulations from './SignUp/Congratulations';
 import { config } from '../config';
 import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';
-
 
 
 interface Kids {
@@ -32,6 +31,7 @@ export default function Kids() {
   const [formData, setFormData] = useState({});
   const [kidsList, setKidsList] = useState<Kids[]>([]);
   const [showTable, setShowTable] = useState(true);
+  const [included, setIncluded] = useState([]);
   const selectedCenter = useContext(dataContext);
 
   const {
@@ -40,11 +40,11 @@ export default function Kids() {
     onClose: onDeleteCongratulations,
   } = useDisclosure();
 
-  const handleCloseModal = () => {
-    onDeleteCongratulations();
-    setShowTable(true);
-    console.log('handle succcess');
-  };
+  // const handleCloseModal = () => {
+  //   onDeleteCongratulations();
+  //   setShowTable(true);
+  //   console.log('handle succcess');
+  // };
   const renderFormStep = () => {
     switch (sliding) {
       case 2:
@@ -55,26 +55,11 @@ export default function Kids() {
               nextHandler={nextHandler}
               backHandler={backHandler}
               sliding={sliding}
+              formData={formData}
             />
           </>
         );
-      case 3:
-        return (
-          <>
-            <GeneralInfoFormKids
-              onSubmit={handleFormSubmit}
-              nextHandler={nextHandler}
-              backHandler={backHandler}
-              sliding={sliding}
-            />
-            <Congratulations
-              isOpen={isOpenCongratulations}
-              onClose={handleCloseModal}
-              kids={true}
-            />
-          </>
-        );
-
+     
       default:
         return null;
     }
@@ -98,6 +83,7 @@ export default function Kids() {
   };
   const handleFormSubmit = (data: any) => {
     setFormData({ ...formData, ...data });
+    console.log(data);
     return { ...formData, ...data };
   };
 
@@ -106,18 +92,22 @@ export default function Kids() {
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
 
-      fetch(`${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids`, {
-        method: 'Get',
-        redirect: 'follow',
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      fetch(
+        `${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids?include=diagnoses,sessions`,
+        {
+          method: 'Get',
+          redirect: 'follow',
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
         .then((response) => response.json())
         .then((result) => {
           console.log(result);
-if(result.data){
-  setKidsList(result.data);
-}
-         
+          if (result.data) {
+            setKidsList(result.data);
+            setIncluded(result.included);
+        
+          }
         })
         .catch((error) => console.log('error', error));
     })();
@@ -165,7 +155,13 @@ if(result.data){
           {selectedCenter &&
             kidsList.map((kid) => (
               <>
-                <TableData  id={kid.id} name={kid.attributes.name} age={kid.attributes.age}/>
+                <TableData
+                  all={kid}
+                  id={kid.id}
+                  name={kid.attributes.name}
+                  age={kid.attributes.age}
+                  included={included}
+                />
               </>
             ))}
         </>
@@ -181,14 +177,26 @@ interface TableData {
   diagnosis?: string;
   jion_in?: string;
   sessions?: string;
-  id:any
+  id: any;
+  all?: any;
+  included?: any;
 }
-const TableData = ({name,age,id}) => {
+const TableData: React.FC<TableData> = ({ all, name, age, id, included }) => {
+  const[date,setDate]=useState("")
   const navigate = useNavigate();
-  const handleKids = (Kids:any) => {
+  const handleKids = (Kids: any) => {
     console.log('Clicked Center Data:', Kids);
-    navigate('/ViewKids', { state: Kids });
+    navigate('/ViewKids', { state: all });
   };
+  useEffect(() => {
+    const transformedDate = new Date(all.attributes.created_at); // Transform the date once when the component mounts
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const formattedDate = transformedDate.getDate() + ' ' + months[transformedDate.getMonth()] + ' ' + transformedDate.getFullYear();
+
+    setDate(formattedDate); // Update the state with the transformed date
+  }, [all.attributes.created_at]); 
+  console.log({ included: included });
   return (
     <Grid
       py="3"
@@ -203,7 +211,7 @@ const TableData = ({name,age,id}) => {
       fontWeight="500"
       fontFamily="Graphik LCG"
       lineHeight="24px"
-      onClick={()=>handleKids(id)}
+      onClick={() => handleKids(all)}
     >
       <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
         <Box display={'flex'} alignItems={'center'}>
@@ -212,7 +220,7 @@ const TableData = ({name,age,id}) => {
             rounded="md"
             // boxSize="80px"
             objectFit="cover"
-            src={img}
+            src={all.attributes.photo_url?all.attributes.photo_url:img}
             alt="VR"
             w="52px"
             h="52px"
@@ -226,7 +234,7 @@ const TableData = ({name,age,id}) => {
             lineHeight={'16px'}
             letterSpacing={'1.6%'}
           >
-           {name}
+            {name}
           </Text>
         </Box>
       </GridItem>
@@ -241,7 +249,7 @@ const TableData = ({name,age,id}) => {
           lineHeight={'16px'}
           letterSpacing={'1.6%'}
         >
-         {age} Years
+          {age} Years
         </Text>
       </GridItem>
       <GridItem
@@ -250,28 +258,38 @@ const TableData = ({name,age,id}) => {
         alignItems={'center'}
         justifyContent={'center'}
       >
-        <Box
-          background={'#F3F3F3'}
-          w="120px"
-          height={'42px'}
-          borderRadius={'10px'}
-          display={'flex'}
-          justifyContent={'center'}
-          alignItems={'center'}
-        >
-          <Text
-            fontSize="16"
-            textAlign={'center'}
-            px="5"
-            fontWeight={'500'}
-            fontFamily="Graphik LCG"
-            color={'#558888'}
-            lineHeight={'16px'}
-            letterSpacing={'1.6%'}
-          >
-            ADHD
-          </Text>
+        <Box>
+        {included.map((x) => {
+            console.log(x)
+          return (
+          
+            <Box
+              background={'#F3F3F3'}
+              w="100px"
+              height={'42px'}
+              borderRadius={'10px'}
+              display={'flex'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              mb={3}
+            >
+              <Text
+                fontSize="16"
+                textAlign={'center'}
+                px="5"
+                fontWeight={'500'}
+                fontFamily="Graphik LCG"
+                color={'#558888'}
+                lineHeight={'16px'}
+                letterSpacing={'1.6%'}
+              >
+                {x.attributes.name}
+              </Text>
+            </Box>
+          );
+        })}
         </Box>
+     
       </GridItem>
       <GridItem colSpan={1}>
         <Text
@@ -283,7 +301,7 @@ const TableData = ({name,age,id}) => {
           lineHeight={'17px'}
           letterSpacing={'1.6%'}
         >
-          14 Mon 2022
+        {date}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>

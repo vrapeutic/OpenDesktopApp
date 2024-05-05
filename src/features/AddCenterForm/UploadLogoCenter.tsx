@@ -50,11 +50,6 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
   };
 
 
-
-
-
-
-
   
   const FormonSubmit = () => {
     SendDataToApi();
@@ -155,8 +150,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
                 lineHeight="20px"
                 color="#00261C"
                 textAlign="center"
-              >
-                Upload Logo
+              >                Upload Logo
               </ModalHeader>
               <ModalCloseButton marginLeft="100px" />
             </Box>

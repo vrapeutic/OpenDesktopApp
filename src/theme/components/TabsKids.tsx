@@ -283,16 +283,14 @@ const TabsKids = () => {
       )}
       <Tabs py={'23px'} colorScheme="#1C1C1C">
         <TabList color={'#38383866'}>
-          <Tab>Recent Activities </Tab>
+         
           <Tab>Doctors</Tab>
           <Tab>Sesion</Tab>
-          <Tab>Widgets</Tab>
+        
         </TabList>
 
         <TabPanels>
-          <TabPanel>
-            <p>Dokkkkkkkkkkkkkkkkkkkors</p>
-          </TabPanel>
+         
           <TabPanel>
             <Grid
               py="2"
@@ -349,9 +347,7 @@ const TabsKids = () => {
             <SessionTable openModal={onOpen} />
           </TabPanel>
 
-          <TabPanel>
-            <p>Widgets</p>
-          </TabPanel>
+        
         </TabPanels>
       </Tabs>
     </>

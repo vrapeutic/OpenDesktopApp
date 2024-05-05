@@ -15,9 +15,9 @@ import Generalinfo from './pages/SignUp/Generalinfo';
 import ViewCenter from './pages/ViewCenter';
 import EditCenter from './pages/EditCenter';
 import OTP from './pages/SignUp/OTP';
-import Uploadlogo from './pages/SignUp/Uploadlogo';
+
 import { useAdminContext } from './Context/AdminContext';
-import ViewKids from './pages/ViewKids';
+import ViewKids from './features/AddKids/ViewKids';
 
 function App() {
   const { adminBoolean } = useAdminContext();

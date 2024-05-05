@@ -17,9 +17,9 @@ import {Documents} from '../../assets/icons/Documents';
   const ProgressBarAddKides = (props: any) => {
     const steps = [
       { title: 'General info', icon: <Info /> },
-      { title: 'Specialty', icon: <Star /> },
-      { title: 'Education info', icon: <Documents /> },
-      { title: 'Contact', icon: <Contact /> },
+      // { title: 'Specialty', icon: <Star /> },
+      // { title: 'Education info', icon: <Documents /> },
+      // { title: 'Contact', icon: <Contact /> },
     ];
   
     const activeStatus = {
