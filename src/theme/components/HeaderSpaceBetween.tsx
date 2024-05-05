@@ -41,10 +41,10 @@ function HeaderSpaceBetween({ Title, ButtonText , onClickFunction }: Subscriptio
           bg="#F5B50E"
           borderRadius="8px"
           fontSize="14px"
-          fontWeight="400"
+          fontWeight="450"
           boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
           onClick={onClickFunction}
-          fontFamily="Graphik LCG"
+          fontFamily="Graphik LCG" 
         >
           {ButtonText}
         </Button>

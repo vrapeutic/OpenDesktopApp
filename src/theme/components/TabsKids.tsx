@@ -134,7 +134,8 @@ const TabsKids = () => {
                     <Box
                       display={'flex'}
                       alignItems={'center'}
-                      justifyContent={'center'}
+                      justifyContent={'end'}
+                      width={"317px"}
                     >
                       <Time />
                       <Text

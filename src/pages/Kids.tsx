@@ -15,7 +15,6 @@ import { config } from '../config';
 import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';
 
-
 interface Kids {
   id: number;
   attributes: {
@@ -59,7 +58,7 @@ export default function Kids() {
             />
           </>
         );
-     
+
       default:
         return null;
     }
@@ -83,11 +82,9 @@ export default function Kids() {
   };
   const handleFormSubmit = (data: any) => {
     setFormData({ ...formData, ...data });
-    console.log(data);
+
     return { ...formData, ...data };
   };
-
-  console.log(selectedCenter);
   useEffect(() => {
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
@@ -102,13 +99,14 @@ export default function Kids() {
       )
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
+          console.log('all results', result);
           if (result.data) {
             setKidsList(result.data);
             setIncluded(result.included);
-        
+            console.log(result.included);
           }
         })
+
         .catch((error) => console.log('error', error));
     })();
   }, []);
@@ -153,17 +151,22 @@ export default function Kids() {
             </GridItem>
           </Grid>
           {selectedCenter &&
-            kidsList.map((kid) => (
-              <>
-                <TableData
-                  all={kid}
-                  id={kid.id}
-                  name={kid.attributes.name}
-                  age={kid.attributes.age}
-                  included={included}
-                />
-              </>
-            ))}
+            kidsList.map((kid) => {
+              console.log('kid', kid.relationships.diagnoses.data);
+
+              return (
+                <>
+                  <TableData
+                    all={kid}
+                    id={kid.id}
+                    name={kid.attributes.name}
+                    age={kid.attributes.age}
+                    included={included}
+                    data={kid.relationships.diagnoses.data}
+                  />
+                </>
+              );
+            })}
         </>
       ) : (
         <>{renderFormStep()}</>
@@ -180,23 +183,58 @@ interface TableData {
   id: any;
   all?: any;
   included?: any;
+  data: any;
 }
-const TableData: React.FC<TableData> = ({ all, name, age, id, included }) => {
-  const[date,setDate]=useState("")
+const TableData: React.FC<TableData> = ({ all, name, age, id, included ,data}) => {
+  const [date, setDate] = useState('');
   const navigate = useNavigate();
   const handleKids = (Kids: any) => {
-    console.log('Clicked Center Data:', Kids);
     navigate('/ViewKids', { state: all });
+    
   };
+
+  const x=all.relationships.diagnoses.data
+ 
+  const filterByReference = (included,  x) => {
+    let res = [];
+    res = included.filter(el => {
+       return x.find(element => {
+          return element.id === el.id;
+       });
+    });
+
+    return res;
+ }
+ 
+ const result = filterByReference(included,x);
+
   useEffect(() => {
     const transformedDate = new Date(all.attributes.created_at); // Transform the date once when the component mounts
 
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const formattedDate = transformedDate.getDate() + ' ' + months[transformedDate.getMonth()] + ' ' + transformedDate.getFullYear();
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const formattedDate =
+      transformedDate.getDate() +
+      ' ' +
+      months[transformedDate.getMonth()] +
+      ' ' +
+      transformedDate.getFullYear();
 
     setDate(formattedDate); // Update the state with the transformed date
-  }, [all.attributes.created_at]); 
-  console.log({ included: included });
+  }, [all.attributes.created_at]);
+
   return (
     <Grid
       py="3"
@@ -220,7 +258,7 @@ const TableData: React.FC<TableData> = ({ all, name, age, id, included }) => {
             rounded="md"
             // boxSize="80px"
             objectFit="cover"
-            src={all.attributes.photo_url?all.attributes.photo_url:img}
+            src={all.attributes.photo_url ? all.attributes.photo_url : img}
             alt="VR"
             w="52px"
             h="52px"
@@ -259,37 +297,35 @@ const TableData: React.FC<TableData> = ({ all, name, age, id, included }) => {
         justifyContent={'center'}
       >
         <Box>
-        {included.map((x) => {
-            console.log(x)
-          return (
-          
-            <Box
-              background={'#F3F3F3'}
-              w="100px"
-              height={'42px'}
-              borderRadius={'10px'}
-              display={'flex'}
-              justifyContent={'center'}
-              alignItems={'center'}
-              mb={3}
-            >
-              <Text
-                fontSize="16"
-                textAlign={'center'}
-                px="5"
-                fontWeight={'500'}
-                fontFamily="Graphik LCG"
-                color={'#558888'}
-                lineHeight={'16px'}
-                letterSpacing={'1.6%'}
+          {result.map((x) => {
+            return (
+              <Box
+                background={'#F3F3F3'}
+                minWidth="100px"
+                w={"205px"}
+                height={'42px'}
+                borderRadius={'10px'}
+                display={'flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                mb={3}
               >
-                {x.attributes.name}
-              </Text>
-            </Box>
-          );
-        })}
+                <Text
+                  fontSize="13"
+                  textAlign={'center'}
+                  px="5"
+                  fontWeight={'500'}
+                  fontFamily="Graphik LCG"
+                  color={'#558888'}
+                  lineHeight={'16px'}
+                  letterSpacing={'1.6%'}
+                >
+                  {x.attributes.name}
+                </Text>
+              </Box>
+            );
+          })}
         </Box>
-     
       </GridItem>
       <GridItem colSpan={1}>
         <Text
@@ -301,7 +337,7 @@ const TableData: React.FC<TableData> = ({ all, name, age, id, included }) => {
           lineHeight={'17px'}
           letterSpacing={'1.6%'}
         >
-        {date}
+          {date}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>

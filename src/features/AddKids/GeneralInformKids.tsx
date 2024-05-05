@@ -9,11 +9,9 @@ import {
   GridItem,
   Input,
   Flex,
-  Textarea,
   useDisclosure,
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Progressbar from './ProgrressBarAddKides';
 import { TherapyFormProps } from '../AddCenterForm/therapyFormInterface';
 import { config } from '@renderer/config';
 import { useEffect, useState } from 'react';
@@ -82,7 +80,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
     try {
       const response = await axios.get(`${config.apiURL}/api/v1/diagnoses`);
       setDiagnoses(response.data);
-      console.log(response.data);
+
     } catch (error) {
       console.error(error);
     }
