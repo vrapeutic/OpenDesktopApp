@@ -49,7 +49,7 @@ console.log(props)
         
         const previewUrl = URL.createObjectURL(file);
         setImagePreview(previewUrl);
-        setLogo(previewUrl);
+        setLogo(file);
     };
 
     const FormonSubmit = () => {
@@ -59,12 +59,12 @@ console.log(props)
 
     const createFormData = () => {
         const formData = new FormData();
-
+console.log( props.formData.Name,logo);
         formData.append('name', props.formData.Name);
         formData.append('email', props.formData.Email);
         formData.append('age', props.formData.Age);
         formData.append('photo', logo);
-   
+
         props.formData.diagnoses.forEach((diagnose: { id: string | Blob }) =>
             formData.append('diagnosis_ids[]', diagnose.id)
         );
@@ -207,7 +207,7 @@ console.log(props)
                                     borderRadius="12px"
                                     bg="#00DEA3"
                                     color="#FFFFFF"
-                                    fontFamily="Roboto"
+                                    fontFamily="Graphik LCG"
                                     fontWeight="700"
                                     fontSize="18px"
                                     lineHeight="21.09px"

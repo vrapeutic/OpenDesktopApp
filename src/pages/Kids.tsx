@@ -10,7 +10,7 @@ import {
 import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
 import img from '../assets/images/Person3.png';
 import GeneralInfoFormKids from '@renderer/features/AddKids/GeneralInformKids';
-import Congratulations from './SignUp/Congratulations';
+
 import { config } from '../config';
 import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';

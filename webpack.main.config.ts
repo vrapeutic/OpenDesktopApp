@@ -1,22 +1,25 @@
-import type { Configuration } from "webpack";
-import { rules } from "./webpack.rules";
-import path from "path";
+import type { Configuration } from 'webpack';
+import { rules } from './webpack.rules';
+import path from 'path';
+import 'csv-loader';
 
 export const mainConfig: Configuration = {
-    /**
-     * This is the main entry point for your application, it's the first file
-     * that runs in the main process.
-     */
-    entry: "./electron/main.ts",
-    // Put your normal webpack config below here
-    module: {
-        rules,
+  /**
+   * This is the main entry point for your application, it's the first file
+   * that runs in the main process.
+   */
+  entry: './electron/main.ts',
+  // Put your normal webpack config below here
+  module: {
+    rules: [
+      ...rules, // Add the existing rule
+    ],
+  },
+  resolve: {
+    alias: {
+      '@main': path.resolve(__dirname, 'electron'),
+      '@renderer': path.resolve(__dirname, 'src'),
     },
-    resolve: {
-        alias: {
-            "@main": path.resolve(__dirname, "electron"),
-            "@renderer": path.resolve(__dirname, "src"),
-        },
-        extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"],
-    },
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
+  },
 };
