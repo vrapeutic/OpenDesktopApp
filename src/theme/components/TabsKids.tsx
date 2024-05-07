@@ -24,9 +24,10 @@ import {
 import axios from 'axios';
 import { config } from '../../config';
 import { getMe } from '../../cache';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import img from '../../assets/images/Person3.png';
 import { Time } from '@renderer/assets/icons/Time';
+import { dataContext } from '@renderer/shared/Provider';
 interface Doctor {
   id: number;
   attributes: {
@@ -47,15 +48,20 @@ interface Child {
     age: number;
   };
 }
+ interface TabsKids {
+  id:number
+ }
+const TabsKids:React.FC<TabsKids> = ({id}) => {
 
-const TabsKids = () => {
   const token = getMe()?.token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
+  console.log(id);
   const [childrenlist, setchildrenlist] = useState<Child[] | undefined>();
   const [Doctorslist, setDoctorlist] = useState<Doctor[] | undefined>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const selectedCenter = useContext(dataContext);
 
   // const getChildren = async () => {
   //   try {
@@ -70,22 +76,35 @@ const TabsKids = () => {
   //   }
   // };
 
-  // const getDoctors = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${config.apiURL}/api/v1/centers/${centerData.id}/doctors`,
-  //       { headers }
-  //     );
-  //     setDoctorlist(response.data.data);
-  //     console.log('doctors', response.data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const getDoctors = async () => {
+    try {
+      const response = await axios.get(
+        `${config.apiURL}/api/v1/doctors/center_child_doctors?center_id=${selectedCenter.id}&child_id=${id}`,
+        { headers }
+      );
+      // setDoctorlist(response.data.data);
+      console.log('doctors', response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const gitSessions = async () => {
+    try {
+      const response = await axios.get(
+        `${config.apiURL}/api/v1/doctors/center_child_sessions?center_id=${selectedCenter.id}&child_id=${id}`,
+        { headers }
+      );
+      // setDoctorlist(response.data.data);
+      console.log('Sessions', response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    //   getDoctors();
-    //   getChildren();
+      getDoctors();
+      gitSessions();
   }, []);
 
   return (
@@ -134,8 +153,7 @@ const TabsKids = () => {
                     <Box
                       display={'flex'}
                       alignItems={'center'}
-                      justifyContent={'end'}
-                      width={"317px"}
+                      justifyContent={'center'}
                     >
                       <Time />
                       <Text

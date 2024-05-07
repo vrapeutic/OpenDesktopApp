@@ -89,13 +89,13 @@ export default function Congratulations(props: any) {
             >
               <Link
                 as={ReachLink}
-                to={'/kids'}
+                to={'/Kids'}
                 _hover={{
                   textDecoration: 'none',
                 }}
                 fontFamily="Graphik LCG"
               >
-                Go to home
+                Go to Home
               </Link>
             </Button>
           </ModalFooter>

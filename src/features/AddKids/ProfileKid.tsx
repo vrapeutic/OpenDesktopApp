@@ -8,6 +8,7 @@ interface ProfileKid {
   img: any;
   diagnosis?: any;
   date?: string;
+ 
 }
 
 const ProfileKid: React.FC<ProfileKid> = ({
@@ -16,9 +17,8 @@ const ProfileKid: React.FC<ProfileKid> = ({
   email,
   img,
   diagnosis,
-  date
+  date,
 }) => {
-
   return (
     <Grid
       templateColumns="repeat(8, 1fr) repeat(2, 1fr) repeat(2, 1fr)"
@@ -34,7 +34,7 @@ const ProfileKid: React.FC<ProfileKid> = ({
         borderRight="1px solid"
         borderColor="gray.200"
       >
-        <Box  width={ '125px' } height= {'125px'} display={"contents"} >
+        <Box width={'125px'} height={'125px'} display={'contents'}>
           <img
             src={
               img
@@ -51,14 +51,12 @@ const ProfileKid: React.FC<ProfileKid> = ({
               {name}
             </chakra.h3>
           </Flex>
-          <Box display={"flex"} flexWrap={"wrap"}>
-
-         
-          {diagnosis.map((x) => {
-            console.log(x)
-            return <Text color="gray.500">{x.attributes.name},</Text>;
-          })}
-           </Box>
+          <Box display={'flex'} flexWrap={'wrap'}>
+            {diagnosis.map((x: any) => {
+             
+              return <Text color="gray.500">{x.attributes.name},</Text>;
+            })}
+          </Box>
         </Box>
       </GridItem>
 
@@ -79,7 +77,7 @@ const ProfileKid: React.FC<ProfileKid> = ({
         >
           Age : {age} years
         </Text>
-       
+
         <Text
           style={{
             fontFamily: 'Graphik LCG',

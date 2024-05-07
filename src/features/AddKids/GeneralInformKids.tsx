@@ -32,7 +32,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
   const [diagnoses, setDiagnoses] = useState([]);
   const [age, setAge] = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     let value = e.target.value;
     // Ensure only numeric characters are entered
     if (/^\d*$/.test(value)) {

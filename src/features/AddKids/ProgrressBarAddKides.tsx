@@ -9,11 +9,10 @@ import {
     Flex,
     Text,
   } from '@chakra-ui/react';
-  import { Contact } from '../../assets/icons/Contact';
+
 
   import { Info } from '../../assets/icons/InfoSvg';
-  import {Star}  from '../../assets/icons/Star';
-import {Documents} from '../../assets/icons/Documents';
+
   const ProgressBarAddKides = (props: any) => {
     const steps = [
       { title: 'General info', icon: <Info /> },
