@@ -151,7 +151,7 @@ export default function Kids() {
             </GridItem>
           </Grid>
           {selectedCenter &&
-            kidsList.map((kid) => {
+            kidsList.map((kid:any) => {
               console.log('kid', kid.relationships.diagnoses.data);
 
               return (
@@ -193,20 +193,21 @@ const TableData: React.FC<TableData> = ({ all, name, age, id, included ,data}) =
     
   };
 
-  const x=all.relationships.diagnoses.data
- 
-  const filterByReference = (included,  x) => {
-    let res = [];
-    res = included.filter(el => {
-       return x.find(element => {
-          return element.id === el.id;
-       });
-    });
+  const x: any[] = all.relationships.diagnoses.data;
 
+  const filterByReference = ({ included, x }: { included: any[], x: any[] }) => {
+    let res = [];
+    res = included.filter((el: any) => {
+      return x.find((element: any) => {
+        return element.id === el.id;
+      });
+    });
+  
     return res;
- }
- 
- const result = filterByReference(included,x);
+  }
+  
+  const result = filterByReference({ included, x });
+  
 
   useEffect(() => {
     const transformedDate = new Date(all.attributes.created_at); // Transform the date once when the component mounts
@@ -297,7 +298,7 @@ const TableData: React.FC<TableData> = ({ all, name, age, id, included ,data}) =
         justifyContent={'center'}
       >
         <Box>
-          {result.map((x) => {
+          {result.map((x:any) => {
             return (
               <Box
                 background={'#F3F3F3'}

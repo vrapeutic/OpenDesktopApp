@@ -437,8 +437,7 @@ const DataModal: React.FC<DataModal> = ({ ModalName, date }) => {
           {ModalName}
         </Box>
       </GridItem>
-      <GridItem colSpan={1} direction="row" align="center " 
-          fontFamily="Graphik LCG"
+      <GridItem colSpan={1}  alignItems="center " 
           fontFamily="Graphik LCG">
         <Switch size="md" />
       </GridItem>
