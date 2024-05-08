@@ -42,6 +42,15 @@ export const rules: Required<ModuleOptions>["rules"] = [
         test: /\.(png|woff|woff2|eot|ttf|svg|ico)$/, // to import images and fonts
         loader: "url-loader",
     },
+
+    {
+        test: /\.csv$/,
+        loader: "csv-loader",
+      },
+
+
+
+
     // {
     //     test: /\.json$/,
     //     loader: "json-loader",

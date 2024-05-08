@@ -12,12 +12,9 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import React from 'react';
+import { Link as ReachLink } from 'react-router-dom';
 
 export default function Congratulations(props: any) {
-  const navigate = useNavigate();
-  console.log(props.kids)
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -70,7 +67,7 @@ export default function Congratulations(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-              Your profile has been created successfully
+             you can check therpy analysis
             </Text>
           </ModalBody>
 
@@ -90,32 +87,16 @@ export default function Congratulations(props: any) {
               textDecoration="none"
               onClick={props.onClose}
             >
-              
-              {
-
-
-             props.kids? 
-             <Link
-             _hover={{
-               textDecoration: 'none',
-             }}
-             onClick={() => navigate('/Kids')}
-           >
-            Check now
-           </Link>
-             
-            :
-                <Link
+              <Link
+                as={ReachLink}
+                to={'/Kids'}
                 _hover={{
                   textDecoration: 'none',
                 }}
-                onClick={() => navigate('/home')}
+                fontFamily="Graphik LCG"
               >
-                Go to home
+                Go to Home
               </Link>
-              
-            }
-              
             </Button>
           </ModalFooter>
         </ModalContent>

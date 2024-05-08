@@ -31,6 +31,7 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
     <Grid
       templateColumns="repeat(8, 1fr) repeat(2, 1fr) repeat(2, 1fr)"
       gap={4}
+     
       background="#FFFFFF"
     >
       <GridItem colSpan={7} p={4}>
