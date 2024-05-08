@@ -33,8 +33,7 @@ interface Center {
     specialties: { id: number; name: string }[];
     children_count: number;
     image?: { url: string }; // Make 'image' property optional
-    targeted_skills?: { name: string ,  id: number;
-    }[]; // Make 'targeted_skills' property optional
+    targeted_skills?: { name: string; id: number }[]; // Make 'targeted_skills' property optional
     technology?: string; // Make 'technology' property optional
   };
 }
@@ -45,10 +44,10 @@ const Theraputicmodules: React.FC = () => {
   const [formData, setFormData] = useState({});
   const [softwaremodules, setsoftwaremodules] = useState<Center[]>([]);
   const [selectedModuleId, setSelectedModuleId] = useState(null);
+  const navigate = useNavigate();
 
   const { otp } = useAdminContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const navigate = useNavigate();
 
   const handleFormSubmit = (data: any) => {
     // Use the previous state to ensure the latest form data is captured
@@ -73,12 +72,9 @@ const Theraputicmodules: React.FC = () => {
     }
   };
 
-
   const handleCloseModal = () => {
     onClose();
   };
-
-
 
   useEffect(() => {
     getModules();
@@ -107,32 +103,29 @@ const Theraputicmodules: React.FC = () => {
       case 1:
         return (
           <>
-          <HeaderSpaceBetween
-            Title={'therapeutic modules'}
-            ButtonText={'Add New Module'}
-            onClickFunction={nextHandler}
-          />
-               {onOpen && (
+            <HeaderSpaceBetween
+              Title={'therapeutic modules'}
+              ButtonText={'Add New Module'}
+              onClickFunction={nextHandler}
+            />
+            {onOpen && (
               <ModuleModal
                 isOpen={isOpen}
                 onClose={handleCloseModal}
                 selectedModuleId={selectedModuleId}
               />
             )}
-          <Table
-            variant="simple"
-            background="#FFFFFF"
-          >
-            <Thead>
-              <Tr>
-                <Th>Name</Th>
-                <Th>Assign</Th>
-                <Th>Specialties</Th>
-                <Th>Technology</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-            {softwaremodules?.map((Module) =>
+            <Table variant="simple" background="#FFFFFF">
+              <Thead>
+                <Tr>
+                  <Th>Name</Th>
+                  <Th>Assign</Th>
+                  <Th>Specialties</Th>
+                  <Th>Technology</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {softwaremodules?.map((Module) =>
                   Module?.attributes.image?.url ? (
                     <Tr key={Module.id} cursor={'pointer'}>
                       <Td>
@@ -162,8 +155,9 @@ const Theraputicmodules: React.FC = () => {
                       <Td>
                         <Button
                           onClick={() => {
-                            setSelectedModuleId(Module.id);
-                            onOpen();
+                            // setSelectedModuleId(Module.id);
+                            // onOpen();
+                            navigate('/Assigntocenter');
                           }}
                         >
                           Assign to center
@@ -171,19 +165,24 @@ const Theraputicmodules: React.FC = () => {
                       </Td>
                       <Td>
                         {Module?.attributes.targeted_skills?.map((skill) => (
-                          <Tag key={skill.id} size="sm" colorScheme="gray" mr={1}>
+                          <Tag
+                            key={skill.id}
+                            size="sm"
+                            colorScheme="gray"
+                            mr={1}
+                          >
                             <TagLabel>{skill?.name}</TagLabel>
                           </Tag>
                         ))}
                       </Td>
                       <Td>{Module?.attributes.technology}</Td>
                     </Tr>
-            ) : null
-            )}
-          </Tbody>
-        </Table>
-      </>
-    );
+                  ) : null
+                )}
+              </Tbody>
+            </Table>
+          </>
+        );
       case 2:
         return (
           <GeneralInfoModule

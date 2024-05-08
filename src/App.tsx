@@ -1,4 +1,4 @@
-import { Routes, Route, MemoryRouter, Navigate } from 'react-router-dom';
+import { Routes, Route, MemoryRouter } from 'react-router-dom';
 import { useEffect } from 'react';
 import Home from './pages/Home';
 import Kids from './pages/Kids';
@@ -16,6 +16,7 @@ import EditCenter from './pages/EditCenter';
 import OTP from './pages/SignUp/OTP';
 import { useAdminContext } from './Context/AdminContext';
 import Signup from './pages/SignUp/Signup';
+import Assigntocenter from './pages/Assigntocenter/Assigntocenter';
 
 function App() {
   const { adminBoolean } = useAdminContext();
@@ -43,6 +44,8 @@ function App() {
           <Route path="Specialists" element={<Specialists />} />
           <Route path="Assessmenttools" element={<Assessmenttools />} />
           <Route path="Subscriptions" element={<Subscriptions />} />
+          <Route path="Assigntocenter" element={<Assigntocenter />} /> 
+
           <Route path="setting" element={<Setting />} />
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />
