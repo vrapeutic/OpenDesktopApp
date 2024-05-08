@@ -535,7 +535,7 @@ interface SessionTable {
 const SessionTable: React.FC<SessionTable> = ({ openModal, sessions }) => {
   console.log(sessions);
 
-  const date = (time) => {
+  const date = ({time}:any) => {
     const transformedDate = new Date(time); // Transform the date once when the component mounts
 
     const months = [
