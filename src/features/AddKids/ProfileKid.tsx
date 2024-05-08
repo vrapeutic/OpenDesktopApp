@@ -54,7 +54,7 @@ const ProfileKid: React.FC<ProfileKid> = ({
           <Box display={'flex'} flexWrap={'wrap'}>
             {diagnosis.map((x: any) => {
              
-              return <Text color="gray.500">{x.attributes.name},</Text>;
+              return <Text color="gray.500" key={x.id}>{x.attributes.name},</Text>;
             })}
           </Box>
         </Box>

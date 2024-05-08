@@ -17,9 +17,6 @@ import {
   useDisclosure,
   ModalCloseButton,
   ModalBody,
-  HStack,
-  VStack,
-  Stack,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { config } from '../../config';
@@ -28,17 +25,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import img from '../../assets/images/Person3.png';
 import { Time } from '@renderer/assets/icons/Time';
 import { dataContext } from '@renderer/shared/Provider';
-interface Doctor {
-  id: number;
-  attributes: {
-    name: string;
-    degree: string;
-    university: string;
-    photo: {
-      url: string;
-    };
-  };
-}
+import { AnyCnameRecord } from 'dns';
 
 interface Child {
   id: number;
@@ -48,44 +35,44 @@ interface Child {
     age: number;
   };
 }
- interface TabsKids {
-  id:number
- }
-const TabsKids:React.FC<TabsKids> = ({id}) => {
-
+interface TabsKids {
+  id: number;
+}
+const TabsKids: React.FC<TabsKids> = ({ id }) => {
   const token = getMe()?.token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
   console.log(id);
   const [childrenlist, setchildrenlist] = useState<Child[] | undefined>();
-  const [Doctorslist, setDoctorlist] = useState<Doctor[] | undefined>();
+  const [Doctorslist, setDoctorlist] = useState<any[]>([]);
+  const [sessions, setSessions] = useState<any[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [showDoctor, setShowDoctor] = useState(false);
   const selectedCenter = useContext(dataContext);
 
-  // const getChildren = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${config.apiURL}/api/v1/centers/${centerData.id}/kids`,
-  //       { headers }
-  //     );
-  //     setchildrenlist(response.data.data);
-  //     console.log('children', response.data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const [includedD, setIncludedD] = useState([]);
 
   const getDoctors = async () => {
     try {
       const response = await axios.get(
-        `${config.apiURL}/api/v1/doctors/center_child_doctors?center_id=${selectedCenter.id}&child_id=${id}`,
+        `${config.apiURL}/api/v1/doctors/center_child_doctors?center_id=${selectedCenter.id}&child_id=${id}&include=sessions,specialties`,
         { headers }
       );
-      // setDoctorlist(response.data.data);
+      if (response.data.data) {
+        setDoctorlist(response.data.data);
+        setIncludedD(response.data.included);
+        console.log('doctors', response);
+      }
       console.log('doctors', response);
+
+      setShowDoctor(false);
     } catch (error) {
-      console.error(error);
+      console.error('error', error.response.status);
+      if (error.response.status === 403) {
+        setShowDoctor(true);
+        setDoctorlist([]);
+      }
     }
   };
 
@@ -95,7 +82,7 @@ const TabsKids:React.FC<TabsKids> = ({id}) => {
         `${config.apiURL}/api/v1/doctors/center_child_sessions?center_id=${selectedCenter.id}&child_id=${id}`,
         { headers }
       );
-      // setDoctorlist(response.data.data);
+      setSessions(response.data.data);
       console.log('Sessions', response.data);
     } catch (error) {
       console.error(error);
@@ -103,8 +90,8 @@ const TabsKids:React.FC<TabsKids> = ({id}) => {
   };
 
   useEffect(() => {
-      getDoctors();
-      gitSessions();
+    getDoctors();
+    gitSessions();
   }, []);
 
   return (
@@ -189,7 +176,7 @@ const TabsKids:React.FC<TabsKids> = ({id}) => {
                     alignItems={'center'}
                     justifyContent={'space-between'}
                   >
-                    <Box  width={'293px'}>
+                    <Box width={'293px'}>
                       <Text
                         py={5}
                         color={'#787486'}
@@ -302,14 +289,11 @@ const TabsKids:React.FC<TabsKids> = ({id}) => {
       )}
       <Tabs py={'23px'} colorScheme="#1C1C1C">
         <TabList color={'#38383866'}>
-         
           <Tab>Doctors</Tab>
           <Tab>Sesion</Tab>
-        
         </TabList>
 
         <TabPanels>
-         
           <TabPanel>
             <Grid
               py="2"
@@ -339,7 +323,11 @@ const TabsKids:React.FC<TabsKids> = ({id}) => {
               </GridItem>
             </Grid>
 
-            <TableData />
+            <TableData
+              showDoctor={showDoctor}
+              doctorslist={Doctorslist}
+              includedD={includedD}
+            />
           </TabPanel>
 
           <TabPanel>
@@ -363,10 +351,8 @@ const TabsKids:React.FC<TabsKids> = ({id}) => {
                 Session Report
               </GridItem>
             </Grid>
-            <SessionTable openModal={onOpen} />
+            <SessionTable openModal={onOpen} sessions={sessions} />
           </TabPanel>
-
-        
         </TabPanels>
       </Tabs>
     </>
@@ -374,12 +360,17 @@ const TabsKids:React.FC<TabsKids> = ({id}) => {
 };
 
 export default TabsKids;
-const TableData = () => {
-  // const navigate = useNavigate();
-  // const handleKids = (Kids:any) => {
-  //   console.log('Clicked Center Data:', Kids);
-  //   navigate('/ViewKids', { state: Kids });
-  // };
+interface TableDataProps {
+  showDoctor: boolean;
+  doctorslist?: any[];
+  includedD: any[];
+}
+
+const TableData: React.FC<TableDataProps> = ({
+  showDoctor,
+  doctorslist,
+  includedD,
+}) => {
   return (
     <Grid
       py="3"
@@ -395,142 +386,263 @@ const TableData = () => {
       lineHeight="24px"
       // onClick={()=>handleKids(id)}
     >
-      <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
-        <Box display={'flex'} alignItems={'center'}>
-          <Image
-            // boxShadow="base"
-            rounded="md"
-            // boxSize="80px"
-            objectFit="cover"
-            src={img}
-            alt="VR"
-            w="52px"
-            h="52px"
-          />
-          <Text
-            fontSize="16"
-            textAlign={'start'}
-            px="5"
-            fontFamily="Graphik LCG"
-            color={'#15134B'}
-            lineHeight={'16px'}
-            letterSpacing={'1.6%'}
-          >
-            Yahya Alaa Ali
-          </Text>
-        </Box>
-      </GridItem>
-      <GridItem
-        colSpan={1}
-        display={'flex'}
-        alignItems={'center'}
-        justifyContent={'center'}
-      >
-        <Box
-          background={'#F3F3F3'}
-          w="120px"
-          height={'42px'}
-          borderRadius={'10px'}
-          display={'flex'}
-          justifyContent={'center'}
-          alignItems={'center'}
+      {showDoctor ? (
+        <GridItem
+          colSpan={4}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
         >
-          <Text
-            fontSize="16"
-            textAlign={'center'}
-            px="5"
-            fontWeight={'500'}
-            fontFamily="Graphik LCG"
-            color={'#558888'}
-            lineHeight={'16px'}
-            letterSpacing={'1.6%'}
-          >
-            ADHD
+          <Text fontSize="14px" fontWeight="500" fontFamily="Graphik LCG">
+            You are not authorized to see the data of this child.
           </Text>
-        </Box>
-      </GridItem>
-      <GridItem colSpan={1} textAlign={'center'}>
-        <Text
-          fontSize="16"
-          textAlign={'center'}
-          px="5"
-          fontFamily="Graphik LCG"
-          color={'#15134B'}
-          lineHeight={'16px'}
-          letterSpacing={'1.6%'}
-        >
-          3 Sesions
-        </Text>
-      </GridItem>
+        </GridItem>
+      ) : (
+        <>
+          {doctorslist.map((doctor: any) => {
+            const specialties = doctor.relationships.specialties.data;
+            const filterByReference = ({
+              includedD,
+              specialties,
+            }: {
+              includedD: any[];
+              specialties: any[];
+            }) => {
+              let res = [];
+              res = includedD.filter((el: any) => {
+                return specialties.find((element: any) => {
+                  return element.id === el.id;
+                });
+              });
+              console.log(res);
+              return res;
+            };
 
-      <GridItem colSpan={1}>
-        <Text
-          fontSize="16"
-          textAlign={'center'}
-          px="5"
-          fontFamily="Graphik LCG"
-          color={' #595959'}
-          lineHeight={'17px'}
-          letterSpacing={'1.6%'}
-        >
-          14 Mon 2022
-        </Text>
-      </GridItem>
+            const result = filterByReference({ includedD, specialties });
+            console.log(includedD, specialties, result);
+            return (
+              <>
+                <GridItem
+                  colSpan={1}
+                  style={{ marginLeft: '15px' }}
+                  key={doctor.id}
+                >
+                  <Box display={'flex'} alignItems={'center'}>
+                    <Image
+                      // boxShadow="base"
+                      rounded="md"
+                      // boxSize="80px"
+                      objectFit="cover"
+                      src={
+                        doctor.attributes.photo_url
+                          ? doctor.attributes.photo_url
+                          : img
+                      }
+                      alt="VR"
+                      w="52px"
+                      h="52px"
+                    />
+                    <Text
+                      fontSize="16"
+                      textAlign={'start'}
+                      px="5"
+                      fontFamily="Graphik LCG"
+                      color={'#15134B'}
+                      lineHeight={'16px'}
+                      letterSpacing={'1.6%'}
+                    >
+                      {doctor.attributes.name}
+                    </Text>
+                  </Box>
+                </GridItem>
+                <GridItem
+                  colSpan={1}
+                  display={'flex'}
+                  alignItems={'center'}
+                  justifyContent={'center'}
+                >
+                  <Box>
+                    {result.map((specialtie: any) => {
+                      console.log(specialtie);
+                      return (
+                        <Box
+                          background={'#F3F3F3'}
+                          w="190px"
+                          height={'42px'}
+                          borderRadius={'10px'}
+                          display={'flex'}
+                          justifyContent={'center'}
+                          alignItems={'center'}
+                          my={3}
+                          key={specialtie.id}
+                        >
+                          <Text
+                            fontSize="13"
+                            textAlign={'center'}
+                            px="5"
+                            fontWeight={'500'}
+                            fontFamily="Graphik LCG"
+                            color={'#558888'}
+                            lineHeight={'16px'}
+                            letterSpacing={'1.6%'}
+                          >
+                            {specialtie.attributes.name}
+                          </Text>
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </GridItem>
+                <GridItem colSpan={1} textAlign={'center'}>
+                  <Text
+                    fontSize="16"
+                    textAlign={'center'}
+                    px="5"
+                    fontFamily="Graphik LCG"
+                    color={'#15134B'}
+                    lineHeight={'16px'}
+                    letterSpacing={'1.6%'}
+                  >
+                    {doctor.relationships.sessions.data.length} Sesions
+                  </Text>
+                </GridItem>
+
+                <GridItem colSpan={1}>
+                  <Text
+                    fontSize="16"
+                    textAlign={'center'}
+                    px="5"
+                    fontFamily="Graphik LCG"
+                    color={' #595959'}
+                    lineHeight={'17px'}
+                    letterSpacing={'1.6%'}
+                  >
+                    TBD
+                  </Text>
+                </GridItem>
+              </>
+            );
+          })}
+        </>
+      )}
     </Grid>
   );
 };
 interface SessionTable {
   openModal: any;
+  sessions?: any[];
 }
-const SessionTable: React.FC<SessionTable> = ({ openModal }) => {
+const SessionTable: React.FC<SessionTable> = ({ openModal, sessions }) => {
+  console.log(sessions);
+
+  const date = (time) => {
+    const transformedDate = new Date(time); // Transform the date once when the component mounts
+
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const formattedDate =
+      transformedDate.getDate() +
+      ' ' +
+      months[transformedDate.getMonth()] +
+      ' ' +
+      transformedDate.getFullYear();
+    return formattedDate;
+  };
+
   return (
-    <Grid
-      py="3"
-      my="1"
-      borderRadius="10px"
-      backgroundColor="#FFFFFF"
-      templateColumns="repeat(4, 1fr)"
-      alignItems="center"
-      color="#787486"
-      fontSize="14px"
-      fontWeight="500"
-      fontFamily="Graphik LCG"
-      lineHeight="24px"
-      // onClick={()=>handleKids(id)}
-    >
-      <GridItem colSpan={2}>
-        <Text
-          fontSize="16"
-          textAlign={'center'}
-          px="5"
-          fontFamily="Graphik LCG"
-          color={' #595959'}
-          lineHeight={'17px'}
-          letterSpacing={'1.6%'}
-        >
-          14.5.2023
-        </Text>
-      </GridItem>
-      <GridItem
-        colSpan={2}
-        display={'flex'}
-        justifyContent={'center'}
-        alignItems={'center'}
-      >
-        <Button
-          bg={'#F3F3F3'}
-          //   borderWidth={2}
+    <>
+      {sessions.length > 0 ? (
+        sessions.map((session: any) => {
+          console.log(session);
+          const time = date(session.attributes.created_at);
+          console.log(time);
+          return (
+            <Grid
+              py="3"
+              my="1"
+              borderRadius="10px"
+              backgroundColor="#FFFFFF"
+              templateColumns="repeat(4, 1fr)"
+              alignItems="center"
+              color="#787486"
+              fontSize="14px"
+              fontWeight="500"
+              fontFamily="Graphik LCG"
+              lineHeight="24px"
+              key={session.id}
+              // onClick={()=>handleKids(id)}
+            >
+              <GridItem colSpan={2}>
+                <Text
+                  fontSize="16"
+                  textAlign={'center'}
+                  px="5"
+                  fontFamily="Graphik LCG"
+                  color={' #595959'}
+                  lineHeight={'17px'}
+                  letterSpacing={'1.6%'}
+                >
+                  {time}
+                </Text>
+              </GridItem>
+              <GridItem
+                colSpan={2}
+                display={'flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
+              >
+                <Button
+                  bg={'#F3F3F3'}
+                  //   borderWidth={2}
+                  fontSize="14px"
+                  fontFamily="Graphik LCG"
+                  fontWeight="500"
+                  color={'#558888'}
+                  lineHeight={'17px'}
+                  letterSpacing={'1.6%'}
+                  onClick={openModal}
+                >
+                  Show Report
+                </Button>
+              </GridItem>
+            </Grid>
+          );
+        })
+      ) : (
+        <Grid
+          py="3"
+          my="1"
+          borderRadius="10px"
+          backgroundColor="#FFFFFF"
+          templateColumns="repeat(4, 1fr)"
+          alignItems="center"
+          color="#787486"
           fontSize="14px"
-          fontFamily="Graphik LCG"
           fontWeight="500"
-          color={'#558888'}
-          lineHeight={'17px'}
-          letterSpacing={'1.6%'}
-          onClick={openModal}
+          fontFamily="Graphik LCG"
+          lineHeight="24px"
+
+          // onClick={()=>handleKids(id)}
         >
-          Show Report
-        </Button>
-      </GridItem>
-    </Grid>
+          <GridItem colSpan={4} display={"flex"} justifyContent={"center"}>
+            <Text fontSize="14px" fontWeight="500" fontFamily="Graphik LCG">
+              There are no sessions
+            </Text>
+          </GridItem>
+        </Grid>
+      )}
+    </>
   );
 };
