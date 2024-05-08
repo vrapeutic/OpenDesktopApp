@@ -51,22 +51,26 @@ export default function ProgressbarSignup(props: any) {
 
   return (
     <>
-      <Stepper
+       <Stepper
         index={props.index}
         position="relative"
         top="27px"
-        left="182px"
-        w="756px"
-        h="101px"
+        left="50%"
+        transform="translateX(-50%)"
+        w={{ base: '90vw', md: '756px' }}
+        h="132px"
         colorScheme="whatsapp"
+        overflowX="hidden"
+        paddingLeft={'50px'}
       >
         {steps.map((step, index) => (
           <Step key={index}>
             <Flex direction="column" justifyContent="center">
               <StepIndicator
                 top="32px"
-                left="206px"
-                w="62px"
+                left={`calc(${index} * (100% / ${steps.length}))`}
+                transform="translateX(-50%)"
+                w={{ base: '30%', md: '62px' }}
                 h="62px"
                 margin="5px"
               >
@@ -84,20 +88,25 @@ export default function ProgressbarSignup(props: any) {
                         w="62px"
                         borderRadius="50%"
                         color="#FFFFFF"
-                      />{' '}
-                      <StepTitle style={{ width: '100px', marginLeft: '20px' }}>
-                        {step.title}
-                      </StepTitle>
+                      />
+                      <StepTitle>{step.title}</StepTitle>
                     </Flex>
                   }
                   incomplete={
                     <Flex
                       flexDirection="column"
                       alignItems="center"
-                      style={inCompleteStatus}
+                      style={{ marginTop: '45px' }}
                     >
                       {step.icon}{' '}
-                      <StepTitle style={inCompleteTitle}>
+                      <StepTitle
+                        style={{
+                          width: '150px',
+                          marginTop: '20px',
+                          marginLeft: '80px',
+                          color: '#A0A0A0',
+                        }}
+                      >
                         {step.title}
                       </StepTitle>
                     </Flex>
@@ -106,27 +115,31 @@ export default function ProgressbarSignup(props: any) {
                     <Flex
                       flexDirection="column"
                       alignItems="center"
-                      style={activeStatus}
+                      style={{
+                        backgroundColor: '#00DEA3',
+                        height: '62px',
+                        width: '62px',
+                        borderRadius: '50%',
+                        paddingTop: '22%',
+                        color: '#00DEA3',
+                      }}
                     >
                       {step.icon}{' '}
-                      <StepTitle style={title}>{step.title}</StepTitle>
+                      <StepTitle
+                        style={{
+                          marginTop: '35px',
+                          marginLeft: '30px',
+                          width: '120px',
+                        }}
+                      >
+                        {step.title}
+                      </StepTitle>
                     </Flex>
                   }
                 />
               </StepIndicator>
-
-              <Text
-                position="absolute"
-                marginTop="100px"
-                h="18px"
-                w="109px"
-                fontFamily="Graphik LCG"
-                fontWeight="400"
-                fontSize="18px"
-                lineHeight="18px"
-              ></Text>
             </Flex>
-            <StepSeparator />
+            {index !== steps.length - 1 && <StepSeparator />}
           </Step>
         ))}
       </Stepper>

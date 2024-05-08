@@ -1,234 +1,59 @@
-import React, { useEffect, useState, useContext } from 'react';
-import ReactApexChart from 'react-apexcharts';
+import { useEffect, useState, useContext } from 'react';
+import {
+  ResponsiveContainer,
+  RadialBarChart,
+  RadialBar,
+  Legend,
+} from 'recharts';
+import { useBreakpointValue } from '@chakra-ui/react';
 import { config } from '@renderer/config';
-import { dataContext } from '@renderer/shared/Provider';
+import { dataContext } from '../Provider';
 
-export default function RadialChart(props: any) {
+interface ChartData {
+  name: string;
+  uv: number;
+  fill: string;
+}
+
+export default function RadialChart(props: { refreshKey: number }) {
+  
+
   const center = useContext(dataContext);
-  const [radialChart, setRadialChart] = useState<{
-    series: any;
-    options: object;
-  }>({
-    series: [],
-    options: {
-      chart: {
-        height: 181,
-        width: 181,
-        type: 'radialBar',
-        toolbar: {
-          show: true,
-          offsetX: 0,
-          offsetY: 0,
-          tools: {
-            download: '...',
-            selection: true,
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            pan: false,
-            reset: false,
-            customIcons: [],
-          },
-          export: {
-            csv: {
-              filename: undefined,
-              columnDelimiter: ',',
-              headerCategory: 'category',
-              headerValue: 'value',
-              dateFormatter(timestamp: any) {
-                return new Date(timestamp).toDateString();
-              },
-            },
-            svg: {
-              filename: undefined,
-            },
-            png: {
-              filename: undefined,
-            },
-          },
-          autoSelected: 'zoom',
-        },
-      },
-
-      title: {
-        text: 'VR Sessions Monthly Metrics',
-        align: 'left',
-        offsetX: 0,
-        offsetY: 0,
-        floating: false,
-        style: {
-          fontSize: '20px',
-          fontWeight: '500',
-          fontFamily: 'Graphik LCG',
-          color: '#00261C',
-          lineHeight: '20px',
-          left: '24px',
-          top: '24px',
-        },
-
-        noData: {
-          text: 'Loading...',
-        },
-      },
-      stroke: {
-        lineCap: 'round',
-        width: -15,
-      },
-      colors: ['#A93BFF', '#FF7049', '#20C997'],
-      legend: {
-        show: true,
-        showForSingleSeries: false,
-        showForNullSeries: true,
-        showForZeroSeries: true,
-        position: 'right',
-        horizontalAlign: 'center',
-        floating: false,
-        fontSize: '16px',
-        fontFamily: 'Roboto',
-        fontWeight: 700,
-        lineHeight: '16.41px',
-        formatter: function (seriesName: string, opts: any) {
-          return `${seriesName} : ${opts.w.globals.series[opts.seriesIndex]}%`;
-        },
-
-        inverseOrder: false,
-        width: 215.56,
-        height: 147.97,
-        tooltipHoverFormatter: undefined,
-        customLegendItems: [
-          'good session percentage',
-          'vr percentage',
-          'kids using vr percentage ',
-        ],
-        offsetX: -1,
-        offsetY: 40,
-        labels: {
-          colors: '#5A5881',
-          useSeriesColors: false,
-        },
-        markers: {
-          width: 0,
-          height: 0,
-          strokeWidth: 0,
-          strokeColor: '#fff',
-          fillColors: undefined,
-          radius: 30,
-          customHTML: undefined,
-          onClick: undefined,
-          offsetX: 0,
-          offsetY: 0,
-        },
-        itemMargin: {
-          horizontal: 2,
-          vertical: 6,
-        },
-        onItemClick: {
-          toggleDataSeries: false,
-        },
-        onItemHover: {
-          highlightDataSeries: false,
-        },
-      },
-      plotOptions: {
-        stroke: {
-          show: true,
-          curve: 'smooth',
-          lineCap: 'round',
-          colors: undefined,
-          width: 4,
-          dashArray: 0,
-        },
-
-        radialBar: {
-          inverseOrder: false,
-          startAngle: 0,
-          endAngle: 360,
-          offsetX: 0,
-          offsetY: 20,
-          hollow: {
-            margin: 3,
-            size: '1%',
-            background: 'transparent',
-            image: undefined,
-            imageWidth: 150,
-            imageHeight: 150,
-            imageOffsetX: 0,
-            imageOffsetY: 0,
-            imageClipped: true,
-            position: 'front',
-            dropShadow: {
-              enabled: false,
-              top: 0,
-              left: 0,
-              blur: 3,
-              opacity: 0.5,
-            },
-          },
-          track: {
-            show: true,
-            startAngle: 0,
-            endAngle: 360,
-            background: '#f2f2f2',
-            strokeWidth: '75%',
-            opacity: 1,
-            margin: 13,
-            dropShadow: {
-              enabled: false,
-              top: 0,
-              left: 0,
-              blur: 0,
-              color: 'rgb(86, 59, 255)',
-              opacity: 0.26,
-            },
-          },
-          dataLabels: {
-            show: false,
-            name: {
-              show: true,
-              fontSize: '16px',
-              fontFamily: undefined,
-              fontWeight: 600,
-              color: undefined,
-              offsetY: -10,
-            },
-            value: {
-              show: false,
-              fontSize: '14px',
-              fontFamily: undefined,
-              fontWeight: 400,
-              color: undefined,
-              offsetY: 16,
-            },
-            total: {
-              show: false,
-              label: 'Total',
-              color: '#373d3f',
-              fontSize: '16px',
-              fontFamily: undefined,
-              fontWeight: 600,
-            },
-          },
-        },
-      },
-    },
-  });
+  const [radialChart, setRadialChart] = useState<ChartData[]>([]);
 
   const getData = async () => {
     const token = await (window as any).electronAPI.getPassword('token');
     if (center.id !== undefined) {
-      await fetch(
-        `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
-        {
-          method: 'Get',
-          redirect: 'follow',
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          setRadialChart({ ...radialChart, series: Object.values(result) });
-        })
-        .catch((error) => console.log('error', error));
+      try {
+        const response = await fetch(
+          `${config.apiURL}/api/v1/doctors/center_statistics?center_id=${center.id}`,
+          {
+            method: 'Get',
+            redirect: 'follow',
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const result = await response.json();
+
+        // Static mapping of names to colors
+        const colors: { [key: string]: string } = {
+          name1: '#FF5733',
+          name2: '#33FFB0',
+          name3: '#3366FF',
+        };
+
+        const formattedData = Object.entries(result).map(
+          ([name, percentage]: [string, number], index) => ({
+            name,
+            uv: percentage,
+            fill: colors[`name${index + 1}`], // Assign static color based on name
+          })
+        );
+
+        setRadialChart(formattedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     }
   };
 
@@ -236,13 +61,44 @@ export default function RadialChart(props: any) {
     getData();
   }, [props.refreshKey]);
 
+  const legendFontSize = useBreakpointValue({
+    base: '10px',
+    md: '0.7rem',
+    lg: '0.8rem',
+    xl: '1.2rem',
+    '2xl': '1.2rem',
+  });
+
+  const style = {
+    top: '50%',
+    right: 0,
+    transform: 'translate(0, -50%)',
+    lineHeight: '24px',
+  };
+
   return (
-    <ReactApexChart
-      options={radialChart.options}
-      series={radialChart.series}
-      type="radialBar"
-      height="231.43px"
-      width="431.56px"
-    />
+    <ResponsiveContainer width="100%" height="100%">
+      <RadialBarChart
+        cx="15%"
+        cy="50%"
+        innerRadius="10%"
+        outerRadius="40%"
+        barSize={10}
+        data={radialChart}
+      >
+        <RadialBar
+          label={{ position: 'insideEnd', fill: '#000000' }}
+          background
+          dataKey="uv"
+          fill="#8884d8"
+        />
+        <Legend
+          iconSize={7}
+          layout="vertical"
+          verticalAlign="middle"
+          wrapperStyle={style}
+        />
+      </RadialBarChart>
+    </ResponsiveContainer>
   );
 }

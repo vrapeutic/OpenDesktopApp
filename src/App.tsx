@@ -11,13 +11,15 @@ import Setting from './pages/Setting';
 import Login from './features/auth/Login';
 import Layout from './shared/Layout';
 import Subscriptions from './pages/Subscriptions';
-import Generalinfo from './pages/SignUp/Generalinfo';
 import ViewCenter from './pages/ViewCenter';
 import EditCenter from './pages/EditCenter';
 import OTP from './pages/SignUp/OTP';
-
+import Uploadlogo from './pages/SignUp/Uploadlogo';
 import { useAdminContext } from './Context/AdminContext';
 import ViewKids from './features/AddKids/ViewKids';
+import Signup from './pages/SignUp/Signup';
+
+
 
 function App() {
   const { adminBoolean } = useAdminContext();
@@ -25,7 +27,7 @@ function App() {
     const token = (window as any).electronAPI.getPassword('token');
     console.log('token: ', token);
     if (!token && !adminBoolean) {
-      console.log("redirect to login in app")
+      console.log('redirect to login in app');
       // Redirect to login if token is not present
       window.location.replace('/login');
     }
@@ -36,7 +38,7 @@ function App() {
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="/" element={<Layout />}>
-          <Route path="signup" element={<Generalinfo />} />
+          <Route path="signup" element={<Signup />} />
           <Route path="home" element={<Home />} />
           <Route path="Kids" element={<Kids />} />
           <Route path="Theraputicmodules" element={<Theraputicmodules />} />

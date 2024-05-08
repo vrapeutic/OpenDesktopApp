@@ -12,7 +12,6 @@ import {
   ModalBody,
   ModalFooter,
   useToast,
-  useDisclosure,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Image } from '../../assets/icons/Image';
@@ -20,23 +19,16 @@ import axios from 'axios';
 import { config } from '../../config';
 import { getMe } from '../../cache';
 import { useNavigate } from 'react-router-dom';
-import Congratulations from './CongratulationsModal';
-import { TherapyFormProps } from './therapyFormInterface';
+import { SignupFormProps } from './signupFormInterface';
 
-interface uploadLogoProps extends TherapyFormProps {
+interface uploadLogoProps extends SignupFormProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
+const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  const {
-    isOpen: isOpenCongratulations,
-    onOpen: onOpenCongratulations,
-    onClose: onDeleteCongratulations,
-  } = useDisclosure();
 
   const toast = useToast();
   const [imagePreview, setImagePreview] = useState('');
@@ -49,54 +41,40 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
     setImagePreview(previewUrl);
   };
 
-
-  
   const FormonSubmit = () => {
     SendDataToApi();
     setLoading(true);
   };
 
-  const createFormData = (
-    socialLinks: { link: string; link_type: string }[]
-  ) => {
+  const createFormData = () => {
     const formData = new FormData();
 
-    formData.append('name', props.formData.therapyCenterName);
-    formData.append('website', props.formData.Website);
-
-    formData.append('tax_id', props.formData.taxID);
-    formData.append('registration_number', props.formData.registrationNumber);
-    formData.append('logo', logo);
-    formData.append('certificate', props.formData.certification);
+    formData.append('name', props.formData.Name);
     formData.append('email', props.formData.Email);
-    formData.append('phone_number', props.formData.phoneNumber);
+
+    formData.append('password', props.formData.Password);
+    formData.append('degree', props.formData.Degree);
+    formData.append('university', props.formData.University);
+    formData.append('photo', logo);
+
+    formData.append('certificate', props.formData.certification);
 
     props.formData.specializationschema.forEach(
       (specialty: { id: string | Blob }) =>
         formData.append('specialty_ids[]', specialty.id)
     );
 
-    formData.append('social_links', JSON.stringify(socialLinks));
-
     return formData;
   };
 
   const postFormData = (formData: FormData) => {
-    const token = getMe().token;
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
+ 
 
-    return axios.post(`${config.apiURL}/api/v1/centers`, formData, { headers });
+    return axios.post(`${config.apiURL}/api/v1/doctors`, formData);
   };
 
   const SendDataToApi = async () => {
-    const socialLinksArray = [
-      { link: props.formData.Website, link_type: 'facebook' },
-      { link: props.formData.Linkedin, link_type: 'twitter' },
-    ];
-
-    const formData = createFormData(socialLinksArray);
+    const formData = createFormData();
 
     try {
       await postFormData(formData);
@@ -108,31 +86,21 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
     }
   };
 
-
-
-
-
-  
   const handleSuccess = () => {
     props.onClose();
-    onOpenCongratulations();
+    navigate('/');
   };
 
   const handleError = (error: any) => {
     props.onClose();
-
+     console.log("errrrrror",error)
     toast({
       title: 'Error',
       description: error.response.data.error,
-      status: 'success',
+      status: 'error',
       duration: 9000,
       position: 'top-right',
     });
-  };
-
-  const handleCloseModal = () => {
-    onDeleteCongratulations();
-    navigate('/');
   };
 
   return (
@@ -154,7 +122,8 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
                 lineHeight="20px"
                 color="#00261C"
                 textAlign="center"
-              >                Upload Logo
+              >
+                Upload Profile picture
               </ModalHeader>
               <ModalCloseButton marginLeft="100px" />
             </Box>
@@ -205,7 +174,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
                 lineHeight="18px"
                 color="#595959"
               >
-                Please upload your Therapy Logo
+                Please upload your Profile picture
               </Text>
             </ModalBody>
 
@@ -249,15 +218,8 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
           </ModalContent>
         </Modal>
       </Box>
-
-      {onOpenCongratulations && (
-        <Congratulations
-          isOpen={isOpenCongratulations}
-          onClose={handleCloseModal}
-        />
-      )}
     </>
   );
 };
 
-export default Uploadlogo;
+export default UploadlogoSignup;

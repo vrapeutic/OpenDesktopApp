@@ -122,7 +122,6 @@ const Theraputicmodules: React.FC = () => {
           <Table
             variant="simple"
             background="#FFFFFF"
-            style={{ marginLeft: 10, marginRight: 10 }}
           >
             <Thead>
               <Tr>
