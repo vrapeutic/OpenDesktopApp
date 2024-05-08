@@ -14,7 +14,6 @@ import Subscriptions from './pages/Subscriptions';
 import ViewCenter from './pages/ViewCenter';
 import EditCenter from './pages/EditCenter';
 import OTP from './pages/SignUp/OTP';
-import Uploadlogo from './pages/SignUp/Uploadlogo';
 import { useAdminContext } from './Context/AdminContext';
 import ViewKids from './features/AddKids/ViewKids';
 import Signup from './pages/SignUp/Signup';

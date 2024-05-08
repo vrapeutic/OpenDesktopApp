@@ -43,10 +43,8 @@ export const rules: Required<ModuleOptions>["rules"] = [
         loader: "url-loader",
     },
 
-    {
-        test: /\.csv$/,
-        loader: "csv-loader",
-      },
+   
+  
 
 
 
