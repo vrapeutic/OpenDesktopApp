@@ -103,7 +103,7 @@ export default function Kids() {
           if (result.data) {
             setKidsList(result.data);
             setIncluded(result.included);
-            console.log(result.included);
+            console.log(result.data.length);
           }
         })
 
@@ -151,19 +151,49 @@ export default function Kids() {
             </GridItem>
           </Grid>
           {selectedCenter &&
-            kidsList.map((kid:any) => {
-              console.log('kid', kid.relationships.diagnoses.data);
+            kidsList.map((kid: any) => {
+              console.log('kid', kidsList.length);
 
               return (
                 <>
-                  <TableData
-                    all={kid}
-                    id={kid.id}
-                    name={kid.attributes.name}
-                    age={kid.attributes.age}
-                    included={included}
-                    data={kid.relationships.diagnoses.data}
-                  />
+                  {kidsList.length > 0 ? (
+                    <TableData
+                      all={kid}
+                      id={kid.id}
+                      name={kid.attributes.name}
+                      age={kid.attributes.age}
+                      included={included}
+                      data={kid.relationships.diagnoses.data}
+                    />
+                  ) : (
+                    <Grid
+                      py="3"
+                      mx="18"
+                      my="1"
+                      borderRadius="10px"
+                      backgroundColor="#FFFFFF"
+                      templateColumns="repeat(5, 1fr)"
+                      alignItems="center"
+                      color="#787486"
+                      fontSize="14px"
+                      fontWeight="500"
+                      fontFamily="Graphik LCG"
+                      lineHeight="24px"
+                    >
+                      <GridItem colSpan={5}
+                      display="flex"
+          justifyContent="center"
+          alignItems="center">
+                        <Text
+                          fontSize="14px"
+                          fontWeight="500"
+                          fontFamily="Graphik LCG"
+                        >
+                          There are no Kids
+                        </Text>
+                      </GridItem>
+                    </Grid>
+                  )}
                 </>
               );
             })}
@@ -185,29 +215,40 @@ interface TableData {
   included?: any;
   data: any;
 }
-const TableData: React.FC<TableData> = ({ all, name, age, id, included ,data}) => {
+const TableData: React.FC<TableData> = ({
+  all,
+  name,
+  age,
+  id,
+  included,
+  data,
+}) => {
   const [date, setDate] = useState('');
   const navigate = useNavigate();
   const handleKids = (Kids: any) => {
     navigate('/ViewKids', { state: all });
-    
   };
 
   const x: any[] = all.relationships.diagnoses.data;
-
-  const filterByReference = ({ included, x }: { included: any[], x: any[] }) => {
+  console.log(all.relationships.sessions.data.length);
+  const filterByReference = ({
+    included,
+    x,
+  }: {
+    included: any[];
+    x: any[];
+  }) => {
     let res = [];
     res = included.filter((el: any) => {
       return x.find((element: any) => {
         return element.id === el.id;
       });
     });
-  
+
     return res;
-  }
-  
+  };
+
   const result = filterByReference({ included, x });
-  
 
   useEffect(() => {
     const transformedDate = new Date(all.attributes.created_at); // Transform the date once when the component mounts
@@ -298,12 +339,12 @@ const TableData: React.FC<TableData> = ({ all, name, age, id, included ,data}) =
         justifyContent={'center'}
       >
         <Box>
-          {result.map((x:any) => {
+          {result.map((x: any) => {
             return (
               <Box
                 background={'#F3F3F3'}
                 minWidth="100px"
-                w={"205px"}
+                w={'205px'}
                 height={'42px'}
                 borderRadius={'10px'}
                 display={'flex'}
@@ -351,7 +392,7 @@ const TableData: React.FC<TableData> = ({ all, name, age, id, included ,data}) =
           lineHeight={'17px'}
           letterSpacing={'1.6%'}
         >
-          450
+          {all.relationships.sessions.data.length}
         </Text>
       </GridItem>
     </Grid>
