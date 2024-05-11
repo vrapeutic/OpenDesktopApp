@@ -18,10 +18,9 @@ import {
 } from '@chakra-ui/react';
 import { useAdminContext } from '../../Context/AdminContext';
 import { config } from '../../config';
-import { SignupFormProps } from '../SignUp/signupFormInterface';
 import CongratulationsAssignCenter from './CongratulationsAssigntocenter';
 
-const Assigntocenter: React.FC<SignupFormProps> = () => {
+const Assigntocenter: React.FC = () => {
   const schema = Joi.object({
     Name: Joi.string().min(3).max(30).required(),
     Email: Joi.string()
