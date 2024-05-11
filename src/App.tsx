@@ -46,6 +46,8 @@ function App() {
           <Route path="Specialists" element={<Specialists />} />
           <Route path="Assessmenttools" element={<Assessmenttools />} />
           <Route path="Subscriptions" element={<Subscriptions />} />
+          <Route path="Therapycentersadmin" element={<Subscriptions />} />
+
           <Route path="setting" element={<Setting />} />
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />

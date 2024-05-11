@@ -137,6 +137,17 @@ export default function Sidebar() {
       ),
       path: '/Theraputicmodules',
     },
+    {
+      link: 'Therapy Center',
+      icon: (
+        <Theraputicmodules
+          color={
+            location.pathname === '/Therapycentersadmin' ? '#00DEA3' : '#333333'
+          }
+        />
+      ),
+      path: '/Therapycentersadmin',
+    },
   ];
 
   return (
