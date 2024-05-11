@@ -1,4 +1,4 @@
-import { Routes, Route, MemoryRouter } from 'react-router-dom';
+import { Routes, Route, MemoryRouter, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Home from './pages/Home';
 import Kids from './pages/Kids';
@@ -23,9 +23,11 @@ function App() {
   useEffect(() => {
     const token = (window as any).electronAPI.getPassword('token');
     console.log('token: ', token);
+    console.log('adminBoolean: ', adminBoolean);
+
     if (!token && !adminBoolean) {
       console.log('redirect to login in app');
-      // Redirect to login if token is not present
+      // Redirect to login if token is not present and adminBoolean is false
       window.location.replace('/login');
     }
   }, []);
@@ -44,9 +46,9 @@ function App() {
           <Route path="Specialists" element={<Specialists />} />
           <Route path="Assessmenttools" element={<Assessmenttools />} />
           <Route path="Subscriptions" element={<Subscriptions />} />
+          <Route path="setting" element={<Setting />} />
           <Route path="Assigntocenter" element={<Assigntocenter />} /> 
 
-          <Route path="setting" element={<Setting />} />
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />
           {/* Add more routes as needed */}

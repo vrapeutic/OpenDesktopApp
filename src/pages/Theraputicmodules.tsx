@@ -155,9 +155,10 @@ const Theraputicmodules: React.FC = () => {
                       <Td>
                         <Button
                           onClick={() => {
-                            // setSelectedModuleId(Module.id);
-                            // onOpen();
-                            navigate('/Assigntocenter');
+                         
+                            navigate('/Assigntocenter', {
+                              state: { Module: Module },
+                            });
                           }}
                         >
                           Assign to center
