@@ -17,6 +17,7 @@ import OTP from './pages/SignUp/OTP';
 import { useAdminContext } from './Context/AdminContext';
 import ViewKids from './features/AddKids/ViewKids';
 import Signup from './pages/SignUp/Signup';
+import Therapycentersadmin from './pages/Therapycentersadmin';
 
 
 
@@ -46,7 +47,7 @@ function App() {
           <Route path="Specialists" element={<Specialists />} />
           <Route path="Assessmenttools" element={<Assessmenttools />} />
           <Route path="Subscriptions" element={<Subscriptions />} />
-          <Route path="Therapycentersadmin" element={<Subscriptions />} />
+          <Route path="Therapycentersadmin" element={<Therapycentersadmin />} />
 
           <Route path="setting" element={<Setting />} />
           <Route path="editcenter" element={<EditCenter />} />

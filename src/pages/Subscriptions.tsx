@@ -21,7 +21,6 @@ import {
 } from '@chakra-ui/react';
 import img from '../assets/images/vr.png';
 import Joi from 'joi';
-
 export default function Subscriptions() {
   const {
     isOpen: isOpenVR,
