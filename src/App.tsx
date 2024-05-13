@@ -18,6 +18,7 @@ import { useAdminContext } from './Context/AdminContext';
 import ViewKids from './features/AddKids/ViewKids';
 import Signup from './pages/SignUp/Signup';
 import Therapycentersadmin from './pages/Therapycentersadmin';
+import Assigntocenter from './pages/Assigntocenter/Assigntocenter';
 
 
 
@@ -26,9 +27,11 @@ function App() {
   useEffect(() => {
     const token = (window as any).electronAPI.getPassword('token');
     console.log('token: ', token);
+    console.log('adminBoolean: ', adminBoolean);
+
     if (!token && !adminBoolean) {
       console.log('redirect to login in app');
-      // Redirect to login if token is not present
+      // Redirect to login if token is not present and adminBoolean is false
       window.location.replace('/login');
     }
   }, []);
@@ -50,6 +53,8 @@ function App() {
           <Route path="Therapycentersadmin" element={<Therapycentersadmin />} />
 
           <Route path="setting" element={<Setting />} />
+          <Route path="Assigntocenter" element={<Assigntocenter />} /> 
+
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />
           <Route path="ViewKids" element={<ViewKids />} />
