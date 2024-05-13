@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { api, setApiToken } from '@renderer/api';
-import { setMe } from '@renderer/cache';
+import { setMe} from '@renderer/cache';
 
 type Params = {
   identifier: string;
@@ -35,7 +35,12 @@ export function useLoginMutation(
         console.log('Login successful:', data);
         setApiToken(data.token);
         setMe(data);
+        {data.doctor&& localStorage.setItem("USER", data.doctor.attributes.name)}
+       
+        {data.doctor&&  localStorage.setItem("USERImg", data.doctor.attributes.photo_url)}
+       
         (window as any).electronAPI.setPassword('token', data.token);
+      
       },
     }
   );
