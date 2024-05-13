@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
 import {
@@ -18,6 +18,7 @@ import {
   Switch,
   Text,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import img from '../assets/images/vr.png';
 import Joi from 'joi';
@@ -25,6 +26,7 @@ import axios from 'axios';
 
 import { useAdminContext } from '@renderer/Context/AdminContext';
 import { config } from '@renderer/config';
+import { dataContext } from '@renderer/shared/Provider';
 
 interface Center {
   id: number;
@@ -34,6 +36,8 @@ interface Center {
   };
 }
 export default function Therapycentersadmin() {
+  const toast = useToast();
+
   const {
     isOpen: isOpenVR,
     onOpen: onOpenVR,
@@ -46,22 +50,22 @@ export default function Therapycentersadmin() {
   } = useDisclosure();
 
   const [values, setValues] = useState({
-    modalText: '',
-    id: '',
+    brand: '',
+    key: '',
   });
-
+  const [id, setId] = useState('');
   const [errors, setErrors] = useState({
-    modalText: null,
-    id: null,
+    brand: null,
+    key: null,
   });
   const [centersData, setCentersData] = useState<Center[]>([]);
 
   const { otp } = useAdminContext();
-
+  const selectedCenter = useContext(dataContext);
   const schema = Joi.object().keys({
-    modalText: Joi.string().min(3).max(30).required(),
+    brand: Joi.string().min(3).max(30).required(),
 
-    id: Joi.string().min(3).max(30).required(),
+    key: Joi.string().min(3).max(30).required(),
   });
 
   const handleChange = (event: any) => {
@@ -83,8 +87,9 @@ export default function Therapycentersadmin() {
       });
       setErrors(validationErrors);
     } else {
-      setErrors({ modalText: null, id: null });
-
+      setErrors({ brand: null, key: null });
+      console.log(values);
+      addVr(values);
       console.log('hhhhhhhhhh');
     }
   };
@@ -110,12 +115,54 @@ export default function Therapycentersadmin() {
       console.error(error);
     }
   };
+  const handleError = (error: any) => {
+    onCloseVR();
+
+    toast({
+      title: 'Error',
+      description: error.response.data.error,
+      status: 'error',
+      duration: 9000,
+      position: 'top-right',
+    });
+  };
+  const handleSuccess = () => {
+    onCloseVR();
+    toast({
+      title: 'Success',
+      description: "Add successfully",
+      status: 'success',
+      duration: 9000,
+      position: 'top-right',
+    });
+  };
+  
+
+  const addVr = async (body: any) => {
+    const dataSend: any = { headset: body };
+    try {
+      const response = await axios.post(
+        `${config.apiURL}/api/v1/admins/assign_center_headset/${id}`,
+        dataSend,
+        { headers }
+      );
+      console.log(response);
+      handleSuccess()
+    } catch (error) {
+      handleError(error);
+      console.error(error);
+    }
+  };
+  const openVr = (id: string) => {
+    console.log(id);
+    setId(id);
+  };
 
   return (
     <>
       <HeaderSpaceBetween
         Title="Therapy Centers"
-        ButtonText="Add Therapy"
+        // ButtonText="Add Therapy"
         onClickFunction={nextHandler}
       />
 
@@ -139,20 +186,20 @@ export default function Therapycentersadmin() {
         {/* <GridItem colSpan={1} textAlign={'center'}>
           Speciality
         </GridItem> */}
-       
+
         <GridItem colSpan={1} textAlign={'center'}>
           Specialties
         </GridItem>
         <GridItem colSpan={1} textAlign={'center'}>
           Kids
         </GridItem>
-       
       </Grid>
 
       <DataTable
         onOpenVR={onOpenVR}
         onOpenModal={onOpenModal}
         data={centersData}
+        openVr={openVr}
       />
       {onOpenVR && (
         <Modal
@@ -170,13 +217,13 @@ export default function Therapycentersadmin() {
                 </Text>
                 <Input
                   type="text"
-                  name="modalText"
+                  name="brand"
                   onChange={handleChange}
-                  value={values.modalText}
+                  value={values.brand}
                   fontFamily="Graphik LCG"
                 />
                 <Text fontSize="16px" color="red" fontFamily="Graphik LCG">
-                  {errors.modalText}
+                  {errors.brand}
                 </Text>
                 <Text
                   fontSize="16px"
@@ -188,12 +235,12 @@ export default function Therapycentersadmin() {
                 </Text>
                 <Input
                   type="text"
-                  name="id"
+                  name="key"
                   onChange={handleChange}
-                  value={values.id}
+                  value={values.key}
                 />
                 <Text fontSize="16px" color="red" fontFamily="Graphik LCG">
-                  {errors.id}
+                  {errors.key}
                 </Text>
               </ModalBody>
 
@@ -307,14 +354,10 @@ export default function Therapycentersadmin() {
   );
 }
 
-const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
-           
-    
+const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
   return (
-    
     <>
       {data.map((x: any) => {
-        console.log(x.relationships.children.data.lenght,x.attributes)
         return (
           <Grid
             py="3"
@@ -329,6 +372,7 @@ const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
             fontWeight="500"
             fontFamily="Graphik LCG"
             lineHeight="24px"
+            key={x.id}
           >
             <GridItem
               colSpan={2}
@@ -359,10 +403,9 @@ const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
                     flexDirection="row"
                     alignItems="center"
                     justifyContent={'center'}
-                    
                   >
                     <Text
-                    mx="5px"
+                      mx="5px"
                       fontSize="16"
                       textAlign={'start'}
                       fontFamily="Graphik LCG"
@@ -402,7 +445,10 @@ const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
                       fontFamily="Graphik LCG"
                       boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                       color={'white'}
-                      onClick={() => onOpenVR()}
+                      onClick={() => {
+                        openVr(x.id);
+                        onOpenVR();
+                      }}
                     >
                       Assign a headset
                     </Button>
@@ -445,14 +491,13 @@ const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
                 Richo
               </Button>
             </GridItem> */}
-           
+
             <GridItem colSpan={1} textAlign={'center'} fontSize={'16'}>
-             {x.relationships.specialties.data.length}
+              {x.relationships.specialties.data.length}
             </GridItem>
             <GridItem colSpan={1} textAlign={'center'} fontSize={'16'}>
-            {x.relationships.children.data.length}
+              {x.relationships.children.data.length}
             </GridItem>
-            
           </Grid>
         );
       })}

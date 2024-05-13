@@ -96,11 +96,13 @@ console.log( props.formData.Name,logo);
         toast({
             title: 'Error',
             description: error.response.data.error,
-            status: 'success',
+            status: 'error',
             duration: 9000,
             position: 'top-right',
         });
     };
+
+   
 
     const handleCloseModal = () => {
         onDeleteCongratulations();

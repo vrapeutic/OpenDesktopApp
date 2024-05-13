@@ -31,7 +31,7 @@ export function useLoginMutation(
         .then((res) => res.data),
     {
       ...options,
-      onSuccess: async (data) => {
+      onSuccess: async (data:any) => {
         console.log('Login successful:', data);
         setApiToken(data.token);
         setMe(data);

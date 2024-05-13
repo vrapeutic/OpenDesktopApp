@@ -144,7 +144,7 @@ export default function Kids() {
               Diagnosis
             </GridItem>
             <GridItem colSpan={1} textAlign={'center'}>
-              Jion in
+            Join in
             </GridItem>
             <GridItem colSpan={1} textAlign={'center'}>
               Sessions{' '}
@@ -156,7 +156,7 @@ export default function Kids() {
 
               return (
                 <>
-                  {kidsList.length > 0 ? (
+                  {kidsList.length === 0 ? (
                     <TableData
                       all={kid}
                       id={kid.id}
