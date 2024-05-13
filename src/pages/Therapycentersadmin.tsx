@@ -100,10 +100,11 @@ export default function Therapycentersadmin() {
   const getCenters = async () => {
     try {
       const response = await axios.get(
-        `${config.apiURL}/api/v1/admins/centers`,
+        `${config.apiURL}/api/v1/admins/centers?include=children,specialties`,
         { headers }
       );
       setCentersData(response.data.data);
+      console.log(response.data);
       console.log(response.data.data);
     } catch (error) {
       console.error(error);
@@ -305,10 +306,15 @@ export default function Therapycentersadmin() {
     </>
   );
 }
+
 const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
+           
+    
   return (
+    
     <>
       {data.map((x: any) => {
+        console.log(x.relationships.children.data.lenght,x.attributes)
         return (
           <Grid
             py="3"
@@ -334,7 +340,7 @@ const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
                   <Image
                     boxShadow="base"
                     rounded="md"
-                    boxSize="80px"
+                    boxSize="100px"
                     objectFit="cover"
                     src={x.attributes.logo_url}
                     alt="VR"
@@ -345,7 +351,7 @@ const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
                   display="flex"
                   flexDirection="column"
                   alignItems="flex-start"
-                  px="2"
+                  px="5"
                   fontFamily="Graphik LCG"
                 >
                   <Box
@@ -353,6 +359,7 @@ const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
                     flexDirection="row"
                     alignItems="center"
                     justifyContent={'center'}
+                    
                   >
                     <Text
                     mx="5px"
@@ -440,10 +447,10 @@ const DataTable = ({ onOpenVR, onOpenModal, data }: any) => {
             </GridItem> */}
            
             <GridItem colSpan={1} textAlign={'center'} fontSize={'16'}>
-              6
+             {x.relationships.specialties.data.length}
             </GridItem>
             <GridItem colSpan={1} textAlign={'center'} fontSize={'16'}>
-              120
+            {x.relationships.children.data.length}
             </GridItem>
             
           </Grid>
