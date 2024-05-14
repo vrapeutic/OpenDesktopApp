@@ -8,7 +8,7 @@ import {
   Button,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Link as ReachLink, useLocation } from 'react-router-dom';
+import { Link as ReachLink, useLocation, useNavigate } from 'react-router-dom';
 import { Fragment, useEffect } from 'react';
 import VRapeutic from '../../assets/images/VRapeutic.png';
 import { Dashboard } from '../../assets/icons/Dashboard';
@@ -28,6 +28,8 @@ export default function Sidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
   const { adminBoolean } = useAdminContext();
+  const navigate = useNavigate();
+
   useEffect(() => {
     // Log the value of adminBoolean when the component mounts or when it changes
     console.log('Admin Context Value:', adminBoolean);
@@ -63,7 +65,7 @@ export default function Sidebar() {
       ),
       path: '/Kids',
     },
-  
+
     {
       link: 'Therapy Centers',
       icon: (
@@ -125,7 +127,6 @@ export default function Sidebar() {
   ];
 
   const sideItemsAdmin = [
-    
     {
       link: 'Theraputic Modules',
       icon: (
@@ -149,6 +150,12 @@ export default function Sidebar() {
       path: '/Therapycentersadmin',
     },
   ];
+
+  const CloseCongratulationsModal = () => {
+    console.log('handle close modal');
+    onClose();
+    navigate('/home');
+  };
 
   return (
     <Flex
@@ -315,7 +322,9 @@ export default function Sidebar() {
           </Button>
         </Box>
       </VStack>
-      {onOpen && <SelectingCenter isOpen={isOpen} onClose={onClose} />}
+      {onOpen && (
+        <SelectingCenter isOpen={isOpen} onClose={CloseCongratulationsModal} />
+      )}
     </Flex>
   );
 }

@@ -63,7 +63,6 @@ const Assigntocenter: React.FC = () => {
       setCenters(response.data.data);
     } catch (error) {
       console.error(error);
-      // Handle error gracefully, e.g., display an error message to the user
     }
   };
 
