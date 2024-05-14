@@ -3,12 +3,15 @@ import { Grid, Text } from '@chakra-ui/layout';
 import { useAdminContext } from '../../Context/AdminContext';
 interface SubscriptionsProps {
   Title: string;
-  ButtonText: string;
+  ButtonText?: string;
   onClickFunction: () => void;
 }
 
-function HeaderSpaceBetween({ Title, ButtonText , onClickFunction }: SubscriptionsProps) {
-
+function HeaderSpaceBetween({
+  Title,
+  ButtonText,
+  onClickFunction,
+}: SubscriptionsProps) {
   const { otp } = useAdminContext();
 
   console.log('OTP value in AnotherComponent:', otp);
@@ -29,25 +32,25 @@ function HeaderSpaceBetween({ Title, ButtonText , onClickFunction }: Subscriptio
           fontWeight="500"
           lineHeight="29px"
           letterSpacing="-0.01em"
-         
         >
           {Title}
         </Text>
-
-        <Button
-          w="143px"
-          h="40px"
-          padding="12px"
-          bg="#F5B50E"
-          borderRadius="8px"
-          fontSize="14px"
-          fontWeight="450"
-          boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-          onClick={onClickFunction}
-          fontFamily="Graphik LCG" 
-        >
-          {ButtonText}
-        </Button>
+        {ButtonText && (
+          <Button
+            w="143px"
+            h="40px"
+            padding="12px"
+            bg="#F5B50E"
+            borderRadius="8px"
+            fontSize="14px"
+            fontWeight="450"
+            boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+            onClick={onClickFunction}
+            fontFamily="Graphik LCG"
+          >
+            {ButtonText}
+          </Button>
+        )}
       </Grid>
     </>
   );

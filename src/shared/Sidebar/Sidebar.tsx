@@ -138,9 +138,9 @@ export default function Sidebar() {
       path: '/Theraputicmodules',
     },
     {
-      link: 'Therapy Center',
+      link: 'Therapy Centers',
       icon: (
-        <Theraputicmodules
+        <Therapycenters
           color={
             location.pathname === '/Therapycentersadmin' ? '#00DEA3' : '#333333'
           }
