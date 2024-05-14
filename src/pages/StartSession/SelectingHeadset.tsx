@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -13,124 +13,98 @@ import {
   Button,
   ModalHeader,
   useDisclosure,
+  GridItem,
+  Select,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import ValidateOtp from './ValidateOtp';
-
+import { joiResolver } from '@hookform/resolvers/joi';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import { dataContext } from '@renderer/shared/Provider';
 export default function SelectingHeadset(props: any) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [headsets, setHeadsets] = useState([]);
-  const [sessionId, setSessionId] = useState('');
-  const [values, setValues] = useState({
-    selectedHeadset: '',
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const selectedCenterContext = useContext(dataContext);
+
+  const schema = Joi.object({
+    headset: Joi.string().required().messages({
+      'string.empty': 'You must select a headset',
+    }),
   });
 
-  const [errors, setErrors] = useState({
-    selectedHeadset: null,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: joiResolver(schema),
+    mode: 'onTouched',
   });
 
-  const schema = Joi.object().keys({
-    selectedHeadset: Joi.string().required(),
-  });
-
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    const { error } = schema.validate(values, { abortEarly: false });
-    console.log(error);
-
-    if (error) {
-      const validationErrors: any = {};
-      error.details.forEach((detail) => {
-        validationErrors[detail.path[0]] = detail.message;
-      });
-      setErrors(validationErrors);
-      console.log(validationErrors);
-    } else {
-      console.log('form is valid');
-      onOpen();
-
-      const data = new FormData();
-      data.append('center_id', props.centerId);
-      data.append('child_id', props.childId);
-      data.append('headset_id', values.selectedHeadset);
-      const token = await (window as any).electronAPI.getPassword('token');
-      fetch(`${config.apiURL}/api/v1/sessions`, {
-        method: 'POST',
-        body: data,
-        redirect: 'follow',
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((response) => response.json())
-        .then((result) => {
-          setSessionId(result.data.id);
-          console.log(result);
-        })
-        .catch((error) => console.log('error', error));
+  const getheadsets = async () => {
+    const token = await (window as any).electronAPI.getPassword('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    try {
+      const response = await axios.get(
+        `${config.apiURL}/api/v1/doctors/center_headsets?center_id=${props.centerId}`,
+        { headers }
+      );
+      setHeadsets(response.data.data);
+    } catch (error) {
+      console.error('Error fetching center_headsets:', error);
     }
   };
 
-  const selectHeadset = async () => {
-    const token = await (window as any).electronAPI.getPassword('token');
-    fetch(
-      `${config.apiURL}/api/v1/doctors/center_headsets?center_id=${props.centerId}`,
-      {
-        method: 'Get',
-        redirect: 'follow',
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result.data);
-        setHeadsets(result.data);
-      })
-      .catch((error) => console.log('error', error));
+  const handleFormSubmit = (data: any) => {
+    console.log('Form submitted with data in headset: ', data);
+
   };
+
+   console.log("props in headsets",props)
+  useEffect(() => {
+    if (selectedCenterContext.id) {
+      getheadsets();
+    }
+  }, [selectedCenterContext.id]);
 
   return (
     <Modal
       isOpen={props.isOpen}
       onClose={props.onClose}
-      closeOnOverlayClick={false}
     >
       <ModalOverlay />
       <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-        <ModalHeader textAlign="center" fontSize="30px">
+      <ModalHeader textAlign="center" fontSize="30px">
           Start a session
         </ModalHeader>
+      {headsets.length > 0 ?
+      <>
+   
         <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-          <Text>Select a headset</Text>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              bgColor="#FFFFFF"
-              border="2px solid #E1E6EA"
-              borderRadius="8px"
-              marginTop="10px"
-              h="40px"
-              w="400px"
-              onClick={selectHeadset}
+          <Text mt="25px">Select a headset</Text>
+          <GridItem>
+            <Select
+              {...register('headseat')}
+              id="headset"
+              name="headset"
+              placeholder="Select headseat"
+              size="sm"
             >
-              Headsets
-            </MenuButton>
-            <MenuList>
               {headsets.map((headset) => (
-                <MenuItem
-                  key={headset.id}
-                  name="SelectedHeadset"
-                  onClick={() => setValues({ selectedHeadset: headset.id })}
-                >
-                  {headset.attributes.name}
-                </MenuItem>
+                <option value={headset.id} key={headset.id}>
+                  {headset?.attributes.name}
+                </option>
               ))}
-            </MenuList>
-          </Menu>
-          <Text fontSize="10px" color="red">
-            {errors.selectedHeadset}
-          </Text>
+            </Select>
+          </GridItem>
+          {errors.headset && (
+            <Text color="red.500">{errors.headset.message as string}</Text>
+          )}
         </ModalBody>
         <ModalFooter>
           <Button
@@ -142,13 +116,20 @@ export default function SelectingHeadset(props: any) {
             fontFamily="Roboto"
             fontWeight="700"
             fontSize="18px"
-            onClick={handleSubmit}
-          >
+            onClick={handleSubmit(handleFormSubmit)}
+            >
             Next
           </Button>
         </ModalFooter>
-      </ModalContent>
-      {onOpen && (
+        </>
+      :
+      <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
+      No VR headsets are available in this center
+    </ModalHeader>
+    }
+          </ModalContent>
+
+      {/* {onOpen && (
         <ValidateOtp
           isOpen={isOpen}
           onClose={onClose}
@@ -157,7 +138,61 @@ export default function SelectingHeadset(props: any) {
           centerId={props.centerId}
           childId={props.childId}
         />
-      )}
+      )} */}
     </Modal>
   );
 }
+
+// const handleSubmit = async (event: any) => {
+//   event.preventDefault();
+//   const { error } = schema.validate(values, { abortEarly: false });
+//   console.log(error);
+
+//   if (error) {
+//     const validationErrors: any = {};
+//     error.details.forEach((detail) => {
+//       validationErrors[detail.path[0]] = detail.message;
+//     });
+//     setErrors(validationErrors);
+//     console.log(validationErrors);
+//   } else {
+//     console.log('form is valid');
+//     onOpen();
+
+//     const data = new FormData();
+//     data.append('center_id', props.centerId);
+//     data.append('child_id', props.childId);
+//     data.append('headset_id', values.selectedHeadset);
+//     const token = await (window as never).electronAPI.getPassword('token');
+//     fetch(`${config.apiURL}/api/v1/sessions`, {
+//       method: 'POST',
+//       body: data,
+//       redirect: 'follow',
+//       headers: { Authorization: `Bearer ${token}` },
+//     })
+//       .then((response) => response.json())
+//       .then((result) => {
+//         setSessionId(result.data.id);
+//         console.log(result);
+//       })
+//       .catch((error) => console.log('error', error));
+//   }
+// };
+
+// const selectHeadset = async () => {
+//   const token = await (window as any).electronAPI.getPassword('token');
+//   fetch(
+//     `${config.apiURL}/api/v1/doctors/center_headsets?center_id=${props.centerId}`,
+//     {
+//       method: 'Get',
+//       redirect: 'follow',
+//       headers: { Authorization: `Bearer ${token}` },
+//     }
+//   )
+//     .then((response) => response.json())
+//     .then((result) => {
+//       console.log(result.data);
+//       setHeadsets(result.data);
+//     })
+//     .catch((error) => console.log('error', error));
+// };
