@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import {
   Box,
+  Flex,
   Grid,
   GridItem,
   Image,
@@ -120,7 +121,10 @@ export default function Kids() {
             ButtonText="Add New Kids"
             onClickFunction={nextHandler}
           />
-          <Grid
+         
+          {selectedCenter.id ?
+<>
+<Grid
             py="2"
             mx="18"
             my="3"
@@ -144,15 +148,13 @@ export default function Kids() {
               Diagnosis
             </GridItem>
             <GridItem colSpan={1} textAlign={'center'}>
-            Join in
+              Join in
             </GridItem>
             <GridItem colSpan={1} textAlign={'center'}>
               Sessions{' '}
             </GridItem>
           </Grid>
-          {selectedCenter &&
-            kidsList.map((kid: any) => {
-              console.log('kid', kidsList.length);
+           { kidsList.map((kid: any) => {
 
               return (
                 <>
@@ -180,10 +182,12 @@ export default function Kids() {
                       fontFamily="Graphik LCG"
                       lineHeight="24px"
                     >
-                      <GridItem colSpan={5}
-                      display="flex"
-          justifyContent="center"
-          alignItems="center">
+                      <GridItem
+                        colSpan={5}
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                      >
                         <Text
                           fontSize="14px"
                           fontWeight="500"
@@ -196,7 +200,16 @@ export default function Kids() {
                   )}
                 </>
               );
-            })}
+            })
+            }
+            
+          
+            </>       
+           : <Flex justifyContent={"center"} >
+            <Text  fontSize="14px"
+                          fontWeight="500"
+                          fontFamily="Graphik LCG"> Please Select Center</Text>
+            </Flex> }
         </>
       ) : (
         <>{renderFormStep()}</>
