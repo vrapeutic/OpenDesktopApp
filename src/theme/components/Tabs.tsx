@@ -102,7 +102,7 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
         </TabPanel>
 
         <TabPanel>
-          {Doctorslist?.length === 0 ? (
+          {Doctorslist?.length > 0 ? (
             <Table
               variant="simple"
               background="#FFFFFF"

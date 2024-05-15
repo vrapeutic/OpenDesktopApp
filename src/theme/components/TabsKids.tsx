@@ -563,7 +563,7 @@ const SessionTable: React.FC<SessionTable> = ({ openModal, sessions }) => {
 
   return (
     <>
-      {sessions.length === 0 ? (
+      {sessions.length >0 ? (
         sessions.map((session: any) => {
           console.log(session);
           const time = date(session.attributes.created_at);
