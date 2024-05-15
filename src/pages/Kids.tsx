@@ -158,7 +158,7 @@ export default function Kids() {
 
               return (
                 <>
-                  {kidsList.length === 0 ? (
+                  {kidsList.length >0 ? (
                     <TableData
                       all={kid}
                       id={kid.id}
