@@ -11,35 +11,34 @@ import {
   MenuItem,
   MenuList,
   Button,
-  ModalHeader,
   useDisclosure,
   Box,
   ModalCloseButton,
-  GridItem,
-  Select,
+
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
+import ConnectedVR from './ConnectedVR';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
-  const [specialists, setSpecialists] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
   const [values, setValues] = useState({
     selectedModule: '',
-    selectedSpecialist: '',
+    
   });
+   const [sessionId,setSessionId]=useState(5)
   const [name,setName] = useState('Modules')
   const [errors, setErrors] = useState({
     selectedModule: null,
-    selectedSpecialist: '',
+
   });
 
   const schema = Joi.object().keys({
     selectedModule: Joi.string().required(),
-    selectedSpecialist: Joi.string().required(),
   });
 
   const handleSubmit = async (event: any) => {
@@ -55,6 +54,10 @@ export default function SelectingModule(props: any) {
       setErrors(validationErrors);
       console.log(validationErrors);
     } else {
+      setErrors({selectedModule:null})
+      
+      props.onClose()
+      onOpen()
       console.log('form is valid');
     }
   };
@@ -85,8 +88,7 @@ export default function SelectingModule(props: any) {
  
     props.onClose()
     setValues({
-      selectedModule: "",
-      selectedSpecialist: '',
+      selectedModule: ""
     })
     setName("modules")
   }
@@ -138,8 +140,7 @@ export default function SelectingModule(props: any) {
                           name="selectedModule"
                           onClick={() =>
                            { setValues({
-                              selectedModule: module.id,
-                              selectedSpecialist: '',
+                              selectedModule: module.id
                             })
                             setName(module.attributes.name)}
                           }
@@ -187,22 +188,7 @@ export default function SelectingModule(props: any) {
             )}
           </ModalBody>
           <ModalFooter display={'flex'} justifyContent={'center'}>
-            {selectedCenter.id && modules.length > 0 && (
-              <Button
-                w="180px"
-                h="54px"
-                bg="#00DEA3"
-                borderRadius="12px"
-                color="#FFFFFF"
-                fontFamily="Graphik LCG"
-                fontWeight="700"
-                fontSize="15px"
-                onClick={handleSubmit}
-                mx={2}
-              >
-                Show module settings
-              </Button>
-            )}
+         
 
             <Button
               w="180px"
@@ -219,9 +205,27 @@ export default function SelectingModule(props: any) {
             >
               Cancel session
             </Button>
+            {selectedCenter.id && modules.length > 0 && (
+              <Button
+                w="180px"
+                h="54px"
+                bg="#00DEA3"
+                borderRadius="12px"
+                color="#FFFFFF"
+                fontFamily="Graphik LCG"
+                fontWeight="700"
+                fontSize="15px"
+                onClick={handleSubmit}
+                mx={2}
+              >
+                Show module settings
+              </Button>
+            )}
           </ModalFooter>
         </ModalContent>
       </Modal>
+      {onOpen&& <ConnectedVR isOpen={isOpen} onClose={onClose} />}
+     
     </Box>
   );
 }

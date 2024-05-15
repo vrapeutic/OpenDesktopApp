@@ -24,6 +24,7 @@ import { Subscriptions } from '../../assets/icons/Subscriptions';
 import SelectingCenter from '../../pages/StartSession/SelectingCenter';
 import { useAdminContext } from '../../Context/AdminContext';
 import SelectingModule from '@renderer/pages/StartSession/SelectingModule';
+import ConnectedVR from '@renderer/pages/StartSession/ConnectedVR';
 
 export default function Sidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -316,8 +317,8 @@ export default function Sidebar() {
           </Button>
         </Box>
       </VStack>
-      {onOpen && <SelectingCenter isOpen={isOpen} onClose={onClose} />}
-   
+      {/* {onOpen && <SelectingCenter isOpen={isOpen} onClose={onClose} />} */}
+      {onOpen && <SelectingModule isOpen={isOpen} onClose={onClose} />}
 
     </Flex>
   );
