@@ -317,8 +317,8 @@ export default function Sidebar() {
           </Button>
         </Box>
       </VStack>
-      {/* {onOpen && <SelectingCenter isOpen={isOpen} onClose={onClose} />} */}
-      {onOpen && <SelectingModule isOpen={isOpen} onClose={onClose} />}
+      {onOpen && <SelectingCenter isOpen={isOpen} onClose={onClose} />}
+    
 
     </Flex>
   );
