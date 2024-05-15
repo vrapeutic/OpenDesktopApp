@@ -118,7 +118,7 @@ export default function SelectingHeadset(props: any) {
             fontSize="18px"
             onClick={handleSubmit(handleFormSubmit)}
             >
-            Next
+            Connect to headset
           </Button>
         </ModalFooter>
         </>
