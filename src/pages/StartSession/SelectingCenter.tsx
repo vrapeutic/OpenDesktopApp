@@ -105,6 +105,7 @@ export default function SelectingCenter(props: any) {
     >
       <ModalOverlay />
       <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
+        
         <ModalHeader textAlign="center" fontSize="30px">
           Start a session
         </ModalHeader>

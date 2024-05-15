@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -13,18 +13,25 @@ import {
   Button,
   ModalHeader,
   useDisclosure,
+  Box,
+  ModalCloseButton,
+  GridItem,
+  Select,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
+import { dataContext } from '@renderer/shared/Provider';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
   const [specialists, setSpecialists] = useState([]);
+  const selectedCenter = useContext(dataContext);
   const [values, setValues] = useState({
     selectedModule: '',
     selectedSpecialist: '',
   });
+  const [name,setName] = useState('Modules')
   const [errors, setErrors] = useState({
     selectedModule: null,
     selectedSpecialist: '',
@@ -52,146 +59,169 @@ export default function SelectingModule(props: any) {
     }
   };
 
-  const selectSpecialist = async () => {
-    const token = await (window as any).electronAPI.getPassword('token');
-    fetch(
-      `${config.apiURL}/api/v1/doctors/center_child_doctors?center_id=3&child_id=1`,
-      {
-        method: 'Get',
-        redirect: 'follow',
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result.data);
-
-        setSpecialists(result.data);
-      })
-      .catch((error) => console.log('error', error));
-  };
+ 
 
   useEffect(() => {
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
-      fetch(`${config.apiURL}/api/v1/software_modules`, {
+      console.log('token: ', token);
+      fetch(`${config.apiURL}/api/v1/centers/${selectedCenter.id}/modules`, {
         method: 'Get',
         redirect: 'follow',
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((response) => response.json())
         .then((result) => {
-          setModules(result.data);
+          {
+            selectedCenter.id && setModules(result.data);
+          }
+
+          console.log(result);
         })
         .catch((error) => console.log('error', error));
     })();
-  }, []);
+  }, [selectedCenter.id]);
+  const CloseMOdule=()=>{
+ 
+    props.onClose()
+    setValues({
+      selectedModule: "",
+      selectedSpecialist: '',
+    })
+    setName("modules")
+  }
 
   return (
-    <Modal
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      closeOnOverlayClick={false}
-    >
-      <ModalOverlay />
-      <ModalContent h="450px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-        <ModalHeader textAlign="center" fontSize="30px">
-          Start a session
-        </ModalHeader>
-        <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-          <Text fontSize="12px" color="orange">
-            You have been connected successfully to the headset
-          </Text>
-          <Text fontSize="12px" color="orange">
-            Your OTP has been verified
-          </Text>
-          <Text mt="10px">Choose a module</Text>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              bgColor="#FFFFFF"
-              border="2px solid #E1E6EA"
-              borderRadius="8px"
-              marginTop="10px"
-              h="40px"
-              w="400px"
-            >
-              Modules
-            </MenuButton>
-            <MenuList>
-              {modules.map((module) => (
-                <MenuItem
-                  key={module.id}
-                  name="selectedModule"
-                  onClick={() =>
-                    setValues({
-                      selectedModule: module.id,
-                      selectedSpecialist: '',
-                    })
-                  }
-                >
-                  {module.attributes.name}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <Text fontSize="10px" color="red">
-            {errors.selectedModule}
-          </Text>
+    <Box as="form" onSubmit={handleSubmit}>
+      <Modal
+        isOpen={props.isOpen}
+        onClose={props.onClose}
+        closeOnOverlayClick={false}
+      >
+        <ModalOverlay />
+        <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
+          <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
+            <ModalCloseButton marginLeft="100px" />
+          </Box>
 
-          <Text mt="25px">Choose a session co-supervisor</Text>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              bgColor="#FFFFFF"
-              border="2px solid #E1E6EA"
-              borderRadius="8px"
-              marginTop="10px"
-              h="40px"
-              w="400px"
-              onClick={selectSpecialist}
+          <ModalBody fontSize="20px" fontWeight="600" mt="25px">
+            <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
+              You have been connected successfully to the headset{' '}
+              {props.headsetId}
+            </Text>
+
+            {selectedCenter.id ? (
+              <>
+                <Text mt="10px">Choose a module</Text>
+                {modules.length > 0 ? (<>
+
+
+                
+                  <Menu>
+                    <MenuButton
+                      as={Button}
+                      rightIcon={<ChevronDownIcon />}
+                      bgColor="#FFFFFF"
+                      border="2px solid #E1E6EA"
+                      borderRadius="8px"
+                      marginTop="10px"
+                      h="40px"
+                      w="400px"
+                    >
+                      {name}
+                    </MenuButton>
+
+                    <MenuList>
+                      {modules.map((module) => (
+                        <MenuItem
+                          key={module.id}
+                          name="selectedModule"
+                          onClick={() =>
+                           { setValues({
+                              selectedModule: module.id,
+                              selectedSpecialist: '',
+                            })
+                            setName(module.attributes.name)}
+                          }
+                        >
+                          {module.attributes.name}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </Menu>
+                   <Text fontSize="10px" color="red">
+                   {errors.selectedModule}
+                 </Text>
+                 </>
+                ) : (
+                  <Box
+                    display={'flex'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    h={'70%'}
+                  >
+                    <Text
+                      fontSize="13px"
+                      fontWeight="500"
+                      fontFamily="Graphik LCG"
+                    >
+                      {' '}
+                      Center don't have module
+                    </Text>
+                  </Box>
+                )}
+               
+              </>
+            ) : (
+              <Box
+                display={'flex'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                h={'70%'}
+              >
+                <Text fontSize="13px" fontWeight="500" fontFamily="Graphik LCG">
+                  {' '}
+                  Please Select Center
+                </Text>
+              </Box>
+            )}
+          </ModalBody>
+          <ModalFooter display={'flex'} justifyContent={'center'}>
+            {selectedCenter.id && modules.length > 0 && (
+              <Button
+                w="180px"
+                h="54px"
+                bg="#00DEA3"
+                borderRadius="12px"
+                color="#FFFFFF"
+                fontFamily="Graphik LCG"
+                fontWeight="700"
+                fontSize="15px"
+                onClick={handleSubmit}
+                mx={2}
+              >
+                Show module settings
+              </Button>
+            )}
+
+            <Button
+              w="180px"
+              h="54px"
+              mx={2}
+              bg="#00DEA3"
+              borderRadius="12px"
+              color="#FFFFFF"
+              fontFamily="Graphik LCG"
+              fontWeight="700"
+              fontSize="15px"
+              onClick={  CloseMOdule
+              }
             >
-              Co-supervisors
-            </MenuButton>
-            <MenuList>
-              {specialists.map((specialist) => (
-                <MenuItem
-                  key={specialist.id}
-                  name="selectedspecialist"
-                  onClick={() =>
-                    setValues({
-                      selectedModule: values.selectedModule,
-                      selectedSpecialist: specialist.id,
-                    })
-                  }
-                >
-                  {specialist.attributes.name}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <Text fontSize="10px" color="red">
-            {errors.selectedSpecialist}
-          </Text>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            w="214px"
-            h="54px"
-            bg="#00DEA3"
-            borderRadius="12px"
-            color="#FFFFFF"
-            fontFamily="Roboto"
-            fontWeight="700"
-            fontSize="18px"
-            onClick={handleSubmit}
-          >
-            Next
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+              Cancel session
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Box>
   );
 }

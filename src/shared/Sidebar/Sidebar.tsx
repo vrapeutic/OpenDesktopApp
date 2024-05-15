@@ -23,6 +23,7 @@ import { Lamp } from '../../assets/icons/Lamp';
 import { Subscriptions } from '../../assets/icons/Subscriptions';
 import SelectingCenter from '../../pages/StartSession/SelectingCenter';
 import { useAdminContext } from '../../Context/AdminContext';
+import SelectingModule from '@renderer/pages/StartSession/SelectingModule';
 
 export default function Sidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -316,6 +317,8 @@ export default function Sidebar() {
         </Box>
       </VStack>
       {onOpen && <SelectingCenter isOpen={isOpen} onClose={onClose} />}
+   
+
     </Flex>
   );
 }

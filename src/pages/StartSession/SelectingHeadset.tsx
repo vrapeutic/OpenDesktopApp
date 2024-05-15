@@ -102,6 +102,9 @@ export default function SelectingHeadset(props: any) {
         </ModalHeader>
         <ModalBody fontSize="20px" fontWeight="600" mt="15px">
           <Text>Select a headset</Text>
+
+
+          
           <Menu>
             <MenuButton
               as={Button}
@@ -148,7 +151,7 @@ export default function SelectingHeadset(props: any) {
           </Button>
         </ModalFooter>
       </ModalContent>
-      {onOpen && (
+      {/* {onOpen && (
         <ValidateOtp
           isOpen={isOpen}
           onClose={onClose}
@@ -157,7 +160,7 @@ export default function SelectingHeadset(props: any) {
           centerId={props.centerId}
           childId={props.childId}
         />
-      )}
+      )} */}
     </Modal>
   );
 }
