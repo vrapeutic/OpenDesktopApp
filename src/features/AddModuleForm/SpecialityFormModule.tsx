@@ -39,6 +39,9 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       .greater(joi.ref('From'))
       .message('"To" must be greater than "From"')
       .label('To'),
+      packagename: joi.string().required(),
+
+      
     certification: joi.required().custom((value, helpers) => {
       if (value) {
         const ext = value.name.split('.').pop().toLowerCase();
@@ -111,6 +114,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
     formDataTobesent.append('min_age', data.From) ;
     formDataTobesent.append('max_age', data.To);
     formDataTobesent.append('image', data.certification);
+    formDataTobesent.append('package_name', data.packagename);
 
     return formDataTobesent;
   };
@@ -238,6 +242,33 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
                 )}
               </GridItem>
             </Grid>
+
+            <GridItem>
+            <FormLabel
+              display="inline"
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
+            >
+              package name
+            </FormLabel>
+
+            <Input
+              {...register('packagename')}
+              id="packagename"
+              borderColor="#4965CA"
+              border="2px solid #E8E8E8"
+              _hover={{ border: '1px solid #4965CA' }}
+              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+              type="text"
+              mt="0.75em"
+              mb="1em"
+              borderRadius="8px"
+            />
+            {errors.packagename && (
+              <Text color="red.500">{errors.packagename.message as string}</Text>
+            )}
+          </GridItem>
           </GridItem>
 
           <GridItem rowSpan={2}>

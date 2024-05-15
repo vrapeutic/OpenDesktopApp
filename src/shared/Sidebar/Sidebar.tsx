@@ -8,7 +8,7 @@ import {
   Button,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Link as ReachLink, useLocation } from 'react-router-dom';
+import { Link as ReachLink, useLocation, useNavigate } from 'react-router-dom';
 import { Fragment, useEffect } from 'react';
 import VRapeutic from '../../assets/images/VRapeutic.png';
 import { Dashboard } from '../../assets/icons/Dashboard';
@@ -23,13 +23,21 @@ import { Lamp } from '../../assets/icons/Lamp';
 import { Subscriptions } from '../../assets/icons/Subscriptions';
 import SelectingCenter from '../../pages/StartSession/SelectingCenter';
 import { useAdminContext } from '../../Context/AdminContext';
+import Lostconnection from '@renderer/pages/StartSession/lostconnection';
 
 export default function Sidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: islostconnection,
+    onOpen: onopenlostconnection,
+    onClose: oncloselostconnection,
+  } = useDisclosure();
+
   const location = useLocation();
   const { adminBoolean } = useAdminContext();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    // Log the value of adminBoolean when the component mounts or when it changes
     console.log('Admin Context Value:', adminBoolean);
   }, [adminBoolean]);
 
@@ -63,7 +71,7 @@ export default function Sidebar() {
       ),
       path: '/Kids',
     },
-  
+
     {
       link: 'Therapy Centers',
       icon: (
@@ -75,15 +83,7 @@ export default function Sidebar() {
       ),
       path: '/Therapycenters',
     },
-    // {
-    //   link: 'Branches',
-    //   icon: (
-    //     <Branches
-    //       color={location.pathname === '/Branches' ? '#00DEA3' : '#333333'}
-    //     />
-    //   ),
-    //   path: '/Branches',
-    // },
+
     {
       link: 'Specialists',
       icon: (
@@ -93,17 +93,7 @@ export default function Sidebar() {
       ),
       path: '/Specialists',
     },
-    // {
-    //   link: 'Assessment tools',
-    //   icon: (
-    //     <Assessmenttools
-    //       color={
-    //         location.pathname === '/Assessmenttools' ? '#00DEA3' : '#333333'
-    //       }
-    //     />
-    //   ),
-    //   path: '/Assessmenttools',
-    // },
+
     {
       link: 'Subscriptions',
       icon: (
@@ -113,19 +103,9 @@ export default function Sidebar() {
       ),
       path: '/Subscriptions',
     },
-    // {
-    //   link: 'General settings',
-    //   icon: (
-    //     <Setting
-    //       color={location.pathname === '/Setting' ? '#00DEA3' : '#333333'}
-    //     />
-    //   ),
-    //   path: '/Setting',
-    // },
   ];
 
   const sideItemsAdmin = [
-    
     {
       link: 'Theraputic Modules',
       icon: (
@@ -149,6 +129,17 @@ export default function Sidebar() {
       path: '/Therapycentersadmin',
     },
   ];
+
+  const CloseCongratulationsModal = () => {
+    console.log('handle close modal');
+    onClose();
+    navigate('/home');
+  };
+
+  const CloseconnectionModal = () => {
+    oncloselostconnection();
+    navigate('/home');
+  };
 
   return (
     <Flex
@@ -216,6 +207,20 @@ export default function Sidebar() {
                   </Flex>
                 </Fragment>
               ))}
+
+          <Button
+            w="143px"
+            h="40px"
+            ml="24px"
+            mt="55px"
+            padding="12px 24px"
+            bg="#F5B50E"
+            color="#FFFFFF"
+            fontWeight="500"
+            onClick={onopenlostconnection}
+          >
+            lost connection
+          </Button>
 
           <Flex
             justify="center"
@@ -315,7 +320,15 @@ export default function Sidebar() {
           </Button>
         </Box>
       </VStack>
-      {onOpen && <SelectingCenter isOpen={isOpen} onClose={onClose} />}
+      {onopenlostconnection && (
+        <Lostconnection
+          isOpen={islostconnection}
+          onClose={CloseconnectionModal}
+        />
+      )}
+      {onOpen && (
+        <SelectingCenter isOpen={isOpen} onClose={CloseCongratulationsModal} />
+      )}
     </Flex>
   );
 }
