@@ -14,27 +14,26 @@ import {
   useDisclosure,
   Box,
   ModalCloseButton,
-
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
 import ConnectedVR from './ConnectedVR';
+import { useNavigate } from 'react-router-dom';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
+  const navigate = useNavigate()
   const [values, setValues] = useState({
     selectedModule: '',
-    
   });
-   const [sessionId,setSessionId]=useState(5)
-  const [name,setName] = useState('Modules')
+  const [sessionId, setSessionId] = useState(5);
+  const [name, setName] = useState('Modules');
   const [errors, setErrors] = useState({
     selectedModule: null,
-
   });
 
   const schema = Joi.object().keys({
@@ -54,15 +53,13 @@ export default function SelectingModule(props: any) {
       setErrors(validationErrors);
       console.log(validationErrors);
     } else {
-      setErrors({selectedModule:null})
-      
-      props.onClose()
-      onOpen()
+      setErrors({ selectedModule: null });
+
+      props.onClose();
+      onOpen();
       console.log('form is valid');
     }
   };
-
- 
 
   useEffect(() => {
     (async () => {
@@ -84,27 +81,23 @@ export default function SelectingModule(props: any) {
         .catch((error) => console.log('error', error));
     })();
   }, [selectedCenter.id]);
-  const CloseMOdule=()=>{
- 
-    props.onClose()
+  const CloseMOdule = () => {
+    props.onClose();
+    navigate("/home")
     setValues({
-      selectedModule: ""
-    })
-    setName("modules")
-  }
+      selectedModule: '',
+    });
+    setName('modules');
+  };
 
   return (
     <Box as="form" onSubmit={handleSubmit}>
-      <Modal
-        isOpen={props.isOpen}
-        onClose={props.onClose}
-        closeOnOverlayClick={false}
-      >
+      <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
+          {/* <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
             <ModalCloseButton marginLeft="100px" />
-          </Box>
+          </Box> */}
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
@@ -115,45 +108,43 @@ export default function SelectingModule(props: any) {
             {selectedCenter.id ? (
               <>
                 <Text mt="10px">Choose a module</Text>
-                {modules.length > 0 ? (<>
+                {modules.length > 0 ? (
+                  <>
+                    <Menu>
+                      <MenuButton
+                        as={Button}
+                        rightIcon={<ChevronDownIcon />}
+                        bgColor="#FFFFFF"
+                        border="2px solid #E1E6EA"
+                        borderRadius="8px"
+                        marginTop="10px"
+                        h="40px"
+                        w="400px"
+                      >
+                        {name}
+                      </MenuButton>
 
-
-                
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<ChevronDownIcon />}
-                      bgColor="#FFFFFF"
-                      border="2px solid #E1E6EA"
-                      borderRadius="8px"
-                      marginTop="10px"
-                      h="40px"
-                      w="400px"
-                    >
-                      {name}
-                    </MenuButton>
-
-                    <MenuList>
-                      {modules.map((module) => (
-                        <MenuItem
-                          key={module.id}
-                          name="selectedModule"
-                          onClick={() =>
-                           { setValues({
-                              selectedModule: module.id
-                            })
-                            setName(module.attributes.name)}
-                          }
-                        >
-                          {module.attributes.name}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </Menu>
-                   <Text fontSize="10px" color="red">
-                   {errors.selectedModule}
-                 </Text>
-                 </>
+                      <MenuList>
+                        {modules.map((module) => (
+                          <MenuItem
+                            key={module.id}
+                            name="selectedModule"
+                            onClick={() => {
+                              setValues({
+                                selectedModule: module.id,
+                              });
+                              setName(module.attributes.name);
+                            }}
+                          >
+                            {module.attributes.name}
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </Menu>
+                    <Text fontSize="10px" color="red">
+                      {errors.selectedModule}
+                    </Text>
+                  </>
                 ) : (
                   <Box
                     display={'flex'}
@@ -171,7 +162,6 @@ export default function SelectingModule(props: any) {
                     </Text>
                   </Box>
                 )}
-               
               </>
             ) : (
               <Box
@@ -188,8 +178,6 @@ export default function SelectingModule(props: any) {
             )}
           </ModalBody>
           <ModalFooter display={'flex'} justifyContent={'center'}>
-         
-
             <Button
               w="180px"
               h="54px"
@@ -200,8 +188,7 @@ export default function SelectingModule(props: any) {
               fontFamily="Graphik LCG"
               fontWeight="700"
               fontSize="15px"
-              onClick={  CloseMOdule
-              }
+              onClick={CloseMOdule}
             >
               Cancel session
             </Button>
@@ -224,8 +211,7 @@ export default function SelectingModule(props: any) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpen&& <ConnectedVR isOpen={isOpen} onClose={onClose} />}
-     
+      {onOpen && <ConnectedVR isOpen={isOpen} onClose={onClose} />}
     </Box>
   );
 }

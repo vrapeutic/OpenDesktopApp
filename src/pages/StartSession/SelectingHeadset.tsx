@@ -11,6 +11,7 @@ import {
   GridItem,
   Select,
   useDisclosure,
+  Flex,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
 import axios from 'axios';
@@ -19,62 +20,108 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
+import SelectingModule from './SelectingModule';
 
 const ErrorsModal = ({
   isOpen,
   onClose,
   onSelectAnotherHeadset,
   onCancelSession,
+  closeselectingheadset,
 }) => {
   const navigate = useNavigate();
 
+  const {
+    isOpen: ismoduleopen,
+    onOpen: onmoduleOpen,
+    onClose: onmoduleClose,
+  } = useDisclosure();
+
+  const OpenModulemodal = () => {
+    onClose();
+    onmoduleOpen();
+  };
+
+  const CloseModuleModal = () => {
+    onmoduleClose();
+    closeselectingheadset();
+    navigate('/');
+  };
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-        <ModalHeader textAlign="center" fontSize="30px">
-          Start a session
-        </ModalHeader>
-        <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-          <Text mt="25px">
-            The selected headset could not be found on this network
-          </Text>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            w="214px"
-            h="54px"
-            bg="#00DEA3"
-            borderRadius="12px"
-            color="#FFFFFF"
-            fontFamily="Roboto"
-            fontWeight="700"
-            fontSize="18px"
-            marginRight="10px"
-            onClick={() => {
-              onCancelSession();
-              navigate('/');
-            }}
-          >
-            Cancel session
-          </Button>
-          <Button
-            w="214px"
-            h="54px"
-            bg="#00DEA3"
-            borderRadius="12px"
-            color="#FFFFFF"
-            fontFamily="Roboto"
-            fontWeight="700"
-            fontSize="18px"
-            marginleft="10px"
-            onClick={onSelectAnotherHeadset}
-          >
-            Select another headset
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <>
+      <Modal isOpen={isOpen} onClose={onClose} w="800px">
+        <ModalOverlay />
+        <ModalContent h="400px" w="800px" bgColor="#FFFFFF" borderRadius="10px">
+          <ModalHeader textAlign="center" fontSize="30px">
+            Start a session
+          </ModalHeader>
+          <ModalBody fontSize="20px" fontWeight="600" mt="15px">
+            <Text mt="25px">
+              The selected headset could not be found on this network
+            </Text>
+
+
+            <Button
+              w="12rem"
+              h="54px"
+              bg="#00DEA3"
+              borderRadius="12px"
+              color="#FFFFFF"
+              fontFamily="Roboto"
+              fontWeight="700"
+              fontSize="1rem"
+              marginleft="10px"            
+              onClick={OpenModulemodal}
+            >
+              Continue to select module
+            </Button>
+        
+          </ModalBody>
+          <ModalFooter>
+
+            <Button
+              w="214px"
+              h="54px"
+              bg="#00DEA3"
+              borderRadius="12px"
+              color="#FFFFFF"
+              fontFamily="Roboto"
+              fontWeight="700"
+              fontSize="1rem"
+              marginRight="10px"
+              onClick={() => {
+                onCancelSession();
+                navigate('/');
+              }}
+            >
+              Cancel session
+            </Button>
+            <Button
+              w="214px"
+              h="54px"
+              bg="#00DEA3"
+              borderRadius="12px"
+              color="#FFFFFF"
+              fontFamily="Roboto"
+              fontWeight="700"
+              fontSize="1rem"
+              marginleft="10px"
+              onClick={onSelectAnotherHeadset}
+            >
+              Select another headset
+            </Button>
+
+            
+
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+
+      {onmoduleOpen && (
+        <SelectingModule isOpen={ismoduleopen} onClose={CloseModuleModal} />
+      )}
+    </>
   );
 };
 
@@ -202,6 +249,7 @@ const SelectingHeadset = (props) => {
       <ErrorsModal
         isOpen={isErrorOpen}
         onClose={onErrorClose}
+        closeselectingheadset={props.onClose}
         onCancelSession={handleCancelSession}
         onSelectAnotherHeadset={handleSelectAnotherHeadset}
         errorMessages={errorMessages}
