@@ -1,85 +1,3 @@
-// import {
-//     Box,
-//     Button,
-//     Modal,
-//     ModalBody,
-//     ModalCloseButton,
-//     ModalContent,
-//     ModalFooter,
-//     ModalHeader,
-//     ModalOverlay,
-//     Stack,
-//     Text,
-//   } from '@chakra-ui/react';
-//   import React from 'react';
-  
-//   const SelectBooks = (props: any) => {
-//     return (
-//       <Modal
-//         isOpen={props.isOpen}
-//         onClose={props.onClose}
-//         closeOnOverlayClick={false}
-//       >
-//         <ModalOverlay />
-//         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-//           <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
-//             <ModalCloseButton marginLeft="100px" />
-//           </Box>
-//           <ModalHeader textAlign="center" fontSize="1rem">
-//             Select Books
-//           </ModalHeader>
-  
-//           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-//             <Stack spacing={4} direction="row" align="center">
-//               <Button colorScheme="teal" size="md">
-//                 A
-//               </Button>
-//               <Button colorScheme="teal" size="md">
-//                 B
-//               </Button>
-//               <Button colorScheme="teal" size="md">
-//                 C
-//               </Button>
-//             </Stack>
-//           </ModalBody>
-//           <ModalFooter display={'flex'} justifyContent={'center'}>
-//             <Button
-//               w="180px"
-//               h="54px"
-//               mx={2}
-//               bg="#00DEA3"
-//               borderRadius="12px"
-//               color="#FFFFFF"
-//               fontFamily="Graphik LCG"
-//               fontWeight="700"
-//               fontSize="15px"
-//               onClick={props.onClose}
-//             >
-//               Cancel session
-//             </Button>
-//             <Button
-//               w="180px"
-//               h="54px"
-//               bg="#00DEA3"
-//               borderRadius="12px"
-//               color="#FFFFFF"
-//               fontFamily="Graphik LCG"
-//               fontWeight="700"
-//               fontSize="15px"
-//               // onClick={handleSubmit}
-//               mx={2}
-//             >
-//               Play
-//             </Button>
-//           </ModalFooter>
-//         </ModalContent>
-//       </Modal>
-//     );
-//   };
-  
-//   export default SelectBooks;
-  
-
 import {
     Box,
     Button,
@@ -172,7 +90,7 @@ import { useNavigate } from 'react-router-dom';
             </FormControl>
           </ModalBody>
           <ModalFooter display="flex" justifyContent="center">
-            <Button
+            {/* <Button
               w="180px"
               h="54px"
               mx={2}
@@ -185,7 +103,7 @@ import { useNavigate } from 'react-router-dom';
               onClick={props.onClose}
             >
               Cancel Session
-            </Button>
+            </Button> */}
             <Button
               w="180px"
               h="54px"
