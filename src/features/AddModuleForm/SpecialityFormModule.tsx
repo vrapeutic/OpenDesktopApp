@@ -123,6 +123,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
 
     try {
       await postFormData(formDatasent);
+      console.log("test")
       onOpen();
     } catch (error) {
       console.log("error in request",error)
@@ -137,12 +138,17 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       otp: `${otp}`,
     };
 
+    
     return axios.post(
+
+
+      
       `${config.apiURL}/api/v1/software_modules`,
       formDatasent,
       { headers }
     );
   };
+ 
 
 
   const handleError = (error: any) => {

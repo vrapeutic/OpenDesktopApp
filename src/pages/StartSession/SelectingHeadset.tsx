@@ -28,7 +28,7 @@ const ErrorsModal = ({
   onSelectAnotherHeadset,
   onCancelSession,
   closeselectingheadset,
-}) => {
+}:any) => {
   const navigate = useNavigate();
 
   const {
@@ -49,7 +49,7 @@ const ErrorsModal = ({
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} w="800px">
+      <Modal isOpen={isOpen} onClose={onClose} >
         <ModalOverlay />
         <ModalContent h="400px" w="800px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
@@ -70,7 +70,7 @@ const ErrorsModal = ({
               fontFamily="Roboto"
               fontWeight="700"
               fontSize="1rem"
-              marginleft="10px"            
+              ml={"10px"}           
               onClick={OpenModulemodal}
             >
               Continue to select module
@@ -105,7 +105,7 @@ const ErrorsModal = ({
               fontFamily="Roboto"
               fontWeight="700"
               fontSize="1rem"
-              marginleft="10px"
+              ml="10px"
               onClick={onSelectAnotherHeadset}
             >
               Select another headset
@@ -125,7 +125,7 @@ const ErrorsModal = ({
   );
 };
 
-const SelectingHeadset = (props) => {
+const SelectingHeadset = (props:any) => {
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
