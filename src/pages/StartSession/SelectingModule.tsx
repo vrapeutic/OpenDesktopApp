@@ -22,7 +22,9 @@ import { dataContext } from '@renderer/shared/Provider';
 import ConnectedVR from './ConnectedVR';
 import { useNavigate } from 'react-router-dom';
 
+
 export default function SelectingModule(props: any) {
+
   const [modules, setModules] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
@@ -55,9 +57,11 @@ export default function SelectingModule(props: any) {
     } else {
       setErrors({ selectedModule: null });
 
-      props.onClose();
+
       onOpen();
-      console.log('form is valid');
+      // props.onClose();
+      
+
     }
   };
 
@@ -91,7 +95,7 @@ export default function SelectingModule(props: any) {
   };
 
   return (
-    <Box as="form" onSubmit={handleSubmit}>
+    <Box>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
@@ -211,7 +215,15 @@ export default function SelectingModule(props: any) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpen && <ConnectedVR isOpen={isOpen} onClose={onClose} />}
+      {onOpen && <ConnectedVR 
+                    isOpen={isOpen}
+                    closSelectingAModule={props.onClose}
+                    closeSelectingAHeadset={props.closeSelectingAHeadset}
+                    headsetId={props.headsetId}
+                    packageName={ values['selectedModule']|| 'test name'}
+                    sessionId={sessionId}
+                    closeErrorToSelectAnotherSet={props.closeErrorToSelectAnotherSet}
+                    />}
     </Box>
   );
 }
