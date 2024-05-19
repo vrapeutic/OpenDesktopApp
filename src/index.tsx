@@ -8,6 +8,7 @@ import { Fonts } from './theme/Fonts';
 import './index.css';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AdminProvider } from './Context/AdminContext';
+import { SocketManagerProvider } from './Context/SocketManagerProvider';
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,9 @@ root.render(
       <QueryClientProvider client={queryClient}>
         <AdminProvider>
           <Fonts />
+          <SocketManagerProvider>
           <App />
+          </SocketManagerProvider>
         </AdminProvider>
       </QueryClientProvider>
     </ChakraProvider>
