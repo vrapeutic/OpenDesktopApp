@@ -12,4 +12,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setPassword: (key: string, password: string) =>
     ipcRenderer.invoke('store:setPassword', [key, password]),
   deletePassword: (key: string) => ipcRenderer.invoke('store:deletePassword', [key]),
+
+  checkServiceExistence:(deviceId: string)=>ipcRenderer.invoke('checkServiceExistence', [deviceId]),
+  
 });
+
+
+
