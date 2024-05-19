@@ -38,16 +38,12 @@ class MdnsManager {
 
     browser.on('serviceUp', (service) => {
       console.log(SERVER_LOGS_COLOR, 'service up: ', service.name);
-      
-      if(service?.txtRecord?.device_id){
-      this.discoverdServices[service?.txtRecord?.device_id] = true;
-      }
+      this.addToDiscoverdServices(service);
     });
 
     browser.on('serviceDown', (service) => {
       console.log(SERVER_LOGS_COLOR, 'service down: ', service.name);
-      
-      delete this.discoverdServices[service?.txtRecord?.device_id];
+      this.removeFromDiscoverdServices(service);
     });
 
     browser.start();
@@ -60,6 +56,17 @@ class MdnsManager {
   checkServiceExistence(deviceId: string) {
     return this.discoverdServices[deviceId];
   }
+
+  addToDiscoverdServices(service:{[key: string]: any}) {
+    if(service?.txtRecord?.device_id){
+      this.discoverdServices[service?.txtRecord?.device_id] = true;
+      }
+  }
+
+ removeFromDiscoverdServices(service:{[key: string]: any}) {
+  delete this.discoverdServices[service?.txtRecord?.device_id];
+ }
+
 }
 
 export default MdnsManager;
