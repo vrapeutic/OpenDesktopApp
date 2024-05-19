@@ -51,7 +51,7 @@ export default function PlayViblio() {
         <Link as={ReachLink} to="/ChooseLevel">
           <PlayBtn />
         </Link>
-        <Link to="#">
+        <Link as={ReachLink} to="/home">
           <ExitBtn />
         </Link>
       </Box>

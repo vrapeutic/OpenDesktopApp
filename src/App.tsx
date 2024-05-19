@@ -20,6 +20,7 @@ import Signup from './pages/SignUp/Signup';
 import Therapycentersadmin from './pages/Therapycentersadmin';
 import Assigntocenter from './pages/Assigntocenter/Assigntocenter';
 import PlayViblio from './pages/ViblioModule/PlayViblio';
+import ChooseLevel from './pages/ViblioModule/ChooseLevel';
 // import ChooseLevel from './pages/ViblioModule/ChooseLevel';
 
 
@@ -42,7 +43,7 @@ function App() {
     <MemoryRouter>
       <Routes>
         <Route path="login" element={<Login />} />
-        {/* <Route path="ChooseLevel" element={<ChooseLevel />} /> */}
+        <Route path="ChooseLevel" element={<ChooseLevel />} />
 
         <Route path="Play" element={<PlayViblio />} />
 
