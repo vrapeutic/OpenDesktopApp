@@ -141,6 +141,12 @@ export default function Sidebar() {
     navigate('/home');
   };
 
+  
+
+  const OpenPlay = () => {
+    navigate('/Play');
+  };
+
   return (
     <Flex
       pos="sticky"
@@ -217,7 +223,7 @@ export default function Sidebar() {
             bg="#F5B50E"
             color="#FFFFFF"
             fontWeight="500"
-            onClick={onopenlostconnection}
+            onClick={OpenPlay}
           >
             lost connection
           </Button>
