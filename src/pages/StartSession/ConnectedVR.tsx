@@ -9,65 +9,71 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useState } from 'react';
+
+import useSocketManager from '../../Context/SocketManagerProvider';
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import PlayModule from './PlayModule';
+import { ErrorPopup } from './ErrorPopup';
+import { useNavigate } from 'react-router-dom';
 
 const ConnectedVR = (props: any) => {
-  return (
-    <Modal
+  const navigate = useNavigate();
+  const { emitMessage, checkIfServiceExists } = useSocketManager();
+  const [notFound, setNotFound] = useState(false);
+
+  const handleSubmit = async () => {
+    const { packageName, headsetId, sessionId } = props;
+    const existingDevice = await checkIfServiceExists(headsetId);
+
+    if (existingDevice) {
+      const socketMessage = {
+        sessionId,
+        [MODULE_PACKAGE_KEY] : packageName,
+      };
+
+      emitMessage(START_APP_MESSAGE, socketMessage);
+      // TODO add logic for after the play module feature
+    } else {
+      console.log(headsetId);
+      console.log(existingDevice);
+      setNotFound(true);
+    }
+  };
+
+  const cancelSession = () => {
+    setNotFound(false);
+    props.closSelectingAModule();
+    props.closeSelectingAHeadset();
+    navigate('/');
+  };
+
+  const closeErrorModal = () => {
+    setNotFound(false);
+    props.closSelectingAModule();
+  };
+
+  const selectAnotherHeadset = () => {
+    setNotFound(false);
+    props.closSelectingAModule();
+  };
+
+  return notFound ? (
+    <ErrorPopup
+      isOpen={notFound}
+      onClose={closeErrorModal}
+      closeSelectingAHeadset={props.closeSelectingAHeadset}
+      onCancelSession={cancelSession}
+      onSelectAnotherHeadset={selectAnotherHeadset}
+      errorMessages={'No headset found'}
+    />
+  ) : (
+    <PlayModule
+      handleSubmit={handleSubmit}
       isOpen={props.isOpen}
-      onClose={props.onClose}
-      closeOnOverlayClick={false}
-    >
-      <ModalOverlay />
-      <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-        <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
-          <ModalCloseButton marginLeft="100px" />
-        </Box>
-
-        <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-          <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
-            You are now connected to
-            {props.headsetId}
-          </Text>
-
-          <Box h={'70%'} display={'flex'} alignItems={'center'}>
-            <Text fontSize="20px" color="red" fontFamily="Graphik LCG">
-              This screen should show the selected module’s UI.
-            </Text>
-          </Box>
-        </ModalBody>
-        <ModalFooter display={'flex'} justifyContent={'center'}>
-          <Button
-            w="180px"
-            h="54px"
-            mx={2}
-            bg="#00DEA3"
-            borderRadius="12px"
-            color="#FFFFFF"
-            fontFamily="Graphik LCG"
-            fontWeight="700"
-            fontSize="15px"
-            onClick={props.onClose}
-          >
-            Cancel session
-          </Button>
-          <Button
-            w="180px"
-            h="54px"
-            bg="#00DEA3"
-            borderRadius="12px"
-            color="#FFFFFF"
-            fontFamily="Graphik LCG"
-            fontWeight="700"
-            fontSize="15px"
-            // onClick={handleSubmit}
-            mx={2}
-          >
-            Play
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+      onClose={props.closSelectingAModule}
+      headsetId={props.headsetId}
+    />
   );
 };
 
