@@ -22,110 +22,56 @@ import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectingModule from './SelectingModule';
 
+import useSocketManager from '../../Context/SocketManagerProvider';
+import { ErrorPopup } from './ErrorPopup';
+
+const HEADSET_FIELD = 'headset';
+
+interface HeadSet {
+  id: string;
+  type: string;
+  attributes: {
+    name: string | null;
+    brand: string;
+    model: string | null;
+    version: string | null;
+    key: string;
+  };
+}
+
+interface ErrorModalPropType {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectAnotherHeadset: () => void;
+  onCancelSession: () => void;
+  closeSelectingAHeadset: () => void;
+  errorMessages?: string;
+}
+
 const ErrorsModal = ({
   isOpen,
   onClose,
   onSelectAnotherHeadset,
   onCancelSession,
-  closeselectingheadset,
-}) => {
-  const navigate = useNavigate();
-
-  const {
-    isOpen: ismoduleopen,
-    onOpen: onmoduleOpen,
-    onClose: onmoduleClose,
-  } = useDisclosure();
-
-  const OpenModulemodal = () => {
-    onClose();
-    onmoduleOpen();
-  };
-
-  const CloseModuleModal = () => {
-    onmoduleClose();
-    closeselectingheadset();
-    navigate('/');
-  };
+  closeSelectingAHeadset,
+  errorMessages,
+}: ErrorModalPropType) => {
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose} w="800px">
-        <ModalOverlay />
-        <ModalContent h="400px" w="800px" bgColor="#FFFFFF" borderRadius="10px">
-          <ModalHeader textAlign="center" fontSize="30px">
-            Start a session
-          </ModalHeader>
-          <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-            <Text mt="25px">
-              The selected headset could not be found on this network
-            </Text>
-
-
-            <Button
-              w="12rem"
-              h="54px"
-              bg="#00DEA3"
-              borderRadius="12px"
-              color="#FFFFFF"
-              fontFamily="Roboto"
-              fontWeight="700"
-              fontSize="1rem"
-              marginleft="10px"            
-              onClick={OpenModulemodal}
-            >
-              Continue to select module
-            </Button>
-        
-          </ModalBody>
-          <ModalFooter>
-
-            <Button
-              w="214px"
-              h="54px"
-              bg="#00DEA3"
-              borderRadius="12px"
-              color="#FFFFFF"
-              fontFamily="Roboto"
-              fontWeight="700"
-              fontSize="1rem"
-              marginRight="10px"
-              onClick={() => {
-                onCancelSession();
-                navigate('/');
-              }}
-            >
-              Cancel session
-            </Button>
-            <Button
-              w="214px"
-              h="54px"
-              bg="#00DEA3"
-              borderRadius="12px"
-              color="#FFFFFF"
-              fontFamily="Roboto"
-              fontWeight="700"
-              fontSize="1rem"
-              marginleft="10px"
-              onClick={onSelectAnotherHeadset}
-            >
-              Select another headset
-            </Button>
-
-            
-
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-
-      {onmoduleOpen && (
-        <SelectingModule isOpen={ismoduleopen} onClose={CloseModuleModal} />
-      )}
-    </>
+    <ErrorPopup
+      isOpen={isOpen}
+      onClose={onClose}
+      onSelectAnotherHeadset={onSelectAnotherHeadset}
+      onCancelSession={onCancelSession}
+      closeSelectingAHeadset={closeSelectingAHeadset}
+      errorMessages={errorMessages}
+    />
   );
 };
 
 const SelectingHeadset = (props) => {
+  const navigate = useNavigate();
+  const { checkIfServiceExists } = useSocketManager();
+  const [deviceIsFound, setDeviceIsFound] = useState(false);
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
@@ -146,6 +92,8 @@ const SelectingHeadset = (props) => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    getValues,
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -167,10 +115,19 @@ const SelectingHeadset = (props) => {
     }
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
+    const headsetId = getValues(HEADSET_FIELD);
     console.log('Form submitted with data in headset.');
-    setErrorMessages('This is a test error message.');
-    onErrorOpen();
+    const existingDevice = await checkIfServiceExists(headsetId);
+
+    if (!existingDevice) {
+      console.log(headsetId);
+      console.log(existingDevice);
+      setDeviceIsFound(true);
+    } else {
+      setErrorMessages('This is a test error message.');
+      onErrorOpen();
+    }
   };
 
   const handleCancelSession = () => {
@@ -189,6 +146,10 @@ const SelectingHeadset = (props) => {
     }
   }, [selectedCenterContext.id]);
 
+  const closeSelectingHeadset = () => {
+    setDeviceIsFound(false);
+    props.onClose();
+  };
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -203,14 +164,17 @@ const SelectingHeadset = (props) => {
                 <Text mt="25px">Select a headset</Text>
                 <GridItem>
                   <Select
-                    {...register('headseat')}
-                    id="headset"
-                    name="headset"
+                    {...(register(HEADSET_FIELD),
+                    {
+                      onChange: (e) => setValue(HEADSET_FIELD, e.target.value),
+                    })}
+                    id={HEADSET_FIELD}
+                    name={HEADSET_FIELD}
                     placeholder="Select headseat"
                     size="sm"
                   >
                     {headsets.map((headset) => (
-                      <option value={headset.id} key={headset.id}>
+                      <option value={headset.key} key={headset.id}>
                         {headset?.attributes.key}
                       </option>
                     ))}
@@ -249,11 +213,21 @@ const SelectingHeadset = (props) => {
       <ErrorsModal
         isOpen={isErrorOpen}
         onClose={onErrorClose}
-        closeselectingheadset={props.onClose}
+        closeSelectingAHeadset={props.onClose}
         onCancelSession={handleCancelSession}
         onSelectAnotherHeadset={handleSelectAnotherHeadset}
         errorMessages={errorMessages}
       />
+
+      {deviceIsFound && (
+        <SelectingModule
+          isOpen={deviceIsFound}
+          onClose={()=> setDeviceIsFound(false)}
+          headsetId={getValues(HEADSET_FIELD)}
+          closeErrorToSelectAnotherSet={handleSelectAnotherHeadset}
+          closeSelectingAHeadset={props.onClose}
+        />
+      )}
     </>
   );
 };
