@@ -48,7 +48,7 @@ export const ErrorPopup = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} w="800px">
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent h="400px" w="800px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">

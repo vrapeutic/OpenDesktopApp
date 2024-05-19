@@ -47,7 +47,12 @@ interface ErrorModalPropType {
   closeSelectingAHeadset: () => void;
   errorMessages?: string;
 }
-
+interface SelectingHeadsetProps {
+  centerId: string;
+  onClose: () => void;
+  isOpen: boolean;
+  childId: string;
+}
 const ErrorsModal = ({
   isOpen,
   onClose,
@@ -68,8 +73,7 @@ const ErrorsModal = ({
   );
 };
 
-const SelectingHeadset = (props) => {
-  const navigate = useNavigate();
+const SelectingHeadset = (props: SelectingHeadsetProps) => {
   const { checkIfServiceExists } = useSocketManager();
   const [deviceIsFound, setDeviceIsFound] = useState(false);
   const {
@@ -222,7 +226,7 @@ const SelectingHeadset = (props) => {
       {deviceIsFound && (
         <SelectingModule
           isOpen={deviceIsFound}
-          onClose={()=> setDeviceIsFound(false)}
+          onClose={() => setDeviceIsFound(false)}
           headsetId={getValues(HEADSET_FIELD)}
           closeErrorToSelectAnotherSet={handleSelectAnotherHeadset}
           closeSelectingAHeadset={props.onClose}
