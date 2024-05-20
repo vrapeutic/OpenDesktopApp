@@ -4,7 +4,7 @@ export const  SOCKET_ALLOWED_EVENTS = {
   MESSAGE: "message",
   START_APP: "start-app",
   START_SESSION: "start-session",
-  PLAY_MODULE: "play-module",
+  PLAY_MODULE: "playModule",
 }
 
 export const SERVER_LOGS_COLOR = "\x1b[36m%s\x1b[0m"
