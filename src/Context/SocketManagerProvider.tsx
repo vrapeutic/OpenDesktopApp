@@ -26,7 +26,7 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const dispatchPlayModuleMessage = useCallback(
     (channel: string, message: string, ...rest: any[]) => {
-      socket.emit(channel, { message, setting: rest });
+      socket.emit(channel, { message, settings: rest });
     },
     [socket]
   );
