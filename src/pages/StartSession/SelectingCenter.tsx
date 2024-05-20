@@ -14,15 +14,20 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
-import SelectingHeadset from './SelectingHeadset'; 
+import SelectingHeadset from './SelectingHeadset';
 import Joi from 'joi';
 import axios from 'axios';
 import { dataContext } from '@renderer/shared/Provider';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useForm } from 'react-hook-form';
+import { PopupsHandlerProvider } from '@renderer/Context/PopupsHandlerContext';
 
 export default function SelectingCenter(props: any) {
-  const { isOpen: isHeadsetOpen, onOpen: onHeadsetOpen, onClose: onHeadsetClose } = useDisclosure();
+  const {
+    isOpen: isHeadsetOpen,
+    onOpen: onHeadsetOpen,
+    onClose: onHeadsetClose,
+  } = useDisclosure();
   const [kids, setKids] = useState([]);
   const [childId, setChildId] = useState('');
   const selectedCenterContext = useContext(dataContext);
@@ -33,7 +38,12 @@ export default function SelectingCenter(props: any) {
     }),
   });
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
   });
@@ -67,68 +77,75 @@ export default function SelectingCenter(props: any) {
   }, [selectedCenterContext.id]);
 
   return (
-    <Box>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}>
-        <ModalOverlay />
-        <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          <ModalHeader textAlign="center" fontSize="30px">
-            Start a session
-          </ModalHeader>
-          {selectedCenterContext.id ? (
-            <>
-              <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-                <Text mt="25px">Select a child</Text>
-                <GridItem>
-                  <Select
-                    {...register('kid')}
-                    id="kid"
-                    name="kid"
-                    placeholder="Select Child"
-                    size="sm"
-                  >
-                    {kids.map((kid) => (
-                      <option value={kid.id} key={kid.id}>
-                        {kid?.attributes.name}
-                      </option>
-                    ))}
-                  </Select>
-                </GridItem>
-                {errors.kid && (
-                  <Text color="red.500">{errors.kid.message as string}</Text>
-                )}
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  w="214px"
-                  h="54px"
-                  bg="#00DEA3"
-                  borderRadius="12px"
-                  color="#FFFFFF"
-                  fontFamily="Roboto"
-                  fontWeight="700"
-                  fontSize="18px"
-                  onClick={handleSubmit(handleFormSubmit)}
-                >
-                  Next
-                </Button>
-              </ModalFooter>
-            </>
-          ) : (
-            <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
-              You should select a center first from home
+    <PopupsHandlerProvider>
+      <Box>
+        <Modal isOpen={props.isOpen} onClose={props.onClose}>
+          <ModalOverlay />
+          <ModalContent
+            h="400px"
+            w="500px"
+            bgColor="#FFFFFF"
+            borderRadius="10px"
+          >
+            <ModalHeader textAlign="center" fontSize="30px">
+              Start a session
             </ModalHeader>
-          )}
-        </ModalContent>
-      </Modal>
+            {selectedCenterContext.id ? (
+              <>
+                <ModalBody fontSize="20px" fontWeight="600" mt="15px">
+                  <Text mt="25px">Select a child</Text>
+                  <GridItem>
+                    <Select
+                      {...register('kid')}
+                      id="kid"
+                      name="kid"
+                      placeholder="Select Child"
+                      size="sm"
+                    >
+                      {kids.map((kid) => (
+                        <option value={kid.id} key={kid.id}>
+                          {kid?.attributes.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </GridItem>
+                  {errors.kid && (
+                    <Text color="red.500">{errors.kid.message as string}</Text>
+                  )}
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    w="214px"
+                    h="54px"
+                    bg="#00DEA3"
+                    borderRadius="12px"
+                    color="#FFFFFF"
+                    fontFamily="Roboto"
+                    fontWeight="700"
+                    fontSize="18px"
+                    onClick={handleSubmit(handleFormSubmit)}
+                  >
+                    Next
+                  </Button>
+                </ModalFooter>
+              </>
+            ) : (
+              <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
+                You should select a center first from home
+              </ModalHeader>
+            )}
+          </ModalContent>
+        </Modal>
 
-      {isHeadsetOpen && (
-        <SelectingHeadset
-          isOpen={isHeadsetOpen}
-          onClose={onHeadsetClose}
-          centerId={selectedCenterContext.id}
-          childId={childId}
-        />
-      )}
-    </Box>
+        {isHeadsetOpen && (
+          <SelectingHeadset
+            isOpen={isHeadsetOpen}
+            onClose={onHeadsetClose}
+            centerId={selectedCenterContext.id}
+            childId={childId}
+          />
+        )}
+      </Box>
+    </PopupsHandlerProvider>
   );
 }

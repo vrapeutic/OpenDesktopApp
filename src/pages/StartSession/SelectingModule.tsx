@@ -21,8 +21,11 @@ import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
 import ConnectedVR from './ConnectedVR';
 import { useNavigate } from 'react-router-dom';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 
 export default function SelectingModule(props: any) {
+  const { popupFunctions, addFunction } = usePopupsHandler();
+  const { closeSelectingAHeadset } = popupFunctions;
   const [modules, setModules] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
@@ -79,8 +82,13 @@ export default function SelectingModule(props: any) {
         })
         .catch((error) => console.log('error', error));
     })();
+
+    addFunction('closeSelectingAModule', props.onClose);
+    addFunction('closeConnectedVrPopup', onClose);
   }, [selectedCenter.id]);
-  const CloseMOdule = () => {
+
+  const cancelSession = () => {
+    closeSelectingAHeadset();
     props.onClose();
     navigate('/home');
     setValues({
@@ -187,7 +195,7 @@ export default function SelectingModule(props: any) {
               fontFamily="Graphik LCG"
               fontWeight="700"
               fontSize="15px"
-              onClick={CloseMOdule}
+              onClick={cancelSession}
             >
               Cancel session
             </Button>
@@ -213,13 +221,9 @@ export default function SelectingModule(props: any) {
       {onOpen && (
         <ConnectedVR
           isOpen={isOpen}
-          closeConnectedVrPopup={onClose}
-          closSelectingAModule={props.onClose}
-          closeSelectingAHeadset={props.closeSelectingAHeadset}
           headsetId={props.headsetId}
           packageName={values.packageName}
           sessionId={sessionId}
-          closeErrorToSelectAnotherSet={props.closeErrorToSelectAnotherSet}
         />
       )}
     </Box>
