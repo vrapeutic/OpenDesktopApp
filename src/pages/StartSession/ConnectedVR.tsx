@@ -5,9 +5,13 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import PlayModule from './PlayModule';
 import { ErrorPopup } from './ErrorPopup';
 import { useNavigate } from 'react-router-dom';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 
 const ConnectedVR = (props: any) => {
   const navigate = useNavigate();
+  const { popupFunctions } = usePopupsHandler();
+  const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
+
   const { dispatchPlayModuleMessage, checkIfServiceExists } =
     useSocketManager();
   const [notFound, setNotFound] = useState(false);
@@ -36,26 +40,26 @@ const ConnectedVR = (props: any) => {
 
   const cancelSession = () => {
     setNotFound(false);
-    props.closSelectingAModule();
-    props.closeSelectingAHeadset();
+    closeSelectingAModule();
+    closeSelectingAHeadset();
     navigate('/');
   };
 
   const closeErrorModal = () => {
     setNotFound(false);
-    props.closSelectingAModule();
+    closeSelectingAModule();
   };
 
   const selectAnotherHeadset = () => {
     setNotFound(false);
-    props.closSelectingAModule();
+    closeSelectingAModule();
   };
 
   return notFound ? (
     <ErrorPopup
       isOpen={notFound}
       onClose={closeErrorModal}
-      closeSelectingAHeadset={props.closeSelectingAHeadset}
+      closeSelectingAHeadset={closeSelectingAHeadset}
       onCancelSession={cancelSession}
       onSelectAnotherHeadset={selectAnotherHeadset}
       errorMessages={'No headset found'}
@@ -64,13 +68,10 @@ const ConnectedVR = (props: any) => {
     <PlayModule
       handleSubmit={handleSubmit}
       isOpen={props.isOpen}
-      onClose={props.closSelectingAModule}
+      onClose={closeSelectingAModule}
       headsetId={props.headsetId}
       openRunningPopup={openRunningPopup}
       setOpenRunningPopup={setOpenRunningPopup}
-      closeSelectingAHeadset={props.closeSelectingAHeadset}
-      closeSelectingAModule={props.closSelectingAModule}
-      closeConnectedVrPopup={props.closeConnectedVrPopup}
     />
   );
 };

@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 import Openconnected from './openconnected';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 
 interface PlayModuleProps {
   isOpen: boolean;
@@ -20,9 +21,6 @@ interface PlayModuleProps {
   handleSubmit: () => void;
   openRunningPopup: boolean;
   setOpenRunningPopup: React.Dispatch<React.SetStateAction<boolean>>;
-  closeSelectingAHeadset: () => void;
-  closeSelectingAModule: () => void;
-  closeConnectedVrPopup: () => void;
 }
 
 const PlayModule = ({
@@ -32,10 +30,14 @@ const PlayModule = ({
   headsetId,
   openRunningPopup,
   setOpenRunningPopup,
-  closeSelectingAHeadset,
-  closeSelectingAModule,
-  closeConnectedVrPopup,
 }: PlayModuleProps) => {
+  const { popupFunctions } = usePopupsHandler();
+  const {
+    closeSelectingAHeadset,
+    closeSelectingAModule,
+    closeConnectedVrPopup,
+  } = popupFunctions;
+
   const {
     isOpen: connectedPopupOpen,
     onOpen: onOpenConnectedPopup,

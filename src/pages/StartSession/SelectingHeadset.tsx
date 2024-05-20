@@ -24,6 +24,7 @@ import SelectingModule from './SelectingModule';
 
 import useSocketManager from '../../Context/SocketManagerProvider';
 import { ErrorPopup } from './ErrorPopup';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 
 const HEADSET_FIELD = 'headset';
 
@@ -74,6 +75,7 @@ const ErrorsModal = ({
 };
 
 const SelectingHeadset = (props: SelectingHeadsetProps) => {
+  const { addFunction } = usePopupsHandler();
   const { checkIfServiceExists } = useSocketManager();
   const [deviceIsFound, setDeviceIsFound] = useState(false);
   const {
@@ -148,12 +150,10 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
     if (selectedCenterContext.id) {
       getHeadsets();
     }
+
+    addFunction('closeSelectingAHeadset', props.onClose);
   }, [selectedCenterContext.id]);
 
-  const closeSelectingHeadset = () => {
-    setDeviceIsFound(false);
-    props.onClose();
-  };
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -228,8 +228,6 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
           isOpen={deviceIsFound}
           onClose={() => setDeviceIsFound(false)}
           headsetId={getValues(HEADSET_FIELD)}
-          closeErrorToSelectAnotherSet={handleSelectAnotherHeadset}
-          closeSelectingAHeadset={props.onClose}
         />
       )}
     </>
