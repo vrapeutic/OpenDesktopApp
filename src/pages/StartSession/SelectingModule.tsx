@@ -213,6 +213,7 @@ export default function SelectingModule(props: any) {
       {onOpen && (
         <ConnectedVR
           isOpen={isOpen}
+          closeConnectedVrPopup={onClose}
           closSelectingAModule={props.onClose}
           closeSelectingAHeadset={props.closeSelectingAHeadset}
           headsetId={props.headsetId}

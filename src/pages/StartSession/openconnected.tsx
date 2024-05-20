@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -12,11 +12,44 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-export default function Openconnected(props: any) {
+interface OpenConnectedProps {
+  isOpen: boolean;
+  onClose: () => void;
+  closeSelectingAHeadset: () => void;
+  closeSelectingAModule: () => void;
+  closeConnectedVrPopup: () => void;
+  headsetId: string;
+}
+export default function Openconnected({
+  isOpen,
+  onClose,
+  closeSelectingAHeadset,
+  closeSelectingAModule,
+  closeConnectedVrPopup,
+  headsetId,
+}: OpenConnectedProps) {
+  const handlePlayAnotherModule = useCallback(() => {
+    closeConnectedVrPopup();
+    onClose();
+  }, [closeConnectedVrPopup, onclose]);
+
+  const handleEndSession = useCallback(() => {
+    closeConnectedVrPopup();
+    closeSelectingAHeadset();
+    closeSelectingAModule();
+    onClose();
+    // TODO dispatch end session message here
+  }, [
+    closeConnectedVrPopup,
+    closeSelectingAHeadset,
+    closeSelectingAModule,
+    onClose,
+  ]);
+
   return (
     <>
       <Box>
-        <Modal isOpen={props.isOpen} onClose={props.onClose}>
+        <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent
             h="400px"
@@ -25,7 +58,7 @@ export default function Openconnected(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset [ID]
+              You are connected to the VR headset {headsetId}
             </ModalHeader>
 
             <ModalBody>
@@ -62,8 +95,7 @@ export default function Openconnected(props: any) {
                 fontWeight="700"
                 fontSize="18px"
                 marginRight="10px"
-                onClick={props.onClose}
-
+                onClick={handleEndSession}
               >
                 End session
               </Button>
@@ -77,6 +109,7 @@ export default function Openconnected(props: any) {
                 fontWeight="700"
                 fontSize="18px"
                 marginLeft="10px"
+                onClick={handlePlayAnotherModule}
               >
                 Play Another Module
               </Button>

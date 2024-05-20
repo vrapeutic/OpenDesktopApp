@@ -11,6 +11,7 @@ const ConnectedVR = (props: any) => {
   const { dispatchPlayModuleMessage, checkIfServiceExists } =
     useSocketManager();
   const [notFound, setNotFound] = useState(false);
+  const [openRunningPopup, setOpenRunningPopup] = useState(false);
 
   const handleSubmit = async () => {
     const { packageName, headsetId, sessionId } = props;
@@ -25,7 +26,7 @@ const ConnectedVR = (props: any) => {
       dispatchPlayModuleMessage(START_APP_MESSAGE, socketMessage, {
         headsetId, // TODO this is a temporary placeholder add setting as key-value pairs here
       });
-      // TODO add logic for after the play module feature
+      setOpenRunningPopup(true);
     } else {
       console.log(headsetId);
       console.log(existingDevice);
@@ -65,6 +66,11 @@ const ConnectedVR = (props: any) => {
       isOpen={props.isOpen}
       onClose={props.closSelectingAModule}
       headsetId={props.headsetId}
+      openRunningPopup={openRunningPopup}
+      setOpenRunningPopup={setOpenRunningPopup}
+      closeSelectingAHeadset={props.closeSelectingAHeadset}
+      closeSelectingAModule={props.closSelectingAModule}
+      closeConnectedVrPopup={props.closeConnectedVrPopup}
     />
   );
 };
