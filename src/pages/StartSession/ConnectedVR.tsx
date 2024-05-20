@@ -1,14 +1,3 @@
-import {
-  Box,
-  Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-  Text,
-} from '@chakra-ui/react';
 import React, { useState } from 'react';
 
 import useSocketManager from '../../Context/SocketManagerProvider';
@@ -19,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 
 const ConnectedVR = (props: any) => {
   const navigate = useNavigate();
-  const { emitMessage, checkIfServiceExists } = useSocketManager();
+  const { dispatchPlayModuleMessage, checkIfServiceExists } =
+    useSocketManager();
   const [notFound, setNotFound] = useState(false);
 
   const handleSubmit = async () => {
@@ -29,10 +19,12 @@ const ConnectedVR = (props: any) => {
     if (existingDevice) {
       const socketMessage = {
         sessionId,
-        [MODULE_PACKAGE_KEY] : packageName,
+        [MODULE_PACKAGE_KEY]: packageName,
       };
 
-      emitMessage(START_APP_MESSAGE, socketMessage);
+      dispatchPlayModuleMessage(START_APP_MESSAGE, socketMessage, {
+        headsetId, // TODO this is a temporary placeholder add setting as key-value pairs here
+      });
       // TODO add logic for after the play module feature
     } else {
       console.log(headsetId);
