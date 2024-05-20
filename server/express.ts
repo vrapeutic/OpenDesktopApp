@@ -34,15 +34,16 @@ io.on('connection', (socket) => {
   console.log(SERVER_LOGS_COLOR, 'a client connected');
 
   socket.onAny((eventName, ...args) => {
-    if (!SOCKET_ALLOWED_EVENTS[eventName as keyof typeof SOCKET_ALLOWED_EVENTS])
+    const event = SOCKET_ALLOWED_EVENTS[eventName as keyof typeof SOCKET_ALLOWED_EVENTS]
+    if (!event)
       throw new Error('invalid event name: ' + eventName);
 
     console.log(
       SERVER_LOGS_COLOR,
-      `received event: ${eventName} with args: ${JSON.stringify(args, null, 4)}`
+      `received event: ${event} with args: ${JSON.stringify(args, null, 4)}`
     );
     // broadcast to all clients
-    io.emit(eventName, args);
+    io.emit(event, args);
   });
 });
 
