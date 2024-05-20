@@ -22,24 +22,22 @@ import { dataContext } from '@renderer/shared/Provider';
 import ConnectedVR from './ConnectedVR';
 import { useNavigate } from 'react-router-dom';
 
-
 export default function SelectingModule(props: any) {
-
   const [modules, setModules] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [values, setValues] = useState({
-    selectedModule: '',
+    packageName: '',
   });
   const [sessionId, setSessionId] = useState(5);
   const [name, setName] = useState('Modules');
   const [errors, setErrors] = useState({
-    selectedModule: null,
+    packageName: null,
   });
 
   const schema = Joi.object().keys({
-    selectedModule: Joi.string().required(),
+    packageName: Joi.string().required(),
   });
 
   const handleSubmit = async (event: any) => {
@@ -55,13 +53,10 @@ export default function SelectingModule(props: any) {
       setErrors(validationErrors);
       console.log(validationErrors);
     } else {
-      setErrors({ selectedModule: null });
-
+      setErrors({ packageName: null });
 
       onOpen();
       // props.onClose();
-      
-
     }
   };
 
@@ -87,9 +82,9 @@ export default function SelectingModule(props: any) {
   }, [selectedCenter.id]);
   const CloseMOdule = () => {
     props.onClose();
-    navigate("/home")
+    navigate('/home');
     setValues({
-      selectedModule: '',
+      packageName: '',
     });
     setName('modules');
   };
@@ -132,10 +127,10 @@ export default function SelectingModule(props: any) {
                         {modules.map((module) => (
                           <MenuItem
                             key={module.id}
-                            name="selectedModule"
+                            name="packageName"
                             onClick={() => {
                               setValues({
-                                selectedModule: module.id,
+                                packageName: module.attributes.package_name,
                               });
                               setName(module.attributes.name);
                             }}
@@ -146,7 +141,7 @@ export default function SelectingModule(props: any) {
                       </MenuList>
                     </Menu>
                     <Text fontSize="10px" color="red">
-                      {errors.selectedModule}
+                      {errors.packageName}
                     </Text>
                   </>
                 ) : (
@@ -215,15 +210,17 @@ export default function SelectingModule(props: any) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpen && <ConnectedVR 
-                    isOpen={isOpen}
-                    closSelectingAModule={props.onClose}
-                    closeSelectingAHeadset={props.closeSelectingAHeadset}
-                    headsetId={props.headsetId}
-                    packageName={ values['selectedModule']|| 'test name'}
-                    sessionId={sessionId}
-                    closeErrorToSelectAnotherSet={props.closeErrorToSelectAnotherSet}
-                    />}
+      {onOpen && (
+        <ConnectedVR
+          isOpen={isOpen}
+          closSelectingAModule={props.onClose}
+          closeSelectingAHeadset={props.closeSelectingAHeadset}
+          headsetId={props.headsetId}
+          packageName={values.packageName}
+          sessionId={sessionId}
+          closeErrorToSelectAnotherSet={props.closeErrorToSelectAnotherSet}
+        />
+      )}
     </Box>
   );
 }
