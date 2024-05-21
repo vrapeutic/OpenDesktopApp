@@ -90,13 +90,12 @@ const SelectBooks = (props: any) => {
 
         <ModalBody fontSize="20px" fontWeight="600" mt="25px">
           <FormControl isInvalid={!!errors.selectLevel}>
-            <Stack spacing={4} direction="column" align="center">
+            <Stack spacing={4} direction="row" align="center">
               <Button
                 onClick={() => handleButtonClick(1)}
                 bg={selectedBook === 1 ? 'blue.300' : 'gray.300'}
                 color="black"
-                width="12em"
-                fontSize="1.2rem"
+                fontSize="0.65rem"
                 {...register('selectBook')}
                 value={1}
               >
@@ -107,8 +106,7 @@ const SelectBooks = (props: any) => {
                 onClick={() => handleButtonClick(2)}
                 bg={selectedBook === 2 ? 'blue.300' : 'gray.300'}
                 color="black"
-                width="12em"
-                fontSize="1.2rem"
+                fontSize="0.65rem"
                 {...register('selectBook')}
                 value={2}
               >
@@ -118,8 +116,7 @@ const SelectBooks = (props: any) => {
                 onClick={() => handleButtonClick(3)}
                 bg={selectedBook === 3 ? 'blue.300' : 'gray.300'}
                 color="black"
-                width="12em"
-                fontSize="1.2rem"
+                fontSize="0.65rem"
                 {...register('selectBook')}
                 value={3}
               >
