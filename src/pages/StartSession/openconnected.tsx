@@ -15,10 +15,10 @@ import {
 interface OpenConnectedProps {
   isOpen: boolean;
   onClose: () => void;
-  closeSelectingAHeadset: () => void;
-  closeSelectingAModule: () => void;
-  closeConnectedVrPopup: () => void;
-  headsetId: string;
+  closeSelectingAHeadset?: () => void;
+  closeSelectingAModule?: () => void;
+  closeConnectedVrPopup?: () => void;
+  headsetId?: string;
 }
 export default function Openconnected({
   isOpen,
