@@ -8,6 +8,8 @@ class MdnsManager {
   discoverdServices: {
     [key: string]: boolean;
   };
+  browser:mdns.Browser|null
+
   constructor() {
     console.log(SERVER_LOGS_COLOR, 'init mdns manager');
     
@@ -16,9 +18,12 @@ class MdnsManager {
       name: 'electron-service',
     });
     this.discoverdServices = {};
+   this.browser=null
   }
 
   start() {
+    console.log(SERVER_LOGS_COLOR, 'start mdns manager');
+    
     this.ad.start();
     this.runWatcher();
   }
@@ -32,21 +37,26 @@ class MdnsManager {
       mdns.rst.makeAddressesUnique(),
     ];
 
-    const browser = mdns.createBrowser(this.tcp, {
+     this.browser = mdns.createBrowser(this.tcp, {
       resolverSequence: sequence,
     });
 
-    browser.on('serviceUp', (service) => {
+    this.browser.on('serviceUp', (service) => {
       console.log(SERVER_LOGS_COLOR, 'service up: ', service.name);
       this.addToDiscoverdServices(service);
     });
 
-    browser.on('serviceDown', (service) => {
+    this.browser.on('serviceDown', (service) => {
       console.log(SERVER_LOGS_COLOR, 'service down: ', service.name);
       this.removeFromDiscoverdServices(service);
     });
 
-    browser.start();
+    this.browser.start();
+
+    process.on('exit', () => {
+      console.log(SERVER_LOGS_COLOR, 'initiate mdns manager cleaner');
+      this.cleanUp();
+    });
   }
 
   findAllServices() {
@@ -67,6 +77,15 @@ class MdnsManager {
   delete this.discoverdServices[service?.txtRecord?.device_id];
  }
 
+
+
+cleanUp() {
+  this.ad?.stop();
+  if(this.browser){
+    this.browser.stop();
+  }
+  this.discoverdServices = {};
+}
 }
 
 export default MdnsManager;
