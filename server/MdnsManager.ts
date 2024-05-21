@@ -68,13 +68,13 @@ class MdnsManager {
   }
 
   addToDiscoverdServices(service:{[key: string]: any}) {
-    if(service?.txtRecord?.device_id){
-      this.discoverdServices[service?.txtRecord?.device_id] = true;
+    if(service?.txtRecord?.deviceId){
+      this.discoverdServices[service?.txtRecord?.deviceId] = true;
       }
   }
 
  removeFromDiscoverdServices(service:{[key: string]: any}) {
-  delete this.discoverdServices[service?.txtRecord?.device_id];
+  delete this.discoverdServices[service?.txtRecord?.deviceId];
  }
 
 
