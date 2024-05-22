@@ -1,11 +1,19 @@
 import {
+  GENERATE_SESSION_REPORT,
+  OUTGOING_ONLY_MESSAGES,
+  REPORT_FILE_SAVE_PATH,
   SERVER_LOGS_COLOR,
   SOCKET_ALLOWED_EVENTS,
+  YELLOW_SERVER_LOGS_COLOR,
 } from '../electron/constants';
+//server affairs
 import * as express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { writeFile } from 'fs';
+// file affairs
+import * as path from 'node:path';
+import * as fs from 'fs';
+import * as os from 'os';
 
 const app = express();
 const server = createServer(app);
@@ -16,28 +24,19 @@ const io = new Server(server, {
   },
 });
 
-import { json } from 'body-parser';
-import { ipcMain } from 'electron';
-
-app.use(json());
-
-// routes
-app.post('/start-app', (req, res) => {
-  const message = req.body.message;
-
-  console.log(SERVER_LOGS_COLOR, 'received message: ' + message);
-  ipcMain.emit('start-app', { event: 'start-app', message: message });
-
-  res.send('express received message: ' + message);
-});
-
 io.on('connection', (socket) => {
   console.log(SERVER_LOGS_COLOR, 'a client connected');
 
-  socket.on('generateCsv', (file, callback) => {
-    console.log(file);
-    writeFile('../src/public/csvs/received_data.csv', file, (err) => {
-      callback({ message: err ? 'failure' : 'success' });
+  socket.on(GENERATE_SESSION_REPORT, (file) => {
+    const reportsDirUrl = getOrCreateReportDir();
+
+    console.log(
+      YELLOW_SERVER_LOGS_COLOR,
+      `generate report at ${reportsDirUrl}`
+    );
+
+    fs.writeFile(`${reportsDirUrl}/received_data.csv`, file, (err) => {
+      if (err) console.log(YELLOW_SERVER_LOGS_COLOR, err);
     });
   });
 
@@ -45,6 +44,11 @@ io.on('connection', (socket) => {
     const event =
       SOCKET_ALLOWED_EVENTS[eventName as keyof typeof SOCKET_ALLOWED_EVENTS];
     if (!event) throw new Error('invalid event name: ' + eventName);
+
+    if (
+      OUTGOING_ONLY_MESSAGES[eventName as keyof typeof OUTGOING_ONLY_MESSAGES]
+    )
+      return;
 
     console.log(
       SERVER_LOGS_COLOR,
@@ -54,5 +58,15 @@ io.on('connection', (socket) => {
     io.emit(event, args);
   });
 });
+
+const getOrCreateReportDir = () => {
+  const homeDir = os.homedir();
+  const dirUrl = path.join(homeDir, REPORT_FILE_SAVE_PATH);
+
+  if (!fs.existsSync(dirUrl)) {
+    fs.mkdirSync(dirUrl, { recursive: true });
+  }
+  return dirUrl;
+};
 
 export default server;
