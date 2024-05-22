@@ -5,10 +5,13 @@ export const  SOCKET_ALLOWED_EVENTS = {
   START_APP: "start-app",
   START_SESSION: "start-session",
   PLAY_MODULE: "playModule",
+  END_SESSION: "end-session"
 }
 
 export const SERVER_LOGS_COLOR = "\x1b[36m%s\x1b[0m"
 
 export const START_APP_MESSAGE = "PLAY_MODULE" // this has to match a key in SOCKET_ALLOWED_EVENTS
+
+export const END_SESSION_MESSAGE = "END_SESSION"
 
 export const MODULE_PACKAGE_KEY = 'modulePackageName'
