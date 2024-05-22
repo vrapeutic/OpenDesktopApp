@@ -21,13 +21,6 @@ const socket = io(URL, {
 const SocketManagerContext = createContext(null);
 
 const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
-  const emitMessage = useCallback(
-    (channel: string, message: string) => {
-      socket.emit(channel, message);
-    },
-    [socket]
-  );
-
   const dispatchSocketMessage = useCallback(
     (channel: string, message: string, ...rest: any[]) => {
       socket.emit(channel, { message, ...(rest.length && { settings: rest }) });
@@ -58,7 +51,6 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const contextValue = useMemo(
     () => ({
-      emitMessage,
       checkIfServiceExists,
       dispatchSocketMessage,
     }),
