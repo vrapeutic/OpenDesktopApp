@@ -19,9 +19,12 @@ import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
 const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
+  const { module,sessionId } = useStartSessionContext();
+
   const [selectedDistractor, setselectedDistractor] = useState<number | null>(
     null
   );
@@ -57,16 +60,18 @@ const SelectDistractors = (props: any) => {
     props.onCloseBooks();
     toast({
       title: 'Success',
-      description: `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor}`,
+      description: `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      module name is ${module} and session id is ${sessionId}`,
       status: 'success',
       duration: 9000,
       position: 'top-right',
     });
 
     console.log(
-      `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor}`
+      `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      module name is ${module} and session id is ${sessionId}`
     );
-    console.log('All form data', updatedFormData);
+    console.log('Array of menu choices', updatedFormData);
   };
 
   const handleBackToSelectBook = () => {

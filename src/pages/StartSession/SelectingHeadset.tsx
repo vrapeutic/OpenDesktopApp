@@ -21,6 +21,8 @@ import { useNavigate } from 'react-router-dom';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectingModule from './SelectingModule';
+import { getMe } from '@renderer/cache';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
 const ErrorsModal = ({
   isOpen,
@@ -60,7 +62,6 @@ const ErrorsModal = ({
               The selected headset could not be found on this network
             </Text>
 
-
             <Button
               w="12rem"
               h="54px"
@@ -70,15 +71,13 @@ const ErrorsModal = ({
               fontFamily="Roboto"
               fontWeight="700"
               fontSize="1rem"
-              marginleft="10px"            
+              marginleft="10px"
               onClick={OpenModulemodal}
             >
               Continue to select module
             </Button>
-        
           </ModalBody>
           <ModalFooter>
-
             <Button
               w="214px"
               h="54px"
@@ -110,13 +109,9 @@ const ErrorsModal = ({
             >
               Select another headset
             </Button>
-
-            
-
           </ModalFooter>
         </ModalContent>
       </Modal>
-
 
       {onmoduleOpen && (
         <SelectingModule isOpen={ismoduleopen} onClose={CloseModuleModal} />
@@ -132,6 +127,9 @@ const SelectingHeadset = (props) => {
     onClose: onErrorClose,
   } = useDisclosure();
   const [headsets, setHeadsets] = useState([]);
+  const [headsetid, setHeadsetid] = useState('');
+  const { setSessionId } = useStartSessionContext();
+
   const selectedCenterContext = useContext(dataContext);
   const [errorMessages, setErrorMessages] = useState('');
 
@@ -145,7 +143,6 @@ const SelectingHeadset = (props) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -167,7 +164,10 @@ const SelectingHeadset = (props) => {
     }
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (data:any) => {
+    console.log('Selected headset:', data.headset); 
+    setHeadsetid(data.headset)
+    Getsessionid(data.headset)
     console.log('Form submitted with data in headset.');
     setErrorMessages('This is a test error message.');
     onErrorOpen();
@@ -175,15 +175,44 @@ const SelectingHeadset = (props) => {
 
   const handleCancelSession = () => {
     onErrorClose();
-    props.onClose(); // Close the SelectingHeadset component
+    props.onClose();
   };
 
   const handleSelectAnotherHeadset = () => {
     onErrorClose();
-    // Additional logic to open the component for selecting another headset
+  };
+
+
+  const Getsessionid = async (dataheadset : any) => {
+    setSessionId("123456")
+
+    const token = getMe().token;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      
+    };
+      try {
+        const response = await axios.post(
+          `${config.apiURL}/api/v1/sessions`,
+          {
+            center_id: props.centerId,
+            child_id: props.childId,
+            headset_id: dataheadset,
+          },
+          { headers }
+        );
+   
+        console.log('API Response from session id: data.data.id', response.data.data.id);
+        // setSessionId(response.data.data.id)
+      } catch (error) {
+        console.log('Error assigning center to module:', error);
+      }
+    
+
   };
 
   useEffect(() => {
+    // Getsessionid()
     if (selectedCenterContext.id) {
       getHeadsets();
     }
@@ -203,10 +232,10 @@ const SelectingHeadset = (props) => {
                 <Text mt="25px">Select a headset</Text>
                 <GridItem>
                   <Select
-                    {...register('headseat')}
+                    {...register('headset')}
                     id="headset"
                     name="headset"
-                    placeholder="Select headseat"
+                    placeholder="Select headset"
                     size="sm"
                   >
                     {headsets.map((headset) => (
@@ -232,7 +261,7 @@ const SelectingHeadset = (props) => {
                   fontFamily="Roboto"
                   fontWeight="700"
                   fontSize="18px"
-                  onClick={handleFormSubmit}
+                  onClick={handleSubmit(handleFormSubmit)} // Use handleSubmit here
                 >
                   Connect to headset
                 </Button>

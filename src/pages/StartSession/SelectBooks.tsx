@@ -20,10 +20,12 @@ import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import SelectDistractors from './SelectDistractors';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
 const SelectBooks = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
+  const { module,sessionId } = useStartSessionContext();
   const toast = useToast();
   const {
     isOpen: isOpenSelectDistractors,
@@ -61,18 +63,22 @@ const SelectBooks = (props: any) => {
       props.onClose();
       props.oncloseselectlevel();
       props.onclosemodules();
+      console.log("session id",sessionId)
       toast({
         title: 'Success',
-        description: `You assigned level ${updatedFormData[0]} and book ${selectedBook}`,
-        status: 'success',
-        duration: 9000,
+        description: `You assigned level ${updatedFormData[0]} , book ${selectedBook} ,
+         module name is ${module} and session id is ${sessionId}`,
+         status: 'success',
+
+        duration: 5000,
         position: 'top-right',
       });
   
       console.log(
-        `You assigned level ${updatedFormData[0]} and book ${selectedBook}`
+        `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} 
+        module name is ${module} and session id is ${sessionId}`
       );
-      console.log('All form data', updatedFormData);
+      console.log('Array of menu choices', updatedFormData);
     }
   };
   
