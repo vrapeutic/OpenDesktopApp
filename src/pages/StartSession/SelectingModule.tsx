@@ -19,19 +19,34 @@ import { config } from '@renderer/config';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
-import ConnectedVR from './ConnectedVR';
 import { useNavigate } from 'react-router-dom';
 import Selectlevel from './SelectLevel';
+import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
-  const { isOpen: isOpenSelectlevel, onOpen: onOpenSelectlevel, onClose: onCloseSelectlevel } = useDisclosure();
+  const {
+    isOpen: isOpenSelectlevel,
+    onOpen: onOpenSelectlevel,
+    onClose: onCloseSelectlevel,
+  } = useDisclosure();
   const selectedCenter = useContext(dataContext);
   const navigate = useNavigate();
   const [values, setValues] = useState({
     selectedModule: '',
   });
+  // const {
+  //   isOpen: isOpenSelectlevel,
+  //   onOpen: onOpenSelectlevel,
+  //   onClose: onCloseSelectlevel,
+  // } = useDisclosure();
+
+  const {
+    isOpen: isOpenSelectlevelArcheeko,
+    onOpen: onOpenSelectlevelArcheeko,
+    onClose: onCloseSelectlevelArcheeko,
+  } = useDisclosure();
   const [name, setName] = useState('Modules');
   const { setModule } = useStartSessionContext();
 
@@ -43,14 +58,23 @@ export default function SelectingModule(props: any) {
     selectedModule: Joi.string().required(),
   });
 
-  const handleSubmit = async () => {
-    onOpenSelectlevel();
+  const handleSubmit = (): void => {
+    switch (name) {
+      case 'Archeeko':
+        console.log('Archeekon', name);
+        return onOpenSelectlevelArcheeko();
+      case 'viblio':
+        console.log('viblio', name);
+        return onOpenSelectlevel();
+      default:
+        return null;
+    }
   };
 
   const handleModuleSelect = (module: any) => {
     setValues({ selectedModule: module.id });
     setName(module.attributes.name);
-    setModule(module.attributes.name)
+    setModule(module.attributes.name);
     console.log('Selected Module:', module);
   };
 
@@ -72,10 +96,19 @@ export default function SelectingModule(props: any) {
     })();
   }, [selectedCenter.id]);
 
+  // <<<<<<< HEAD
+  //   const CloseMOdule = () => {
+  //     props.onClose();
+  //     navigate('/home');
+  //     setValues({
+  //       selectedModule: '',
+  //     });
+  // =======
   const CloseModule = () => {
     props.onClose();
-    navigate("/home");
+    navigate('/home');
     setValues({ selectedModule: '' });
+
     setName('modules');
   };
 
@@ -86,7 +119,8 @@ export default function SelectingModule(props: any) {
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
-              You have been connected successfully to the headset {props.headsetId}
+              You have been connected successfully to the headset{' '}
+              {props.headsetId}
             </Text>
 
             {selectedCenter.id ? (
@@ -192,6 +226,13 @@ export default function SelectingModule(props: any) {
         <Selectlevel
           isOpen={isOpenSelectlevel}
           onClose={onCloseSelectlevel}
+          onclosemodules={props.onClose}
+        />
+      )}
+      {onOpenSelectlevelArcheeko && (
+        <SelectLevelArcheeko
+          isOpen={isOpenSelectlevelArcheeko}
+          onClose={onCloseSelectlevelArcheeko}
           onclosemodules={props.onClose}
         />
       )}

@@ -51,7 +51,7 @@ const ErrorsModal = ({
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} w="800px">
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent h="400px" w="800px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
@@ -104,7 +104,7 @@ const ErrorsModal = ({
               fontFamily="Roboto"
               fontWeight="700"
               fontSize="1rem"
-              marginleft="10px"
+              marginLeft="10px"
               onClick={onSelectAnotherHeadset}
             >
               Select another headset
@@ -120,7 +120,7 @@ const ErrorsModal = ({
   );
 };
 
-const SelectingHeadset = (props) => {
+const SelectingHeadset = (props: any) => {
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
@@ -128,7 +128,7 @@ const SelectingHeadset = (props) => {
   } = useDisclosure();
   const [headsets, setHeadsets] = useState([]);
   const [headsetid, setHeadsetid] = useState('');
-  const { setSessionId } = useStartSessionContext();
+  const { setSessionId, setStartSession } = useStartSessionContext();
 
   const selectedCenterContext = useContext(dataContext);
   const [errorMessages, setErrorMessages] = useState('');
@@ -164,10 +164,10 @@ const SelectingHeadset = (props) => {
     }
   };
 
-  const handleFormSubmit = (data:any) => {
-    console.log('Selected headset:', data.headset); 
-    setHeadsetid(data.headset)
-    Getsessionid(data.headset)
+  const handleFormSubmit = (data: any) => {
+    console.log('Selected headset:', data.headset);
+    setHeadsetid(data.headset);
+    Getsessionid(data.headset);
     console.log('Form submitted with data in headset.');
     setErrorMessages('This is a test error message.');
     onErrorOpen();
@@ -182,33 +182,34 @@ const SelectingHeadset = (props) => {
     onErrorClose();
   };
 
-
-  const Getsessionid = async (dataheadset : any) => {
-    setSessionId("123456")
+  const Getsessionid = async (dataheadset: any) => {
+    setSessionId('123456');
 
     const token = getMe().token;
     const headers = {
       Authorization: `Bearer ${token}`,
-      
     };
-      try {
-        const response = await axios.post(
-          `${config.apiURL}/api/v1/sessions`,
-          {
-            center_id: props.centerId,
-            child_id: props.childId,
-            headset_id: dataheadset,
-          },
-          { headers }
-        );
-   
-        console.log('API Response from session id: data.data.id', response.data.data.id);
-        // setSessionId(response.data.data.id)
-      } catch (error) {
-        console.log('Error assigning center to module:', error);
-      }
-    
+    try {
+      const response = await axios.post(
+        `${config.apiURL}/api/v1/sessions`,
+        {
+          center_id: props.centerId,
+          child_id: props.childId,
+          headset_id: dataheadset,
+        },
+        { headers }
+      );
 
+      console.log(
+        'API Response from session id: data.data.id',
+        response.data.data.id,
+        response.data.data.attributes
+      );
+      setSessionId(response.data.data.id);
+      setStartSession(response.data.data.attributes.created_at);
+    } catch (error) {
+      console.log('Error assigning center to module:', error);
+    }
   };
 
   useEffect(() => {
@@ -281,7 +282,7 @@ const SelectingHeadset = (props) => {
         closeselectingheadset={props.onClose}
         onCancelSession={handleCancelSession}
         onSelectAnotherHeadset={handleSelectAnotherHeadset}
-        errorMessages={errorMessages}
+        // errorMessages={errorMessages}
       />
     </>
   );

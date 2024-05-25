@@ -21,12 +21,18 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import SelectDistractors from './SelectDistractors';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import Openconnected from './openconnected';
 
 const SelectBooks = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
   const { module,sessionId } = useStartSessionContext();
   const toast = useToast();
+  const {
+    isOpen: isOpenConnected,
+    onOpen: onOpenConnected,
+    onClose: onCloseConnected,
+  } = useDisclosure();
   const {
     isOpen: isOpenSelectDistractors,
     onOpen: onOpenSelectDistractors,
@@ -60,10 +66,9 @@ const SelectBooks = (props: any) => {
       onOpenSelectDistractors();
     } else {
       navigate('/Therapycenters');
-      props.onClose();
-      props.oncloseselectlevel();
-      props.onclosemodules();
+      onOpenConnected()
       console.log("session id",sessionId)
+
       toast({
         title: 'Success',
         description: `You assigned level ${updatedFormData[0]} , book ${selectedBook} ,
@@ -190,6 +195,13 @@ const SelectBooks = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
           onCloseBooks={props.onClose}
+        />
+      )}
+        {onOpenConnected && (
+        <Openconnected
+          isOpen={isOpenConnected}
+          onClose={onCloseConnected}
+          onclosemodules={props.onclosemodules}
         />
       )}
     </>

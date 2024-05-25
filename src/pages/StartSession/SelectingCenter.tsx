@@ -48,6 +48,8 @@ export default function SelectingCenter(props: any) {
   });
 
   const getKids = async () => {
+
+  
     const token = await (window as any).electronAPI.getPassword('token');
     const headers = { Authorization: `Bearer ${token}` };
     try {
@@ -140,6 +142,7 @@ export default function SelectingCenter(props: any) {
           onClose={onHeadsetClose}
           centerId={selectedCenterContext.id}
           childId={childId}
+
         />
       )}
     </Box>
