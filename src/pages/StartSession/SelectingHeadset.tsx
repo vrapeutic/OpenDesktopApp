@@ -28,6 +28,7 @@ const ErrorsModal = ({
   onSelectAnotherHeadset,
   onCancelSession,
   closeselectingheadset,
+
 }) => {
   const navigate = useNavigate();
 
@@ -49,7 +50,7 @@ const ErrorsModal = ({
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} w="800px">
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent h="400px" w="800px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
@@ -60,7 +61,6 @@ const ErrorsModal = ({
               The selected headset could not be found on this network
             </Text>
 
-
             <Button
               w="12rem"
               h="54px"
@@ -70,15 +70,13 @@ const ErrorsModal = ({
               fontFamily="Roboto"
               fontWeight="700"
               fontSize="1rem"
-              marginleft="10px"            
+              marginleft="10px"
               onClick={OpenModulemodal}
             >
               Continue to select module
             </Button>
-        
           </ModalBody>
           <ModalFooter>
-
             <Button
               w="214px"
               h="54px"
@@ -105,27 +103,23 @@ const ErrorsModal = ({
               fontFamily="Roboto"
               fontWeight="700"
               fontSize="1rem"
-              marginleft="10px"
+              marginLeft="10px"
               onClick={onSelectAnotherHeadset}
             >
               Select another headset
             </Button>
-
-            
-
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-
       {onmoduleOpen && (
-        <SelectingModule isOpen={ismoduleopen} onClose={CloseModuleModal} />
+        <SelectingModule isOpen={ismoduleopen} onClose={CloseModuleModal}  />
       )}
     </>
   );
 };
 
-const SelectingHeadset = (props) => {
+const SelectingHeadset = (props:any) => {
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
@@ -252,7 +246,7 @@ const SelectingHeadset = (props) => {
         closeselectingheadset={props.onClose}
         onCancelSession={handleCancelSession}
         onSelectAnotherHeadset={handleSelectAnotherHeadset}
-        errorMessages={errorMessages}
+        // errorMessages={errorMessages}
       />
     </>
   );

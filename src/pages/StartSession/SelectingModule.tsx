@@ -22,12 +22,24 @@ import { dataContext } from '@renderer/shared/Provider';
 import ConnectedVR from './ConnectedVR';
 import { useNavigate } from 'react-router-dom';
 import Selectlevel from './SelectLevel';
+import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
-  const { isOpen :isOpenSelectlevel, onOpen:onOpenSelectlevel, onClose:onCloseSelectlevel } = useDisclosure();
+  const {
+    isOpen: isOpenSelectlevel,
+    onOpen: onOpenSelectlevel,
+    onClose: onCloseSelectlevel,
+  } = useDisclosure();
+
+
+  const {
+    isOpen: isOpenSelectlevelArcheeko,
+    onOpen: onOpenSelectlevelArcheeko,
+    onClose: onCloseSelectlevelArcheeko,
+  } = useDisclosure();
   const selectedCenter = useContext(dataContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [values, setValues] = useState({
     selectedModule: '',
   });
@@ -41,8 +53,19 @@ export default function SelectingModule(props: any) {
     selectedModule: Joi.string().required(),
   });
 
-  const handleSubmit = async () => {
-    onOpenSelectlevel();
+  const handleSubmit =  (): void => {
+    switch (name) {
+      case 'Archeeko':
+        console.log("Archeekon",name);
+        return onOpenSelectlevelArcheeko();
+       
+      case 'test':
+        console.log(name);
+        return onOpenSelectlevelArcheeko();
+      default:
+        return onOpenSelectlevel();
+    }
+  
   };
 
   useEffect(() => {
@@ -65,10 +88,10 @@ export default function SelectingModule(props: any) {
         .catch((error) => console.log('error', error));
     })();
   }, [selectedCenter.id]);
-  
+
   const CloseMOdule = () => {
     props.onClose();
-    navigate("/home")
+    navigate('/home');
     setValues({
       selectedModule: '',
     });
@@ -80,8 +103,6 @@ export default function SelectingModule(props: any) {
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-      
-
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
               You have been connected successfully to the headset{' '}
@@ -194,8 +215,20 @@ export default function SelectingModule(props: any) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenSelectlevel && <Selectlevel isOpen={isOpenSelectlevel} onClose={onCloseSelectlevel} 
-      onclosemodules={props.onClose}/>}
+      {onOpenSelectlevel && (
+        <Selectlevel
+          isOpen={isOpenSelectlevel}
+          onClose={onCloseSelectlevel}
+          onclosemodules={props.onClose}
+        />
+      )}
+      {onOpenSelectlevelArcheeko && (
+        <SelectLevelArcheeko
+          isOpen={isOpenSelectlevelArcheeko}
+          onClose={onCloseSelectlevelArcheeko}
+          onclosemodules={props.onClose}
+        />
+      )}
     </Box>
   );
 }
