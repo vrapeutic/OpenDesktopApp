@@ -22,9 +22,14 @@ import { config } from '../../../config';
 
 import { dataContext } from '@renderer/shared/Provider';
 import { getMe } from '@renderer/cache';
+import Openconnected from '../openconnected';
 
 const SelectNumberArcheeko = (props: any) => {
-
+  const {
+    isOpen: isOpenConnected,
+    onOpen: onOpenConnected,
+    onClose: onCloseConnected,
+  } = useDisclosure();
   const selectedCenterContext = useContext(dataContext);
   const [formData, setFormData] = useState<any[]>([]);
   const {
@@ -72,9 +77,10 @@ const SelectNumberArcheeko = (props: any) => {
       onOpenSelectDistractors();
     } else {
       props.onClose();
-      props.onclosemodules();
+      // props.onclosemodules();
 
       Sessionid();
+      onOpenConnected()
     }
     const hasEnvironmentObject = formData.some((obj) => 'number' in obj);
 
@@ -200,6 +206,10 @@ const SelectNumberArcheeko = (props: any) => {
           oncloseselectlevel={props.onClose}
           onclosemodules={props.onclosemodules}
         />
+      )}
+
+{onOpenConnected && (
+        <Openconnected isOpen={isOpenConnected} onClose={onCloseConnected} onclosemodules={props.onclosemodules}/>
       )}
     </>
   );

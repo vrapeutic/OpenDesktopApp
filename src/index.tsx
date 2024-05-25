@@ -8,6 +8,7 @@ import { Fonts } from './theme/Fonts';
 import './index.css';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AdminProvider } from './Context/AdminContext';
+import { StartSessionProvider } from './Context/StartSesstionContext';
 
 const queryClient = new QueryClient();
 
@@ -19,10 +20,12 @@ root.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <AdminProvider>
-          <Fonts />
-          <App />
-        </AdminProvider>
+        <StartSessionProvider>
+          <AdminProvider>
+            <Fonts />
+            <App />
+          </AdminProvider>
+        </StartSessionProvider>
       </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>

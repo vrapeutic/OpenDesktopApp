@@ -19,10 +19,10 @@ import { config } from '@renderer/config';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
-import ConnectedVR from './ConnectedVR';
 import { useNavigate } from 'react-router-dom';
 import Selectlevel from './SelectLevel';
 import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
@@ -31,20 +31,25 @@ export default function SelectingModule(props: any) {
     onOpen: onOpenSelectlevel,
     onClose: onCloseSelectlevel,
   } = useDisclosure();
-
+  const selectedCenter = useContext(dataContext);
+  const navigate = useNavigate();
+  const [values, setValues] = useState({
+    selectedModule: '',
+  });
+  // const {
+  //   isOpen: isOpenSelectlevel,
+  //   onOpen: onOpenSelectlevel,
+  //   onClose: onCloseSelectlevel,
+  // } = useDisclosure();
 
   const {
     isOpen: isOpenSelectlevelArcheeko,
     onOpen: onOpenSelectlevelArcheeko,
     onClose: onCloseSelectlevelArcheeko,
   } = useDisclosure();
-  const selectedCenter = useContext(dataContext);
-  const navigate = useNavigate();
-  const [values, setValues] = useState({
-    selectedModule: '',
-  });
-  const [sessionId, setSessionId] = useState(5);
   const [name, setName] = useState('Modules');
+  const { setModule } = useStartSessionContext();
+
   const [errors, setErrors] = useState({
     selectedModule: null,
   });
@@ -53,19 +58,24 @@ export default function SelectingModule(props: any) {
     selectedModule: Joi.string().required(),
   });
 
-  const handleSubmit =  (): void => {
+  const handleSubmit = (): void => {
     switch (name) {
       case 'Archeeko':
-        console.log("Archeekon",name);
+        console.log('Archeekon', name);
         return onOpenSelectlevelArcheeko();
-       
-      case 'test':
-        console.log(name);
-        return onOpenSelectlevelArcheeko();
-      default:
+      case 'viblio':
+        console.log('viblio', name);
         return onOpenSelectlevel();
+      default:
+        return null;
     }
-  
+  };
+
+  const handleModuleSelect = (module: any) => {
+    setValues({ selectedModule: module.id });
+    setName(module.attributes.name);
+    setModule(module.attributes.name);
+    console.log('Selected Module:', module);
   };
 
   useEffect(() => {
@@ -79,22 +89,26 @@ export default function SelectingModule(props: any) {
       })
         .then((response) => response.json())
         .then((result) => {
-          {
-            selectedCenter.id && setModules(result.data);
-          }
-
+          selectedCenter.id && setModules(result.data);
           console.log(result);
         })
         .catch((error) => console.log('error', error));
     })();
   }, [selectedCenter.id]);
 
-  const CloseMOdule = () => {
+  // <<<<<<< HEAD
+  //   const CloseMOdule = () => {
+  //     props.onClose();
+  //     navigate('/home');
+  //     setValues({
+  //       selectedModule: '',
+  //     });
+  // =======
+  const CloseModule = () => {
     props.onClose();
     navigate('/home');
-    setValues({
-      selectedModule: '',
-    });
+    setValues({ selectedModule: '' });
+
     setName('modules');
   };
 
@@ -133,12 +147,7 @@ export default function SelectingModule(props: any) {
                           <MenuItem
                             key={module.id}
                             name="selectedModule"
-                            onClick={() => {
-                              setValues({
-                                selectedModule: module.id,
-                              });
-                              setName(module.attributes.name);
-                            }}
+                            onClick={() => handleModuleSelect(module)}
                           >
                             {module.attributes.name}
                           </MenuItem>
@@ -161,7 +170,6 @@ export default function SelectingModule(props: any) {
                       fontWeight="500"
                       fontFamily="Graphik LCG"
                     >
-                      {' '}
                       Center don't have module
                     </Text>
                   </Box>
@@ -175,7 +183,6 @@ export default function SelectingModule(props: any) {
                 h={'70%'}
               >
                 <Text fontSize="13px" fontWeight="500" fontFamily="Graphik LCG">
-                  {' '}
                   Please Select Center
                 </Text>
               </Box>
@@ -192,7 +199,7 @@ export default function SelectingModule(props: any) {
               fontFamily="Graphik LCG"
               fontWeight="700"
               fontSize="15px"
-              onClick={CloseMOdule}
+              onClick={CloseModule}
             >
               Cancel session
             </Button>

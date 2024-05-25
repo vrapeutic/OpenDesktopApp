@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -8,77 +9,85 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
-  Radio,
-  RadioGroup,
   FormControl,
   FormErrorMessage,
-  Text,
+  Stack,
   useToast,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import joi from 'joi';
+import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
-import SelectNumberArcheeko from './SelectNumberArcheeko';
-import Openconnected from '../openconnected';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import Openconnected from './openconnected';
 
 const SelectDistractors = (props: any) => {
+  const navigate = useNavigate();
+  const { module, sessionId } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
-
-  const [formData, setFormData] = useState<any[]>([]);
-  const [selectedDistractors, setSelectedDistractors] = useState<number | null>(
+  const [selectedDistractor, setselectedDistractor] = useState<number | null>(
     null
   );
+  const toast = useToast();
 
   const schema = joi.object({
-    selectDistractors: joi.number().required(),
+    selectDistractor: joi.number().required(),
   });
-
   const {
     register,
     handleSubmit,
-    formState: { errors },
     setValue,
+
+    formState: { errors },
   } = useForm({
     resolver: joiResolver(schema),
-    mode: 'onSubmit',
+    mode: 'onTouched',
   });
 
   const handleFormSubmit = (data: any) => {
-    const hasEnvironmentObject = formData.some((obj) => 'distractors' in obj);
-
-    const updatedFormData = hasEnvironmentObject
-      ? [
-          ...props.formData.slice(0, 3),
-          { distractors: data.selectDistractors },
-          ...props.formData.slice(4),
-        ]
-      : [
-          ...props.formData.slice(0, 3),
-          { distractors: data.selectDistractors, ...props.formData.slice(3) },
-        ];
-
-    setFormData(updatedFormData);
+    const updatedFormData = [
+      props.formData[0],
+      props.formData[1],
+      data.selectDistractor,
+      ...props.formData.slice(3),
+    ];
     props.setFormData(updatedFormData);
-    console.log(updatedFormData);
-    const numbers = updatedFormData.map((obj) => Object.values(obj)[0]);
 
-    console.log(numbers);
-
+    navigate('/Therapycenters');
+    props.onClose();
+    // props.oncloseselectlevel();
+    // props.onclosemodules();
+    // props.onCloseBooks();
     onOpenConnected();
-  };
-  const handleButtonClick = (distractors: number) => {
-    setSelectedDistractors(distractors);
-    setValue('selectDistractors', distractors);
+    toast({
+      title: 'Success',
+      description: `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      module name is ${module} and session id is ${sessionId}`,
+      status: 'success',
+      duration: 9000,
+      position: 'top-right',
+    });
+
+    console.log(
+      `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      module name is ${module} and session id is ${sessionId}`
+    );
+    console.log('Array of menu choices', updatedFormData);
   };
 
+  const handleBackToSelectBook = () => {
+    props.onClose();
+  };
+
+  const handleButtonClick = (distractor: number) => {
+    setselectedDistractor(distractor);
+    setValue('selectDistractor', distractor);
+  };
   return (
     <>
       <Modal
@@ -88,70 +97,73 @@ const SelectDistractors = (props: any) => {
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          {/* <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
+          <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
             <ModalCloseButton marginLeft="100px" />
-          </Box> */}
+          </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Number of Distractors
+            Select Distractors
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectDistractors}>
+            <FormControl isInvalid={!!errors.selectLevel}>
               <Stack spacing={4} direction="column" align="center">
                 <Button
                   onClick={() => handleButtonClick(1)}
-                  bg={selectedDistractors === 1 ? 'blue.300' : 'gray.300'}
+                  bg={selectedDistractor === 1 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
-                  {...register('selectDistractors')}
+                  width="12em"
+                  fontSize="1.2rem"
+                  {...register('selectDistractor')}
+                  value={1}
                 >
                   1
                 </Button>
+
                 <Button
                   onClick={() => handleButtonClick(2)}
-                  bg={selectedDistractors === 2 ? 'blue.300' : 'gray.300'}
+                  bg={selectedDistractor === 2 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
-                  {...register('selectDistractors')}
+                  width="12em"
+                  fontSize="1.2rem"
+                  {...register('selectDistractor')}
+                  value={2}
                 >
                   2
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
-                  bg={selectedDistractors === 3 ? 'blue.300' : 'gray.300'}
+                  bg={selectedDistractor === 3 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
-                  {...register('selectDistractors')}
+                  width="12em"
+                  fontSize="1.2rem"
+                  {...register('selectDistractor')}
+                  value={3}
                 >
                   3
                 </Button>
               </Stack>
-
               <FormErrorMessage>
-                {errors.selectDistractors && 'Please select a Distractors .'}
+                {errors.selectDistractor && 'Please select a Distractor.'}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
-          <ModalFooter display="flex" justifyContent="space-between">
+          <ModalFooter display="flex" justifyContent="center">
             <Button
-              w="120px"
+              w="180px"
               h="54px"
-              mx={2}
               bg="#00DEA3"
               borderRadius="12px"
               color="#FFFFFF"
               fontFamily="Graphik LCG"
               fontWeight="700"
               fontSize="15px"
-              onClick={props.onClose}
+              onClick={handleBackToSelectBook}
+              mx={2}
             >
-              Back
+              Back to Select Book
             </Button>
             <Button
-              w="120px"
+              w="180px"
               h="54px"
               bg="#00DEA3"
               borderRadius="12px"
@@ -162,7 +174,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              play
+              Play
             </Button>
           </ModalFooter>
         </ModalContent>
