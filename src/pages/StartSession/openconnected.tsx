@@ -32,8 +32,6 @@ export default function Openconnected({
 }: OpenConnectedProps) {
   const { dispatchSocketMessage } = useSocketManager();
   const handlePlayAnotherModule = useCallback(() => {
-    dispatchSocketMessage(END_SESSION_MESSAGE, { deviceId: headsetId });
-
     closeConnectedVrPopup();
     onClose();
   }, [closeConnectedVrPopup, onclose]);
