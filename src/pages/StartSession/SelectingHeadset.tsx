@@ -183,7 +183,7 @@ const SelectingHeadset = (props: any) => {
   };
 
   const Getsessionid = async (dataheadset: any) => {
-    setSessionId('123456');
+    // setSessionId('123456');
 
     const token = getMe().token;
     const headers = {
