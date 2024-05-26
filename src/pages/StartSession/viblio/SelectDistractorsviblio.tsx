@@ -19,30 +19,25 @@ import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
-import SelectDistractors from './SelectDistractors';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import Openconnected from './openconnected';
+import Openconnected from '../openconnected';
 
-const SelectBooks = (props: any) => {
+const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
-  const [selectedBook, setselectedBook] = useState<number | null>(null);
-  const { module,sessionId } = useStartSessionContext();
-  const toast = useToast();
+  const { module, sessionId } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
-  const {
-    isOpen: isOpenSelectDistractors,
-    onOpen: onOpenSelectDistractors,
-    onClose: onCloseSelectDistractors,
-  } = useDisclosure();
+  const [selectedDistractor, setselectedDistractor] = useState<number | null>(
+    null
+  );
+  const toast = useToast();
 
   const schema = joi.object({
-    selectBook: joi.number().required(),
+    selectDistractor: joi.number().required(),
   });
-
   const {
     register,
     handleSubmit,
@@ -57,43 +52,41 @@ const SelectBooks = (props: any) => {
   const handleFormSubmit = (data: any) => {
     const updatedFormData = [
       props.formData[0],
-      data.selectBook,
-      ...props.formData.slice(2),
+      props.formData[1],
+      data.selectDistractor,
+      ...props.formData.slice(3),
     ];
     props.setFormData(updatedFormData);
-  
-    if (props.formData[0] === 2 || props.formData[0] === 3) {
-      onOpenSelectDistractors();
-    } else {
-      navigate('/Therapycenters');
-      onOpenConnected()
-      console.log("session id",sessionId)
 
-      toast({
-        title: 'Success',
-        description: `You assigned level ${updatedFormData[0]} , book ${selectedBook} ,
-         module name is ${module} and session id is ${sessionId}`,
-         status: 'success',
+    navigate('/Therapycenters');
+    props.onClose();
+    // props.oncloseselectlevel();
+    // props.onclosemodules();
+    // props.onCloseBooks();
+    onOpenConnected();
+    toast({
+      title: 'Success',
+      description: `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      module name is ${module} and session id is ${sessionId}`,
+      status: 'success',
+      duration: 9000,
+      position: 'top-right',
+    });
 
-        duration: 5000,
-        position: 'top-right',
-      });
-  
-      console.log(
-        `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} 
-        module name is ${module} and session id is ${sessionId}`
-      );
-      console.log('Array of menu choices', updatedFormData);
-    }
+    console.log(
+      `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      module name is ${module} and session id is ${sessionId}`
+    );
+    console.log('Array of menu choices', updatedFormData);
   };
-  
-  const handleBackToSelectLevel = () => {
+
+  const handleBackToSelectBook = () => {
     props.onClose();
   };
 
-  const handleButtonClick = (book: number) => {
-    setselectedBook(book);
-    setValue('selectBook', book);
+  const handleButtonClick = (distractor: number) => {
+    setselectedDistractor(distractor);
+    setValue('selectDistractor', distractor);
   };
   return (
     <>
@@ -108,7 +101,7 @@ const SelectBooks = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            Select Books
+            Select Distractors
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -116,41 +109,41 @@ const SelectBooks = (props: any) => {
               <Stack spacing={4} direction="column" align="center">
                 <Button
                   onClick={() => handleButtonClick(1)}
-                  bg={selectedBook === 1 ? 'blue.300' : 'gray.300'}
+                  bg={selectedDistractor === 1 ? 'blue.300' : 'gray.300'}
                   color="black"
                   width="12em"
                   fontSize="1.2rem"
-                  {...register('selectBook')}
+                  {...register('selectDistractor')}
                   value={1}
                 >
-                  5
+                  1
                 </Button>
 
                 <Button
                   onClick={() => handleButtonClick(2)}
-                  bg={selectedBook === 2 ? 'blue.300' : 'gray.300'}
+                  bg={selectedDistractor === 2 ? 'blue.300' : 'gray.300'}
                   color="black"
                   width="12em"
                   fontSize="1.2rem"
-                  {...register('selectBook')}
+                  {...register('selectDistractor')}
                   value={2}
                 >
-                  10
+                  2
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
-                  bg={selectedBook === 3 ? 'blue.300' : 'gray.300'}
+                  bg={selectedDistractor === 3 ? 'blue.300' : 'gray.300'}
                   color="black"
                   width="12em"
                   fontSize="1.2rem"
-                  {...register('selectBook')}
+                  {...register('selectDistractor')}
                   value={3}
                 >
-                  15
+                  3
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectBook && 'Please select a book.'}
+                {errors.selectDistractor && 'Please select a Distractor.'}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -164,10 +157,10 @@ const SelectBooks = (props: any) => {
               fontFamily="Graphik LCG"
               fontWeight="700"
               fontSize="15px"
-              onClick={handleBackToSelectLevel}
+              onClick={handleBackToSelectBook}
               mx={2}
             >
-              Back to Select Level
+              Back to Select Book
             </Button>
             <Button
               w="180px"
@@ -181,23 +174,12 @@ const SelectBooks = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-             {props.formData[0] == 2  || props.formData[0] == 3 ? "select distractor" : "play"}
+              Play
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenSelectDistractors && (
-        <SelectDistractors
-          isOpen={isOpenSelectDistractors}
-          onClose={onCloseSelectDistractors}
-          formData={props.formData}
-          setFormData={props.setFormData}
-          oncloseselectlevel={props.oncloseselectlevel}
-          onclosemodules={props.onclosemodules}
-          onCloseBooks={props.onClose}
-        />
-      )}
-        {onOpenConnected && (
+      {onOpenConnected && (
         <Openconnected
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
@@ -208,4 +190,4 @@ const SelectBooks = (props: any) => {
   );
 };
 
-export default SelectBooks;
+export default SelectDistractors;
