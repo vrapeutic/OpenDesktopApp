@@ -28,7 +28,6 @@ export default function Openconnected(props: any) {
    
     try {
       await endSissionApi();
-      console.log(endSissionApi);
       props.onClose();
       props.onclosemodules();
       navigate('/');

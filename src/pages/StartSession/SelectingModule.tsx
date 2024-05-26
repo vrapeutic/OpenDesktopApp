@@ -24,6 +24,7 @@ import Selectlevel from './viblio/SelectLevelviblio';
 import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import SelectLevelViblio from './viblio/SelectLevelviblio';
+import SelectLevelRodja from './rodja/SelectLevelrodja';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
@@ -32,16 +33,18 @@ export default function SelectingModule(props: any) {
     onOpen: onOpenSelectlevelviblio,
     onClose: onCloseSelectlevelviblio,
   } = useDisclosure();
+  const {
+    isOpen: isOpenSelectlevelrodja,
+    onOpen: onOpenSelectlevelrodja,
+    onClose: onCloseSelectlevelrodja,
+  } = useDisclosure();
+
   const selectedCenter = useContext(dataContext);
   const navigate = useNavigate();
   const [values, setValues] = useState({
     selectedModule: '',
   });
-  // const {
-  //   isOpen: isOpenSelectlevel,
-  //   onOpen: onOpenSelectlevel,
-  //   onClose: onCloseSelectlevel,
-  // } = useDisclosure();
+
 
   const {
     isOpen: isOpenSelectlevelArcheeko,
@@ -67,6 +70,9 @@ export default function SelectingModule(props: any) {
       case 'viblio':
         console.log('viblio', name);
         return onOpenSelectlevelviblio();
+        case 'Rodja':
+        console.log('Rodja', name);
+        return onOpenSelectlevelrodja();
       default:
         return null;
     }
@@ -227,6 +233,13 @@ export default function SelectingModule(props: any) {
         <SelectLevelViblio
           isOpen={isOpenSelectlevelviblio}
           onClose={onCloseSelectlevelviblio}
+          onclosemodules={props.onClose}
+        />
+      )}
+           {onOpenSelectlevelrodja && (
+        <SelectLevelRodja
+          isOpen={isOpenSelectlevelrodja}
+          onClose={onCloseSelectlevelrodja}
           onclosemodules={props.onClose}
         />
       )}
