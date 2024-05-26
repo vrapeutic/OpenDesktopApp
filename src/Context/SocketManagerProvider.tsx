@@ -5,10 +5,14 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { io } from 'socket.io-client';
 
-import { EXPRESS_PORT } from '../../electron/constants';
+import {
+  EXPRESS_PORT,
+  MODULE_NOT_FOUND_ERROR_MESSAGE,
+} from '../../electron/constants';
 
 const URL = `http://localhost:${EXPRESS_PORT}`;
 
@@ -19,8 +23,10 @@ const socket = io(URL, {
 });
 
 const SocketManagerContext = createContext(null);
+const onConnect = () => console.log('Connected to Socket.IO server');
 
 const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
+  const [socketError, setSocketError] = useState(null);
   const dispatchSocketMessage = useCallback(
     (channel: string, message: string, ...rest: any[]) => {
       socket.emit(channel, { message, ...(rest.length && { settings: rest }) });
@@ -37,14 +43,16 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
     [socket]
   );
 
+  const onSocketError = useCallback((err: string) => setSocketError(err), []);
+
   useEffect(() => {
     socket.connect();
 
-    socket.on('connect', () => {
-      console.log('Connected to Socket.IO server');
-    });
-
+    socket.on('connect', onConnect);
+    socket.on(MODULE_NOT_FOUND_ERROR_MESSAGE, onSocketError);
     return () => {
+      socket.off('connect', onConnect);
+      socket.off(MODULE_NOT_FOUND_ERROR_MESSAGE, onSocketError);
       socket.disconnect();
     };
   }, []);
@@ -53,6 +61,7 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
     () => ({
       checkIfServiceExists,
       dispatchSocketMessage,
+      socketError,
     }),
     [socket]
   );
