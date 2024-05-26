@@ -9,12 +9,14 @@ import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 
 const ConnectedVR = (props: any) => {
   const navigate = useNavigate();
+
+  const { socketError } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
 
-  const { dispatchSocketMessage, checkIfServiceExists } =
-    useSocketManager();
+  const { dispatchSocketMessage, checkIfServiceExists } = useSocketManager();
   const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMessages] = useState(null);
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
 
   const handleSubmit = async () => {
@@ -31,7 +33,12 @@ const ConnectedVR = (props: any) => {
       dispatchSocketMessage(START_APP_MESSAGE, socketMessage, {
         headsetId, // TODO this is a temporary placeholder add setting as key-value pairs here
       });
-      setOpenRunningPopup(true);
+      socketError
+        ? () => {
+            setNotFound(true);
+            setErrorMessages(socketError);
+          }
+        : setOpenRunningPopup(true);
     } else {
       console.log(headsetId);
       console.log(existingDevice);
@@ -56,6 +63,10 @@ const ConnectedVR = (props: any) => {
     closeSelectingAModule();
   };
 
+  const onClose = () => {
+    console.log('close ing connected vr');
+    closeSelectingAModule();
+  };
   return notFound ? (
     <ErrorPopup
       isOpen={notFound}
@@ -63,13 +74,13 @@ const ConnectedVR = (props: any) => {
       closeSelectingAHeadset={closeSelectingAHeadset}
       onCancelSession={cancelSession}
       onSelectAnotherHeadset={selectAnotherHeadset}
-      errorMessages={'No headset found'}
+      errorMessages={errorMEssage || 'No headset found'}
     />
   ) : (
     <PlayModule
       handleSubmit={handleSubmit}
       isOpen={props.isOpen}
-      onClose={closeSelectingAModule}
+      onClose={onClose}
       headsetId={props.headsetId}
       openRunningPopup={openRunningPopup}
       setOpenRunningPopup={setOpenRunningPopup}

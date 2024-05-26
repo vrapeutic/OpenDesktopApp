@@ -32,6 +32,8 @@ export default function Openconnected({
 }: OpenConnectedProps) {
   const { dispatchSocketMessage } = useSocketManager();
   const handlePlayAnotherModule = useCallback(() => {
+    dispatchSocketMessage(END_SESSION_MESSAGE, { deviceId: headsetId });
+
     closeConnectedVrPopup();
     onClose();
   }, [closeConnectedVrPopup, onclose]);
@@ -54,7 +56,7 @@ export default function Openconnected({
   return (
     <>
       <Box>
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
           <ModalOverlay />
           <ModalContent
             h="400px"
