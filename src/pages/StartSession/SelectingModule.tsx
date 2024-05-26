@@ -23,13 +23,14 @@ import { useNavigate } from 'react-router-dom';
 import Selectlevel from './viblio/SelectLevelviblio';
 import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import SelectLevelViblio from './viblio/SelectLevelviblio';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
   const {
-    isOpen: isOpenSelectlevel,
-    onOpen: onOpenSelectlevel,
-    onClose: onCloseSelectlevel,
+    isOpen: isOpenSelectlevelviblio,
+    onOpen: onOpenSelectlevelviblio,
+    onClose: onCloseSelectlevelviblio,
   } = useDisclosure();
   const selectedCenter = useContext(dataContext);
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ export default function SelectingModule(props: any) {
         return onOpenSelectlevelArcheeko();
       case 'viblio':
         console.log('viblio', name);
-        return onOpenSelectlevel();
+        return onOpenSelectlevelviblio();
       default:
         return null;
     }
@@ -222,10 +223,10 @@ export default function SelectingModule(props: any) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenSelectlevel && (
-        <Selectlevel
-          isOpen={isOpenSelectlevel}
-          onClose={onCloseSelectlevel}
+      {onOpenSelectlevelviblio && (
+        <SelectLevelViblio
+          isOpen={isOpenSelectlevelviblio}
+          onClose={onCloseSelectlevelviblio}
           onclosemodules={props.onClose}
         />
       )}

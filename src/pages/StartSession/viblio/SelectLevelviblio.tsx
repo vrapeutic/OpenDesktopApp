@@ -15,16 +15,16 @@ import {
   Text,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import SelectBooks from './SelectBooksviblio';
 import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
+import SelectBooksViblio from './SelectBooksviblio';
 
-const SelectLevel = (props: any) => {
+const SelectLevelViblio = (props: any) => {
   const {
-    isOpen: isOpenSelectBooks,
-    onOpen: onOpenSelectBooks,
-    onClose: onCloseSelectBooks,
+    isOpen: isOpenSelectBooksviblio,
+    onOpen: onOpenSelectBooksviblio,
+    onClose: onCloseSelectBooksviblio,
   } = useDisclosure();
 
   const [formData, setFormData] = useState<any[]>([
@@ -52,7 +52,7 @@ const SelectLevel = (props: any) => {
       data.selectLevel,
       ...formData.slice(1),
     ]);
-    onOpenSelectBooks();
+    onOpenSelectBooksviblio();
   };
 
   const handleButtonClick = (level: number) => {
@@ -134,10 +134,10 @@ const SelectLevel = (props: any) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenSelectBooks && (
-        <SelectBooks
-          isOpen={isOpenSelectBooks}
-          onClose={onCloseSelectBooks}
+      {onOpenSelectBooksviblio && (
+        <SelectBooksViblio
+          isOpen={isOpenSelectBooksviblio}
+          onClose={onCloseSelectBooksviblio}
           formData={formData}
           setFormData={setFormData}
           oncloseselectlevel={props.onClose}
@@ -148,4 +148,4 @@ const SelectLevel = (props: any) => {
   );
 };
 
-export default SelectLevel;
+export default SelectLevelViblio;

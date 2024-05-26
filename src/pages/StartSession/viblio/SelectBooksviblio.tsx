@@ -23,7 +23,7 @@ import SelectDistractors from './SelectDistractorsviblio';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import Openconnected from '../openconnected';
 
-const SelectBooks = (props: any) => {
+const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
   const { module,sessionId } = useStartSessionContext();
@@ -208,4 +208,4 @@ const SelectBooks = (props: any) => {
   );
 };
 
-export default SelectBooks;
+export default SelectBooksViblio;
