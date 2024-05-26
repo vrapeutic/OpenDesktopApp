@@ -27,7 +27,7 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   console.log(SERVER_LOGS_COLOR, 'a client connected');
 
-  socket.on(GENERATE_SESSION_REPORT, (file, sessionId) => {
+  socket.on(GENERATE_SESSION_REPORT, (file, fileName) => {
     const reportsDirUrl = getOrCreateReportDir();
 
     console.log(
@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
     );
 
     fs.writeFile(
-      `${reportsDirUrl}/${sessionId || Date.now()}.csv`,
+      `${reportsDirUrl}/${fileName || Date.now()}.csv`,
       file,
       (err) => {
         if (err) console.log(YELLOW_SERVER_LOGS_COLOR, err);
