@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -25,6 +25,7 @@ import SelectingModule from './SelectingModule';
 import useSocketManager from '../../Context/SocketManagerProvider';
 import { ErrorPopup } from './ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { getMe } from '@renderer/cache';
 
 const HEADSET_FIELD = 'headset';
 
@@ -78,6 +79,7 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
   const { addFunction } = usePopupsHandler();
   const { checkIfServiceExists } = useSocketManager();
   const [deviceIsFound, setDeviceIsFound] = useState(false);
+  const [sessionId, setSessionId] = useState<string>(null);
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
@@ -123,7 +125,8 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
 
   const handleFormSubmit = async () => {
     const headsetId = getValues(HEADSET_FIELD);
-    console.log('Form submitted with data in headset.');
+    setSessionIdState();
+
     const existingDevice = await checkIfServiceExists(headsetId);
 
     if (existingDevice) {
@@ -135,6 +138,45 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
       onErrorOpen();
     }
   };
+
+  const setSessionIdState = useCallback(async () => {
+    const token = getMe().token;
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.post(
+        `${config.apiURL}/api/v1/sessions`,
+        {
+          center_id: props.centerId,
+          child_id: props.childId,
+          headset_id: getValues(HEADSET_FIELD),
+        },
+        { headers }
+      );
+
+      console.log(
+        'API Response from session id: data.data.id',
+        response.data.data.id
+      );
+      setSessionId(response?.data?.data?.id);
+    } catch (error) {
+      console.log('Error assigning center to module:', error);
+    } finally {
+      // TODO: remove this after integrating a working session id API call
+      if (!sessionId) {
+        const sessionID = localStorage.getItem('sessionID');
+
+        const sessionHex = Math.floor(
+          Math.random() * 0xffffff * 10000000
+        ).toString(12);
+
+        localStorage.setItem('sessionID', sessionID || sessionHex);
+        setSessionId(sessionHex);
+      }
+    }
+  }, [getValues, props.centerId, props.childId]);
 
   const handleCancelSession = () => {
     onErrorClose();
@@ -228,6 +270,7 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
           isOpen={deviceIsFound}
           onClose={() => setDeviceIsFound(false)}
           headsetId={getValues(HEADSET_FIELD)}
+          sessionId={sessionId}
         />
       )}
     </>
