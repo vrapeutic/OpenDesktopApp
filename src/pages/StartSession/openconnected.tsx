@@ -10,6 +10,7 @@ import {
   useDisclosure,
   ModalBody,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { getMe } from '@renderer/cache';
 
@@ -21,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Openconnected(props: any) {
   const { startSession, sessionId } = useStartSessionContext();
-
+  const toast = useToast();
   const navigate = useNavigate();
 
   const handle = async () => {
@@ -33,7 +34,14 @@ export default function Openconnected(props: any) {
       props.onclosemodules();
       navigate('/');
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
+      toast({
+        title: 'error',
+        description: `${error.response.data.error}`,
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+      });
     }
   };
   const token = getMe().token;
@@ -72,7 +80,7 @@ export default function Openconnected(props: any) {
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
-    axios.put(
+    return   axios.put(
       `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
       {   "vr_duration": differenceInMinutes },
       { headers }
