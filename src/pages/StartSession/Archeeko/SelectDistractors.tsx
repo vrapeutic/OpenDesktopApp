@@ -24,6 +24,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import SelectNumberArcheeko from './SelectNumberArcheeko';
 import Openconnected from '../openconnected';
+import OpenconnectedArcheeko from './OpenconnectedArcheeko';
 
 const SelectDistractors = (props: any) => {
   const {
@@ -168,10 +169,14 @@ const SelectDistractors = (props: any) => {
         </ModalContent>
       </Modal>
       {onOpenConnected && (
-        <Openconnected
+        <OpenconnectedArcheeko
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
+          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+          SelectDistractors={props.onClose}
+          onCloseSelectNumber={props.onCloseSelectNumber}
+          oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
     </>

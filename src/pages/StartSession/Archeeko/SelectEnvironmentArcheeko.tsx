@@ -164,7 +164,10 @@ const SelectEnvironmentArcheeko = (props: any) => {
           onClose={onCloseSelectNumber}
           formData={formData}
           setFormData={setFormData}
-          oncloseselectlevel={props.onClose}
+          onCloseSelectEnvironment={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
+   
+          onCloseSelectNumber={onCloseSelectNumber}
           onclosemodules={props.onclosemodules}
           level={formData[0] && formData[0].level}
         />
