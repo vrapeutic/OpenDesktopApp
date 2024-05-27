@@ -127,7 +127,11 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
   const handleFormSubmit = async () => {
     const headsetId = getValues(HEADSET_FIELD);
     // end old session
-    dispatchSocketMessage(END_SESSION_MESSAGE, { deviceId: headsetId });
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetId },
+      headsetId
+    );
 
     setSessionIdState();
 

@@ -38,7 +38,11 @@ export default function Openconnected({
 
   const handleEndSession = useCallback(() => {
     localStorage.removeItem('sessionID');
-    dispatchSocketMessage(END_SESSION_MESSAGE, { deviceId: headsetId });
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetId },
+      headsetId
+    );
 
     closeConnectedVrPopup();
     closeSelectingAHeadset();
