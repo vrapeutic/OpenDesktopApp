@@ -30,7 +30,7 @@ const ConnectedVR = (props: any) => {
         deviceId: headsetId,
       };
 
-      dispatchSocketMessage(START_APP_MESSAGE, socketMessage, {
+      dispatchSocketMessage(START_APP_MESSAGE, socketMessage, headsetId, {
         headsetId, // TODO this is a temporary placeholder add setting as key-value pairs here
       });
       socketError
