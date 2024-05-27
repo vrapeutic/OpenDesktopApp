@@ -30,9 +30,12 @@ const ConnectedVR = (props: any) => {
         deviceId: headsetId,
       };
 
-      dispatchSocketMessage(START_APP_MESSAGE, socketMessage, headsetId, {
-        headsetId, // TODO this is a temporary placeholder add setting as key-value pairs here
-      });
+      dispatchSocketMessage(
+        START_APP_MESSAGE,
+        socketMessage,
+        headsetId,
+        ...[1, 2] // this array for holding settings
+      );
       socketError
         ? () => {
             setNotFound(true);
@@ -62,7 +65,6 @@ const ConnectedVR = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
   };
-
 
   return notFound ? (
     <ErrorPopup
