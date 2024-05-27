@@ -1,4 +1,6 @@
 import {
+  END_SESSION_MESSAGE,
+  GENERATE_SESSION_REPORT,
   REPORT_FILE_SAVE_PATH,
   SERVER_LOGS_COLOR,
   SOCKET_ALLOWED_EVENTS,
@@ -28,6 +30,17 @@ io.on('connection', (socket) => {
   console.log(SERVER_LOGS_COLOR, 'a client connected');
   socketsIds[socket?.handshake?.query?.deviceId as string] = socket.id;
 
+  // custom handlers
+  socket.on(START_APP_MESSAGE, (args) =>
+    handleSendPrivateMessage(START_APP_MESSAGE, args)
+  );
+
+  socket.on(END_SESSION_MESSAGE, (args) =>
+    handleSendPrivateMessage(END_SESSION_MESSAGE, args)
+  );
+
+  socket.on(GENERATE_SESSION_REPORT, handleReceivingReportMessage);
+
   socket.onAny((eventName, ...args) => {
     const event =
       SOCKET_ALLOWED_EVENTS[eventName as keyof typeof SOCKET_ALLOWED_EVENTS];
@@ -44,8 +57,7 @@ io.on('connection', (socket) => {
       }`
     );
 
-    if (eventCustomHandler) {
-      socket.on(event, eventCustomHandler);
+    if (eventCustomHandler !== undefined) {
       return;
     }
 
@@ -54,22 +66,20 @@ io.on('connection', (socket) => {
   });
 });
 
-const handlePlayModuleMessage = (args: any) => {
-  const playModuleEvent =
-    SOCKET_ALLOWED_EVENTS[
-      START_APP_MESSAGE as keyof typeof SOCKET_ALLOWED_EVENTS
-    ];
+const handleSendPrivateMessage = (event: string, args: any) => {
+  const eventName =
+    SOCKET_ALLOWED_EVENTS[event as keyof typeof SOCKET_ALLOWED_EVENTS];
 
   const { clientDeviceId, ...rest } = args;
 
-  console.log(YELLOW_SERVER_LOGS_COLOR, 'revcived start app message', args);
+  console.log(YELLOW_SERVER_LOGS_COLOR, `received ${eventName} message`, args);
 
   const clientSocketId = socketsIds[clientDeviceId];
 
   if (clientSocketId) {
-    io.to(clientSocketId).emit(playModuleEvent, rest);
+    io.to(clientSocketId).emit(eventName, rest);
   } else {
-    io.emit(playModuleEvent, args);
+    io.emit(eventName, args);
   }
 };
 
@@ -97,10 +107,11 @@ const getOrCreateReportDir = () => {
   }
   return dirUrl;
 };
-
+// TODO: make listeners respond dynamically based on events
 const CUSTOM_MESSAGE_HANDLERS = {
-  playModule: handlePlayModuleMessage,
+  playModule: handleSendPrivateMessage,
   generateSessionReport: handleReceivingReportMessage,
+  endSession: handleSendPrivateMessage,
 };
 
 export default server;
