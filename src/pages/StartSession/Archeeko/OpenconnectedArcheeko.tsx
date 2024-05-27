@@ -20,7 +20,7 @@ import axios from 'axios';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 
-export default function Openconnected(props: any) {
+export default function OpenconnectedArcheeko(props: any) {
   const { startSession, sessionId } = useStartSessionContext();
   const toast = useToast();
   const navigate = useNavigate();
@@ -88,9 +88,11 @@ export default function Openconnected(props: any) {
   };
   const antherModule =()=>{
     props.onClose()
-    { props.onCloseBooks& props.onCloseBooks()}
-    { props.oncloseselectlevel& props.oncloseselectlevel()}
-
+   
+    props.onCloseSelectEnvironment()
+    props.SelectDistractors()
+    props.onCloseSelectNumber()
+    props.oncloseselectlevel()
    
   }
   

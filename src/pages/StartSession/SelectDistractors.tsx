@@ -184,6 +184,8 @@ const SelectDistractors = (props: any) => {
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
+          onCloseBooks={props.onCloseBooks}
+          oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
     </>
