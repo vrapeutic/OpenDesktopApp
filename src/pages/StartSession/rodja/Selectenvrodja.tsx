@@ -50,19 +50,7 @@ const SelectenvRodja = (props: any) => {
   });
 
   const handleFormSubmit = (data: any) => {
-    // console.log(data);
-    // const hasEnvironmentObject = formData.some((obj) => 'environment' in obj);
-
-    // const updatedFormData = hasEnvironmentObject
-    //   ? [
-    //       ...props.formData.slice(0, 1),
-    //       { environment: data.selectEniverinment },
-    //       ...props.formData.slice(2),
-    //     ]
-    //   : [
-    //       ...props.formData.slice(0, 1),
-    //       { environment: data.selectEniverinment, ...props.formData.slice(1) },
-    //     ];
+  
 
     const updatedFormData = [
       props.formData[0],

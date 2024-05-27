@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import SelectDistractors from './SelectDistractorsrodja';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import Openconnected from '../openconnected';
+import SelectDistractorsRodja from './SelectDistractorsrodja';
 
 const SelectjewelRodja = (props: any) => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const SelectjewelRodja = (props: any) => {
 
   let updatedFormData 
   const handleFormSubmit = (data: any) => {
-    console.log("props form data in env rodja in 59",data.selectBook)
+    console.log("props form data in select book env rodja in 59",data.selectBook)
 
      updatedFormData = [
       props.formData[0],
@@ -77,7 +78,7 @@ const SelectjewelRodja = (props: any) => {
 
       toast({
         title: 'Success',
-        description: `You assigned level ${updatedFormData[0]} , book ${selectedBook} ,
+        description: `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
          module name is ${module} and session id is ${sessionId}`,
          status: 'success',
 
@@ -86,8 +87,8 @@ const SelectjewelRodja = (props: any) => {
       });
   
       console.log(
-        `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} 
-        module name is ${module} and session id is ${sessionId}`
+        `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
+         module name is ${module} and session id is ${sessionId}`
       );
       console.log('Array of menu choices', updatedFormData);
     }
@@ -193,11 +194,12 @@ const SelectjewelRodja = (props: any) => {
         </ModalContent>
       </Modal>
       {onOpenSelectDistractors && (
-        <SelectDistractors
+        <SelectDistractorsRodja
           isOpen={isOpenSelectDistractors}
           onClose={onCloseSelectDistractors}
           formData={props.formData}
           updatedFormData={updatedFormData}
+          selectBook={selectedBook}
           setFormData={props.setFormData}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}

@@ -22,7 +22,9 @@ import { useNavigate } from 'react-router-dom';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import Openconnected from '../openconnected';
 
-const SelectDistractors = (props: any) => {
+const SelectDistractorsRodja = (props: any) => {
+  console.log("selected book in select distractors",props.selectBook)
+
   console.log("props.formData array in distractor rodja",props.formData)
   console.log(",props.updatedFormData in distractor updatedFormData",props.updatedFormData)
 
@@ -55,13 +57,16 @@ const SelectDistractors = (props: any) => {
   const handleFormSubmit = (data: any) => {
   
     const updatedFormData = [
-      props.updatedFormData[0],
-      props.updatedFormData[1],
-      props.updatedFormData[2],
+      props.formData[0],
+      props.formData[1],
+      props.selectBook,
       data.selectDistractor,
       ...props.formData.slice(4),
     ];
-    console.log("props.formData[2] of 2 in distractor rodja",props.updatedFormData[2])
+    console.log("all array in distractor rodja",props.formData)
+
+    
+    console.log("props.formData[2] of 2 in distractor rodja",props.formData[2])
 
     console.log("all subimtted data in distractor",updatedFormData)
     props.setFormData(updatedFormData);
@@ -74,7 +79,8 @@ const SelectDistractors = (props: any) => {
     onOpenConnected();
     toast({
       title: 'Success',
-      description: `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
+       distractor  ${selectedDistractor} 
       module name is ${module} and session id is ${sessionId}`,
       status: 'success',
       duration: 9000,
@@ -82,7 +88,8 @@ const SelectDistractors = (props: any) => {
     });
 
     console.log(
-      `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
+       distractor  ${selectedDistractor} 
       module name is ${module} and session id is ${sessionId}`
     );
     console.log('Array of menu choices', updatedFormData);
@@ -198,4 +205,4 @@ const SelectDistractors = (props: any) => {
   );
 };
 
-export default SelectDistractors;
+export default SelectDistractorsRodja;
