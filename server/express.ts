@@ -79,9 +79,13 @@ const handleReceivingReportMessage = (file: any, data: any) => {
 
   console.log(YELLOW_SERVER_LOGS_COLOR, `generate report at ${reportsDirUrl}`);
 
-  fs.writeFile(`${reportsDirUrl}/${fileName || Date.now()}`, file, (err) => {
-    if (err) console.log(YELLOW_SERVER_LOGS_COLOR, err);
-  });
+  fs.writeFile(
+    `${reportsDirUrl}/${fileName || `${Date.now()}.csv`}`,
+    file,
+    (err) => {
+      if (err) console.log(YELLOW_SERVER_LOGS_COLOR, err);
+    }
+  );
 };
 
 const getOrCreateReportDir = () => {
