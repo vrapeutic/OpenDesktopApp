@@ -63,10 +63,7 @@ const SelectDistractorsRodja = (props: any) => {
       data.selectDistractor,
       ...props.formData.slice(4),
     ];
-    console.log("all array in distractor rodja",props.formData)
-
-    
-    console.log("props.formData[2] of 2 in distractor rodja",props.formData[2])
+   
 
     console.log("all subimtted data in distractor",updatedFormData)
     props.setFormData(updatedFormData);

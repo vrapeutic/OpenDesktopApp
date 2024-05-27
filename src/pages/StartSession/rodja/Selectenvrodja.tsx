@@ -58,7 +58,6 @@ const SelectenvRodja = (props: any) => {
       ...props.formData.slice(2),
     ];
     props.setFormData(updatedFormData);
-     console.log("props updated form data in env rodja",updatedFormData)
     onOpenSelectJewel();
   };
   const handleButtonClick = (envienment: number) => {

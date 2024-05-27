@@ -58,7 +58,6 @@ const SelectjewelRodja = (props: any) => {
 
   let updatedFormData 
   const handleFormSubmit = (data: any) => {
-    console.log("props form data in select book env rodja in 59",data.selectBook)
 
      updatedFormData = [
       props.formData[0],
