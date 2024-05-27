@@ -18,7 +18,7 @@ const URL = `http://localhost:${EXPRESS_PORT}`;
 
 const socket = io(URL, {
   query: {
-    serviceName: 'electron-service',
+    deviceId: 'electron-service',
   },
 });
 
@@ -28,8 +28,17 @@ const onConnect = () => console.log('Connected to Socket.IO server');
 const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
   const [socketError, setSocketError] = useState(null);
   const dispatchSocketMessage = useCallback(
-    (channel: string, message: string, ...rest: any[]) => {
-      socket.emit(channel, { message, ...(rest.length && { settings: rest }) });
+    (
+      channel: string,
+      message: string,
+      clientDeviceId: string,
+      ...rest: any[]
+    ) => {
+      socket.emit(channel, {
+        clientDeviceId,
+        message,
+        ...(rest.length && { settings: rest }),
+      });
     },
     [socket]
   );
