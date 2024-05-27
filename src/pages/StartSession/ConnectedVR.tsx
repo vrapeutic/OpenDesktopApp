@@ -63,10 +63,7 @@ const ConnectedVR = (props: any) => {
     closeSelectingAModule();
   };
 
-  const onClose = () => {
-    console.log('close ing connected vr');
-    closeSelectingAModule();
-  };
+
   return notFound ? (
     <ErrorPopup
       isOpen={notFound}
@@ -80,7 +77,7 @@ const ConnectedVR = (props: any) => {
     <PlayModule
       handleSubmit={handleSubmit}
       isOpen={props.isOpen}
-      onClose={onClose}
+      onClose={closeSelectingAModule}
       headsetId={props.headsetId}
       openRunningPopup={openRunningPopup}
       setOpenRunningPopup={setOpenRunningPopup}
