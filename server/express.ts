@@ -37,15 +37,18 @@ io.on('connection', (socket) => {
     const eventCustomHandler =
       CUSTOM_MESSAGE_HANDLERS[event as keyof typeof CUSTOM_MESSAGE_HANDLERS];
 
+    console.log(
+      SERVER_LOGS_COLOR,
+      `received event: ${event} with args: ${JSON.stringify(args, null, 4)} ${
+        eventCustomHandler !== undefined ? 'with custom handler' : ''
+      }`
+    );
+
     if (eventCustomHandler) {
       socket.on(event, eventCustomHandler);
       return;
     }
 
-    console.log(
-      SERVER_LOGS_COLOR,
-      `received event: ${event} with args: ${JSON.stringify(args, null, 4)}`
-    );
     // broadcast to all clients
     io.emit(event, args);
   });
