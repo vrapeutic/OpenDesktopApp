@@ -33,7 +33,7 @@ export default function SelectingModule(props: any) {
   const [values, setValues] = useState({
     packageName: '',
   });
-  const [sessionId, setSessionId] = useState(5);
+
   const [name, setName] = useState('Modules');
   const [errors, setErrors] = useState({
     packageName: null,
@@ -223,7 +223,7 @@ export default function SelectingModule(props: any) {
           isOpen={isOpen}
           headsetId={props.headsetId}
           packageName={values.packageName}
-          sessionId={sessionId}
+          sessionId={props.sessionId}
         />
       )}
     </Box>

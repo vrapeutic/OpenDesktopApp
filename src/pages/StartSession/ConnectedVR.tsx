@@ -12,7 +12,7 @@ const ConnectedVR = (props: any) => {
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
 
-  const { dispatchPlayModuleMessage, checkIfServiceExists } =
+  const { dispatchSocketMessage, checkIfServiceExists } =
     useSocketManager();
   const [notFound, setNotFound] = useState(false);
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
@@ -25,9 +25,10 @@ const ConnectedVR = (props: any) => {
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: packageName,
+        deviceId: headsetId,
       };
 
-      dispatchPlayModuleMessage(START_APP_MESSAGE, socketMessage, {
+      dispatchSocketMessage(START_APP_MESSAGE, socketMessage, {
         headsetId, // TODO this is a temporary placeholder add setting as key-value pairs here
       });
       setOpenRunningPopup(true);

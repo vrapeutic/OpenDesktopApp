@@ -12,21 +12,18 @@ import { EXPRESS_PORT } from '../../electron/constants';
 
 const URL = `http://localhost:${EXPRESS_PORT}`;
 
-const socket = io(URL);
+const socket = io(URL, {
+  query: {
+    serviceName: 'electron-service',
+  },
+});
 
 const SocketManagerContext = createContext(null);
 
 const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
-  const emitMessage = useCallback(
-    (channel: string, message: string) => {
-      socket.emit(channel, message);
-    },
-    [socket]
-  );
-
-  const dispatchPlayModuleMessage = useCallback(
+  const dispatchSocketMessage = useCallback(
     (channel: string, message: string, ...rest: any[]) => {
-      socket.emit(channel, { message, settings: rest });
+      socket.emit(channel, { message, ...(rest.length && { settings: rest }) });
     },
     [socket]
   );
@@ -54,9 +51,8 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const contextValue = useMemo(
     () => ({
-      emitMessage,
       checkIfServiceExists,
-      dispatchPlayModuleMessage,
+      dispatchSocketMessage,
     }),
     [socket]
   );

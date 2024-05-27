@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -11,6 +11,8 @@ import {
   ModalBody,
   Text,
 } from '@chakra-ui/react';
+import useSocketManager from '../../Context/SocketManagerProvider';
+import { END_SESSION_MESSAGE } from '@main/constants';
 
 interface OpenConnectedProps {
   isOpen: boolean;
@@ -28,12 +30,15 @@ export default function Openconnected({
   closeConnectedVrPopup,
   headsetId,
 }: OpenConnectedProps) {
+  const { dispatchSocketMessage } = useSocketManager();
   const handlePlayAnotherModule = useCallback(() => {
     closeConnectedVrPopup();
     onClose();
   }, [closeConnectedVrPopup, onclose]);
 
   const handleEndSession = useCallback(() => {
+    dispatchSocketMessage(END_SESSION_MESSAGE, { deviceId: headsetId });
+
     closeConnectedVrPopup();
     closeSelectingAHeadset();
     closeSelectingAModule();
