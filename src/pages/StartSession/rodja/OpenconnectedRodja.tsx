@@ -80,6 +80,8 @@ export default function OpenconnectedRodja(props: any) {
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
+
+    
     return   axios.put(
       `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
       {   "vr_duration": differenceInMinutes },

@@ -18,10 +18,6 @@ import {
 import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { useNavigate } from 'react-router-dom';
-import SelectDistractors from './SelectDistractorsviblio';
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import Openconnected from '../openconnected';
 import SelectjewelRodja from './Selectjewelsrodja';
 
 const SelectenvRodja = (props: any) => {

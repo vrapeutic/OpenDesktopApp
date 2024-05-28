@@ -23,7 +23,7 @@ import axios from 'axios';
 import { config } from '@renderer/config';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
-export default function SelectEvaluation(props) {
+export default function SelectEvaluation(props:any) {
   const { sessionId } = useStartSessionContext();
   const toast = useToast();
   const schema = Joi.object({
@@ -48,7 +48,7 @@ export default function SelectEvaluation(props) {
 
   const [value, setValue] = useState('');
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e:any) => {
     const inputValue = e.target.value;
     setValue(inputValue);
   };

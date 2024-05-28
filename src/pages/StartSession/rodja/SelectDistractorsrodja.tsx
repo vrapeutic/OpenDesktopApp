@@ -71,9 +71,7 @@ const SelectDistractorsRodja = (props: any) => {
 
     navigate('/Therapycenters');
     props.onClose();
-    // props.oncloseselectlevel();
-    // props.onclosemodules();
-    // props.onCloseBooks();
+  
     onOpenConnected();
     toast({
       title: 'Success',
