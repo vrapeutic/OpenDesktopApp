@@ -102,8 +102,8 @@ console.log(data.selectEnvironment)
                     onClick={() => handleButtonClick(1)}
                     bg={selectedEniverinment === 1 ? 'blue.300' : 'gray.300'}
                     color="black"
-                    fontSize="0.65rem"
-                    width={'100px'}
+                    width="12em"
+                    fontSize="1.2rem"
                    
                     {...register('selectEnvironment')}
                   >
@@ -112,9 +112,8 @@ console.log(data.selectEnvironment)
                   <Button
                     onClick={() => handleButtonClick(2)}
                     bg={selectedEniverinment === 2 ? 'blue.300' : 'gray.300'}
-                    color="black"
-                    fontSize="0.65rem"
-                    width={'100px'}
+                    width="12em"
+                    fontSize="1.2rem"
                     
                     {...register('selectEnvironment')}
                   >
@@ -128,7 +127,8 @@ console.log(data.selectEnvironment)
           </ModalBody>
           <ModalFooter display="flex" justifyContent="space-between">
             <Button
-              w="120px"
+               width="12em"
+               fontSize="1rem"
               h="54px"
               mx={2}
               bg="#00DEA3"
@@ -136,20 +136,21 @@ console.log(data.selectEnvironment)
               color="#FFFFFF"
               fontFamily="Graphik LCG"
               fontWeight="700"
-              fontSize="15px"
+          
               onClick={props.onClose}
             >
               Back
             </Button>
             <Button
-              w="120px"
+              width="12em"
+              fontSize="1rem"
               h="54px"
               bg="#00DEA3"
               borderRadius="12px"
               color="#FFFFFF"
               fontFamily="Graphik LCG"
               fontWeight="700"
-              fontSize="15px"
+             
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >

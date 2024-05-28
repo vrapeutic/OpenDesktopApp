@@ -84,7 +84,8 @@ const SelectLevelArcheeko = (props: any) => {
                   onClick={() => handleButtonClick(1)}
                   bg={selectedLevel === 1 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
+                  width="12em"
+                  fontSize="1.2rem"
                   as="button"
                   {...register('selectLevel')}
                 >
@@ -94,7 +95,8 @@ const SelectLevelArcheeko = (props: any) => {
                   onClick={() => handleButtonClick(2)}
                   bg={selectedLevel === 2 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
+                  width="12em"
+                  fontSize="1.2rem"
                   as="button"
                   {...register('selectLevel')}
                 >
@@ -104,7 +106,8 @@ const SelectLevelArcheeko = (props: any) => {
                   onClick={() => handleButtonClick(3)}
                   bg={selectedLevel === 3 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
+                  width="12em"
+                  fontSize="1.2rem"
                   as="button"
                   {...register('selectLevel')}
                 >

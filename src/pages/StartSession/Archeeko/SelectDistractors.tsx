@@ -121,8 +121,8 @@ const SelectDistractors = (props: any) => {
                   onClick={() => handleButtonClick(1)}
                   bg={selectedDistractors === 1 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
+                  width="12em"
+                  fontSize="1.2rem"
                   {...register('selectDistractors')}
                 >
                   1
@@ -131,8 +131,8 @@ const SelectDistractors = (props: any) => {
                   onClick={() => handleButtonClick(2)}
                   bg={selectedDistractors === 2 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
+                  width="12em"
+                  fontSize="1.2rem"
                   {...register('selectDistractors')}
                 >
                   2
@@ -141,8 +141,8 @@ const SelectDistractors = (props: any) => {
                   onClick={() => handleButtonClick(3)}
                   bg={selectedDistractors === 3 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
+                  width="12em"
+                  fontSize="1.2rem"
                   {...register('selectDistractors')}
                 >
                   3

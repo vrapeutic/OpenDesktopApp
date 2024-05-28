@@ -147,7 +147,8 @@ const SelectenvRodja = (props: any) => {
           onClose={onCloseSelectJewel}
           formData={props.formData}
           setFormData={props.setFormData}
-          oncloseselectlevel={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectEnvrodja={props.onClose}
           onclosemodules={props.onclosemodules}
           level={props.formData[0] && props.formData[0].level}
         />

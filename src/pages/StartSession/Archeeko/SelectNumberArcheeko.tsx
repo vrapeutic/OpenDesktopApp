@@ -120,8 +120,8 @@ const SelectNumberArcheeko = (props: any) => {
                   onClick={() => handleButtonClick(1)}
                   bg={selectedNumber === 1 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
+                  width="12em"
+                  fontSize="1.2rem"
                   {...register('selectNumber')}
                 >
                   1
@@ -130,8 +130,8 @@ const SelectNumberArcheeko = (props: any) => {
                   onClick={() => handleButtonClick(2)}
                   bg={selectedNumber === 2 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
+                  width="12em"
+                  fontSize="1.2rem"
                   {...register('selectNumber')}
                 >
                   2
@@ -140,8 +140,8 @@ const SelectNumberArcheeko = (props: any) => {
                   onClick={() => handleButtonClick(3)}
                   bg={selectedNumber === 3 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
+                  width="12em"
+                  fontSize="1.2rem"
                   {...register('selectNumber')}
                 >
                   3
