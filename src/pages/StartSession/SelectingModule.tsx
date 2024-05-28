@@ -21,29 +21,33 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';
-import Selectlevel from './SelectLevel';
+import Selectlevel from './viblio/SelectLevelviblio';
 import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import SelectLevelViblio from './viblio/SelectLevelviblio';
+import SelectLevelRodja from './rodja/SelectLevelrodja';
 import axios from 'axios';
 import { getMe } from '@renderer/cache';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
   const {
-    isOpen: isOpenSelectlevel,
-    onOpen: onOpenSelectlevel,
-    onClose: onCloseSelectlevel,
+    isOpen: isOpenSelectlevelviblio,
+    onOpen: onOpenSelectlevelviblio,
+    onClose: onCloseSelectlevelviblio,
   } = useDisclosure();
+  const {
+    isOpen: isOpenSelectlevelrodja,
+    onOpen: onOpenSelectlevelrodja,
+    onClose: onCloseSelectlevelrodja,
+  } = useDisclosure();
+
   const selectedCenter = useContext(dataContext);
   const navigate = useNavigate();
   const [values, setValues] = useState({
     selectedModule: '',
   });
-  // const {
-  //   isOpen: isOpenSelectlevel,
-  //   onOpen: onOpenSelectlevel,
-  //   onClose: onCloseSelectlevel,
-  // } = useDisclosure();
+
 
   const {
     isOpen: isOpenSelectlevelArcheeko,
@@ -66,9 +70,12 @@ export default function SelectingModule(props: any) {
       case 'Archeeko':
         console.log('Archeekon', name);
         return onOpenSelectlevelArcheeko();
-      case 'viblio':
-        console.log('viblio', name);
-        return onOpenSelectlevel();
+      case 'Viblio':
+        console.log('Viblio', name);
+        return onOpenSelectlevelviblio();
+        case 'Rodja':
+        console.log('Rodja', name);
+        return onOpenSelectlevelrodja();
       default: toast({
           title: 'error',
           description: `This module is not available, please select anther module`,
@@ -280,10 +287,17 @@ export default function SelectingModule(props: any) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenSelectlevel && (
-        <Selectlevel
-          isOpen={isOpenSelectlevel}
-          onClose={onCloseSelectlevel}
+      {onOpenSelectlevelviblio && (
+        <SelectLevelViblio
+          isOpen={isOpenSelectlevelviblio}
+          onClose={onCloseSelectlevelviblio}
+          onclosemodules={props.onClose}
+        />
+      )}
+           {onOpenSelectlevelrodja && (
+        <SelectLevelRodja
+          isOpen={isOpenSelectlevelrodja}
+          onClose={onCloseSelectlevelrodja}
           onclosemodules={props.onClose}
         />
       )}

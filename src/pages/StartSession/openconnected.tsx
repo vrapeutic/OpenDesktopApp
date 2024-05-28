@@ -19,9 +19,15 @@ import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import axios from 'axios';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
+import SelectEvalution from './Evaluation';
 
 export default function Openconnected(props: any) {
   const { startSession, sessionId } = useStartSessionContext();
+  const {
+    isOpen: isevaluationopen,
+    onOpen: onevaluationOpen,
+    onClose: onevalutionClose,
+  } = useDisclosure();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -29,10 +35,10 @@ export default function Openconnected(props: any) {
    
     try {
       await endSissionApi();
-      console.log(endSissionApi);
-      props.onClose();
-      props.onclosemodules();
-      navigate('/');
+      onevaluationOpen()
+      // props.onClose();
+      // props.onclosemodules();
+      // navigate('/');
     } catch (error) {
       console.log(error.response);
       toast({
@@ -166,6 +172,16 @@ export default function Openconnected(props: any) {
           </ModalContent>
         </Modal>
       </Box>
+
+
+      {onevaluationOpen && (
+        <SelectEvalution
+          isOpen={isevaluationopen}
+          onClose={onevalutionClose}
+         closeopenconnected={props.onClose}
+         closemodules={props.onclosemodules}
+        />
+      )}
     </>
   );
 }

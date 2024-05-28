@@ -19,11 +19,11 @@ import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
-import SelectDistractors from './SelectDistractors';
+import SelectDistractors from './SelectDistractorsviblio';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import Openconnected from './openconnected';
+import Openconnected from '../openconnected';
 
-const SelectBooks = (props: any) => {
+const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
   const { module,sessionId } = useStartSessionContext();
@@ -210,4 +210,4 @@ const SelectBooks = (props: any) => {
   );
 };
 
-export default SelectBooks;
+export default SelectBooksViblio;

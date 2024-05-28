@@ -15,16 +15,17 @@ import {
   Text,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import SelectBooks from './SelectBooks';
 import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
+import SelectBooksViblio from './Selectenvrodja';
+import SelectenvRodja from './Selectenvrodja';
 
-const SelectLevel = (props: any) => {
+const SelectLevelRodja = (props: any) => {
   const {
-    isOpen: isOpenSelectBooks,
-    onOpen: onOpenSelectBooks,
-    onClose: onCloseSelectBooks,
+    isOpen: isOpenSelectEnvrodja,
+    onOpen: onOpenSelectEnvrodja,
+    onClose: onCloseSelectEnvrodja,
   } = useDisclosure();
 
   const [formData, setFormData] = useState<any[]>([
@@ -48,11 +49,11 @@ const SelectLevel = (props: any) => {
 
   const handleFormSubmit = (data: any) => {
     setFormData([data.selectLevel, ...formData.slice(1)]);
-    console.log('Form Data Submitted: ', [
+    console.log('Form Data Submitted in level rodja: ', [
       data.selectLevel,
       ...formData.slice(1),
     ]);
-    onOpenSelectBooks();
+    onOpenSelectEnvrodja();
   };
 
   const handleButtonClick = (level: number) => {
@@ -73,7 +74,7 @@ const SelectLevel = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            Select Level
+            Select Level rodja
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -129,15 +130,15 @@ const SelectLevel = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              Select books
+              Select Environment
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenSelectBooks && (
-        <SelectBooks
-          isOpen={isOpenSelectBooks}
-          onClose={onCloseSelectBooks}
+      {onOpenSelectEnvrodja && (
+        <SelectenvRodja
+          isOpen={isOpenSelectEnvrodja}
+          onClose={onCloseSelectEnvrodja}
           formData={formData}
           setFormData={setFormData}
           oncloseselectlevel={props.onClose}
@@ -148,4 +149,4 @@ const SelectLevel = (props: any) => {
   );
 };
 
-export default SelectLevel;
+export default SelectLevelRodja;

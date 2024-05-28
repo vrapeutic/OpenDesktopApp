@@ -20,9 +20,14 @@ import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import Openconnected from './openconnected';
+import Openconnected from '../openconnected';
 
-const SelectDistractors = (props: any) => {
+const SelectDistractorsRodja = (props: any) => {
+  console.log("selected book in select distractors",props.selectBook)
+
+  console.log("props.formData array in distractor rodja",props.formData)
+  console.log(",props.updatedFormData in distractor updatedFormData",props.updatedFormData)
+
   const navigate = useNavigate();
   const { module, sessionId } = useStartSessionContext();
   const {
@@ -50,12 +55,17 @@ const SelectDistractors = (props: any) => {
   });
 
   const handleFormSubmit = (data: any) => {
+  
     const updatedFormData = [
       props.formData[0],
       props.formData[1],
+      props.selectBook,
       data.selectDistractor,
-      ...props.formData.slice(3),
+      ...props.formData.slice(4),
     ];
+   
+
+    console.log("all subimtted data in distractor",updatedFormData)
     props.setFormData(updatedFormData);
 
     navigate('/Therapycenters');
@@ -66,7 +76,8 @@ const SelectDistractors = (props: any) => {
     onOpenConnected();
     toast({
       title: 'Success',
-      description: `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
+       distractor  ${selectedDistractor} 
       module name is ${module} and session id is ${sessionId}`,
       status: 'success',
       duration: 9000,
@@ -74,7 +85,8 @@ const SelectDistractors = (props: any) => {
     });
 
     console.log(
-      `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
+       distractor  ${selectedDistractor} 
       module name is ${module} and session id is ${sessionId}`
     );
     console.log('Array of menu choices', updatedFormData);
@@ -160,7 +172,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleBackToSelectBook}
               mx={2}
             >
-              Back to Select Book
+              Back to Select Jewel
             </Button>
             <Button
               w="180px"
@@ -184,12 +196,10 @@ const SelectDistractors = (props: any) => {
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
-          onCloseBooks={props.onCloseBooks}
-          oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
     </>
   );
 };
 
-export default SelectDistractors;
+export default SelectDistractorsRodja;
