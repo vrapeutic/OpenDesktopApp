@@ -23,6 +23,7 @@ import { config } from '../../../config';
 import { dataContext } from '@renderer/shared/Provider';
 import { getMe } from '@renderer/cache';
 import Openconnected from '../openconnected';
+import OpenconnectedArcheeko from './OpenconnectedArcheeko';
 
 const SelectNumberArcheeko = (props: any) => {
   const {
@@ -55,7 +56,7 @@ const SelectNumberArcheeko = (props: any) => {
 
   const token = getMe().token;
   const headers = {
-      Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   };
   const postSessionId = (body: any) => {
     return axios.post(`${config.apiURL}/api/v1/Session`, { body }, { headers });
@@ -63,7 +64,11 @@ const SelectNumberArcheeko = (props: any) => {
 
   const Sessionid = async () => {
     try {
-      await postSessionId({ center_id:`${selectedCenterContext.id}`, child_id: '1', headset_id: '21' });
+      await postSessionId({
+        center_id: `${selectedCenterContext.id}`,
+        child_id: '1',
+        headset_id: '21',
+      });
       console.log(postSessionId);
     } catch (error) {
       console.log(error);
@@ -80,7 +85,7 @@ const SelectNumberArcheeko = (props: any) => {
       // props.onclosemodules();
 
       Sessionid();
-      onOpenConnected()
+      onOpenConnected();
     }
     const hasEnvironmentObject = formData.some((obj) => 'number' in obj);
 
@@ -203,13 +208,23 @@ const SelectNumberArcheeko = (props: any) => {
           onClose={onCloseSelectDistractors}
           formData={formData}
           setFormData={setFormData}
-          oncloseselectlevel={props.onClose}
           onclosemodules={props.onclosemodules}
+          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+          onCloseSelectNumber={props.onCloseSelectNumber}
+          oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
 
-{onOpenConnected && (
-        <Openconnected isOpen={isOpenConnected} onClose={onCloseConnected} onclosemodules={props.onclosemodules}/>
+      {onOpenConnected && (
+        <OpenconnectedArcheeko
+          isOpen={isOpenConnected}
+          onClose={onCloseConnected}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+          SelectDistractors={onCloseSelectDistractors}
+          onCloseSelectNumber={props.onCloseSelectNumber}
+          oncloseselectlevel={props.oncloseselectlevel}
+        />
       )}
     </>
   );

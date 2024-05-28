@@ -11,7 +11,7 @@ import {
   GridItem,
   Select,
   useDisclosure,
-  Flex,
+  useToast,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
 import axios from 'axios';
@@ -49,6 +49,93 @@ const ErrorsModal = ({
     closeselectingheadset();
     navigate('/');
   };
+
+  const { startSession, sessionId } = useStartSessionContext();
+ console.log(sessionId , startSession)
+  const token = getMe().token;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  const toast = useToast();
+  const endSissionApi = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
+
+    // Format the date string
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+
+    console.log(formattedDate);
+
+    const date1String = startSession;
+    const date2String = formattedDate;
+    console.log(date1String, date2String);
+
+    // Create Date objects
+    const date1: any = new Date(date1String);
+    const date2: any = new Date(date2String);
+
+    // Calculate the difference in milliseconds
+    const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
+    console.log(timeDifferenceInMilliseconds);
+    // Convert milliseconds to seconds
+    const differenceInMinutes = Math.floor(
+      (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    console.log(differenceInMinutes);
+return    axios.put(
+      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+      { vr_duration:differenceInMinutes},
+      { headers }
+    );
+  };
+
+  const endSessionId = async () => {
+    try {
+      await endSissionApi();
+      onCancelSession();
+      navigate('/');
+    } catch (error) {
+      console.log(error.response);
+      toast({
+        title: 'error',
+        description: `${error.response.data.error}`,
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+      });
+    
+    }
+  };
+
+
+
+ 
+  const SelectAnther =async ()=> {
+    try{
+      await endSissionApi();
+      onSelectAnotherHeadset()
+    }catch(error) {
+      console.log(error.response);
+      toast({
+        title: 'error',
+        description: `${error.response.data.error}`,
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+      });
+    
+    }
+
+   
+
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -71,7 +158,7 @@ const ErrorsModal = ({
               fontFamily="Roboto"
               fontWeight="700"
               fontSize="1rem"
-              marginleft="10px"
+              ml="10px"
               onClick={OpenModulemodal}
             >
               Continue to select module
@@ -88,10 +175,7 @@ const ErrorsModal = ({
               fontWeight="700"
               fontSize="1rem"
               marginRight="10px"
-              onClick={() => {
-                onCancelSession();
-                navigate('/');
-              }}
+              onClick={endSessionId}
             >
               Cancel session
             </Button>
@@ -105,7 +189,8 @@ const ErrorsModal = ({
               fontWeight="700"
               fontSize="1rem"
               marginLeft="10px"
-              onClick={onSelectAnotherHeadset}
+              onClick={SelectAnther
+                }
             >
               Select another headset
             </Button>
@@ -205,7 +290,7 @@ const SelectingHeadset = (props: any) => {
         response.data.data.id,
         response.data.data.attributes
       );
-      setSessionId(response.data.data.id);
+      await setSessionId(response.data.data.id);
       setStartSession(response.data.data.attributes.created_at);
     } catch (error) {
       console.log('Error assigning center to module:', error);

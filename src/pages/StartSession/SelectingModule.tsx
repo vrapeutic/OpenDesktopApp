@@ -14,6 +14,7 @@ import {
   useDisclosure,
   Box,
   ModalCloseButton,
+  useToast,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
 import { ChevronDownIcon } from '@chakra-ui/icons';
@@ -25,6 +26,8 @@ import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import SelectLevelViblio from './viblio/SelectLevelviblio';
 import SelectLevelRodja from './rodja/SelectLevelrodja';
+import axios from 'axios';
+import { getMe } from '@renderer/cache';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
@@ -73,8 +76,13 @@ export default function SelectingModule(props: any) {
         case 'Rodja':
         console.log('Rodja', name);
         return onOpenSelectlevelrodja();
-      default:
-        return null;
+      default: toast({
+          title: 'error',
+          description: `This module is not available, please select anther module`,
+          status: 'error',
+          duration: 5000,
+          position: 'top-right',
+        });
     }
   };
 
@@ -103,12 +111,70 @@ export default function SelectingModule(props: any) {
     })();
   }, [selectedCenter.id]);
 
-  const CloseModule = () => {
-    props.onClose();
-    navigate('/home');
-    setValues({ selectedModule: '' });
+  const { startSession, sessionId } = useStartSessionContext();
+  console.log(sessionId, startSession);
+  const token = getMe().token;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  const toast = useToast();
+  const endSissionApi = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
 
-    setName('modules');
+    // Format the date string
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+
+    console.log(formattedDate);
+
+    const date1String = startSession;
+    const date2String = formattedDate;
+    console.log(date1String, date2String);
+
+    // Create Date objects
+    const date1: any = new Date(date1String);
+    const date2: any = new Date(date2String);
+
+    // Calculate the difference in milliseconds
+    const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
+    console.log(timeDifferenceInMilliseconds);
+    // Convert milliseconds to seconds
+    const differenceInMinutes = Math.floor(
+      (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    console.log(differenceInMinutes);
+    return axios.put(
+      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+      { vr_duration: differenceInMinutes },
+      { headers }
+    );
+  };
+
+  const CloseModule = async () => {
+    try {
+      await endSissionApi();
+      props.onClose();
+      navigate('/home');
+      setValues({ selectedModule: '' });
+
+      setName('modules');
+    } catch (error) {
+      console.log(error.response);
+
+      toast({
+        title: 'error',
+        description: `${error.response.data.error}`,
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+      });
+    }
   };
 
   return (

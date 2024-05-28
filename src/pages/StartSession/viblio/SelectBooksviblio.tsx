@@ -202,6 +202,8 @@ const SelectBooksViblio = (props: any) => {
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
+          onCloseBooks={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
     </>
