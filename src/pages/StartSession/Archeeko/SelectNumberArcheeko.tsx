@@ -11,27 +11,27 @@ import {
   FormControl,
   FormErrorMessage,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectDistractors from './SelectDistractors';
-import axios from 'axios';
-import { config } from '../../../config';
 
-import { dataContext } from '@renderer/shared/Provider';
-import { getMe } from '@renderer/cache';
-import Openconnected from '../openconnected';
 import OpenconnectedArcheeko from './OpenconnectedArcheeko';
-
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import { useNavigate } from 'react-router-dom';
 const SelectNumberArcheeko = (props: any) => {
+  console.log('select form data in number in 30', props.formData);
+  const toast = useToast();
+  const { module, sessionId } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
-  const selectedCenterContext = useContext(dataContext);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<any[]>([]);
   const {
     isOpen: isOpenSelectDistractors,
@@ -54,60 +54,44 @@ const SelectNumberArcheeko = (props: any) => {
     mode: 'onSubmit',
   });
 
-  const token = getMe().token;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-  const postSessionId = (body: any) => {
-    return axios.post(`${config.apiURL}/api/v1/Session`, { body }, { headers });
-  };
 
-  const Sessionid = async () => {
-    try {
-      await postSessionId({
-        center_id: `${selectedCenterContext.id}`,
-        child_id: '1',
-        headset_id: '21',
-      });
-      console.log(postSessionId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  let updatedFormData;
+  const handleFormSubmit = (data: any) => {
+    console.log(data.selectNumber);
+    updatedFormData = [
+      props.formData[0],
+      props.formData[1],
+      data.selectNumber,
+      ...props.formData.slice(3),
+    ];
+    props.setFormData(updatedFormData);
 
-  const handleFormSubmit = async (data: any) => {
-    console.log(props.level);
-
-    if (props.level != 1) {
+    console.log('updated form data in number', updatedFormData);
+    if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      props.onClose();
-      // props.onclosemodules();
-
-      Sessionid();
+      navigate('/Therapycenters');
       onOpenConnected();
+      console.log('session id', sessionId);
+
+      toast({
+        title: 'Success',
+        description: `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, Number ${selectedNumber} ,
+         module name is ${module} and session id is ${sessionId}`,
+        status: 'success',
+
+        duration: 5000,
+        position: 'top-right',
+      });
+
+      console.log(
+        `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, Number ${selectedNumber} ,
+         module name is ${module} and session id is ${sessionId}`
+      );
+      console.log('Array of menu choices', updatedFormData);
     }
-    const hasEnvironmentObject = formData.some((obj) => 'number' in obj);
-
-    const updatedFormData = hasEnvironmentObject
-      ? [
-          ...props.formData.slice(0, 2),
-          { number: data.selectNumber },
-          ...props.formData.slice(3),
-        ]
-      : [
-          ...props.formData.slice(0, 2),
-          { number: data.selectNumber, ...props.formData.slice(2) },
-        ];
-
-    props.setFormData(updatedFormData);
-    setFormData(updatedFormData);
-    console.log(updatedFormData);
-
-    const numbers = updatedFormData.map((obj) => Object.values(obj)[0]);
-
-    console.log(numbers);
   };
+
   const handleButtonClick = (number: number) => {
     setSelectedNumber(number);
     setValue('selectNumber', number);
@@ -136,8 +120,8 @@ const SelectNumberArcheeko = (props: any) => {
                   onClick={() => handleButtonClick(1)}
                   bg={selectedNumber === 1 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
+                  width="12em"
+                  fontSize="1.2rem"
                   {...register('selectNumber')}
                 >
                   1
@@ -146,8 +130,8 @@ const SelectNumberArcheeko = (props: any) => {
                   onClick={() => handleButtonClick(2)}
                   bg={selectedNumber === 2 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
+                  width="12em"
+                  fontSize="1.2rem"
                   {...register('selectNumber')}
                 >
                   2
@@ -156,8 +140,8 @@ const SelectNumberArcheeko = (props: any) => {
                   onClick={() => handleButtonClick(3)}
                   bg={selectedNumber === 3 ? 'blue.300' : 'gray.300'}
                   color="black"
-                  fontSize="0.65rem"
-                  width={'100px'}
+                  width="12em"
+                  fontSize="1.2rem"
                   {...register('selectNumber')}
                 >
                   3
@@ -206,11 +190,13 @@ const SelectNumberArcheeko = (props: any) => {
         <SelectDistractors
           isOpen={props.level !== 1 ? isOpenSelectDistractors : null}
           onClose={onCloseSelectDistractors}
-          formData={formData}
-          setFormData={setFormData}
+          formData={props.formData}
+          updatedFormData={updatedFormData}
+          selectedNumber={selectedNumber}
+          setFormData={props.setFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          onCloseSelectNumber={props.onCloseSelectNumber}
+          onCloseSelectNumber={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
@@ -222,7 +208,7 @@ const SelectNumberArcheeko = (props: any) => {
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
           SelectDistractors={onCloseSelectDistractors}
-          onCloseSelectNumber={props.onCloseSelectNumber}
+          onCloseSelectNumber={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
         />
       )}

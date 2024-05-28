@@ -18,10 +18,6 @@ import {
 import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { useNavigate } from 'react-router-dom';
-import SelectDistractors from './SelectDistractorsviblio';
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import Openconnected from '../openconnected';
 import SelectjewelRodja from './Selectjewelsrodja';
 
 const SelectenvRodja = (props: any) => {
@@ -147,7 +143,8 @@ const SelectenvRodja = (props: any) => {
           onClose={onCloseSelectJewel}
           formData={props.formData}
           setFormData={props.setFormData}
-          oncloseselectlevel={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectEnvrodja={props.onClose}
           onclosemodules={props.onclosemodules}
           level={props.formData[0] && props.formData[0].level}
         />

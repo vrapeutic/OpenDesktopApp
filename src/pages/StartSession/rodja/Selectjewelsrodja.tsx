@@ -23,6 +23,7 @@ import SelectDistractors from './SelectDistractorsrodja';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import Openconnected from '../openconnected';
 import SelectDistractorsRodja from './SelectDistractorsrodja';
+import OpenconnectedRodja from './OpenconnectedRodja';
 
 const SelectjewelRodja = (props: any) => {
   const navigate = useNavigate();
@@ -200,16 +201,22 @@ const SelectjewelRodja = (props: any) => {
           updatedFormData={updatedFormData}
           selectBook={selectedBook}
           setFormData={props.setFormData}
-          oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
+          onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
+          oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectJewel={props.onClose}
           onCloseBooks={props.onClose}
         />
       )}
         {onOpenConnected && (
-        <Openconnected
+        <OpenconnectedRodja
+        oncloseselectlevel={props.oncloseselectlevel}
+        onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
+        onCloseSelectJewel={props.onClose}
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
+          onCloseSelectDistractors={props.onClose}
         />
       )}
     </>

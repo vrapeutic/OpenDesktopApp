@@ -21,6 +21,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import Openconnected from '../openconnected';
+import OpenconnectedRodja from './OpenconnectedRodja';
 
 const SelectDistractorsRodja = (props: any) => {
   console.log("selected book in select distractors",props.selectBook)
@@ -70,9 +71,7 @@ const SelectDistractorsRodja = (props: any) => {
 
     navigate('/Therapycenters');
     props.onClose();
-    // props.oncloseselectlevel();
-    // props.onclosemodules();
-    // props.onCloseBooks();
+  
     onOpenConnected();
     toast({
       title: 'Success',
@@ -192,10 +191,14 @@ const SelectDistractorsRodja = (props: any) => {
         </ModalContent>
       </Modal>
       {onOpenConnected && (
-        <Openconnected
+        <OpenconnectedRodja
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
+          onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
+          oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectJewel={props.onCloseSelectJewel}
+          onCloseSelectDistractors={props.onClose}
         />
       )}
     </>
