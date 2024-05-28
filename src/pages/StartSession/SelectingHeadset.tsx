@@ -32,6 +32,7 @@ const ErrorsModal = ({
   closeselectingheadset,
 }) => {
   const navigate = useNavigate();
+  const { startSession, sessionId  } = useStartSessionContext();
 
   const {
     isOpen: ismoduleopen,
@@ -50,7 +51,6 @@ const ErrorsModal = ({
     navigate('/');
   };
 
-  const { startSession, sessionId } = useStartSessionContext();
  console.log(sessionId , startSession)
   const token = getMe().token;
   const headers = {
@@ -212,8 +212,7 @@ const SelectingHeadset = (props: any) => {
     onClose: onErrorClose,
   } = useDisclosure();
   const [headsets, setHeadsets] = useState([]);
-  const [headsetid, setHeadsetid] = useState('');
-  const { setSessionId, setStartSession } = useStartSessionContext();
+  const { setSessionId, setStartSession  , setheadsetid } = useStartSessionContext();
   const toast = useToast();
   const [errorSessionApi, seterrorSessionApi] = useState('');
 
@@ -286,7 +285,7 @@ const SelectingHeadset = (props: any) => {
   
   const handleFormSubmit = async (data: any) => {
     console.log('Selected headset:', data.headset);
-    setHeadsetid(data.headset);
+    setheadsetid(data.headset);
   
     const { success, error } = await Getsessionid(data.headset);
   
