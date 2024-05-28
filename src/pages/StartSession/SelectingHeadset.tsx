@@ -126,18 +126,18 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
 
   const handleFormSubmit = async () => {
     const headsetId = getValues(HEADSET_FIELD);
-    // end old session
-    dispatchSocketMessage(
-      END_SESSION_MESSAGE,
-      { deviceId: headsetId },
-      headsetId
-    );
-
-    setSessionIdState();
-
     const existingDevice = await checkIfServiceExists(headsetId);
-
+    
     if (existingDevice) {
+      // end old session
+      dispatchSocketMessage(
+        END_SESSION_MESSAGE,
+        { deviceId: headsetId },
+        headsetId
+      );
+
+      setSessionIdState();
+
       console.log(headsetId);
       console.log(existingDevice);
       setDeviceIsFound(true);
