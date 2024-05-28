@@ -148,6 +148,7 @@ const SelectingHeadset = (props: any) => {
     mode: 'onTouched',
   });
 
+
   const getHeadsets = async () => {
     const token = await (window as any).electronAPI.getPassword('token');
     const headers = { Authorization: `Bearer ${token}` };
@@ -183,7 +184,6 @@ const SelectingHeadset = (props: any) => {
   };
 
   const Getsessionid = async (dataheadset: any) => {
-    setSessionId('123456');
 
     const token = getMe().token;
     const headers = {

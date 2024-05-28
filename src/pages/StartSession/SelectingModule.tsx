@@ -67,8 +67,8 @@ export default function SelectingModule(props: any) {
       case 'Archeeko':
         console.log('Archeekon', name);
         return onOpenSelectlevelArcheeko();
-      case 'viblio':
-        console.log('viblio', name);
+      case 'Viblio':
+        console.log('Viblio', name);
         return onOpenSelectlevelviblio();
         case 'Rodja':
         console.log('Rodja', name);
@@ -103,14 +103,6 @@ export default function SelectingModule(props: any) {
     })();
   }, [selectedCenter.id]);
 
-  // <<<<<<< HEAD
-  //   const CloseMOdule = () => {
-  //     props.onClose();
-  //     navigate('/home');
-  //     setValues({
-  //       selectedModule: '',
-  //     });
-  // =======
   const CloseModule = () => {
     props.onClose();
     navigate('/home');
