@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import SelectEvalution from './Evaluation';
 
 export default function Openconnected(props: any) {
-  const { startSession, sessionId } = useStartSessionContext();
+  const { startSession, sessionId , headsetid} = useStartSessionContext();
   const {
     isOpen: isevaluationopen,
     onOpen: onevaluationOpen,
@@ -113,7 +113,7 @@ export default function Openconnected(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset [ID]
+              You are connected to the VR headset {headsetid}
             </ModalHeader>
 
             <ModalBody>
