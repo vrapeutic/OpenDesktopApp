@@ -28,8 +28,10 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   console.log(SERVER_LOGS_COLOR, 'a client connected');
-  socketsIds[socket?.handshake?.query?.deviceId as string] = socket.id;
 
+  if (socket?.handshake?.query?.deviceId) {
+    socketsIds[socket?.handshake?.query?.deviceId as string] = socket.id;
+  }
   // custom handlers
   socket.on(START_APP_MESSAGE, (args) =>
     handleSendPrivateMessage(START_APP_MESSAGE, args)
@@ -63,6 +65,12 @@ io.on('connection', (socket) => {
 
     // broadcast to all clients
     io.emit(event, args);
+  });
+
+  socket.on('disconnect', () => {
+    if (socket?.handshake?.query?.deviceId) {
+      delete socketsIds[socket?.handshake?.query?.deviceId as string];
+    }
   });
 });
 
