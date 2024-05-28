@@ -52,7 +52,7 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
     [socket]
   );
 
-  const onSocketError = useCallback((err: any) => setSocketError(err?.errMessage), []);
+  const onSocketError = useCallback((err: any) => setSocketError(err[0]?.errMessage), []);
 
   useEffect(() => {
     socket.connect();
