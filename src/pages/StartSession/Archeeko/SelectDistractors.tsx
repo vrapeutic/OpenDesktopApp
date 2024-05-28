@@ -1,19 +1,18 @@
 import {
-  Box,
+
   Button,
   Modal,
   ModalBody,
-  ModalCloseButton,
+
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
-  Radio,
-  RadioGroup,
+
   FormControl,
   FormErrorMessage,
-  Text,
+
   useToast,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -22,11 +21,14 @@ import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
-import SelectNumberArcheeko from './SelectNumberArcheeko';
-import Openconnected from '../openconnected';
+
 import OpenconnectedArcheeko from './OpenconnectedArcheeko';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
 const SelectDistractors = (props: any) => {
+  const navigate = useNavigate();
+  const toast = useToast();
+  const { module, sessionId } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -52,28 +54,44 @@ const SelectDistractors = (props: any) => {
     mode: 'onSubmit',
   });
 
+ 
+
+
+
   const handleFormSubmit = (data: any) => {
-    const hasEnvironmentObject = formData.some((obj) => 'distractors' in obj);
+  
+    const updatedFormData = [
+      props.formData[0],
+      props.formData[1],
+      props.selectedNumber,
+      data.selectDistractors,
+      ...props.formData.slice(4),
+    ];
+   
 
-    const updatedFormData = hasEnvironmentObject
-      ? [
-          ...props.formData.slice(0, 3),
-          { distractors: data.selectDistractors },
-          ...props.formData.slice(4),
-        ]
-      : [
-          ...props.formData.slice(0, 3),
-          { distractors: data.selectDistractors, ...props.formData.slice(3) },
-        ];
-
-    setFormData(updatedFormData);
+    console.log("all subimtted data in distractor",updatedFormData)
     props.setFormData(updatedFormData);
-    console.log(updatedFormData);
-    const numbers = updatedFormData.map((obj) => Object.values(obj)[0]);
 
-    console.log(numbers);
-
+    navigate('/Therapycenters');
+    props.onClose();
+  
     onOpenConnected();
+    toast({
+      title: 'Success',
+      description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
+       distractor  ${selectedDistractors} 
+      module name is ${module} and session id is ${sessionId}`,
+      status: 'success',
+      duration: 9000,
+      position: 'top-right',
+    });
+
+    console.log(
+      `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
+       distractor ${selectedDistractors} 
+      module name is ${module} and session id is ${sessionId}`
+    );
+    console.log('Array of menu choices', updatedFormData);
   };
   const handleButtonClick = (distractors: number) => {
     setSelectedDistractors(distractors);

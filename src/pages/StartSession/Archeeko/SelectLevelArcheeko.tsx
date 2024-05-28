@@ -23,10 +23,12 @@ const SelectLevelArcheeko = (props: any) => {
   const {
     isOpen: isOpenSelectEnvironment,
     onOpen: onOpenSelectEnvironment,
-    onClose: onCloseSelectEnvironment,
+    onClose:onCloseSelectEnvironment,
   } = useDisclosure();
-  const [formData, setFormData] = useState<any[]>([]);
-
+ 
+  const [formData, setFormData] = useState<any[]>([
+    -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000,
+  ]);
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
 
   const schema = joi.object({
@@ -43,23 +45,21 @@ const SelectLevelArcheeko = (props: any) => {
     mode: 'onSubmit',
   });
 
+ 
   const handleFormSubmit = (data: any) => {
-    const hasLevelObject = formData.some((obj) => 'level' in obj);
-    setFormData(
-      hasLevelObject
-        ? [{ level: data.selectLevel }, ...formData.slice(1)]
-        : [{ ...formData[0], level: data.selectLevel }, ...formData.slice(1)]
-    );
-    console.log('Form Data Submitted: ', [
-      { level: data.selectLevel },
+    setFormData([data.selectLevel, ...formData.slice(1)]);
+    console.log('Form Data Submitted in level Arc: ', [
+      data.selectLevel,
       ...formData.slice(1),
     ]);
     onOpenSelectEnvironment();
   };
+
   const handleButtonClick = (level: number) => {
     setSelectedLevel(level);
     setValue('selectLevel', level);
   };
+
 
   return (
     <>
@@ -155,6 +155,7 @@ const SelectLevelArcheeko = (props: any) => {
           onClose={onCloseSelectEnvironment}
           formData={formData}
           setFormData={setFormData}
+          
           oncloseselectlevel={props.onClose}
           onclosemodules={props.onclosemodules}
         />

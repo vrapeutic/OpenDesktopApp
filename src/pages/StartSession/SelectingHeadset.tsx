@@ -189,8 +189,7 @@ return    axios.put(
               fontWeight="700"
               fontSize="1rem"
               marginLeft="10px"
-              onClick={SelectAnther
-                }
+              onClick={SelectAnther}
             >
               Select another headset
             </Button>

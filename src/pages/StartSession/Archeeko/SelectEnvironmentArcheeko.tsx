@@ -1,20 +1,15 @@
 import {
-  Box,
+
   Button,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
-  Radio,
-  RadioGroup,
   FormControl,
   FormErrorMessage,
-  Text,
-  useToast,
   useDisclosure,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
@@ -25,16 +20,19 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import SelectNumberArcheeko from './SelectNumberArcheeko';
 
 const SelectEnvironmentArcheeko = (props: any) => {
- 
+  const [formData, setFormData] = useState<any[]>([]);
   const {
     isOpen: isOpenSelectNumber,
     onOpen: onOpenSelectNumber,
     onClose: onCloseSelectNumber,
   } = useDisclosure();
-  const [formData, setFormData] = useState<any[]>([]);
+
+  // const [formData, setFormData] = useState<any[]>([
+  //   -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000,
+  // ]);
 
   const schema = joi.object({
-    selectEniverinment: joi.number().required(),
+    selectEnvironment: joi.number().required(),
   });
   const [selectedEniverinment, setSelectedEniverinment] = useState<
     number | null
@@ -52,32 +50,35 @@ const SelectEnvironmentArcheeko = (props: any) => {
 
 
 
+
+
   const handleFormSubmit = (data: any) => {
-    console.log(data);
-    const hasEnvironmentObject = formData.some((obj) => 'environment' in obj);
+console.log(data.selectEnvironment)
+    const updatedFormData = [
+      props.formData[0],
+      data.selectEnvironment,
+      ...props.formData.slice(2),
+    ];
 
-    const updatedFormData = hasEnvironmentObject
-      ? [
-          ...props.formData.slice(0, 1),
-          { environment: data.selectEniverinment },
-          ...props.formData.slice(2),
-        ]
-      : [
-          ...props.formData.slice(0, 1),
-          { environment: data.selectEniverinment, ...props.formData.slice(1) },
-        ];
-
-
-    setFormData(updatedFormData);
     props.setFormData(updatedFormData);
-    console.log(updatedFormData);
-
+    console.log('Form Data : ',  [
+      props.formData[0],
+      data.selectEnvironment,
+      ...props.formData.slice(2),
+    ]);
     onOpenSelectNumber();
   };
   const handleButtonClick = (envienment: number) => {
     setSelectedEniverinment(envienment);
-    setValue('selectEniverinment', envienment);
+    setValue('selectEnvironment', envienment);
+
   };
+
+
+
+
+
+
   return (
     <>
       <Modal
@@ -95,7 +96,7 @@ const SelectEnvironmentArcheeko = (props: any) => {
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectEniverinment}>
+            <FormControl isInvalid={!!errors.selectEnvironment}>
                 <Stack spacing={4} direction="column" align="center">
                   <Button
                     onClick={() => handleButtonClick(1)}
@@ -104,7 +105,7 @@ const SelectEnvironmentArcheeko = (props: any) => {
                     fontSize="0.65rem"
                     width={'100px'}
                    
-                    {...register('selectEniverinment')}
+                    {...register('selectEnvironment')}
                   >
                     Garden
                   </Button>
@@ -115,13 +116,13 @@ const SelectEnvironmentArcheeko = (props: any) => {
                     fontSize="0.65rem"
                     width={'100px'}
                     
-                    {...register('selectEniverinment')}
+                    {...register('selectEnvironment')}
                   >
                     Room
                   </Button>
                 </Stack>
               <FormErrorMessage>
-                {errors.selectEniverinment && 'Please select a Enironment.'}
+                {errors.selectEnvironment && 'Please select a Enironment.'}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -162,12 +163,10 @@ const SelectEnvironmentArcheeko = (props: any) => {
         <SelectNumberArcheeko
           isOpen={isOpenSelectNumber}
           onClose={onCloseSelectNumber}
-          formData={formData}
-          setFormData={setFormData}
           onCloseSelectEnvironment={props.onClose}
+          formData={props.formData}
+          setFormData={setFormData}
           oncloseselectlevel={props.oncloseselectlevel}
-   
-          onCloseSelectNumber={onCloseSelectNumber}
           onclosemodules={props.onclosemodules}
           level={formData[0] && formData[0].level}
         />

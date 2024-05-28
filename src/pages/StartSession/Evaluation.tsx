@@ -113,26 +113,7 @@ const evaluation = async() => {
      });
 
 
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
 
 
   return (
