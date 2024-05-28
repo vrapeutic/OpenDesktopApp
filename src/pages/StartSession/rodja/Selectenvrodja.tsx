@@ -30,7 +30,6 @@ const SelectenvRodja = (props: any) => {
     onOpen: onOpenSelectJewel,
     onClose: onCloseSelectJewel,
   } = useDisclosure();
-  const [formData, setFormData] = useState<any[]>([]);
 
   const schema = joi.object({
     selectEniverinment: joi.number().required(),
@@ -147,10 +146,10 @@ const SelectenvRodja = (props: any) => {
           isOpen={isOpenSelectJewel}
           onClose={onCloseSelectJewel}
           formData={props.formData}
-          setFormData={setFormData}
+          setFormData={props.setFormData}
           oncloseselectlevel={props.onClose}
           onclosemodules={props.onclosemodules}
-          level={formData[0] && formData[0].level}
+          level={props.formData[0] && props.formData[0].level}
         />
       )}
     </>

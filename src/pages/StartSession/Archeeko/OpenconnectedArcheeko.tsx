@@ -21,7 +21,7 @@ import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 
 export default function OpenconnectedArcheeko(props: any) {
-  const { startSession, sessionId } = useStartSessionContext();
+  const { startSession, sessionId , headsetid } = useStartSessionContext();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -109,7 +109,7 @@ export default function OpenconnectedArcheeko(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset [ID]
+              You are connected to the VR headset {headsetid}
             </ModalHeader>
 
             <ModalBody>

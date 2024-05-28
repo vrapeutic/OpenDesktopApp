@@ -7,6 +7,8 @@ interface StartSessionContextProps {
   setSessionId: React.Dispatch<React.SetStateAction<string>>;
   startSession: string;
   setStartSession: React.Dispatch<React.SetStateAction<string>>;
+  headsetid: string;
+  setheadsetid: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const StartSessionContext = createContext<StartSessionContextProps | undefined>(undefined);
@@ -19,6 +21,7 @@ const StartSessionProvider: React.FC<StartSessionProviderProps> = ({ children })
   const [module, setModule] = useState('');
   const [sessionId, setSessionId] = useState('');
   const [startSession,setStartSession]=useState('');
+  const [headsetid,setheadsetid]=useState('');
 
   const value: StartSessionContextProps = {
     module,
@@ -27,6 +30,8 @@ const StartSessionProvider: React.FC<StartSessionProviderProps> = ({ children })
     setSessionId,
     startSession,
     setStartSession,
+    headsetid,
+    setheadsetid
   };
 
   return (

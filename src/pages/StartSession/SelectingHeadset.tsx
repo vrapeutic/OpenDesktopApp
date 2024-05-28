@@ -32,6 +32,7 @@ const ErrorsModal = ({
   closeselectingheadset,
 }) => {
   const navigate = useNavigate();
+  const { startSession, sessionId  } = useStartSessionContext();
 
   const {
     isOpen: ismoduleopen,
@@ -50,7 +51,6 @@ const ErrorsModal = ({
     navigate('/');
   };
 
-  const { startSession, sessionId } = useStartSessionContext();
  console.log(sessionId , startSession)
   const token = getMe().token;
   const headers = {
@@ -211,8 +211,9 @@ const SelectingHeadset = (props: any) => {
     onClose: onErrorClose,
   } = useDisclosure();
   const [headsets, setHeadsets] = useState([]);
-  const [headsetid, setHeadsetid] = useState('');
-  const { setSessionId, setStartSession } = useStartSessionContext();
+  const { setSessionId, setStartSession  , setheadsetid } = useStartSessionContext();
+  const toast = useToast();
+  const [errorSessionApi, seterrorSessionApi] = useState('');
 
   const selectedCenterContext = useContext(dataContext);
   const [errorMessages, setErrorMessages] = useState('');
@@ -249,26 +250,9 @@ const SelectingHeadset = (props: any) => {
     }
   };
 
-  const handleFormSubmit = (data: any) => {
-    console.log('Selected headset:', data.headset);
-    setHeadsetid(data.headset);
-    Getsessionid(data.headset);
-    console.log('Form submitted with data in headset.');
-    setErrorMessages('This is a test error message.');
-    onErrorOpen();
-  };
-
-  const handleCancelSession = () => {
-    onErrorClose();
-    props.onClose();
-  };
-
-  const handleSelectAnotherHeadset = () => {
-    onErrorClose();
-  };
-
-  const Getsessionid = async (dataheadset: any) => {
-
+ 
+  
+  const Getsessionid = async (dataheadset: any): Promise<{ success: boolean; error?: string }> => {
     const token = getMe().token;
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -283,19 +267,55 @@ const SelectingHeadset = (props: any) => {
         },
         { headers }
       );
-
+  
       console.log(
-        'API Response from session id: data.data.id',
+        'API Response from session id:',
         response.data.data.id,
         response.data.data.attributes
       );
-      await setSessionId(response.data.data.id);
+      setSessionId(response.data.data.id);
       setStartSession(response.data.data.attributes.created_at);
+      return { success: true };  // Success
     } catch (error) {
-      console.log('Error assigning center to module:', error);
+      console.log('Error assigning session id:', error.response.data.error);
+      return { success: false, error: error.response.data.error }; 
     }
   };
+  
+  const handleFormSubmit = async (data: any) => {
+    console.log('Selected headset:', data.headset);
+    setheadsetid(data.headset);
+  
+    const { success, error } = await Getsessionid(data.headset);
+  
+    if (!success) {
+      console.log('Error occurred in Getsessionid, halting further execution.');
+  
+      toast({
+        title: 'Error',
+        description: error,
+        status: 'error',
+        duration: 9000,
+        position: 'top-right',
+      });
+      return;
+    }
+  
+    console.log('Form submitted with data in headset.');
+    setErrorMessages('This is a test error message.');
+    onErrorOpen();
+  };
+  
 
+  const handleCancelSession = () => {
+    onErrorClose();
+    props.onClose();
+  };
+
+  const handleSelectAnotherHeadset = () => {
+    onErrorClose();
+  };
+  
   useEffect(() => {
     // Getsessionid()
     if (selectedCenterContext.id) {
