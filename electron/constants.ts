@@ -2,12 +2,12 @@ export const EXPRESS_PORT = 3001;
 
 export const RECEIVED_MESSAGES = {
   generateSessionReport: 'generateSessionReport',
+  moduleNotFound: 'moduleNotFound',
 };
 
 export const SOCKET_ALLOWED_EVENTS = {
   playModule: 'playModule',
   endSession: 'endSession',
-  MODULE_NOT_FOUND: 'moduleNotFound',
   ...RECEIVED_MESSAGES,
 };
 
