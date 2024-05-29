@@ -26,6 +26,7 @@ import useSocketManager from '../../Context/SocketManagerProvider';
 import { ErrorPopup } from './ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { getMe } from '@renderer/cache';
+import { END_SESSION_MESSAGE } from '@main/constants';
 
 const HEADSET_FIELD = 'headset';
 
@@ -77,7 +78,7 @@ const ErrorsModal = ({
 
 const SelectingHeadset = (props: SelectingHeadsetProps) => {
   const { addFunction } = usePopupsHandler();
-  const { checkIfServiceExists } = useSocketManager();
+  const { dispatchSocketMessage, checkIfServiceExists } = useSocketManager();
   const [deviceIsFound, setDeviceIsFound] = useState(false);
   const [sessionId, setSessionId] = useState<string>(null);
   const {
@@ -125,11 +126,18 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
 
   const handleFormSubmit = async () => {
     const headsetId = getValues(HEADSET_FIELD);
-    setSessionIdState();
-
     const existingDevice = await checkIfServiceExists(headsetId);
-
+    
     if (existingDevice) {
+      // end old session
+      dispatchSocketMessage(
+        END_SESSION_MESSAGE,
+        { deviceId: headsetId },
+        headsetId
+      );
+
+      setSessionIdState();
+
       console.log(headsetId);
       console.log(existingDevice);
       setDeviceIsFound(true);

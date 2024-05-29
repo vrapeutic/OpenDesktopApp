@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useSocketManager from '../../Context/SocketManagerProvider';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
@@ -9,12 +9,14 @@ import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 
 const ConnectedVR = (props: any) => {
   const navigate = useNavigate();
+
+  const { socketError } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
 
-  const { dispatchSocketMessage, checkIfServiceExists } =
-    useSocketManager();
+  const { dispatchSocketMessage, checkIfServiceExists } = useSocketManager();
   const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMessages] = useState(null);
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
 
   const handleSubmit = async () => {
@@ -28,9 +30,12 @@ const ConnectedVR = (props: any) => {
         deviceId: headsetId,
       };
 
-      dispatchSocketMessage(START_APP_MESSAGE, socketMessage, {
-        headsetId, // TODO this is a temporary placeholder add setting as key-value pairs here
-      });
+      dispatchSocketMessage(
+        START_APP_MESSAGE,
+        socketMessage,
+        headsetId,
+        ...[1, 2] // this array for holding settings
+      );
       setOpenRunningPopup(true);
     } else {
       console.log(headsetId);
@@ -56,6 +61,8 @@ const ConnectedVR = (props: any) => {
     closeSelectingAModule();
   };
 
+  if (socketError) return null;
+
   return notFound ? (
     <ErrorPopup
       isOpen={notFound}
@@ -63,7 +70,7 @@ const ConnectedVR = (props: any) => {
       closeSelectingAHeadset={closeSelectingAHeadset}
       onCancelSession={cancelSession}
       onSelectAnotherHeadset={selectAnotherHeadset}
-      errorMessages={'No headset found'}
+      errorMessages={errorMEssage || 'No headset found'}
     />
   ) : (
     <PlayModule

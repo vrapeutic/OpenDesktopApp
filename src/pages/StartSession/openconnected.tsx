@@ -37,13 +37,17 @@ export default function Openconnected({
   }, [closeConnectedVrPopup, onclose]);
 
   const handleEndSession = useCallback(() => {
-    dispatchSocketMessage(END_SESSION_MESSAGE, { deviceId: headsetId });
+    localStorage.removeItem('sessionID');
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetId },
+      headsetId
+    );
 
     closeConnectedVrPopup();
     closeSelectingAHeadset();
     closeSelectingAModule();
     onClose();
-    // TODO dispatch end session message here
   }, [
     closeConnectedVrPopup,
     closeSelectingAHeadset,
@@ -54,7 +58,7 @@ export default function Openconnected({
   return (
     <>
       <Box>
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
           <ModalOverlay />
           <ModalContent
             h="400px"
