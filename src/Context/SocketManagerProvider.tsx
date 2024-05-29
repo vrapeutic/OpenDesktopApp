@@ -63,7 +63,7 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    const onSocketError = (...err: any) => setSocketError(err[0]?.errMessage);
+    const onSocketError = (err: any) => setSocketError(err[0]?.errMessage);
 
     socket.on(MODULE_NOT_FOUND_ERROR_MESSAGE, onSocketError);
     return () => {
