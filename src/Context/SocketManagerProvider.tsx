@@ -52,19 +52,24 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
     [socket]
   );
 
-  const onSocketError = useCallback((err: any) => setSocketError(err[0]?.errMessage), []);
-
   useEffect(() => {
     socket.connect();
-
     socket.on('connect', onConnect);
-    socket.on(MODULE_NOT_FOUND_ERROR_MESSAGE, onSocketError);
+
     return () => {
       socket.off('connect', onConnect);
-      socket.off(MODULE_NOT_FOUND_ERROR_MESSAGE, onSocketError);
       socket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    const onSocketError = (...err: any) => setSocketError(err[0]?.errMessage);
+
+    socket.on(MODULE_NOT_FOUND_ERROR_MESSAGE, onSocketError);
+    return () => {
+      socket.off(MODULE_NOT_FOUND_ERROR_MESSAGE, onSocketError);
+    };
+  }, [socketError]);
 
   const contextValue = useMemo(
     () => ({
@@ -72,7 +77,7 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
       dispatchSocketMessage,
       socketError,
     }),
-    [socket]
+    [socketError]
   );
 
   return (
