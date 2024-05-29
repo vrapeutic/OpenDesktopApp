@@ -23,7 +23,7 @@ const ConnectedVR = (props: any) => {
     const { packageName, headsetId, sessionId } = props;
     const existingDevice = await checkIfServiceExists(headsetId);
 
-    if (!existingDevice) {
+    if (existingDevice) {
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: packageName,
