@@ -13,18 +13,26 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { config } from '@renderer/config';
+import { config } from '../../config';
 import axios from 'axios';
-import { dataContext } from '@renderer/shared/Provider';
-import { useForm } from 'react-hook-form';
+import { dataContext } from '../../shared/Provider';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectingModule from './SelectingModule';
+import { useStartSessionContext } from '../../Context/StartSesstionContext';
 import { getMe } from '@renderer/cache';
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
-const ErrorsModal = ({
+interface ErrorsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectAnotherHeadset: () => void;
+  onCancelSession: () => void;
+  closeselectingheadset: () => void;
+}
+
+const ErrorsModal: React.FC<ErrorsModalProps> = ({
   isOpen,
   onClose,
   onSelectAnotherHeadset,
@@ -32,7 +40,7 @@ const ErrorsModal = ({
   closeselectingheadset,
 }) => {
   const navigate = useNavigate();
-  const { startSession, sessionId  } = useStartSessionContext();
+  const { startSession, sessionId } = useStartSessionContext();
 
   const {
     isOpen: ismoduleopen,
@@ -51,13 +59,13 @@ const ErrorsModal = ({
     navigate('/');
   };
 
- console.log(sessionId , startSession)
   const token = getMe().token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
   const toast = useToast();
-  const endSissionApi = () => {
+
+  const endSessionApi = async () => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
@@ -93,48 +101,39 @@ return    axios.put(
       { vr_duration:differenceInMinutes},
       { headers }
     );
+
   };
 
   const endSessionId = async () => {
     try {
-      await endSissionApi();
+      await endSessionApi();
       onCancelSession();
       navigate('/');
     } catch (error) {
-      console.log(error.response);
       toast({
-        title: 'error',
-        description: `${error.response.data.error}`,
+        title: 'Error',
+        description: error.response?.data?.error || 'An error occurred',
         status: 'error',
         duration: 3000,
         position: 'top-right',
       });
-    
     }
   };
 
-
-
- 
-  const SelectAnther =async ()=> {
-    try{
-      await endSissionApi();
-      onSelectAnotherHeadset()
-    }catch(error) {
-      console.log(error.response);
+  const SelectAnother = async () => {
+    try {
+      await endSessionApi();
+      onSelectAnotherHeadset();
+    } catch (error) {
       toast({
-        title: 'error',
-        description: `${error.response.data.error}`,
+        title: 'Error',
+        description: error.response?.data?.error || 'An error occurred',
         status: 'error',
         duration: 3000,
         position: 'top-right',
       });
-    
     }
-
-   
-
-  }
+  };
 
   return (
     <>
@@ -148,7 +147,6 @@ return    axios.put(
             <Text mt="25px">
               The selected headset could not be found on this network
             </Text>
-
             <Button
               w="12rem"
               h="54px"
@@ -189,7 +187,7 @@ return    axios.put(
               fontWeight="700"
               fontSize="1rem"
               marginLeft="10px"
-              onClick={SelectAnther}
+              onClick={SelectAnother}
             >
               Select another headset
             </Button>
@@ -204,19 +202,30 @@ return    axios.put(
   );
 };
 
-const SelectingHeadset = (props: any) => {
+interface SelectingHeadsetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  centerId: string;
+  childId: string;
+}
+
+interface FormData {
+  headset: string;
+}
+
+const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
     onClose: onErrorClose,
   } = useDisclosure();
-  const [headsets, setHeadsets] = useState([]);
-  const { setSessionId, setStartSession  , setheadsetid } = useStartSessionContext();
+  const [headsets, setHeadsets] = useState<any[]>([]);
+  const { setSessionId, setStartSession, setheadsetid } = useStartSessionContext();
   const toast = useToast();
-  const [errorSessionApi, seterrorSessionApi] = useState('');
+  const [errorMessages, setErrorMessages] = useState('');
+
 
   const selectedCenterContext = useContext(dataContext);
-  const [errorMessages, setErrorMessages] = useState('');
 
   const schema = Joi.object({
     headset: Joi.string().required().messages({
@@ -228,11 +237,10 @@ const SelectingHeadset = (props: any) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormData>({
     resolver: joiResolver(schema),
     mode: 'onTouched',
   });
-
 
   const getHeadsets = async () => {
     const token = await (window as any).electronAPI.getPassword('token');
@@ -250,9 +258,7 @@ const SelectingHeadset = (props: any) => {
     }
   };
 
- 
-  
-  const Getsessionid = async (dataheadset: any): Promise<{ success: boolean; error?: string }> => {
+  const getSessionId = async (dataheadset: string) => {
     const token = getMe().token;
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -267,30 +273,20 @@ const SelectingHeadset = (props: any) => {
         },
         { headers }
       );
-  
-      console.log(
-        'API Response from session id:',
-        response.data.data.id,
-        response.data.data.attributes
-      );
       setSessionId(response.data.data.id);
       setStartSession(response.data.data.attributes.created_at);
-      return { success: true };  // Success
+      return { success: true }; // Success
     } catch (error) {
-      console.log('Error assigning session id:', error.response.data.error);
+      console.error('Error assigning session id:', error.response.data.error);
       return { success: false, error: error.response.data.error }; 
     }
   };
-  
-  const handleFormSubmit = async (data: any) => {
-    console.log('Selected headset:', data.headset);
+
+  const handleFormSubmit: SubmitHandler<FormData> = async (data) => {
     setheadsetid(data.headset);
-  
-    const { success, error } = await Getsessionid(data.headset);
-  
+    const { success, error } = await getSessionId(data.headset);
+
     if (!success) {
-      console.log('Error occurred in Getsessionid, halting further execution.');
-  
       toast({
         title: 'Error',
         description: error,
@@ -300,12 +296,9 @@ const SelectingHeadset = (props: any) => {
       });
       return;
     }
-  
-    console.log('Form submitted with data in headset.');
-    setErrorMessages('This is a test error message.');
+
     onErrorOpen();
   };
-  
 
   const handleCancelSession = () => {
     onErrorClose();
@@ -315,9 +308,8 @@ const SelectingHeadset = (props: any) => {
   const handleSelectAnotherHeadset = () => {
     onErrorClose();
   };
-  
+
   useEffect(() => {
-    // Getsessionid()
     if (selectedCenterContext.id) {
       getHeadsets();
     }
@@ -340,6 +332,7 @@ const SelectingHeadset = (props: any) => {
                     {...register('headset')}
                     id="headset"
                     name="headset"
+
                     placeholder="Select headset"
                     size="sm"
                   >
@@ -366,7 +359,7 @@ const SelectingHeadset = (props: any) => {
                   fontFamily="Roboto"
                   fontWeight="700"
                   fontSize="18px"
-                  onClick={handleSubmit(handleFormSubmit)} // Use handleSubmit here
+                  onClick={handleSubmit(handleFormSubmit)}
                 >
                   Connect to headset
                 </Button>
@@ -386,7 +379,8 @@ const SelectingHeadset = (props: any) => {
         closeselectingheadset={props.onClose}
         onCancelSession={handleCancelSession}
         onSelectAnotherHeadset={handleSelectAnotherHeadset}
-        // errorMessages={errorMessages}
+                // errorMessages={errorMessages}
+
       />
     </>
   );

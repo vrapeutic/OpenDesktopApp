@@ -19,20 +19,26 @@ import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import axios from 'axios';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
+import SelectEvaluation from '../Evaluation';
 
 export default function OpenconnectedArcheeko(props: any) {
   const { startSession, sessionId , headsetid } = useStartSessionContext();
   const toast = useToast();
   const navigate = useNavigate();
+  const {
+    isOpen: isevaluationopen,
+    onOpen: onevaluationOpen,
+    onClose: onevalutionClose,
+  } = useDisclosure();
 
   const handle = async () => {
    
     try {
       await endSissionApi();
-      console.log(endSissionApi);
-      props.onClose();
-      props.onclosemodules();
-      navigate('/');
+      onevaluationOpen()
+      // props.onClose();
+      // props.onclosemodules();
+      // navigate('/');
     } catch (error) {
       console.log(error.response);
       toast({
@@ -168,6 +174,15 @@ export default function OpenconnectedArcheeko(props: any) {
           </ModalContent>
         </Modal>
       </Box>
+
+      {onevaluationOpen && (
+        <SelectEvaluation
+          isOpen={isevaluationopen}
+          onClose={onevalutionClose}
+         closeopenconnected={props.onClose}
+         closemodules={props.onclosemodules}
+        />
+      )}
     </>
   );
 }
