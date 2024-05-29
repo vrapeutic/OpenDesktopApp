@@ -48,7 +48,6 @@ export default function Openconnected({
     closeSelectingAHeadset();
     closeSelectingAModule();
     onClose();
-    // TODO dispatch end session message here
   }, [
     closeConnectedVrPopup,
     closeSelectingAHeadset,
