@@ -22,9 +22,12 @@ import { dataContext } from '@renderer/shared/Provider';
 import ConnectedVR from './ConnectedVR';
 import { useNavigate } from 'react-router-dom';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
 
 export default function SelectingModule(props: any) {
   const { popupFunctions, addFunction } = usePopupsHandler();
+  const { socketError } = useSocketManager();
+
   const { closeSelectingAHeadset } = popupFunctions;
   const [modules, setModules] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -111,6 +114,16 @@ export default function SelectingModule(props: any) {
               You have been connected successfully to the headset{' '}
               {props.headsetId}
             </Text>
+            {socketError && (
+              <Text
+                textAlign="center"
+                fontSize="1.2rem"
+                color="red"
+                fontFamily="Graphik LCG"
+              >
+                {socketError}
+              </Text>
+            )}
 
             {selectedCenter.id ? (
               <>

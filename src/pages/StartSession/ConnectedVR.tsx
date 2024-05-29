@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useSocketManager from '../../Context/SocketManagerProvider';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
@@ -23,7 +23,7 @@ const ConnectedVR = (props: any) => {
     const { packageName, headsetId, sessionId } = props;
     const existingDevice = await checkIfServiceExists(headsetId);
 
-    if (existingDevice) {
+    if (!existingDevice) {
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: packageName,
@@ -36,12 +36,7 @@ const ConnectedVR = (props: any) => {
         headsetId,
         ...[1, 2] // this array for holding settings
       );
-      socketError
-        ? () => {
-            setNotFound(true);
-            setErrorMessages(socketError);
-          }
-        : setOpenRunningPopup(true);
+      setOpenRunningPopup(true);
     } else {
       console.log(headsetId);
       console.log(existingDevice);
@@ -65,6 +60,8 @@ const ConnectedVR = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
   };
+
+  if (socketError) return null;
 
   return notFound ? (
     <ErrorPopup
