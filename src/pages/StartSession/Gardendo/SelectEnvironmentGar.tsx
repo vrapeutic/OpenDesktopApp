@@ -16,8 +16,7 @@ import {
   import { useForm } from 'react-hook-form';
   import joi from 'joi';
   import { joiResolver } from '@hookform/resolvers/joi';
-  
-  import SelectNumberArcheeko from './SelectNumberArcheeko';
+
 import SelectNumberGar from './SelectNumberGar';
   
   const SelectEnvironmentGar = (props: any) => {

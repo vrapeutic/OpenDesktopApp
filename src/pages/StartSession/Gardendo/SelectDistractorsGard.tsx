@@ -22,7 +22,6 @@ import {
   import { joiResolver } from '@hookform/resolvers/joi';
   import { useNavigate } from 'react-router-dom';
   
-  import OpenconnectedArcheeko from './OpenconnectedArcheeko';
   import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import OpenconnectedGar from './OpenconnectedGar';
   

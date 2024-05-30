@@ -17,7 +17,6 @@ import {
   import { useForm } from 'react-hook-form';
   import joi from 'joi';
   import { joiResolver } from '@hookform/resolvers/joi';
-  import OpenconnectedArcheeko from './OpenconnectedArcheeko';
   import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
   import { useNavigate } from 'react-router-dom';
 import SelectDistractorsGard from './SelectDistractorsGard';
