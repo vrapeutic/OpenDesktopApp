@@ -28,6 +28,7 @@ import SelectLevelViblio from './viblio/SelectLevelviblio';
 import SelectLevelRodja from './rodja/SelectLevelrodja';
 import axios from 'axios';
 import { getMe } from '@renderer/cache';
+import SelectLevelGar from './Gardendo/SelectLevelGar';
 
 export default function SelectingModule(props: any) {
   const [modules, setModules] = useState([]);
@@ -48,11 +49,15 @@ export default function SelectingModule(props: any) {
     selectedModule: '',
   });
 
-
   const {
     isOpen: isOpenSelectlevelArcheeko,
     onOpen: onOpenSelectlevelArcheeko,
     onClose: onCloseSelectlevelArcheeko,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenSelectlevelGar,
+    onOpen: onOpenSelectlevelGar,
+    onClose: onCloseSelectlevelGar,
   } = useDisclosure();
   const [name, setName] = useState('Modules');
   const { setModule } = useStartSessionContext();
@@ -73,10 +78,14 @@ export default function SelectingModule(props: any) {
       case 'Viblio':
         console.log('Viblio', name);
         return onOpenSelectlevelviblio();
-        case 'Rodja':
+      case 'Rodja':
         console.log('Rodja', name);
         return onOpenSelectlevelrodja();
-      default: toast({
+      case 'GardenDo':
+        console.log('GardenDo', name);
+        return onOpenSelectlevelGar();
+      default:
+        toast({
           title: 'error',
           description: `This module is not available, please select anther module`,
           status: 'error',
@@ -294,7 +303,7 @@ export default function SelectingModule(props: any) {
           onclosemodules={props.onClose}
         />
       )}
-           {onOpenSelectlevelrodja && (
+      {onOpenSelectlevelrodja && (
         <SelectLevelRodja
           isOpen={isOpenSelectlevelrodja}
           onClose={onCloseSelectlevelrodja}
@@ -305,6 +314,13 @@ export default function SelectingModule(props: any) {
         <SelectLevelArcheeko
           isOpen={isOpenSelectlevelArcheeko}
           onClose={onCloseSelectlevelArcheeko}
+          onclosemodules={props.onClose}
+        />
+      )}
+      {onOpenSelectlevelGar && (
+        <SelectLevelGar
+          isOpen={isOpenSelectlevelGar}
+          onClose={onCloseSelectlevelGar}
           onclosemodules={props.onClose}
         />
       )}
