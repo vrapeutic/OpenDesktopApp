@@ -62,7 +62,7 @@ class MdnsManager {
       this.browser.on('serviceUp', (service) => {
         console.log(SERVER_LOGS_COLOR, 'service up: ', service.name);
         if (service.name === DESKTOP_APP_SERVICE_NAME) {
-          this.toggleAppNetConnectionStatus();
+          this.isConnectedToNetwork = true;
         } else {
           this.addToDiscoverdServices(service);
         }
@@ -71,7 +71,8 @@ class MdnsManager {
       this.browser.on('serviceDown', (service) => {
         console.log(SERVER_LOGS_COLOR, 'service down: ', service.name);
         if (service.name === DESKTOP_APP_SERVICE_NAME) {
-          this.toggleAppNetConnectionStatus();
+          console.log(YELLOW_SERVER_LOGS_COLOR, "The desktop app connection is lost");
+          this.isConnectedToNetwork = false;
         } else {
           this.removeFromDiscoverdServices(service.name as string);
         }
@@ -125,9 +126,7 @@ class MdnsManager {
   removeFromServicesDiscoveryLookUp(serviceName: string) {
     delete this.servicesDiscoveryLookUp[serviceName];
   }
-  toggleAppNetConnectionStatus() {
-    this.isConnectedToNetwork = !this.isConnectedToNetwork;
-  }
+
   cleanUp() {
     this.ad?.stop();
     if (this.browser) {
