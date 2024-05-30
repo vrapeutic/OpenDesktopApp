@@ -52,6 +52,13 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
     [socket]
   );
 
+  const checkAppNetWorkConnection = useCallback(async () => {
+    const isConnected = await (
+      window as any
+    ).electronAPI.checkNetworkConnection();
+    return isConnected;
+  }, [socket]);
+
   useEffect(() => {
     socket.connect();
     socket.on('connect', onConnect);
@@ -74,9 +81,10 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
   const contextValue = useMemo(
     () => ({
       checkIfServiceExists,
+      checkAppNetWorkConnection,
       dispatchSocketMessage,
       socketError,
-      setSocketError
+      setSocketError,
     }),
     [socketError]
   );
