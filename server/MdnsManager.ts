@@ -12,6 +12,9 @@ class MdnsManager {
   discoverdServices: {
     [key: string]: boolean;
   };
+  servicesDiscoveryLookUp: {
+    [key: string]: string;
+  };
   browser: mdns.Browser | null;
 
   constructor() {
@@ -28,6 +31,7 @@ class MdnsManager {
     }
 
     this.discoverdServices = {};
+    this.servicesDiscoveryLookUp = {};
     this.browser = null;
   }
 
@@ -59,7 +63,7 @@ class MdnsManager {
 
       this.browser.on('serviceDown', (service) => {
         console.log(SERVER_LOGS_COLOR, 'service down: ', service.name);
-        this.removeFromDiscoverdServices(service);
+        this.removeFromDiscoverdServices(service.name as string);
       });
 
       this.browser.on('error', (error: any) => {
@@ -86,13 +90,25 @@ class MdnsManager {
   }
 
   addToDiscoverdServices(service: { [key: string]: any }) {
-    if (service?.txtRecord?.deviceId) {
-      this.discoverdServices[service?.txtRecord?.deviceId] = true;
+    const serviceDeviceId = service?.txtRecord?.deviceId;
+    if (serviceDeviceId) {
+      this.discoverdServices[serviceDeviceId] = true;
+      this.addToServicesDiscoveryLookUp(service.name, serviceDeviceId);
     }
   }
 
-  removeFromDiscoverdServices(service: { [key: string]: any }) {
-    delete this.discoverdServices[service?.txtRecord?.deviceId];
+  removeFromDiscoverdServices(serviceName: string) {
+    const serviceDeviceId = this.servicesDiscoveryLookUp[serviceName];
+    delete this.discoverdServices[serviceDeviceId];
+    this.removeFromServicesDiscoveryLookUp(serviceName);
+  }
+
+  addToServicesDiscoveryLookUp(serviceName: string, serviceDeviceId: string) {
+    this.servicesDiscoveryLookUp[serviceName] = serviceDeviceId;
+  }
+
+  removeFromServicesDiscoveryLookUp(serviceName: string) {
+    delete this.servicesDiscoveryLookUp[serviceName];
   }
 
   cleanUp() {

@@ -16,8 +16,7 @@ const ConnectedVR = (props: any) => {
 
   const { dispatchSocketMessage, checkIfServiceExists } = useSocketManager();
   const [notFound, setNotFound] = useState(false);
-  const [errorMEssage, setErrorMessages] = useState(null);
-  const [openRunningPopup, setOpenRunningPopup] = useState(false);
+  const [errorMEssage] = useState(null);
 
   const handleSubmit = async () => {
     const { packageName, headsetId, sessionId } = props;
@@ -36,7 +35,7 @@ const ConnectedVR = (props: any) => {
         headsetId,
         ...[1, 2] // this array for holding settings
       );
-      setOpenRunningPopup(true);
+      props.setOpenRunningPopup(true);
     } else {
       console.log(headsetId);
       console.log(existingDevice);
@@ -61,7 +60,9 @@ const ConnectedVR = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) return null;
+  if (socketError) {
+    return null;
+  }
 
   return notFound ? (
     <ErrorPopup
@@ -78,8 +79,8 @@ const ConnectedVR = (props: any) => {
       isOpen={props.isOpen}
       onClose={closeSelectingAModule}
       headsetId={props.headsetId}
-      openRunningPopup={openRunningPopup}
-      setOpenRunningPopup={setOpenRunningPopup}
+      openRunningPopup={props.openRunningPopup}
+      setOpenRunningPopup={props.setOpenRunningPopup}
     />
   );
 };

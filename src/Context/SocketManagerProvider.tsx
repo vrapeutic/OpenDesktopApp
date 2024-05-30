@@ -76,6 +76,7 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
       checkIfServiceExists,
       dispatchSocketMessage,
       socketError,
+      setSocketError
     }),
     [socketError]
   );

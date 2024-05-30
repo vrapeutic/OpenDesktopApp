@@ -26,7 +26,8 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 
 export default function SelectingModule(props: any) {
   const { popupFunctions, addFunction } = usePopupsHandler();
-  const { socketError } = useSocketManager();
+  const { socketError, setSocketError } = useSocketManager();
+  const [openRunningPopup, setOpenRunningPopup] = useState(false);
 
   const { closeSelectingAHeadset } = popupFunctions;
   const [modules, setModules] = useState([]);
@@ -43,11 +44,17 @@ export default function SelectingModule(props: any) {
   });
 
   const schema = Joi.object().keys({
-    packageName: Joi.string().required(),
+    packageName: Joi.string().required().label('module Name'),
   });
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+
+    if (socketError) {
+      setSocketError(null);
+      setOpenRunningPopup(false);
+    }
+
     const { error } = schema.validate(values, { abortEarly: false });
     console.log(error);
 
@@ -237,6 +244,8 @@ export default function SelectingModule(props: any) {
           headsetId={props.headsetId}
           packageName={values.packageName}
           sessionId={props.sessionId}
+          setOpenRunningPopup={setOpenRunningPopup}
+          openRunningPopup={openRunningPopup}
         />
       )}
     </Box>
