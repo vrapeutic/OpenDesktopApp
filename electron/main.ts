@@ -19,6 +19,9 @@ const checkServiceExistence = (event: IpcMainInvokeEvent, args: string[]) => {
   const deviceId = args[0];
   return serverStarterService.discoverer?.checkServiceExistence(deviceId);
 };
+const checkNetworkConnection = () => {
+  return serverStarterService.discoverer?.checkNetworkConnection();
+};
 
 const handleStoreGetPassword = (event: IpcMainInvokeEvent, args: any[]) => {
   const key = args[0];
@@ -63,6 +66,7 @@ const createWindow = (): void => {
   ipcMain.handle('store:deletePassword', handleStoreDeletePassword);
 
   ipcMain.handle('checkServiceExistence', checkServiceExistence);
+  ipcMain.handle('checkNetworkConnection', checkNetworkConnection);
 };
 
 // This method will be called when Electron has finished

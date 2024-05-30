@@ -11,11 +11,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getPassword: (key: string) => ipcRenderer.invoke('store:getPassword', [key]),
   setPassword: (key: string, password: string) =>
     ipcRenderer.invoke('store:setPassword', [key, password]),
-  deletePassword: (key: string) => ipcRenderer.invoke('store:deletePassword', [key]),
+  deletePassword: (key: string) =>
+    ipcRenderer.invoke('store:deletePassword', [key]),
 
-  checkServiceExistence:(deviceId: string)=>ipcRenderer.invoke('checkServiceExistence', [deviceId]),
-  
+  checkServiceExistence: (deviceId: string) =>
+    ipcRenderer.invoke('checkServiceExistence', [deviceId]),
+  checkNetworkConnection: () => ipcRenderer.invoke('checkNetworkConnection'),
 });
-
-
-
