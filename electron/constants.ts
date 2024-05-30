@@ -22,3 +22,5 @@ export const GENERATE_SESSION_REPORT = 'generateSessionReport';
 export const MODULE_PACKAGE_KEY = 'modulePackageName';
 
 export const REPORT_FILE_SAVE_PATH = 'Desktop/VRapeuticSessions';
+
+export const DESKTOP_APP_SERVICE_NAME = 'electron-service';
