@@ -8,10 +8,10 @@ rules.push(
       test: /\.css$/,
       use: [{ loader: "style-loader" }, { loader: "css-loader" }],
     },
-    // {
-    //   test: /\.csv$/,
-    //   use:   [{ loader: "csv-loader" }],
-    // }
+    {
+      test: /\.csv$/,
+      use:   [{ loader: "csv-loader" }],
+    }
   );
 export const rendererConfig: Configuration = {
     module: {

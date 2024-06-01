@@ -4,6 +4,7 @@ import {
   Text,
   
 } from '@chakra-ui/react';
+import CSV from '@renderer/features/csv/CSV';
 
 export default function Subscriptions() {
 
@@ -16,9 +17,9 @@ export default function Subscriptions() {
 
   return (
     <>
-    <Text>
-    Subscriptions
-    </Text>
+    <div>
+      <CSV/>
+    </div>
      
 
     

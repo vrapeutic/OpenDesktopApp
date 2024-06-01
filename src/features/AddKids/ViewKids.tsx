@@ -6,7 +6,7 @@ import ProfileKid from '@renderer/features/AddKids/ProfileKid';
 import TabsKids from '@renderer/theme/components/TabsKids';
 import { config } from '../../config';
 import { dataContext } from '@renderer/shared/Provider';
-// import CSVReader from './cvs/Csv';
+import CSVReader from './cvs/Csv';
 
 const ViewKids = () => {
   const location = useLocation();
@@ -125,7 +125,7 @@ const ViewKids = () => {
         
       />
       <TabsKids id={kidsData.id} />
-      {/* <CSVReader/> */}
+
     </Box>
   );
 };
