@@ -351,6 +351,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
         <CongratulationsModuleAdmin
           isOpen={isOpen}
           onClose={handleCloseModal}
+          text={"Your Module has been created successfully"}
         />
       )}
     </>

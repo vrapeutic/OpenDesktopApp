@@ -75,7 +75,8 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
   });
 
   const FormonSubmit: SubmitHandler<FormInputs> = (data) => {
-    nextHandler(data);
+    console.log("Form Data after submission:", data); // Log the form data
+    nextHandler(data); // Call the nextHandler function to navigate or perform other actions
   };
 
   const [specialistslist, setspecialistslist] = useState<
@@ -110,9 +111,14 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
 
   useEffect(() => {
     if (Module) {
+
+      console.log("type of verison without parse int", typeof Module.attributes.version)
+
+      console.log("type of verison", parseInt(Module.attributes.version))
+
       setValue('Name', Module.attributes.name);
       setValue('Technology', Module.attributes.technology);
-      setValue('Version', Module.attributes.version);
+      setValue('Version', parseInt(Module.attributes.version));
       setValue(
         'specializationschema',
         Module.attributes.targeted_skills.map((skill) => ({
@@ -128,9 +134,9 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
     navigate('/Theraputicmodules');
   };
 
-  const nextHandler = (data : any) => {
-    // Navigate to EditModule2 with form data
-    navigate('/EditModule2', { state: { formData: data } });
+  const nextHandler = (data: any) => {
+    console.log("Form Data in general info edit module:", data); 
+    navigate('/EditModule2', { state: { newdata: data, olddata: Module } });
   };
   return (
     <>
@@ -246,7 +252,6 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
         </Grid>
         <Flex flexDirection="row-reverse">
           <Button
-            onClick={nextHandler}
             type="submit"
             bg="#4AA6CA"
             borderRadius="0.75em"
