@@ -26,10 +26,16 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 
 export default function SelectingModule(props: any) {
   const { popupFunctions, addFunction } = usePopupsHandler();
-  const { socketError, setSocketError } = useSocketManager();
+  const {
+    socketError,
+    setSocketError,
+    checkIfServiceExists,
+    checkAppNetWorkConnection,
+  } = useSocketManager();
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
 
-  const { closeSelectingAHeadset } = popupFunctions;
+  const { closeSelectingAHeadset, renderDisconnectedHeadSetError } =
+    popupFunctions;
   const [modules, setModules] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
@@ -49,6 +55,15 @@ export default function SelectingModule(props: any) {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+
+    const existingDevice = await checkIfServiceExists(props.headsetId);
+    const appIsConnectedToInternet = await checkAppNetWorkConnection();
+    if (!existingDevice || !appIsConnectedToInternet) {
+      renderDisconnectedHeadSetError(
+        !appIsConnectedToInternet && 'You are not connected to the internet'
+      );
+      return;
+    }
 
     if (socketError) {
       setSocketError(null);

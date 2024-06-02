@@ -2,6 +2,7 @@ import {
   SERVER_LOGS_COLOR,
   EXPRESS_PORT,
   YELLOW_SERVER_LOGS_COLOR,
+  DESKTOP_APP_SERVICE_NAME,
 } from '../electron/constants';
 
 import * as mdns from 'mdns';
@@ -16,6 +17,7 @@ class MdnsManager {
     [key: string]: string;
   };
   browser: mdns.Browser | null;
+  isConnectedToNetwork: boolean;
 
   constructor() {
     console.log(SERVER_LOGS_COLOR, 'init mdns manager');
@@ -24,7 +26,7 @@ class MdnsManager {
 
     try {
       this.ad = mdns.createAdvertisement(mdns.tcp('http'), EXPRESS_PORT, {
-        name: 'electron-service',
+        name: DESKTOP_APP_SERVICE_NAME,
       });
     } catch (error) {
       console.log(SERVER_LOGS_COLOR, error);
@@ -33,6 +35,7 @@ class MdnsManager {
     this.discoverdServices = {};
     this.servicesDiscoveryLookUp = {};
     this.browser = null;
+    this.isConnectedToNetwork = false;
   }
 
   start() {
@@ -58,12 +61,21 @@ class MdnsManager {
 
       this.browser.on('serviceUp', (service) => {
         console.log(SERVER_LOGS_COLOR, 'service up: ', service.name);
-        this.addToDiscoverdServices(service);
+        if (service.name === DESKTOP_APP_SERVICE_NAME) {
+          this.isConnectedToNetwork = true;
+        } else {
+          this.addToDiscoverdServices(service);
+        }
       });
 
       this.browser.on('serviceDown', (service) => {
         console.log(SERVER_LOGS_COLOR, 'service down: ', service.name);
-        this.removeFromDiscoverdServices(service.name as string);
+        if (service.name === DESKTOP_APP_SERVICE_NAME) {
+          console.log(YELLOW_SERVER_LOGS_COLOR, "The desktop app connection is lost");
+          this.isConnectedToNetwork = false;
+        } else {
+          this.removeFromDiscoverdServices(service.name as string);
+        }
       });
 
       this.browser.on('error', (error: any) => {
@@ -87,6 +99,10 @@ class MdnsManager {
 
   checkServiceExistence(deviceId: string) {
     return this.discoverdServices[deviceId];
+  }
+
+  checkNetworkConnection() {
+    return this.isConnectedToNetwork;
   }
 
   addToDiscoverdServices(service: { [key: string]: any }) {

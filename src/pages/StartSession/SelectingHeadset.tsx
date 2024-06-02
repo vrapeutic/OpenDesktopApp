@@ -78,7 +78,12 @@ const ErrorsModal = ({
 
 const SelectingHeadset = (props: SelectingHeadsetProps) => {
   const { addFunction } = usePopupsHandler();
-  const { dispatchSocketMessage, checkIfServiceExists } = useSocketManager();
+  const {
+    dispatchSocketMessage,
+    checkIfServiceExists,
+    checkAppNetWorkConnection,
+  } = useSocketManager();
+
   const [deviceIsFound, setDeviceIsFound] = useState(false);
   const [sessionId, setSessionId] = useState<string>(null);
   const {
@@ -127,8 +132,9 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
   const handleFormSubmit = async () => {
     const headsetId = getValues(HEADSET_FIELD);
     const existingDevice = await checkIfServiceExists(headsetId);
-    
-    if (existingDevice) {
+    const appIsConnectedToInternet = await checkAppNetWorkConnection();
+
+    if (appIsConnectedToInternet && existingDevice) {
       // end old session
       dispatchSocketMessage(
         END_SESSION_MESSAGE,
@@ -142,7 +148,11 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
       console.log(existingDevice);
       setDeviceIsFound(true);
     } else {
-      setErrorMessages('the selected headset is not connected.');
+      const errorMessage = !appIsConnectedToInternet
+        ? 'You are not connected to the internet.'
+        : 'The selected headset is not connected.';
+
+      setErrorMessages(errorMessage);
       onErrorOpen();
     }
   };
@@ -202,6 +212,11 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
     }
 
     addFunction('closeSelectingAHeadset', props.onClose);
+    addFunction('renderDisconnectedHeadSetError', (errorMessage = '') => {
+      setDeviceIsFound(false);
+      errorMessage && setErrorMessages(errorMessage);
+      onErrorOpen();
+    });
   }, [selectedCenterContext.id]);
 
   return (

@@ -14,15 +14,21 @@ const ConnectedVR = (props: any) => {
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
 
-  const { dispatchSocketMessage, checkIfServiceExists } = useSocketManager();
+  const {
+    dispatchSocketMessage,
+    checkIfServiceExists,
+    checkAppNetWorkConnection,
+  } = useSocketManager();
+
   const [notFound, setNotFound] = useState(false);
-  const [errorMEssage] = useState(null);
+  const [errorMEssage, setErrorMEssage] = useState(null);
 
   const handleSubmit = async () => {
     const { packageName, headsetId, sessionId } = props;
     const existingDevice = await checkIfServiceExists(headsetId);
+    const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
 
-    if (existingDevice) {
+    if (appIsConnectedToInternet && existingDevice) {
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: packageName,
@@ -39,6 +45,11 @@ const ConnectedVR = (props: any) => {
     } else {
       console.log(headsetId);
       console.log(existingDevice);
+      const errorMessage = !appIsConnectedToInternet
+        ? 'You are not connected to the internet'
+        : 'No headset found';
+
+      setErrorMEssage(errorMessage);
       setNotFound(true);
     }
   };
@@ -71,7 +82,7 @@ const ConnectedVR = (props: any) => {
       closeSelectingAHeadset={closeSelectingAHeadset}
       onCancelSession={cancelSession}
       onSelectAnotherHeadset={selectAnotherHeadset}
-      errorMessages={errorMEssage || 'No headset found'}
+      errorMessages={errorMEssage}
     />
   ) : (
     <PlayModule
