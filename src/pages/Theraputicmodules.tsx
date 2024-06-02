@@ -131,7 +131,7 @@ const Theraputicmodules: React.FC = () => {
                       key={Module.id}
                       cursor={'pointer'}
                       onClick={() => {
-                        navigate('/Editmodule', {
+                        navigate('/viewmodule', {
                           state: { Module: Module },
                         });
                       }}

@@ -33,7 +33,6 @@ interface LocationState<T = undefined> {
 const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = ({
  
   
-  backHandler,
 }) => {
 
   const location = useLocation();
@@ -171,6 +170,9 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = ({
     navigate('/');
   };
 
+  const backHandler = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     if (olddata) {

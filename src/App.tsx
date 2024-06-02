@@ -21,6 +21,7 @@ import Therapycentersadmin from './pages/Therapycentersadmin';
 import Assigntocenter from './pages/Assigntocenter/Assigntocenter';
 import GeneralInfoEditModule from './features/EditModuleForm/GeneralInfoEditModule';
 import SpecialtyFormEditModule from './features/EditModuleForm/SpecialityFormEditModule';
+import ViewModule from './pages/viewmodule';
 
 
 
@@ -61,6 +62,8 @@ function App() {
 
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />
+          <Route path="viewmodule" element={<ViewModule />} />
+
           <Route path="ViewKids" element={<ViewKids />} />
           {/* Add more routes as needed */}
         </Route>

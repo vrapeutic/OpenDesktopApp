@@ -3,28 +3,28 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import TabsViewCenter from '../theme/components/Tabs';
 import HeaderWithButton from '../theme/components/HeaderWithButton';
 import CardWithLogo from '../theme/components/CardWithLogo';
-const ViewCenter = () => {
+const ViewModule = () => {
   const location = useLocation();
-  const centerData = location.state;
+  const Module = location.state;
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (centerData) {
-      console.log('Clicked Center Data from view center:', centerData);
+    if (Module) {
+      console.log('Clicked module Data from module:', Module);
     }
-  }, [centerData]);
+  }, [Module]);
 
   return (
     <>
       <HeaderWithButton
-        leftText="Therapy Center"
-        rightText="Edit Center"
-        onButtonClick={() => navigate('/editcenter', { state: centerData })}
+        leftText="therapeutic module"
+        rightText="Edit Module"
+        onButtonClick={() => navigate('/Editmodule', { state: Module })}
       />{' '}
-      <CardWithLogo centerData={centerData} />
-      <TabsViewCenter centerData={centerData} />
+      {/* <CardWithLogo centerData={centerData} />
+      <TabsViewCenter centerData={centerData} /> */}
     </>
   );
 };
 
-export default ViewCenter;
+export default ViewModule;
