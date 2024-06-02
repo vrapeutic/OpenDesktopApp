@@ -19,6 +19,7 @@ import ViewKids from './features/AddKids/ViewKids';
 import Signup from './pages/SignUp/Signup';
 import Therapycentersadmin from './pages/Therapycentersadmin';
 import Assigntocenter from './pages/Assigntocenter/Assigntocenter';
+import GeneralInfoEditModule from './features/EditModuleForm/GeneralInfoEditModule';
 
 
 
@@ -54,6 +55,7 @@ function App() {
 
           <Route path="setting" element={<Setting />} />
           <Route path="Assigntocenter" element={<Assigntocenter />} /> 
+          <Route path="Editmodule" element={<GeneralInfoEditModule />} /> 
 
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />

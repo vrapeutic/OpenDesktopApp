@@ -127,7 +127,15 @@ const Theraputicmodules: React.FC = () => {
               <Tbody>
                 {softwaremodules?.map((Module) =>
                   Module?.attributes.image?.url ? (
-                    <Tr key={Module.id} cursor={'pointer'}>
+                    <Tr
+                      key={Module.id}
+                      cursor={'pointer'}
+                      onClick={() => {
+                        navigate('/Editmodule', {
+                          state: { Module: Module },
+                        });
+                      }}
+                    >
                       <Td>
                         <Flex direction="row" gap={2}>
                           <Box
@@ -155,7 +163,6 @@ const Theraputicmodules: React.FC = () => {
                       <Td>
                         <Button
                           onClick={() => {
-                         
                             navigate('/Assigntocenter', {
                               state: { Module: Module },
                             });
