@@ -19,6 +19,7 @@ import ViewKids from './features/AddKids/ViewKids';
 import Signup from './pages/SignUp/Signup';
 import Therapycentersadmin from './pages/Therapycentersadmin';
 import Assigntocenter from './pages/Assigntocenter/Assigntocenter';
+import ViewCenterAdmin from './pages/ViewCenterAdmin';
 
 
 
@@ -57,6 +58,9 @@ function App() {
 
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />
+          <Route path="ViewCenterAdmin" element={<ViewCenterAdmin />} />
+
+          
           <Route path="ViewKids" element={<ViewKids />} />
           {/* Add more routes as needed */}
         </Route>

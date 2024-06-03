@@ -15,7 +15,7 @@ export default function HeaderWithButton({
 
   return (
     <>
-      <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Grid style={{ display: 'flex', justifyContent: 'space-between'}}>
         <HStack w="143px" h="40px" ml="24px" mt="55px">
           <ArrowBackIcon onClick={goBack} />
           <Text>Therapy Center</Text>

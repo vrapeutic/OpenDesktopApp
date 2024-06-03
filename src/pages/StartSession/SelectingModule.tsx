@@ -113,7 +113,7 @@ export default function SelectingModule(props: any) {
 
   const { startSession, sessionId } = useStartSessionContext();
   console.log(sessionId, startSession);
-  const token = getMe().token;
+  const token = getMe()?.token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
