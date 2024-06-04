@@ -33,7 +33,7 @@ const ViewCenterAdmin= () => {
               backHandler={backHandler}
               sliding={sliding}
               formData={formData}
-              dataCild={kidsList}
+              datachild={kidsList}
             />
           </>
         );
@@ -55,7 +55,7 @@ const ViewCenterAdmin= () => {
       onOpenCongratulations();
     }
   };
-  const dataCild=(x:any)=>{
+  const datachild=(x:any)=>{
     console.log(x)
     setKidsList(x)
 
@@ -94,7 +94,7 @@ const ViewCenterAdmin= () => {
     {showTable?<>
     <HeaderWithArrow  title={"Therapy Center"}/>
     {/* <CardWithLogo centerData={centerData} /> */}
-    <TabsViewCenterAdmin  dataCild={dataCild} nextHandler={()=>nextHandler()} centerData={centerData} /></>:(<>{renderFormStep()}</>)}
+    <TabsViewCenterAdmin  datachild={datachild} nextHandler={()=>nextHandler()} centerData={centerData} /></>:(<>{renderFormStep()}</>)}
       
     </>
   );

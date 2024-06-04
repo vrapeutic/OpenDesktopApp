@@ -47,12 +47,12 @@ interface Child {
 
 const TabsViewCenterAdmin = ({
   centerData,
-  dataCild,
+  datachild,
   nextHandler
 }: {
   centerData: { id: number };
   nextHandler:any;
-  dataCild:any;
+  datachild:any;
 }) => {
   const token = getMe()?.token;
   const { otp } = useAdminContext();
@@ -99,7 +99,7 @@ const TabsViewCenterAdmin = ({
 
 const handleData=(x:any)=>{
   console.log(x)
-  dataCild(x)
+  datachild(x)
 
 
   nextHandler()

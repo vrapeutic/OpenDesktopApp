@@ -20,21 +20,21 @@ import makeAnimated from 'react-select/animated';
 import axios from 'axios';
 import UploadKidImg from '@renderer/features/AddKids/UploadKidImg';
 
-
 const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
   onSubmit,
   // nextHandler,
   backHandler,
   sliding,
   formData,
-  dataCild
+  datachild,
 }) => {
   const animatedComponents = makeAnimated();
 
   const [diagnoses, setDiagnoses] = useState([]);
   const [age, setAge] = useState('');
-console.log(dataCild)
-  const handleChange = (e:any) => {
+  console.log(datachild);
+  const [selectedDiagnoses, setSelectedDiagnoses] = useState([])
+  const handleChange = (e: any) => {
     let value = e.target.value;
     // Ensure only numeric characters are entered
     if (/^\d*$/.test(value)) {
@@ -48,8 +48,7 @@ console.log(dataCild)
   const { isOpen, onOpen, onClose } = useDisclosure();
   const schema = joi.object({
     Name: joi.string().min(3).max(30).required().label('Name'),
-   
-    Age: joi.string().required(),
+    Age: joi.required(),
     diagnoses: joi.array().required().label('diagnoses'),
   });
   const {
@@ -71,14 +70,53 @@ console.log(dataCild)
 
     onOpen();
   };
-  useEffect(() => {
-    getAllDiagnoses();
+   useEffect(() => {
+  
+     getAllDiagnoses();
+
+ 
   }, []);
   const getAllDiagnoses = async () => {
     try {
       const response = await axios.get(`${config.apiURL}/api/v1/diagnoses`);
-      setDiagnoses(response.data);
+      await setDiagnoses(response.data);
 
+
+      const filterAndMapData = async() => {
+        
+        // Perform filtering using datachild
+        const x: any[] = datachild.relationships.diagnoses.data;
+           console.log(x, response.data);
+          const filteredArray =  response.data.filter((item) => {
+            // Convert item.id to a string for comparison with array1's IDs
+            return x.some((elem) => elem.id === String(item.id));
+          });
+        
+        console.log('Filtered array:', filteredArray);
+        
+        const m = filteredArray.map((y: any) => ({
+          id: y.id,
+          label: y.name,
+          value: y.id,
+        }));
+        
+        console.log('Mapped array:', m);
+        
+        // Set values or update state using filtered and mapped data
+        if (datachild) {
+          setValue('Name', datachild.attributes.name);
+          setValue('Age', datachild.attributes.age);
+          console.log(datachild.attributes.age)
+          setValue('diagnoses', m);
+          setSelectedDiagnoses(m);
+          setAge(datachild.attributes.age);
+        }
+      };
+    
+      // Call filterAndMapData if datachild exists to trigger the operations when datachild changes
+      if (datachild) {
+        filterAndMapData();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -90,9 +128,10 @@ console.log(dataCild)
     value: diagnose.id,
   }));
   const handleSpecializations = (options: any) => {
+    console.log(options);
     setValue('diagnoses', [...options]);
+    setSelectedDiagnoses([...options])
   };
-
 
   const customStyles = {
     control: (provided: any, state: any) => ({
@@ -104,28 +143,11 @@ console.log(dataCild)
         border: '1px solid #4965CA',
       },
     }),
-  
   };
+  
 
 
-  useEffect(() => {
-   
-    if (dataCild) {
-      setValue('Name', dataCild.attributes.name);
-      setValue('Age', dataCild.attributes.Age);
-      
-      
-    }
-  }, [dataCild]);
-
-
-
-
-
-
-
-
-
+  
 
   return (
     <Box
@@ -216,6 +238,7 @@ console.log(dataCild)
               name="diagnoses"
               onChange={handleSpecializations}
               styles={customStyles}
+              value={selectedDiagnoses}
             />
           </Box>
 
@@ -267,6 +290,9 @@ console.log(dataCild)
           onClose={onClose}
           onSubmit={onSubmit}
           formData={formData}
+          datachild={datachild.attributes.photo_url}
+          id={datachild.id}
+          email={datachild.attributes.email}
         />
       )}
     </Box>
