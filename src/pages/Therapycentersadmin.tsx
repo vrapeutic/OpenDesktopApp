@@ -78,6 +78,7 @@ export default function Therapycentersadmin() {
   };
 
   const handleSubmit = async (event: any) => {
+   
     event.preventDefault();
     const { error } = schema.validate(values, { abortEarly: false });
     console.log(error);
@@ -440,7 +441,9 @@ const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
                       fontFamily="Graphik LCG"
                       boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                       color={'white'}
-                      onClick={() => onOpenModal()}
+                      onClick={(e:any) =>{ 
+                        e.stopPropagation()
+                        onOpenModal()}}
                     >
                       Assign a module
                     </Button>
@@ -455,7 +458,8 @@ const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
                       fontFamily="Graphik LCG"
                       boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                       color={'white'}
-                      onClick={() => {
+                      onClick={(e:any) => {
+                        e.stopPropagation();
                         openVr(x.id);
                         onOpenVR();
                       }}

@@ -107,7 +107,7 @@ const handleData=(x:any)=>{
 
 
   return (
-    <Tabs>
+    <Tabs mx={18}>
       <TabList>
         <Tab>Subscriptions</Tab>
         <Tab>Specialists</Tab>

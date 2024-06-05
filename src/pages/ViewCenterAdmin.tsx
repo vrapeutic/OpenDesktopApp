@@ -93,7 +93,7 @@ const ViewCenterAdmin= () => {
     <>
     {showTable?<>
     <HeaderWithArrow  title={"Therapy Center"}/>
-    {/* <CardWithLogo centerData={centerData} /> */}
+    <CardWithLogo centerData={centerData} />
     <TabsViewCenterAdmin  datachild={datachild} nextHandler={()=>nextHandler()} centerData={centerData} /></>:(<>{renderFormStep()}</>)}
       
     </>

@@ -65,17 +65,44 @@ const UploadKidImg: React.FC<UploadKidImgProps> = (props) => {
   const createFormData = () => {
     const formData = new FormData();
     console.log(props.formData.Name, logo);
-    formData.append('name', props.formData.Name);
+
+    formData.append('name', props.formData.Name)
     formData.append('email',props.email?props.email:props.formData.Email);
     formData.append('age', props.formData.Age);
-    formData.append('photo', logo ? logo : props.datachild);
+    formData.append('photo', logo  );
 
     props.formData.diagnoses.forEach((diagnose: { id: string | Blob }) =>
       formData.append('diagnosis_ids[]', diagnose.id)
     );
 
+  
+
+
+
+
+
+
+
+
+
     return formData;
   };
+
+
+
+   const createFormEdit=()=>{
+    const childFormData = new FormData();
+childFormData.append('child[name]', props.formData.Name);
+childFormData.append('child[age]', props.formData.Age);
+childFormData.append('child[photo]',  logo ? logo : props.datachild);
+
+// Append diagnosis IDs for the child form
+props.formData.diagnoses.forEach((diagnose: { id: string | Blob }) =>
+  childFormData.append('child[diagnosis_ids][]', diagnose.id)
+ 
+);
+return childFormData;
+   }
 
   const postFormData = (formData: FormData) => {
     const token = getMe()?.token;
@@ -125,7 +152,9 @@ const UploadKidImg: React.FC<UploadKidImgProps> = (props) => {
   };
 
   const SendDataToApi = async () => {
-    const formData = createFormData();
+
+   
+    const formData =  props.datachild? createFormEdit():createFormData()
 
     try {
       await postFormData(formData);

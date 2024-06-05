@@ -16,9 +16,12 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { getMe } from '@renderer/cache';
 
 const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
-  const facebookLink =
+  const token = getMe()?.token;
+  if(token){
+const facebookLink =
     centerData?.centerData?.attributes?.center_social_links.find(
       (link: { link_type: string }) => link.link_type === 'facebook'
     );
@@ -26,12 +29,14 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
     centerData?.centerData?.attributes?.center_social_links.find(
       (link: { link_type: string }) => link.link_type === 'twitter'
     );
+  }
+  
 
   return (
     <Grid
       templateColumns="repeat(8, 1fr) repeat(2, 1fr) repeat(2, 1fr)"
       gap={4}
-     
+      mx={18}
       background="#FFFFFF"
     >
       <GridItem colSpan={7} p={4}>
@@ -86,8 +91,8 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
         <Text>Contact us</Text>
         <Text>Email: {centerData?.centerData.attributes?.email}</Text>
         <Text>Cal : {centerData?.centerData.attributes?.phone_number}</Text>
-
-        <Flex direction="row" gap={2}>
+{token&&
+         <Flex direction="row" gap={2}>
           <Link display="inline" color="#3961FB" href={facebookLink?.link}>
             <IconButton>
               <Icon as={FaFacebook} w={4} h={4} />
@@ -105,7 +110,8 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
               <Icon as={FaTwitter} w={4} h={4} />
             </IconButton>
           </Link>
-        </Flex>
+        </Flex> 
+      }
       </GridItem>
       <GridItem colSpan={2}>
         <Text>Tax ID : {centerData?.centerData.attributes?.tax_id}</Text>
