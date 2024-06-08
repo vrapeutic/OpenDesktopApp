@@ -12,13 +12,14 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { TherapyFormProps } from '../AddCenterForm/therapyFormInterface';
+// import { TherapyFormProps } from '../AddCenterForm/therapyFormInterface';
 import { config } from '@renderer/config';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import axios from 'axios';
 import UploadKidImg from '@renderer/features/AddKids/UploadKidImg';
+import { TherapyFormProps } from '@renderer/features/AddCenterForm/therapyFormInterface';
 
 const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
   onSubmit,
@@ -86,8 +87,8 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
         
         // Perform filtering using datachild
         const x: any[] = datachild.relationships.diagnoses.data;
-           console.log(x, response.data);
-          const filteredArray =  response.data.filter((item) => {
+          
+          const filteredArray =  response.data.filter((item:any) => {
             // Convert item.id to a string for comparison with array1's IDs
             return x.some((elem) => elem.id === String(item.id));
           });

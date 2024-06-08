@@ -20,17 +20,18 @@ import { getMe } from '@renderer/cache';
 
 const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
   const token = getMe()?.token;
-  if(token){
-const facebookLink =
-    centerData?.centerData?.attributes?.center_social_links.find(
-      (link: { link_type: string }) => link.link_type === 'facebook'
-    );
-  const linkedinLink =
-    centerData?.centerData?.attributes?.center_social_links.find(
-      (link: { link_type: string }) => link.link_type === 'twitter'
-    );
+  let facebookLink ;
+  let linkedinLink ;
+  if (token) {
+    facebookLink =
+      centerData?.centerData?.attributes?.center_social_links.find(
+        (link: { link_type: string }) => link.link_type === 'facebook'
+      );
+    linkedinLink =
+      centerData?.centerData?.attributes?.center_social_links.find(
+        (link: { link_type: string }) => link.link_type === 'twitter'
+      );
   }
-  
 
   return (
     <Grid
@@ -91,27 +92,27 @@ const facebookLink =
         <Text>Contact us</Text>
         <Text>Email: {centerData?.centerData.attributes?.email}</Text>
         <Text>Cal : {centerData?.centerData.attributes?.phone_number}</Text>
-{token&&
-         <Flex direction="row" gap={2}>
-          <Link display="inline" color="#3961FB" href={facebookLink?.link}>
-            <IconButton>
-              <Icon as={FaFacebook} w={4} h={4} />
-            </IconButton>
-          </Link>
+        {token && (
+          <Flex direction="row" gap={2}>
+            <Link display="inline" color="#3961FB" href={facebookLink?.link}>
+              <IconButton>
+                <Icon as={FaFacebook} w={4} h={4} />
+              </IconButton>
+            </Link>
 
-          <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
-            <IconButton>
-              <Icon as={FaLinkedin} w={4} h={4} />
-            </IconButton>
-          </Link>
+            <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
+              <IconButton>
+                <Icon as={FaLinkedin} w={4} h={4} />
+              </IconButton>
+            </Link>
 
-          <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
-            <IconButton>
-              <Icon as={FaTwitter} w={4} h={4} />
-            </IconButton>
-          </Link>
-        </Flex> 
-      }
+            <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
+              <IconButton>
+                <Icon as={FaTwitter} w={4} h={4} />
+              </IconButton>
+            </Link>
+          </Flex>
+        )}
       </GridItem>
       <GridItem colSpan={2}>
         <Text>Tax ID : {centerData?.centerData.attributes?.tax_id}</Text>
