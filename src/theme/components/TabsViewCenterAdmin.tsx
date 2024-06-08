@@ -18,7 +18,6 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { config } from '../../config';
-import { getMe } from '../../cache';
 import { useEffect, useState } from 'react';
 import { useAdminContext } from '@renderer/Context/AdminContext';
 import GeneralInfoFormKidsEdit from '@renderer/pages/GeneralInfoFormKidsEdit';
@@ -54,7 +53,7 @@ const TabsViewCenterAdmin = ({
   nextHandler:any;
   datachild:any;
 }) => {
-  const token = getMe()?.token;
+ 
   const { otp } = useAdminContext();
 
   const headers = {
@@ -81,7 +80,7 @@ const TabsViewCenterAdmin = ({
   const getDoctors = async () => {
     try {
       const response = await axios.get(
-        `${config.apiURL}/api/v1/centers/${centerData.id}/doctors`,
+        `${config.apiURL}/api/v1/admins/doctors?specialties&q[centers_id_eq]=${centerData.id}`,
         { headers }
       );
       setDoctorlist(response.data.data);

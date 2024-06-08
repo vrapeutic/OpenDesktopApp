@@ -74,17 +74,6 @@ const UploadKidImg: React.FC<UploadKidImgProps> = (props) => {
     props.formData.diagnoses.forEach((diagnose: { id: string | Blob }) =>
       formData.append('diagnosis_ids[]', diagnose.id)
     );
-
-  
-
-
-
-
-
-
-
-
-
     return formData;
   };
 
@@ -94,7 +83,8 @@ const UploadKidImg: React.FC<UploadKidImgProps> = (props) => {
     const childFormData = new FormData();
 childFormData.append('child[name]', props.formData.Name);
 childFormData.append('child[age]', props.formData.Age);
-childFormData.append('child[photo]',  logo ? logo : props.datachild);
+
+{logo&& childFormData.append('child[photo]',  logo );}
 
 // Append diagnosis IDs for the child form
 props.formData.diagnoses.forEach((diagnose: { id: string | Blob }) =>
