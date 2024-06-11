@@ -122,7 +122,7 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = ({
     );
     formDataTobesent.append('software_module[min_age]', data.From) ;
     formDataTobesent.append('software_module[max_age]', data.To);
-    formDataTobesent.append('software_module[image]', data.certification);
+   {selectedFile&&formDataTobesent.append('software_module[image]', selectedFile);}  
     formDataTobesent.append('software_module[package_name]', data.packagename);
 
     return formDataTobesent;
