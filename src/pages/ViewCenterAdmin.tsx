@@ -7,6 +7,7 @@ import HeaderWithArrow from '@renderer/theme/components/HeaderWithArrow';
 import TabsViewCenterAdmin from '@renderer/theme/components/TabsViewCenterAdmin';
 import GeneralInfoFormKidsEdit from './GeneralInfoFormKidsEdit';
 import { useDisclosure } from '@chakra-ui/react';
+import GenerallInfoDoctorEdit from './GenerallInfoDoctorEdit';
 const ViewCenterAdmin= () => {
   const location = useLocation();
   const centerData = location.state;
@@ -15,6 +16,7 @@ const ViewCenterAdmin= () => {
   const [formData, setFormData] = useState({});
   const [kidsList, setKidsList] = useState<any>([]);
 
+const [doctor, setDoctor] = useState<any>([]);
   const [showTable, setShowTable] = useState(true);
 
   useEffect(() => {
@@ -43,6 +45,32 @@ const ViewCenterAdmin= () => {
         return null;
     }
   };
+
+  const renderFormStepDoctor = () => {
+    console.log("dcotor")
+    switch (sliding) {
+      case 2:
+        return (
+          <>
+            <GenerallInfoDoctorEdit
+              onSubmit={handleFormSubmit}
+              nextHandler={nextHandler}
+              backHandler={backHandler}
+              sliding={sliding}
+              formData={formData}
+              datachild={doctor}
+            />
+          </>
+        );
+
+
+      default:
+        return null;
+    }
+  };
+
+
+
   const handleFormSubmit = (data: any) => {
     setFormData({ ...formData, ...data });
 
@@ -58,6 +86,14 @@ const ViewCenterAdmin= () => {
   const datachild=(x:any)=>{
     console.log(x)
     setKidsList(x)
+    setDoctor([])
+  }
+  
+
+  const dataDoctor=(x:any)=>{
+    console.log(x)
+    setDoctor(x)
+    setKidsList([])
 
   }
   const {
@@ -94,7 +130,22 @@ const ViewCenterAdmin= () => {
     {showTable?<>
     <HeaderWithArrow  title={"Therapy Center"}/>
     <CardWithLogo centerData={centerData} />
-    <TabsViewCenterAdmin  datachild={datachild} nextHandler={()=>nextHandler()} centerData={centerData} /></>:(<>{renderFormStep()}</>)}
+    <TabsViewCenterAdmin 
+     datachild={datachild}
+      nextHandler={()=>nextHandler()} 
+    centerData={centerData} 
+    dataDoctor={dataDoctor} 
+    nextHandlerDoctor={()=>nextHandler()}
+    />
+  
+    
+    </>:(<>
+    
+    
+    {kidsList.length===0?renderFormStepDoctor():renderFormStep()}
+  
+    
+    </>)}
       
     </>
   );

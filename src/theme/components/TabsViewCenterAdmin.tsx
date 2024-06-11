@@ -47,13 +47,15 @@ interface Child {
 const TabsViewCenterAdmin = ({
   centerData,
   datachild,
-  nextHandler
+  nextHandler,
+  dataDoctor,nextHandlerDoctor
 }: {
   centerData: { id: number };
-  nextHandler:any;
-  datachild:any;
+  nextHandler: any;
+  datachild: any;
+  dataDoctor:any
+  nextHandlerDoctor:any
 }) => {
- 
   const { otp } = useAdminContext();
 
   const headers = {
@@ -61,8 +63,6 @@ const TabsViewCenterAdmin = ({
   };
   const [childrenlist, setChildrenlist] = useState<Child[] | undefined>();
   const [Doctorslist, setDoctorlist] = useState<Doctor[] | undefined>();
-
-
 
   const getChildren = async () => {
     try {
@@ -95,16 +95,19 @@ const TabsViewCenterAdmin = ({
     getChildren();
   }, []);
 
+  const handleData = (x: any) => {
+    console.log(x);
+    datachild(x);
 
-const handleData=(x:any)=>{
-  console.log(x)
-  datachild(x)
+    nextHandler();
+  };
 
+ const handleDataDoctor= (x: any) => {
+    console.log(x);
+    dataDoctor(x);
 
-  nextHandler()
-}
-
-
+    nextHandlerDoctor();
+  };
   return (
     <Tabs mx={18}>
       <TabList>
@@ -144,15 +147,23 @@ const handleData=(x:any)=>{
                           borderRadius="full"
                           mr={2}
                         />
-                        <Text
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}
-                        >
-                          {doctor?.attributes?.name}
-                        </Text>
+                        <Box>
+                          <Text
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}
+                          >
+                            {doctor?.attributes?.name}
+                          </Text>
+                          <Button
+                            height={'40px'}
+                            onClick={() => handleDataDoctor(doctor)}
+                          >
+                            Edit
+                          </Button>
+                        </Box>
                       </Flex>
                     </Td>
 
@@ -176,7 +187,6 @@ const handleData=(x:any)=>{
             >
               <Thead>
                 <Tr>
-                 
                   <Th> Name</Th>
                   <Th>email</Th>
                   <Th>age</Th>
@@ -195,12 +205,14 @@ const handleData=(x:any)=>{
                           mr={10}
                         />
                         <Box>
-                          <Text>
-                            {child?.attributes?.name}
-                           
-                          </Text>
-                       
-                          <Button height={"40px"} onClick={()=>handleData(child)} >Edit</Button>
+                          <Text>{child?.attributes?.name}</Text>
+
+                          <Button
+                            height={'40px'}
+                            onClick={() => handleData(child)}
+                          >
+                            Edit
+                          </Button>
                         </Box>
                       </Flex>
                     </Td>
