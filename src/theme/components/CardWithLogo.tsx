@@ -11,30 +11,24 @@ import {
   TagLabel,
   Grid,
   GridItem,
-  Link,
-  HStack,
+  
   Box,
 } from '@chakra-ui/react';
-import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
-const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
-  const facebookLink =
-    centerData?.centerData?.attributes?.center_social_links.find(
-      (link: { link_type: string }) => link.link_type === 'facebook'
-    );
-  const linkedinLink =
-    centerData?.centerData?.attributes?.center_social_links.find(
-      (link: { link_type: string }) => link.link_type === 'twitter'
-    );
+
+const CardWithLogo = ({ Module }: any) => {
+  console.log(Module);
+
 
   return (
     <Grid
       templateColumns="repeat(8, 1fr) repeat(2, 1fr) repeat(2, 1fr)"
       gap={4}
-     
+      mx={18}
+      my={5}
       background="#FFFFFF"
     >
-      <GridItem colSpan={7} p={4}>
+      <GridItem colSpan={4} p={4}>
         <Stack
           spacing={{ base: 0, md: 4 }}
           direction={{ base: 'column', md: 'row' }}
@@ -42,10 +36,10 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
           overflow="hidden"
           pos="relative"
         >
-          <Box width={197} height={197} alignItems={'center'} display={'flex'}>
+          <Box alignItems={'center'} display={'flex'}>
             <img
-              src={centerData?.centerData.attributes?.logo?.url}
-              alt={centerData?.centerData.attributes?.name}
+              src={Module?.Module.attributes?.image?.url}
+              alt={Module?.Module.attributes?.name}
             />
           </Box>
           <Stack
@@ -56,12 +50,12 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
           >
             <Flex justify="space-between">
               <chakra.h3 fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
-                {centerData?.centerData.attributes?.name}
+                {Module?.Module.attributes?.name}
               </chakra.h3>
             </Flex>
 
             <Flex color="gray.500">
-              {centerData?.centerData?.attributes?.specialties?.map(
+              {Module?.Module?.attributes?.specialties?.map(
                 (specialty: { id: number; name: string }) => (
                   <Tag key={specialty.id} size="sm" colorScheme="gray" mr={1}>
                     <TagLabel>{specialty?.name}</TagLabel>{' '}
@@ -69,66 +63,37 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
                 )
               )}
             </Flex>
-            <Stack
-              direction={{ base: 'column-reverse', sm: 'row' }}
-              justify="space-between"
-              alignItems={{ base: 'flex-start', sm: 'center' }}
-            >
-              <Text fontSize="sm" mt={{ base: 1, sm: 0 }}>
-                Ceo : Mostafa Elzohry
-              </Text>
-            </Stack>
           </Stack>
         </Stack>
       </GridItem>
 
-      <GridItem colSpan={3}>
-        <Text>Contact us</Text>
-        <Text>Email: {centerData?.centerData.attributes?.email}</Text>
-        <Text>Cal : {centerData?.centerData.attributes?.phone_number}</Text>
-
-        <Flex direction="row" gap={2}>
-          <Link display="inline" color="#3961FB" href={facebookLink?.link}>
-            <IconButton>
-              <Icon as={FaFacebook} w={4} h={4} />
-            </IconButton>
-          </Link>
-
-          <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
-            <IconButton>
-              <Icon as={FaLinkedin} w={4} h={4} />
-            </IconButton>
-          </Link>
-
-          <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
-            <IconButton>
-              <Icon as={FaTwitter} w={4} h={4} />
-            </IconButton>
-          </Link>
-        </Flex>
+      <GridItem colSpan={4}>
+        <Text my={2}>
+          Age Range: {Module?.Module.attributes?.min_age} -{' '}
+          {Module?.Module.attributes?.max_age} years
+        </Text>
+        <Text my={2}> Version : {Module?.Module.attributes?.version}</Text>
+        <Text my={2}>
+          {' '}
+          Technology : {Module?.Module.attributes?.technology}
+        </Text>
+        <Text my={2}>
+          {' '}
+          Package_name : {Module?.Module.attributes?.package_name}
+        </Text>
+        
       </GridItem>
-      <GridItem colSpan={2}>
-        <Text>Tax ID : {centerData?.centerData.attributes?.tax_id}</Text>
+      <GridItem colSpan={4} >
+        <Text my={2}>
+          Specialties :{' '}
+          {Module?.Module?.attributes.targeted_skills?.map((skill: any) => (
+            <Tag key={skill.id} size="sm" colorScheme="gray" mr={1} my={1}>
+              <TagLabel>{skill?.name}</TagLabel>
+            </Tag>
+          ))}
+        </Text>
       </GridItem>
     </Grid>
-  );
-};
-
-const IconButton = ({ children, ...props }: PropsWithChildren<StackProps>) => {
-  return (
-    <HStack
-      cursor="pointer"
-      border="1px solid"
-      borderColor="gray.300"
-      px={2}
-      py="0.15rem"
-      alignItems="center"
-      rounded="sm"
-      spacing={2}
-      {...props}
-    >
-      {children}
-    </HStack>
   );
 };
 

@@ -22,7 +22,7 @@ const ViewModule = () => {
         onButtonClick={() => navigate('/Editmodule', { state: Module })}
       />{' '}
 
-<CardWithLogo centerData={Module} />
+<CardWithLogo Module={Module} />
       {/* <CardWithLogo centerData={centerData} />
       <TabsViewCenter centerData={centerData} /> */}
     </>

@@ -23,13 +23,14 @@ export default function HeaderWithButton({
     <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
       <HStack w="143px" h="40px" ml="24px" mt="55px">
         <ArrowBackIcon onClick={goBack} />
-        <Text>{leftText}</Text>
+        <Text  fontSize={"29px"}  fontWeight={"500"} whiteSpace={'nowrap'}>{leftText}</Text>
       </HStack>
       <Button
         w="143px"
         h="40px"
         ml="24px"
         mt="55px"
+        mr={18}
         padding="12px 24px"
         bg="#4AA6CA"
         borderRadius="8px"
