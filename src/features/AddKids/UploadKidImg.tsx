@@ -73,7 +73,7 @@ console.log( props.formData.Name,logo);
     };
 
     const postFormData = (formData: FormData) => {
-        const token = getMe().token;
+        const token = getMe()?.token;
         const headers = {
             Authorization: `Bearer ${token}`,
         };

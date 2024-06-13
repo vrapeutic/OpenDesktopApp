@@ -1,5 +1,5 @@
 export interface AddModuleFormProps {
-    onSubmit: (data: object) => void;
+    onSubmit?: (data: object) => void;
     backHandler?:() => void;
     nextHandler?:() => void;
     sliding?:number

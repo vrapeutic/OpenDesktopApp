@@ -33,13 +33,13 @@ export function useLoginMutation(
       ...options,
       onSuccess: async (data:any) => {
         console.log('Login successful:', data);
-        setApiToken(data.token);
+        setApiToken(data?.token);
         setMe(data);
         {data.doctor&& localStorage.setItem("USER", data.doctor.attributes.name)}
        
         {data.doctor&&  localStorage.setItem("USERImg", data.doctor.attributes.photo_url)}
        
-        (window as any).electronAPI.setPassword('token', data.token);
+        (window as any).electronAPI.setPassword('token', data?.token);
       
       },
     }

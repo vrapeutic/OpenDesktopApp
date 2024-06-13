@@ -1,4 +1,4 @@
-import { ChangeEvent,  useState } from 'react';
+import { ChangeEvent,  useEffect,  useState } from 'react';
 import {
   Box,
   Button,
@@ -16,21 +16,32 @@ import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Image } from '../../assets/icons/Image';
-import { AddModuleFormProps } from './ModuleFormInterface';
+import { AddModuleFormProps } from '../AddModuleForm/ModuleFormInterface';
 import ProgressBarAddModule from '../../theme/components/ProgressBarAddModule';
-import { useNavigate } from 'react-router-dom';
-import CongratulationsModuleAdmin from './CongratulationsModuleAdmin';
+
 import axios from 'axios';
 import { config } from '../../config';
 import { useAdminContext } from '@renderer/Context/AdminContext';
+import { useLocation, useNavigate } from 'react-router-dom';
+import CongratulationsModuleAdmin from '../AddModuleForm/CongratulationsModuleAdmin';
 
-const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
-  onSubmit,
-  
-  backHandler,
-  sliding,
-  formData,
-}) => {
+
+interface LocationState<T = undefined> {
+  formData?: T;
+  newdata?: any;
+  olddata?:any;
+  onSubmit?:any
+}
+
+const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
+
+  const location = useLocation();
+  const newdata = (location.state as LocationState)?.newdata;
+  const olddata= (location.state as LocationState)?.olddata;
+
+  console.log("form data from location form data from location new data", newdata);
+  console.log("form data from location form data from location olddata", olddata);
+
   const schema = joi.object({
     From: joi.number().required(),
     To: joi
@@ -93,28 +104,26 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   };
 
   const FormonSubmit = (data:object) => {
-    onSubmit(data);
     SendDataToApi(data);
     setLoading(true);
-    console.log('Updated FormData in SpecialtyFormModule:', formData);
+    console.log('Updated FormData in SpecialtyFormModule:', data);
   };
 
   const createFormData = (data:any) => {
-    console.log('form data in create form data', formData);
     const formDataTobesent = new FormData();
 
-    formDataTobesent.append('name', formData.Name);
-    formDataTobesent.append('version', formData.Version);
+    formDataTobesent.append('software_module[name]', newdata.Name);
+    formDataTobesent.append('software_module[version]', newdata.Version);
 
-    formDataTobesent.append('technology', formData.Technology);
+    formDataTobesent.append('software_module[technology]', newdata.Technology);
 
-    formData.specializationschema.forEach((specialty: { id: string | Blob }) =>
-      formDataTobesent.append('targeted_skill_ids[]', specialty.id)
+    newdata.specializationschema.forEach((specialty: { id: string | Blob }) =>
+      formDataTobesent.append('software_module[targeted_skill_ids][]', specialty.id)
     );
-    formDataTobesent.append('min_age', data.From) ;
-    formDataTobesent.append('max_age', data.To);
-    formDataTobesent.append('image', data.certification);
-    formDataTobesent.append('package_name', data.packagename);
+    formDataTobesent.append('software_module[min_age]', data.From) ;
+    formDataTobesent.append('software_module[max_age]', data.To);
+   {selectedFile&&formDataTobesent.append('software_module[image]', selectedFile);}  
+    formDataTobesent.append('software_module[package_name]', data.packagename);
 
     return formDataTobesent;
   };
@@ -137,8 +146,8 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       otp: `${otp}`,
     };
 
-    return axios.post(
-      `${config.apiURL}/api/v1/software_modules`,
+    return axios.put(
+      `${config.apiURL}/api/v1/software_modules/${olddata?.id}`,
       formDatasent,
       { headers }
     );
@@ -161,6 +170,25 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
     navigate('/');
   };
 
+  const backHandler = () => {
+    navigate(-1);
+  };
+
+  useEffect(() => {
+    if (olddata) {
+      setValue('From', olddata.attributes.min_age);
+      setValue('To', olddata.attributes.max_age);
+      setValue('packagename',olddata.attributes.package_name);
+      // setValue(
+      //   'specializationschema',
+      //   Module.attributes.targeted_skills.map((skill) => ({
+      //     id: skill.id,
+      //     label: skill.name,
+      //     value: skill.id,
+      //   }))
+      // );
+    }
+  }, [olddata]);
   return (
     <>
       <Box
@@ -290,7 +318,6 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
                       {...register('certification')}
                       id="certification"
                       type="file"
-                      accept="application/pdf" // Update this line to accept PDF files
                       onChange={(e) => handleCertificateChange(e)}
                       style={{ display: 'none' }}
                     />
@@ -326,7 +353,6 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
             {loading ? 'Uploading Your Data' : 'Submit'}
           </Button>
 
-          {sliding === 1 ? null : (
             <Button
               onClick={backHandler}
               bg="#F5F5F5"
@@ -343,7 +369,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
             >
               Back
             </Button>
-          )}
+       
         </Flex>
       </Box>
 
@@ -351,10 +377,10 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
         <CongratulationsModuleAdmin
           isOpen={isOpen}
           onClose={handleCloseModal}
-          text={"Your Module has been created successfully"}
+          text={"Your Module has been edited successfully"}
         />
       )}
     </>
   );
 };
-export default SpecialtyFormModule;
+export default SpecialtyFormEditModule;

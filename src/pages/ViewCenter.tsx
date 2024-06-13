@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TabsViewCenter from '../theme/components/Tabs';
 import HeaderWithButton from '../theme/components/HeaderWithButton';
 import CardWithLogo from '../theme/components/CardWithLogo';
 const ViewCenter = () => {
   const location = useLocation();
   const centerData = location.state;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (centerData) {
@@ -15,7 +16,11 @@ const ViewCenter = () => {
 
   return (
     <>
-      <HeaderWithButton centerData={centerData} />
+      <HeaderWithButton
+        leftText="Therapy Center"
+        rightText="Edit Center"
+        onButtonClick={() => navigate('/editcenter', { state: centerData })}
+      />{' '}
       <CardWithLogo centerData={centerData} />
       <TabsViewCenter centerData={centerData} />
     </>
