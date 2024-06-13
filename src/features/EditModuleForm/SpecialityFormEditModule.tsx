@@ -18,7 +18,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { Image } from '../../assets/icons/Image';
 import { AddModuleFormProps } from '../AddModuleForm/ModuleFormInterface';
 import ProgressBarAddModule from '../../theme/components/ProgressBarAddModule';
-import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 import { config } from '../../config';
 import { useAdminContext } from '@renderer/Context/AdminContext';
@@ -28,16 +28,16 @@ import CongratulationsModuleAdmin from '../AddModuleForm/CongratulationsModuleAd
 
 interface LocationState<T = undefined> {
   formData?: T;
+  newdata?: any;
+  olddata?:any;
+  onSubmit?:any
 }
 
-const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = ({
- 
-  
-}) => {
+const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
 
   const location = useLocation();
   const newdata = (location.state as LocationState)?.newdata;
-  const olddata = (location.state as LocationState)?.olddata;
+  const olddata= (location.state as LocationState)?.olddata;
 
   console.log("form data from location form data from location new data", newdata);
   console.log("form data from location form data from location olddata", olddata);

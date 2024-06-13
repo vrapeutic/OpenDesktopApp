@@ -23,7 +23,7 @@ import { config } from '../../config';
 interface ModuleAttributes {
   name: string;
   technology: string;
-  version: number;
+  version: any;
   targeted_skills: { id: number; name: string }[];
 }
 
@@ -38,14 +38,14 @@ interface LocationState {
 interface FormInputs {
   Name: string;
   Technology: string;
-  Version: number;
+  Version: any;
   specializationschema: { id: number; label: string; value: number }[];
 }
 
 interface Props {
-  onSubmit: (data: FormInputs) => void;
-  nextHandler: () => void;
-  sliding: number;
+  onSubmit?: (data: FormInputs) => void;
+  nextHandler?: () => void;
+  sliding?: number;
 }
 
 const GeneralInfoEditModule: React.FC<Props> = () => {
@@ -60,7 +60,7 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
   const schema = joi.object({
     Name: joi.string().min(3).max(30).required().label('Name'),
     Technology: joi.string().required(),
-    Version: joi.number().required(),
+    Version: joi.required(),
     specializationschema: joi.array().required().label('specializationschema'),
   });
 
