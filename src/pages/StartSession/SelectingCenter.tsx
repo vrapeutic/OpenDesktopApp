@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
-import SelectingHeadset from './SelectingHeadset'; 
+import SelectingHeadset from './SelectingHeadset';
 import Joi from 'joi';
 import axios from 'axios';
 import { dataContext } from '@renderer/shared/Provider';
@@ -22,7 +22,11 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { useForm } from 'react-hook-form';
 
 export default function SelectingCenter(props: any) {
-  const { isOpen: isHeadsetOpen, onOpen: onHeadsetOpen, onClose: onHeadsetClose } = useDisclosure();
+  const {
+    isOpen: isHeadsetOpen,
+    onOpen: onHeadsetOpen,
+    onClose: onHeadsetClose,
+  } = useDisclosure();
   const [kids, setKids] = useState([]);
   const [childId, setChildId] = useState('');
   const selectedCenterContext = useContext(dataContext);
@@ -33,17 +37,25 @@ export default function SelectingCenter(props: any) {
     }),
   });
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
   });
 
   const getKids = async () => {
+
+  
     const token = await (window as any).electronAPI.getPassword('token');
     const headers = { Authorization: `Bearer ${token}` };
     try {
       const response = await axios.get(
         `${config.apiURL}/api/v1/centers/${selectedCenterContext.id}/kids?include=diagnoses,sessions`,
+
         { headers }
       );
       setKids(response.data.data);
@@ -54,6 +66,9 @@ export default function SelectingCenter(props: any) {
 
   const handleFormSubmit = (data: any) => {
     console.log('Form submitted with data: ', data);
+    console.log(
+      `center id   ${selectedCenterContext.id} , child id  ${data.kid}`
+    );
     setChildId(data.kid);
     onHeadsetOpen();
     props.onClose();
@@ -127,6 +142,7 @@ export default function SelectingCenter(props: any) {
           onClose={onHeadsetClose}
           centerId={selectedCenterContext.id}
           childId={childId}
+
         />
       )}
     </Box>

@@ -19,17 +19,17 @@ import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import axios from 'axios';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
-import SelectEvalution from './Evaluation';
+import SelectEvaluation from '../Evaluation';
 
-export default function Openconnected(props: any) {
-  const { startSession, sessionId , headsetid} = useStartSessionContext();
+export default function OpenconnectedArcheeko(props: any) {
+  const { startSession, sessionId , headsetid } = useStartSessionContext();
+  const toast = useToast();
+  const navigate = useNavigate();
   const {
     isOpen: isevaluationopen,
     onOpen: onevaluationOpen,
     onClose: onevalutionClose,
   } = useDisclosure();
-  const toast = useToast();
-  const navigate = useNavigate();
 
   const handle = async () => {
    
@@ -50,7 +50,7 @@ export default function Openconnected(props: any) {
       });
     }
   };
-  const token = getMe()?.token;
+  const token = getMe().token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
@@ -94,9 +94,11 @@ export default function Openconnected(props: any) {
   };
   const antherModule =()=>{
     props.onClose()
-    { props.onCloseBooks& props.onCloseBooks()}
-    { props.oncloseselectlevel& props.oncloseselectlevel()}
-
+   
+    props.onCloseSelectEnvironment()
+    props.SelectDistractors()
+    props.onCloseSelectNumber()
+    props.oncloseselectlevel()
    
   }
   
@@ -173,9 +175,8 @@ export default function Openconnected(props: any) {
         </Modal>
       </Box>
 
-
       {onevaluationOpen && (
-        <SelectEvalution
+        <SelectEvaluation
           isOpen={isevaluationopen}
           onClose={onevalutionClose}
          closeopenconnected={props.onClose}

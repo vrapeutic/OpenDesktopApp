@@ -11,18 +11,28 @@ import {
   GridItem,
   Select,
   useDisclosure,
-  Flex,
+  useToast,
 } from '@chakra-ui/react';
-import { config } from '@renderer/config';
+import { config } from '../../config';
 import axios from 'axios';
-import { dataContext } from '@renderer/shared/Provider';
-import { useForm } from 'react-hook-form';
+import { dataContext } from '../../shared/Provider';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectingModule from './SelectingModule';
+import { useStartSessionContext } from '../../Context/StartSesstionContext';
+import { getMe } from '@renderer/cache';
 
-const ErrorsModal = ({
+interface ErrorsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectAnotherHeadset: () => void;
+  onCancelSession: () => void;
+  closeselectingheadset: () => void;
+}
+
+const ErrorsModal: React.FC<ErrorsModalProps> = ({
   isOpen,
   onClose,
   onSelectAnotherHeadset,
@@ -30,6 +40,7 @@ const ErrorsModal = ({
   closeselectingheadset,
 }:any) => {
   const navigate = useNavigate();
+  const { startSession, sessionId } = useStartSessionContext();
 
   const {
     isOpen: ismoduleopen,
@@ -47,6 +58,83 @@ const ErrorsModal = ({
     closeselectingheadset();
     navigate('/');
   };
+
+  const token = getMe().token;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  const toast = useToast();
+
+  const endSessionApi = async () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
+
+    // Format the date string
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+
+    console.log(formattedDate);
+
+    const date1String = startSession;
+    const date2String = formattedDate;
+    console.log(date1String, date2String);
+
+    // Create Date objects
+    const date1: any = new Date(date1String);
+    const date2: any = new Date(date2String);
+
+    // Calculate the difference in milliseconds
+    const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
+    console.log(timeDifferenceInMilliseconds);
+    // Convert milliseconds to seconds
+    const differenceInMinutes = Math.floor(
+      (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    console.log(differenceInMinutes);
+return    axios.put(
+      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+      { vr_duration:differenceInMinutes},
+      { headers }
+    );
+
+  };
+
+  const endSessionId = async () => {
+    try {
+      await endSessionApi();
+      onCancelSession();
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error.response?.data?.error || 'An error occurred',
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+      });
+    }
+  };
+
+  const SelectAnother = async () => {
+    try {
+      await endSessionApi();
+      onSelectAnotherHeadset();
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error.response?.data?.error || 'An error occurred',
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+      });
+    }
+  };
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} >
@@ -59,8 +147,6 @@ const ErrorsModal = ({
             <Text mt="25px">
               The selected headset could not be found on this network
             </Text>
-
-
             <Button
               w="12rem"
               h="54px"
@@ -75,10 +161,8 @@ const ErrorsModal = ({
             >
               Continue to select module
             </Button>
-        
           </ModalBody>
           <ModalFooter>
-
             <Button
               w="214px"
               h="54px"
@@ -89,10 +173,7 @@ const ErrorsModal = ({
               fontWeight="700"
               fontSize="1rem"
               marginRight="10px"
-              onClick={() => {
-                onCancelSession();
-                navigate('/');
-              }}
+              onClick={endSessionId}
             >
               Cancel session
             </Button>
@@ -105,18 +186,14 @@ const ErrorsModal = ({
               fontFamily="Roboto"
               fontWeight="700"
               fontSize="1rem"
-              ml="10px"
-              onClick={onSelectAnotherHeadset}
+              marginLeft="10px"
+              onClick={SelectAnother}
             >
               Select another headset
             </Button>
-
-            
-
           </ModalFooter>
         </ModalContent>
       </Modal>
-
 
       {onmoduleOpen && (
         <SelectingModule isOpen={ismoduleopen} onClose={CloseModuleModal} />
@@ -125,15 +202,30 @@ const ErrorsModal = ({
   );
 };
 
-const SelectingHeadset = (props:any) => {
+interface SelectingHeadsetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  centerId: string;
+  childId: string;
+}
+
+interface FormData {
+  headset: string;
+}
+
+const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
     onClose: onErrorClose,
   } = useDisclosure();
-  const [headsets, setHeadsets] = useState([]);
-  const selectedCenterContext = useContext(dataContext);
+  const [headsets, setHeadsets] = useState<any[]>([]);
+  const { setSessionId, setStartSession, setheadsetid } = useStartSessionContext();
+  const toast = useToast();
   const [errorMessages, setErrorMessages] = useState('');
+
+
+  const selectedCenterContext = useContext(dataContext);
 
   const schema = Joi.object({
     headset: Joi.string().required().messages({
@@ -145,8 +237,7 @@ const SelectingHeadset = (props:any) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm({
+  } = useForm<FormData>({
     resolver: joiResolver(schema),
     mode: 'onTouched',
   });
@@ -167,20 +258,55 @@ const SelectingHeadset = (props:any) => {
     }
   };
 
-  const handleFormSubmit = () => {
-    console.log('Form submitted with data in headset.');
-    setErrorMessages('This is a test error message.');
+  const getSessionId = async (dataheadset: string) => {
+    const token = getMe().token;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.post(
+        `${config.apiURL}/api/v1/sessions`,
+        {
+          center_id: props.centerId,
+          child_id: props.childId,
+          headset_id: dataheadset,
+        },
+        { headers }
+      );
+      setSessionId(response.data.data.id);
+      setStartSession(response.data.data.attributes.created_at);
+      return { success: true }; // Success
+    } catch (error) {
+      console.error('Error assigning session id:', error.response.data.error);
+      return { success: false, error: error.response.data.error }; 
+    }
+  };
+
+  const handleFormSubmit: SubmitHandler<FormData> = async (data) => {
+    setheadsetid(data.headset);
+    const { success, error } = await getSessionId(data.headset);
+
+    if (!success) {
+      toast({
+        title: 'Error',
+        description: error,
+        status: 'error',
+        duration: 9000,
+        position: 'top-right',
+      });
+      return;
+    }
+
     onErrorOpen();
   };
 
   const handleCancelSession = () => {
     onErrorClose();
-    props.onClose(); // Close the SelectingHeadset component
+    props.onClose();
   };
 
   const handleSelectAnotherHeadset = () => {
     onErrorClose();
-    // Additional logic to open the component for selecting another headset
   };
 
   useEffect(() => {
@@ -203,10 +329,11 @@ const SelectingHeadset = (props:any) => {
                 <Text mt="25px">Select a headset</Text>
                 <GridItem>
                   <Select
-                    {...register('headseat')}
+                    {...register('headset')}
                     id="headset"
                     name="headset"
-                    placeholder="Select headseat"
+
+                    placeholder="Select headset"
                     size="sm"
                   >
                     {headsets.map((headset) => (
@@ -232,7 +359,7 @@ const SelectingHeadset = (props:any) => {
                   fontFamily="Roboto"
                   fontWeight="700"
                   fontSize="18px"
-                  onClick={handleFormSubmit}
+                  onClick={handleSubmit(handleFormSubmit)}
                 >
                   Connect to headset
                 </Button>
@@ -252,7 +379,8 @@ const SelectingHeadset = (props:any) => {
         closeselectingheadset={props.onClose}
         onCancelSession={handleCancelSession}
         onSelectAnotherHeadset={handleSelectAnotherHeadset}
-        errorMessages={errorMessages}
+                // errorMessages={errorMessages}
+
       />
     </>
   );
