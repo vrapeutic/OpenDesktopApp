@@ -14,11 +14,23 @@ import {
   
   Box,
 } from '@chakra-ui/react';
+import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { getMe } from '@renderer/cache';
 
-
-const CardWithLogo = ({ Module }: any) => {
-  console.log(Module);
-
+const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
+  const token = getMe()?.token;
+  let facebookLink ;
+  let linkedinLink ;
+  if (token) {
+    facebookLink =
+      centerData?.centerData?.attributes?.center_social_links.find(
+        (link: { link_type: string }) => link.link_type === 'facebook'
+      );
+    linkedinLink =
+      centerData?.centerData?.attributes?.center_social_links.find(
+        (link: { link_type: string }) => link.link_type === 'twitter'
+      );
+  }
 
   return (
     <Grid
@@ -67,6 +79,31 @@ const CardWithLogo = ({ Module }: any) => {
         </Stack>
       </GridItem>
 
+      <GridItem colSpan={3}>
+        <Text>Contact us</Text>
+        <Text>Email: {centerData?.centerData.attributes?.email}</Text>
+        <Text>Cal : {centerData?.centerData.attributes?.phone_number}</Text>
+        {token && (
+          <Flex direction="row" gap={2}>
+            <Link display="inline" color="#3961FB" href={facebookLink?.link}>
+              <IconButton>
+                <Icon as={FaFacebook} w={4} h={4} />
+              </IconButton>
+            </Link>
+
+            <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
+              <IconButton>
+                <Icon as={FaLinkedin} w={4} h={4} />
+              </IconButton>
+            </Link>
+
+            <Link display="inline" color="#3961FB" href={linkedinLink?.link}>
+              <IconButton>
+                <Icon as={FaTwitter} w={4} h={4} />
+              </IconButton>
+            </Link>
+          </Flex>
+        )}
       <GridItem colSpan={4}>
         <Text my={2}>
           Age Range: {Module?.Module.attributes?.min_age} -{' '}

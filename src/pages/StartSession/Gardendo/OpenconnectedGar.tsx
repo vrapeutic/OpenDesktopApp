@@ -21,10 +21,9 @@ import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 import SelectEvaluation from '../Evaluation';
 
-export default function OpenconnectedRodja(props: any) {
+export default function OpenconnectedGar(props: any) {
   const { startSession, sessionId , headsetid } = useStartSessionContext();
   const toast = useToast();
-  const navigate = useNavigate();
   const {
     isOpen: isevaluationopen,
     onOpen: onevaluationOpen,
@@ -87,20 +86,20 @@ export default function OpenconnectedRodja(props: any) {
     );
     console.log(differenceInMinutes);
 
-    
-    return   axios.put(
-      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
-      {   "vr_duration": differenceInMinutes },
-      { headers }
-    );
+
+    const api = axios.put(
+        `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+        {   "vr_duration": differenceInMinutes },
+        { headers }
+      );
+    return  api
   };
   const antherModule =()=>{
     props.onClose()
- 
-    props.onCloseSelectEnvrodja()
+    props.onCloseSelectEnvironment()
+    props.SelectDistractors()
+    props.onCloseSelectNumber()
     props.oncloseselectlevel()
-    props.onCloseSelectJewel()
-    props.onCloseSelectDistractors()
    
   }
   
@@ -176,7 +175,6 @@ export default function OpenconnectedRodja(props: any) {
           </ModalContent>
         </Modal>
       </Box>
-
 
       {onevaluationOpen && (
         <SelectEvaluation

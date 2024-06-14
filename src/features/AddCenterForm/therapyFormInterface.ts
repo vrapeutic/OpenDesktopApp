@@ -4,5 +4,6 @@ export interface TherapyFormProps {
     nextHandler?:() => void;
     sliding?:number
     formData?:any;
+    datachild?:any;
   }
   

@@ -5,7 +5,7 @@ import { Box, Button, Flex, HStack, Text } from '@chakra-ui/react'
 
 import { useNavigate } from 'react-router-dom';
 
-const HeaderWithArrow = ({ title }: { title: string, bntTitle:string }) => {
+const HeaderWithArrow = ({ title }: { title: string, bntTitle?:string }) => {
     const navigate = useNavigate();
 
     const goBack = () => {
@@ -13,7 +13,7 @@ const HeaderWithArrow = ({ title }: { title: string, bntTitle:string }) => {
     };
   return (
     <>
-   <Flex justifyContent={"space-between"} alignItems={"center"} py={23} >
+   <Flex justifyContent={"space-between"} alignItems={"center"} py={23} mx={18} >
     <HStack spacing={5}>
     <ArrowBackIcon onClick={goBack} />
           <Text fontSize={"29px"} fontFamily={"Graphik LCG"} fontWeight={"400"} color={"#383838"}>{title}</Text>
