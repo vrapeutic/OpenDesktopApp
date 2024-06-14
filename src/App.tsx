@@ -22,6 +22,7 @@ import Assigntocenter from './pages/Assigntocenter/Assigntocenter';
 import ViewModule from './pages/viewmodule';
 import GeneralInfoEditModule from './features/EditModuleForm/GeneralInfoEditModule';
 import SpecialtyFormEditModule from './features/EditModuleForm/SpecialityFormEditModule';
+import ViewCenterAdmin from './pages/ViewCenterAdmin';
 
 
 
@@ -65,6 +66,9 @@ function App() {
           <Route path="ViewCenter" element={<ViewCenter />} />
           <Route path="viewmodule" element={<ViewModule />} />
 
+          <Route path="ViewCenterAdmin" element={<ViewCenterAdmin />} />
+
+          
           <Route path="ViewKids" element={<ViewKids />} />
           {/* Add more routes as needed */}
         </Route>

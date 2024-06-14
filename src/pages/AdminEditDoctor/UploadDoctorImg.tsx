@@ -1,57 +1,52 @@
 import {
+  Box,
   Button,
   FormControl,
   Input,
-  Text,
-  Box,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
-  useToast,
+  ModalHeader,
+  ModalOverlay,
+  Text,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
-import { useContext, useState } from 'react';
-import { Image } from '../../assets/icons/Image';
-import axios from 'axios';
-import { config } from '../../config';
-import { getMe } from '../../cache';
-import { useNavigate } from 'react-router-dom';
-import { TherapyFormProps } from '../AddCenterForm/therapyFormInterface';
-import { dataContext } from '@renderer/shared/Provider';
-import Congratulations from './Congratulations';
 import { useAdminContext } from '@renderer/Context/AdminContext';
+import { TherapyFormProps } from '@renderer/features/AddCenterForm/therapyFormInterface';
+import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Image } from '../../assets/icons/Image';
+import { config } from '../../config';
+import CongratulationEdit from './CongratulationEdit';
 
 interface UploadKidImgProps extends TherapyFormProps {
   isOpen: boolean;
   onClose: () => void;
   datachild?: any;
-  id?:string;
-  email?:string;
+  id?: string;
+  email?: string;
 }
 
-const UploadKidImg: React.FC<UploadKidImgProps> = (props) => {
+const UploadDoctorImg: React.FC<UploadKidImgProps> = (props) => {
   const navigate = useNavigate();
-
+  console.log(props.formData);
   const { otp } = useAdminContext();
   const [loading, setLoading] = useState(false);
-  const selectedCenter = useContext(dataContext);
   const {
     isOpen: isOpenCongratulations,
     onOpen: onOpenCongratulations,
     onClose: onDeleteCongratulations,
   } = useDisclosure();
-  console.log(props);
   const toast = useToast();
   const [imagePreview, setImagePreview] = useState('');
   const [logo, setLogo] = useState<File>();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
-
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
     setLogo(file);
@@ -62,61 +57,33 @@ const UploadKidImg: React.FC<UploadKidImgProps> = (props) => {
     SendDataToApi();
   };
 
-  const createFormData = () => {
-    const formData = new FormData();
-    console.log(props.formData.Name, logo);
-
-    formData.append('name', props.formData.Name)
-    formData.append('email',props.email?props.email:props.formData.Email);
-    formData.append('age', props.formData.Age);
-    formData.append('photo', logo  );
-
-    props.formData.diagnoses.forEach((diagnose: { id: string | Blob }) =>
-      formData.append('diagnosis_ids[]', diagnose.id)
+  const createFormEdit = () => {
+    const doctorFormData = new FormData();
+    doctorFormData.append('name', props.formData.name);
+    doctorFormData.append('degree', props.formData.degree);
+    doctorFormData.append('university', props.formData.university);
+    doctorFormData.append('certification', props.formData.certification);
+    if (logo) {
+      doctorFormData.append('photo', logo);
+    }
+    props.formData.specialities.forEach((speciality: { id: string | Blob }) =>
+      doctorFormData.append('specialty_ids[]', speciality.id)
     );
-    return formData;
+    return doctorFormData;
   };
 
-
-
-   const createFormEdit=()=>{
-    const childFormData = new FormData();
-childFormData.append('child[name]', props.formData.Name);
-childFormData.append('child[age]', props.formData.Age);
-
-{logo&& childFormData.append('child[photo]',  logo );}
-
-// Append diagnosis IDs for the child form
-props.formData.diagnoses.forEach((diagnose: { id: string | Blob }) =>
-  childFormData.append('child[diagnosis_ids][]', diagnose.id)
- 
-);
-return childFormData;
-   }
-
-  const postFormData = (formData: FormData) => {
-    const token = getMe()?.token;
-    const headers = {
-        ...(props.datachild ? { otp: otp } : { Authorization: `Bearer ${token}` })
-      };
-
-
-    let x;
-    {
-      props.datachild
-        ? (x = axios.put(
-            `${config.apiURL}/api/v1/admins/edit_child/?child_id=${props.id}`,
-            formData,
-            { headers}
-          ))
-        : (x = axios.post(
-            `${config.apiURL}/api/v1/centers/${selectedCenter.id}/add_child`,
-            formData,
-            { headers }
-          ));
+  const postFormData = async (formData: FormData) => {
+    try {
+      const headers = { otp: otp };
+      const response = await axios.put(
+        `${config.apiURL}/api/v1/admins/edit_doctor?doctor_id=${props.id}`,
+        formData,
+        { headers }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
     }
-
-    return x;
   };
 
   const handleSuccess = () => {
@@ -126,14 +93,15 @@ return childFormData;
 
   const handleError = (error: any) => {
     props.onClose();
-
+    const errorMessage = error.response?.data?.error || 'Unknown Error';
     toast({
       title: 'Error',
-      description: error.response.data.error,
+      description: errorMessage,
       status: 'error',
       duration: 9000,
       position: 'top-right',
     });
+    console.error('API Error:', error);
   };
 
   const handleCloseModal = () => {
@@ -142,9 +110,7 @@ return childFormData;
   };
 
   const SendDataToApi = async () => {
-
-   
-    const formData =  props.datachild? createFormEdit():createFormData()
+    const formData = createFormEdit();
 
     try {
       await postFormData(formData);
@@ -177,7 +143,7 @@ return childFormData;
                 textAlign="center"
               >
                 {' '}
-                Upload Logo
+                Upload Photo
               </ModalHeader>
               <ModalCloseButton marginLeft="100px" />
             </Box>
@@ -231,14 +197,14 @@ return childFormData;
               <Text
                 position="absolute"
                 top="445px"
-                left="18%"
+                left="25%"
                 fontFamily="Graphik LCG"
                 fontSize="18px"
                 fontWeight="400"
                 lineHeight="18px"
                 color="#595959"
               >
-                Please upload your Therapy Logo
+                Please upload your photo
               </Text>
             </ModalBody>
 
@@ -284,7 +250,7 @@ return childFormData;
       </Box>
 
       {onOpenCongratulations && (
-        <Congratulations
+        <CongratulationEdit
           isOpen={isOpenCongratulations}
           onClose={handleCloseModal}
         />
@@ -293,4 +259,4 @@ return childFormData;
   );
 };
 
-export default UploadKidImg;
+export default UploadDoctorImg;

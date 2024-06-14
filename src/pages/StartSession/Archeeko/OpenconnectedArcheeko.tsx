@@ -50,7 +50,7 @@ export default function OpenconnectedArcheeko(props: any) {
       });
     }
   };
-  const token = getMe().token;
+  const token = getMe()?.token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };

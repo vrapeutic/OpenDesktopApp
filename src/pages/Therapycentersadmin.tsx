@@ -26,6 +26,7 @@ import axios from 'axios';
 
 import { useAdminContext } from '@renderer/Context/AdminContext';
 import { config } from '@renderer/config';
+import { useNavigate } from 'react-router-dom';
 import { dataContext } from '@renderer/shared/Provider';
 
 interface Center {
@@ -77,6 +78,7 @@ export default function Therapycentersadmin() {
   };
 
   const handleSubmit = async (event: any) => {
+   
     event.preventDefault();
     const { error } = schema.validate(values, { abortEarly: false });
     console.log(error);
@@ -354,7 +356,15 @@ export default function Therapycentersadmin() {
   );
 }
 
+
+
+
 const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
+  const navigate = useNavigate();
+  const handleCenterClick = (center: Center) => {
+    console.log('Clicked Center Data:', center);
+    navigate('/ViewCenterAdmin', { state: center });
+  };
   return (
     <>
       {data.map((x: any) => {
@@ -373,6 +383,7 @@ const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
             fontFamily="Graphik LCG"
             lineHeight="24px"
             key={x.id}
+            onClick={() => handleCenterClick(x)}
           >
             <GridItem
               colSpan={2}
@@ -430,7 +441,9 @@ const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
                       fontFamily="Graphik LCG"
                       boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                       color={'white'}
-                      onClick={() => onOpenModal()}
+                      onClick={(e:any) =>{ 
+                        e.stopPropagation()
+                        onOpenModal()}}
                     >
                       Assign a module
                     </Button>
@@ -445,7 +458,8 @@ const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
                       fontFamily="Graphik LCG"
                       boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                       color={'white'}
-                      onClick={() => {
+                      onClick={(e:any) => {
+                        e.stopPropagation();
                         openVr(x.id);
                         onOpenVR();
                       }}
