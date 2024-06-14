@@ -1,27 +1,27 @@
 import {
+  Box,
   Button,
   FormControl,
   Input,
-  Text,
-  Box,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
-  useToast,
+  ModalHeader,
+  ModalOverlay,
+  Text,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
-import { useContext, useState } from 'react';
-import { Image } from '../../assets/icons/Image';
-import axios from 'axios';
-import { config } from '../../config';
-import { useNavigate } from 'react-router-dom';
 import { useAdminContext } from '@renderer/Context/AdminContext';
 import { TherapyFormProps } from '@renderer/features/AddCenterForm/therapyFormInterface';
-import Congratulations from '../SignUp/Congratulations';
+import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Image } from '../../assets/icons/Image';
+import { config } from '../../config';
+import CongratulationEdit from './CongratulationEdit';
 
 interface UploadKidImgProps extends TherapyFormProps {
   isOpen: boolean;
@@ -197,7 +197,7 @@ const UploadDoctorImg: React.FC<UploadKidImgProps> = (props) => {
               <Text
                 position="absolute"
                 top="445px"
-                left="18%"
+                left="25%"
                 fontFamily="Graphik LCG"
                 fontSize="18px"
                 fontWeight="400"
@@ -250,7 +250,7 @@ const UploadDoctorImg: React.FC<UploadKidImgProps> = (props) => {
       </Box>
 
       {onOpenCongratulations && (
-        <Congratulations
+        <CongratulationEdit
           isOpen={isOpenCongratulations}
           onClose={handleCloseModal}
         />
