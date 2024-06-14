@@ -38,7 +38,7 @@ const ErrorsModal: React.FC<ErrorsModalProps> = ({
   onSelectAnotherHeadset,
   onCancelSession,
   closeselectingheadset,
-}) => {
+}:any) => {
   const navigate = useNavigate();
   const { startSession, sessionId } = useStartSessionContext();
 
@@ -137,7 +137,7 @@ return    axios.put(
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} >
         <ModalOverlay />
         <ModalContent h="400px" w="800px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
@@ -156,7 +156,7 @@ return    axios.put(
               fontFamily="Roboto"
               fontWeight="700"
               fontSize="1rem"
-              ml="10px"
+              ml={"10px"}           
               onClick={OpenModulemodal}
             >
               Continue to select module

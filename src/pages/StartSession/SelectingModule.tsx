@@ -97,7 +97,7 @@ export default function SelectingModule(props: any) {
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
       console.log('token: ', token);
-      fetch(`${config.apiURL}/api/v1/centers/${selectedCenter.id}/modules`, {
+      fetch(`${config.apiURL}/api/v1/centers/${selectedCenter.id}/assigned_modules`, {
         method: 'Get',
         redirect: 'follow',
         headers: { Authorization: `Bearer ${token}` },
