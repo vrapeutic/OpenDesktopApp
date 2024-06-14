@@ -7,8 +7,8 @@ import HeaderWithArrow from '@renderer/theme/components/HeaderWithArrow';
 import TabsViewCenterAdmin from '@renderer/theme/components/TabsViewCenterAdmin';
 import GeneralInfoFormKidsEdit from './GeneralInfoFormKidsEdit';
 import { useDisclosure } from '@chakra-ui/react';
-import GenerallInfoDoctorEdit from './GenerallInfoDoctorEdit';
-const ViewCenterAdmin= () => {
+import GenerallInfoDoctorEdit from './AdminEditDoctor/GenerallInfoDoctorEdit';
+const ViewCenterAdmin = () => {
   const location = useLocation();
   const centerData = location.state;
   const totalSteps = 5;
@@ -16,7 +16,7 @@ const ViewCenterAdmin= () => {
   const [formData, setFormData] = useState({});
   const [kidsList, setKidsList] = useState<any>([]);
 
-const [doctor, setDoctor] = useState<any>([]);
+  const [doctor, setDoctor] = useState<any>([]);
   const [showTable, setShowTable] = useState(true);
 
   useEffect(() => {
@@ -40,14 +40,13 @@ const [doctor, setDoctor] = useState<any>([]);
           </>
         );
 
-
       default:
         return null;
     }
   };
 
   const renderFormStepDoctor = () => {
-    console.log("dcotor")
+    console.log('dcotor');
     switch (sliding) {
       case 2:
         return (
@@ -63,13 +62,10 @@ const [doctor, setDoctor] = useState<any>([]);
           </>
         );
 
-
       default:
         return null;
     }
   };
-
-
 
   const handleFormSubmit = (data: any) => {
     setFormData({ ...formData, ...data });
@@ -83,19 +79,17 @@ const [doctor, setDoctor] = useState<any>([]);
       onOpenCongratulations();
     }
   };
-  const datachild=(x:any)=>{
-    console.log(x)
-    setKidsList(x)
-    setDoctor([])
-  }
-  
+  const datachild = (x: any) => {
+    console.log(x);
+    setKidsList(x);
+    setDoctor([]);
+  };
 
-  const dataDoctor=(x:any)=>{
-    console.log(x)
-    setDoctor(x)
-    setKidsList([])
-
-  }
+  const dataDoctor = (x: any) => {
+    console.log(x);
+    setDoctor(x);
+    setKidsList([]);
+  };
   const {
     isOpen: isOpenCongratulations,
     onOpen: onOpenCongratulations,
@@ -112,41 +106,23 @@ const [doctor, setDoctor] = useState<any>([]);
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <>
-    {showTable?<>
-    <HeaderWithArrow  title={"Therapy Center"}/>
-    <CardWithLogo centerData={centerData} />
-    <TabsViewCenterAdmin 
-     datachild={datachild}
-      nextHandler={()=>nextHandler()} 
-    centerData={centerData} 
-    dataDoctor={dataDoctor} 
-    nextHandlerDoctor={()=>nextHandler()}
-    />
-  
-    
-    </>:(<>
-    
-    
-    {kidsList.length===0?renderFormStepDoctor():renderFormStep()}
-  
-    
-    </>)}
-      
+      {showTable ? (
+        <>
+          <HeaderWithArrow title={'Therapy Center'} />
+          <CardWithLogo centerData={centerData} />
+          <TabsViewCenterAdmin
+            datachild={datachild}
+            nextHandler={() => nextHandler()}
+            centerData={centerData}
+            dataDoctor={dataDoctor}
+            nextHandlerDoctor={() => nextHandler()}
+          />
+        </>
+      ) : (
+        <>{kidsList.length === 0 ? renderFormStepDoctor() : renderFormStep()}</>
+      )}
     </>
   );
 };

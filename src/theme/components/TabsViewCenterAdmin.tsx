@@ -48,13 +48,14 @@ const TabsViewCenterAdmin = ({
   centerData,
   datachild,
   nextHandler,
-  dataDoctor,nextHandlerDoctor
+  dataDoctor,
+  nextHandlerDoctor,
 }: {
   centerData: { id: number };
   nextHandler: any;
   datachild: any;
-  dataDoctor:any
-  nextHandlerDoctor:any
+  dataDoctor: any;
+  nextHandlerDoctor: any;
 }) => {
   const { otp } = useAdminContext();
 
@@ -80,7 +81,7 @@ const TabsViewCenterAdmin = ({
   const getDoctors = async () => {
     try {
       const response = await axios.get(
-        `${config.apiURL}/api/v1/admins/doctors?specialties&q[centers_id_eq]=${centerData.id}`,
+        `${config.apiURL}/api/v1/admins/doctors?include=specialties&q[centers_id_eq]=${centerData.id}`,
         { headers }
       );
       setDoctorlist(response.data.data);
@@ -102,7 +103,7 @@ const TabsViewCenterAdmin = ({
     nextHandler();
   };
 
- const handleDataDoctor= (x: any) => {
+  const handleDataDoctor = (x: any) => {
     console.log(x);
     dataDoctor(x);
 
