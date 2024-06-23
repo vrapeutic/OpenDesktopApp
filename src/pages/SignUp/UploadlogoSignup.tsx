@@ -86,6 +86,9 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
     }
   };
 
+
+  
+
   const handleSuccess = () => {
     props.onClose();
     navigate('/');

@@ -68,7 +68,7 @@ export default function CongratulationsModuleAdmin(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-              Your Module has been created successfully
+              {props.text}
             </Text>
           </ModalBody>
 

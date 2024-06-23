@@ -158,11 +158,11 @@ const EditCenter = () => {
 
   const navigate = useNavigate();
 
-  const goBack = () => {
+const goBack = () => {
     navigate(-1);
   };
   const EditFormData = (formData: FormData) => {
-    const token = getMe().token;
+    const token = getMe()?.token;
     const headers = {
       Authorization: `Bearer ${token}`,
     };

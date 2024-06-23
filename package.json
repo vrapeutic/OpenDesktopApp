@@ -78,7 +78,6 @@
     "electron-store": "^8.1.0",
     "electron-winstaller": "^5.2.1",
     "express": "^4.19.2",
-    "framer-motion": "^10.12.4",
     "http": "^0.0.1-security",
     "joi": "^17.9.2",
     "mdns": "^2.7.2",
