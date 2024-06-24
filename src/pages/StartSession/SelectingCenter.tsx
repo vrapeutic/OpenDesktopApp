@@ -70,7 +70,7 @@ export default function SelectingCenter(props: any) {
     );
     setChildId(data.kid);
     onHeadsetOpen();
-    props.onClose();
+    // props.onClose();
     // reset();
   };
 

@@ -297,12 +297,63 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
     }
   };
 
-  const handleFormSubmit = () => {
-    console.log('Form submitted with data in headset.');
-    setErrorMessages('This is a test error message.');
-    onErrorOpen();
+  // const handleFormSubmit = () => {
+  //   console.log('Form submitted with data in headset.');
+  //   setErrorMessages('This is a test error message.');
+  //   onErrorOpen();
+  // };
+  const getSessionId:any = async (dataheadset: string) => {
+    const token = getMe().token;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.post(
+        `${config.apiURL}/api/v1/sessions`,
+        {
+          center_id: props.centerId,
+          child_id: props.childId,
+          headset_id: dataheadset,
+        },
+        { headers }
+      );
+      setSessionId(response.data.data.id);
+      setStartSession(response.data.data.attributes.created_at);
+      return { success: true }; // Success
+    } catch (error) {
+      console.error('Error assigning session id:', error.response.data.error);
+      return { success: false, error: error.response.data.error }; 
+    }
+  };
+  const handleFormSubmit = async () => {
+    const headsetId = getValues(HEADSET_FIELD);
+    const existingDevice = await checkIfServiceExists(headsetId);
+    const appIsConnectedToInternet = await checkAppNetWorkConnection();
+
+    if (appIsConnectedToInternet && existingDevice) {
+      // end old session
+      dispatchSocketMessage(
+        END_SESSION_MESSAGE,
+        { deviceId: headsetId },
+        headsetId
+      );
+
+      getSessionId();
+      setSessionIdState()
+      console.log(headsetId);
+      console.log(existingDevice);
+      setDeviceIsFound(true);
+    } else {
+      const errorMessage = !appIsConnectedToInternet
+        ? 'You are not connected to the internet.'
+        : 'The selected headset is not connected.';
+
+      setErrorMessages(errorMessage);
+      onErrorOpen();
+    }
   };
 
+ 
   const setSessionIdState = useCallback(async () => {
     const token = getMe().token;
     const headers = {
@@ -354,9 +405,11 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
       getHeadsets();
     }
     addFunction('closeSelectingAHeadset', props.onClose);
-    addFunction('renderDisconnectedHeadSetError', (errorMessage = '') => {
+    addFunction('renderDisconnectedHeadSetError', (errorMessage = 'manar test') => {
       setDeviceIsFound(false);
+
       errorMessage && setErrorMessages(errorMessage);
+      console.log(errorMessage);
       onErrorOpen();
     });
   }, [selectedCenterContext.id]);
@@ -409,7 +462,7 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
                   fontSize="18px"
                   onClick={handleSubmit(handleFormSubmit)}
                 >
-                  Connect to headset
+                  Connect to headset 
                 </Button>
               </ModalFooter>
             </>

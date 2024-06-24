@@ -78,7 +78,7 @@ export default function SelectingModule(props: any) {
     selectedModule: Joi.string().required().label('module Name'),
   });
 
-  //old Code
+  // old Code
   // const handleSubmit = (): void => {
   //   switch (name) {
   //     case 'Archeeko':
@@ -101,11 +101,69 @@ export default function SelectingModule(props: any) {
   // };
 
   //new Code
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+console.log("iam here one")
+    const existingDevice = await checkIfServiceExists(props.headsetId);
+    console.log("iam here 2",props.headsetId)
+    const appIsConnectedToInternet = await checkAppNetWorkConnection();
+    console.log("iam here 3",appIsConnectedToInternet)
+    //---------------------------- now this line i think it,s for error or not get id head
+    // if (!existingDevice || !appIsConnectedToInternet) {
+    //   renderDisconnectedHeadSetError(
+    //     !appIsConnectedToInternet && 'You are not connected to the internet'
+    //   );
+    //   return;
+    // }
+
+    if (socketError) {
+      setSocketError(null);
+      setOpenRunningPopup(false);
+    }
+
+    const { error } = schema.validate(values, { abortEarly: false });
+    console.log(error);
+
+    if (error) {
+      console.log("iam here 4", error)
+      const validationErrors: any = {};
+      error.details.forEach((detail) => {
+        validationErrors[detail.path[0]] = detail.message;
+      });
+      setErrors(validationErrors);
+      console.log(validationErrors);
+    } else {
+      console.log("i am here")
+      setErrors({ selectedModule: null });
+      switch (name) {
+        case 'Archeeko':
+          console.log('Archeekon', name);
+          return onOpenSelectlevelArcheeko();
+        case 'Viblio':
+          console.log('Viblio', name);
+          return onOpenSelectlevelviblio();
+        case 'Rodja':
+          console.log('Rodja', name);
+          return onOpenSelectlevelrodja();
+        default:
+          toast({
+            title: 'error',
+            description: `This module is not available, please select anther module`,
+            status: 'error',
+            duration: 5000,
+            position: 'top-right',
+          });
+      }
+    }
+  };
+
+  //both old and new code
   // const handleSubmit = async (event: any) => {
   //   event.preventDefault();
 
   //   const existingDevice = await checkIfServiceExists(props.headsetId);
   //   const appIsConnectedToInternet = await checkAppNetWorkConnection();
+
   //   if (!existingDevice || !appIsConnectedToInternet) {
   //     renderDisconnectedHeadSetError(
   //       !appIsConnectedToInternet && 'You are not connected to the internet'
@@ -128,75 +186,38 @@ export default function SelectingModule(props: any) {
   //     });
   //     setErrors(validationErrors);
   //     console.log(validationErrors);
+  //     return;
   //   } else {
   //     setErrors({ selectedModule: null });
-
-  //     onOpen();
-  //     // props.onClose();
   //   }
+
+  //   switch (
+  //     values.selectedModule // Assuming values.selectedModule contains the module name
+  //   ) {
+  //     case 'Archeeko':
+  //       console.log('Archeeko', values.selectedModule);
+  //       onOpenSelectlevelArcheeko();
+  //       break;
+  //     case 'Viblio':
+  //       console.log('Viblio', values.selectedModule);
+  //       onOpenSelectlevelviblio();
+  //       break;
+  //     case 'Rodja':
+  //       console.log('Rodja', values.selectedModule);
+  //       onOpenSelectlevelrodja();
+  //       break;
+  //     default:
+  //       toast({
+  //         title: 'error',
+  //         description: `This module is not available, please select another module`,
+  //         status: 'error',
+  //         duration: 5000,
+  //         position: 'top-right',
+  //       });
+  //   }
+
+  //  props.onOpen();
   // };
-
-  //both old and new code
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-
-    const existingDevice = await checkIfServiceExists(props.headsetId);
-    const appIsConnectedToInternet = await checkAppNetWorkConnection();
-
-    if (!existingDevice || !appIsConnectedToInternet) {
-      renderDisconnectedHeadSetError(
-        !appIsConnectedToInternet && 'You are not connected to the internet'
-      );
-      return;
-    }
-
-    if (socketError) {
-      setSocketError(null);
-      setOpenRunningPopup(false);
-    }
-
-    const { error } = schema.validate(values, { abortEarly: false });
-    console.log(error);
-
-    if (error) {
-      const validationErrors: any = {};
-      error.details.forEach((detail) => {
-        validationErrors[detail.path[0]] = detail.message;
-      });
-      setErrors(validationErrors);
-      console.log(validationErrors);
-      return;
-    } else {
-      setErrors({ selectedModule: null });
-    }
-
-    switch (
-      values.selectedModule // Assuming values.selectedModule contains the module name
-    ) {
-      case 'Archeeko':
-        console.log('Archeeko', values.selectedModule);
-        onOpenSelectlevelArcheeko();
-        break;
-      case 'Viblio':
-        console.log('Viblio', values.selectedModule);
-        onOpenSelectlevelviblio();
-        break;
-      case 'Rodja':
-        console.log('Rodja', values.selectedModule);
-        onOpenSelectlevelrodja();
-        break;
-      default:
-        toast({
-          title: 'error',
-          description: `This module is not available, please select another module`,
-          status: 'error',
-          duration: 5000,
-          position: 'top-right',
-        });
-    }
-
-    onOpen();
-  };
 
   useEffect(() => {
     (async () => {
@@ -219,7 +240,7 @@ export default function SelectingModule(props: any) {
     })();
 
     addFunction('closeSelectingAModule', props.onClose);
-    addFunction('closeConnectedVrPopup', onClose);
+    addFunction('closeConnectedVrPopup', props.onClose);
   }, [selectedCenter.id]);
 
   const handleModuleSelect = (module: any) => {
