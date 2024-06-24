@@ -54,6 +54,7 @@ export default function SelectingCenter(props: any) {
     try {
       const response = await axios.get(
         `${config.apiURL}/api/v1/centers/${selectedCenterContext.id}/kids?include=diagnoses,sessions`,
+
         { headers }
       );
       setKids(response.data.data);
@@ -64,6 +65,9 @@ export default function SelectingCenter(props: any) {
 
   const handleFormSubmit = (data: any) => {
     console.log('Form submitted with data: ', data);
+    console.log(
+      `center id   ${selectedCenterContext.id} , child id  ${data.kid}`
+    );
     setChildId(data.kid);
     onHeadsetOpen();
     props.onClose();

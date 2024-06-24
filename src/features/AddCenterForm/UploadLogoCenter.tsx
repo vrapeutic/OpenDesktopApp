@@ -82,7 +82,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
   };
 
   const postFormData = (formData: FormData) => {
-    const token = getMe().token;
+    const token = getMe()?.token;
     const headers = {
       Authorization: `Bearer ${token}`,
     };

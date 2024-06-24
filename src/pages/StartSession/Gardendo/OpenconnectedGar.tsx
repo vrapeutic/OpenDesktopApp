@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -12,61 +12,29 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import useSocketManager from '../../Context/SocketManagerProvider';
-import { END_SESSION_MESSAGE } from '@main/constants';
+import { getMe } from '@renderer/cache';
+
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+
 import axios from 'axios';
 import { config } from '@renderer/config';
-import { getMe } from '@renderer/cache';
-import SelectEvaluation from './Evaluation';
 import { useNavigate } from 'react-router-dom';
+import SelectEvaluation from '../Evaluation';
 
-interface OpenConnectedProps {
-  isOpen: boolean;
-  onClose: () => void;
-  closeSelectingAHeadset?: () => void;
-  closeSelectingAModule?: () => void;
-  closeConnectedVrPopup?: () => void;
-  headsetId?: string;
-}
-export default function Openconnected({
-  isOpen,
-  onClose,
-  closeSelectingAHeadset,
-  closeSelectingAModule,
-  closeConnectedVrPopup,
-  headsetId,
-}: OpenConnectedProps) {
-  const { startSession, sessionId, headsetid } = useStartSessionContext();
-  const { dispatchSocketMessage } = useSocketManager();
+export default function OpenconnectedGar(props: any) {
+  const { startSession, sessionId , headsetid } = useStartSessionContext();
+  const toast = useToast();
   const {
     isOpen: isevaluationopen,
     onOpen: onevaluationOpen,
     onClose: onevalutionClose,
   } = useDisclosure();
-  const toast = useToast();
-  const navigate = useNavigate();
 
-  const handlePlayAnotherModule = useCallback(() => {
-    closeConnectedVrPopup();
-    onClose();
-  }, [closeConnectedVrPopup, onclose]);
-
-  const handleEndSession = useCallback(async () => {
+  const handle = async () => {
+   
     try {
-      await endSessionApi();
-      localStorage.removeItem('sessionID');
-      dispatchSocketMessage(
-        END_SESSION_MESSAGE,
-        { deviceId: headsetId },
-        headsetId
-      );
-
-      closeConnectedVrPopup();
-      closeSelectingAHeadset();
-      closeSelectingAModule();
-      onevaluationOpen();
-      onClose();
+      await endSissionApi();
+      onevaluationOpen()
       // props.onClose();
       // props.onclosemodules();
       // navigate('/');
@@ -80,19 +48,13 @@ export default function Openconnected({
         position: 'top-right',
       });
     }
-  }, [
-    closeConnectedVrPopup,
-    closeSelectingAHeadset,
-    closeSelectingAModule,
-    onClose,
-  ]);
-
+  };
   const token = getMe()?.token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
 
-  const endSessionApi = () => {
+  const endSissionApi = () => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
@@ -101,17 +63,20 @@ export default function Openconnected({
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
     const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
-
+  
     // Format the date string
     const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+  
     console.log(formattedDate);
+  
     const date1String = startSession;
     const date2String = formattedDate;
     console.log(date1String, date2String);
+  
     // Create Date objects
-    const date1: any = new Date(date1String);
-    const date2: any = new Date(date2String);
-
+    const date1:any = new Date(date1String);
+    const date2:any = new Date(date2String);
+  
     // Calculate the difference in milliseconds
     const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
     console.log(timeDifferenceInMilliseconds);
@@ -120,26 +85,29 @@ export default function Openconnected({
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
-    return axios.put(
-      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
-      { vr_duration: differenceInMinutes },
-      { headers }
-    );
+
+
+    const api = axios.put(
+        `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+        {   "vr_duration": differenceInMinutes },
+        { headers }
+      );
+    return  api
   };
-  // const antherModule = () => {
-  //   onClose();
-  //   {
-  //     props.onCloseBooks & props.onCloseBooks();
-  //   }
-  //   {
-  //     props.oncloseselectlevel & props.oncloseselectlevel();
-  //   }
-  // };
+  const antherModule =()=>{
+    props.onClose()
+    props.onCloseSelectEnvironment()
+    props.SelectDistractors()
+    props.onCloseSelectNumber()
+    props.oncloseselectlevel()
+   
+  }
+  
 
   return (
     <>
       <Box>
-        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
+        <Modal isOpen={props.isOpen} onClose={props.onClose}>
           <ModalOverlay />
           <ModalContent
             h="400px"
@@ -148,7 +116,7 @@ export default function Openconnected({
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset {headsetId}{' '}
+              You are connected to the VR headset {headsetid}
             </ModalHeader>
 
             <ModalBody>
@@ -185,7 +153,7 @@ export default function Openconnected({
                 fontWeight="700"
                 fontSize="18px"
                 marginRight="10px"
-                onClick={handleEndSession}
+                onClick={handle}
               >
                 End session
               </Button>
@@ -199,7 +167,7 @@ export default function Openconnected({
                 fontWeight="700"
                 fontSize="18px"
                 marginLeft="10px"
-                onClick={handlePlayAnotherModule}
+                onClick={antherModule}
               >
                 Play Another Module
               </Button>
@@ -212,8 +180,8 @@ export default function Openconnected({
         <SelectEvaluation
           isOpen={isevaluationopen}
           onClose={onevalutionClose}
-          closeopenconnected={onClose}
-          closemodules={closeSelectingAModule}
+         closeopenconnected={props.onClose}
+         closemodules={props.onclosemodules}
         />
       )}
     </>

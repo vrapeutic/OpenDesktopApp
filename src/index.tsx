@@ -1,14 +1,15 @@
+import { ChakraProvider } from '@chakra-ui/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { ChakraProvider } from '@chakra-ui/react';
-import theme from './theme';
-import { Fonts } from './theme/Fonts';
-import './index.css';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AdminProvider } from './Context/AdminContext';
 import { SocketManagerProvider } from './Context/SocketManagerProvider';
+import { StartSessionProvider } from './Context/StartSesstionContext';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
+import theme from './theme';
+import { Fonts } from './theme/Fonts';
 
 const queryClient = new QueryClient();
 
@@ -20,12 +21,14 @@ root.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <AdminProvider>
-          <Fonts />
-          <SocketManagerProvider>
-          <App />
-          </SocketManagerProvider>
-        </AdminProvider>
+        <StartSessionProvider>
+          <AdminProvider>
+            <Fonts />
+            <SocketManagerProvider>
+              <App />
+            </SocketManagerProvider>
+          </AdminProvider>
+        </StartSessionProvider>
       </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>

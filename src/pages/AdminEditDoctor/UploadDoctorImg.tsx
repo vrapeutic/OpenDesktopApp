@@ -1,80 +1,116 @@
 import {
+  Box,
   Button,
   FormControl,
   Input,
-  Text,
-  Box,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-import { Image } from '../../assets/icons/Image';
+import { useAdminContext } from '@renderer/Context/AdminContext';
+import { TherapyFormProps } from '@renderer/features/AddCenterForm/therapyFormInterface';
 import axios from 'axios';
-import { config } from '../../config';
-import { getMe } from '../../cache';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SignupFormProps } from './signupFormInterface';
+import { Image } from '../../assets/icons/Image';
+import { config } from '../../config';
+import CongratulationEdit from './CongratulationEdit';
 
-interface uploadLogoProps extends SignupFormProps {
+interface UploadKidImgProps extends TherapyFormProps {
   isOpen: boolean;
   onClose: () => void;
+  datachild?: any;
+  id?: string;
+  email?: string;
 }
 
-const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
+const UploadDoctorImg: React.FC<UploadKidImgProps> = (props) => {
   const navigate = useNavigate();
+  console.log(props.formData);
+  const { otp } = useAdminContext();
   const [loading, setLoading] = useState(false);
-
+  const {
+    isOpen: isOpenCongratulations,
+    onOpen: onOpenCongratulations,
+    onClose: onDeleteCongratulations,
+  } = useDisclosure();
   const toast = useToast();
   const [imagePreview, setImagePreview] = useState('');
   const [logo, setLogo] = useState<File>();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
-    setLogo(file);
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
+    setLogo(file);
   };
 
   const FormonSubmit = () => {
-    SendDataToApi();
     setLoading(true);
+    SendDataToApi();
   };
 
-  const createFormData = () => {
-    const formData = new FormData();
-
-    formData.append('name', props.formData.Name);
-    formData.append('email', props.formData.Email);
-
-    formData.append('password', props.formData.Password);
-    formData.append('degree', props.formData.Degree);
-    formData.append('university', props.formData.University);
-    formData.append('photo', logo);
-
-    formData.append('certificate', props.formData.certification);
-
-    props.formData.specializationschema.forEach(
-      (specialty: { id: string | Blob }) =>
-        formData.append('specialty_ids[]', specialty.id)
+  const createFormEdit = () => {
+    const doctorFormData = new FormData();
+    doctorFormData.append('name', props.formData.name);
+    doctorFormData.append('degree', props.formData.degree);
+    doctorFormData.append('university', props.formData.university);
+    doctorFormData.append('certification', props.formData.certification);
+    if (logo) {
+      doctorFormData.append('photo', logo);
+    }
+    props.formData.specialities.forEach((speciality: { id: string | Blob }) =>
+      doctorFormData.append('specialty_ids[]', speciality.id)
     );
-
-    return formData;
+    return doctorFormData;
   };
 
-  const postFormData = (formData: FormData) => {
- 
+  const postFormData = async (formData: FormData) => {
+    try {
+      const headers = { otp: otp };
+      const response = await axios.put(
+        `${config.apiURL}/api/v1/admins/edit_doctor?doctor_id=${props.id}`,
+        formData,
+        { headers }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-    return axios.post(`${config.apiURL}/api/v1/doctors`, formData);
+  const handleSuccess = () => {
+    props.onClose();
+    onOpenCongratulations();
+  };
+
+  const handleError = (error: any) => {
+    props.onClose();
+    const errorMessage = error.response?.data?.error || 'Unknown Error';
+    toast({
+      title: 'Error',
+      description: errorMessage,
+      status: 'error',
+      duration: 9000,
+      position: 'top-right',
+    });
+    console.error('API Error:', error);
+  };
+
+  const handleCloseModal = () => {
+    onDeleteCongratulations();
+    navigate('/');
   };
 
   const SendDataToApi = async () => {
-    const formData = createFormData();
+    const formData = createFormEdit();
 
     try {
       await postFormData(formData);
@@ -84,26 +120,6 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
     } finally {
       setLoading(false);
     }
-  };
-
-
-  
-
-  const handleSuccess = () => {
-    props.onClose();
-    navigate('/');
-  };
-
-  const handleError = (error: any) => {
-    props.onClose();
-     console.log("errrrrror",error)
-    toast({
-      title: 'Error',
-      description: error.response.data.error,
-      status: 'error',
-      duration: 9000,
-      position: 'top-right',
-    });
   };
 
   return (
@@ -126,7 +142,8 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
                 color="#00261C"
                 textAlign="center"
               >
-                Upload Profile picture
+                {' '}
+                Upload Photo
               </ModalHeader>
               <ModalCloseButton marginLeft="100px" />
             </Box>
@@ -144,7 +161,7 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
               >
                 {imagePreview ? (
                   <img
-                    src={imagePreview}
+                    src={logo ? imagePreview : props.datachild}
                     alt="Preview"
                     height="271px"
                     width="271px"
@@ -152,7 +169,17 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
                 ) : (
                   <>
                     <label>
-                      <Image />
+                      {props.datachild ? (
+                        <img
+                          src={props.datachild}
+                          alt="Preview"
+                          height="271px"
+                          width="271px"
+                        />
+                      ) : (
+                        <Image />
+                      )}
+                      {/* <Image /> */}
 
                       <Input
                         type="file"
@@ -170,14 +197,14 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
               <Text
                 position="absolute"
                 top="445px"
-                left="18%"
+                left="25%"
                 fontFamily="Graphik LCG"
                 fontSize="18px"
                 fontWeight="400"
                 lineHeight="18px"
                 color="#595959"
               >
-                Please upload your Profile picture
+                Please upload your photo
               </Text>
             </ModalBody>
 
@@ -191,7 +218,7 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
                   borderRadius="12px"
                   bg="#00DEA3"
                   color="#FFFFFF"
-                  fontFamily="Roboto"
+                  fontFamily="Graphik LCG"
                   fontWeight="700"
                   fontSize="18px"
                   lineHeight="21.09px"
@@ -221,8 +248,15 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
           </ModalContent>
         </Modal>
       </Box>
+
+      {onOpenCongratulations && (
+        <CongratulationEdit
+          isOpen={isOpenCongratulations}
+          onClose={handleCloseModal}
+        />
+      )}
     </>
   );
 };
 
-export default UploadlogoSignup;
+export default UploadDoctorImg;

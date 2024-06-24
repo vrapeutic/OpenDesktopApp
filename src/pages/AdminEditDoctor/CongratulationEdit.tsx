@@ -1,4 +1,4 @@
-import { CheckIcon } from "@chakra-ui/icons";
+import { CheckIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -11,11 +11,10 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-} from "@chakra-ui/react";
-import { Link as ReachLink } from "react-router-dom";
+} from '@chakra-ui/react';
+import { Link as ReachLink } from 'react-router-dom';
 
-export default function CongratulationsModuleAdmin(props: any) {
-  console.log(props)
+export default function CongratulationEdit(props: any) {
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -68,7 +67,7 @@ export default function CongratulationsModuleAdmin(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-              {props.text}
+              Your Profile has been edited successfully
             </Text>
           </ModalBody>
 
@@ -90,9 +89,9 @@ export default function CongratulationsModuleAdmin(props: any) {
             >
               <Link
                 as={ReachLink}
-                to={"/"}
+                to={'/'}
                 _hover={{
-                  textDecoration: "none",
+                  textDecoration: 'none',
                 }}
               >
                 Go to home

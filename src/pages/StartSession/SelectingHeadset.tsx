@@ -11,22 +11,30 @@ import {
   GridItem,
   Select,
   useDisclosure,
-  Flex,
+  useToast,
 } from '@chakra-ui/react';
-import { config } from '@renderer/config';
+import { config } from '../../config';
 import axios from 'axios';
-import { dataContext } from '@renderer/shared/Provider';
-import { useForm } from 'react-hook-form';
+import { dataContext } from '../../shared/Provider';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectingModule from './SelectingModule';
-
+import { useStartSessionContext } from '../../Context/StartSesstionContext';
+import { getMe } from '@renderer/cache';
 import useSocketManager from '../../Context/SocketManagerProvider';
 import { ErrorPopup } from './ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
-import { getMe } from '@renderer/cache';
 import { END_SESSION_MESSAGE } from '@main/constants';
+
+interface ErrorsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectAnotherHeadset: () => void;
+  onCancelSession: () => void;
+  closeselectingheadset: () => void;
+}
 
 const HEADSET_FIELD = 'headset';
 
@@ -56,27 +64,196 @@ interface SelectingHeadsetProps {
   isOpen: boolean;
   childId: string;
 }
-const ErrorsModal = ({
+const ErrorsModal: React.FC<ErrorsModalProps> = ({
   isOpen,
   onClose,
   onSelectAnotherHeadset,
   onCancelSession,
-  closeSelectingAHeadset,
-  errorMessages,
-}: ErrorModalPropType) => {
+  closeselectingheadset,
+}) => {
+  const navigate = useNavigate();
+  const { startSession, sessionId } = useStartSessionContext();
+
+  const {
+    isOpen: ismoduleopen,
+    onOpen: onmoduleOpen,
+    onClose: onmoduleClose,
+  } = useDisclosure();
+
+  const OpenModulemodal = () => {
+    onClose();
+    onmoduleOpen();
+  };
+
+  const CloseModuleModal = () => {
+    onmoduleClose();
+    closeselectingheadset();
+    navigate('/');
+  };
+  const token = getMe().token;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  const toast = useToast();
+
+  const endSessionApi = async () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
+
+    // Format the date string
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+
+    console.log(formattedDate);
+
+    const date1String = startSession;
+    const date2String = formattedDate;
+    console.log(date1String, date2String);
+
+    // Create Date objects
+    const date1: any = new Date(date1String);
+    const date2: any = new Date(date2String);
+
+    // Calculate the difference in milliseconds
+    const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
+    console.log(timeDifferenceInMilliseconds);
+    // Convert milliseconds to seconds
+    const differenceInMinutes = Math.floor(
+      (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    console.log(differenceInMinutes);
+    return axios.put(
+      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+      { vr_duration: differenceInMinutes },
+      { headers }
+    );
+  };
+
+  const endSessionId = async () => {
+    try {
+      await endSessionApi();
+      onCancelSession();
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error.response?.data?.error || 'An error occurred',
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+      });
+    }
+  };
+
+  const SelectAnother = async () => {
+    try {
+      await endSessionApi();
+      onSelectAnotherHeadset();
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error.response?.data?.error || 'An error occurred',
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+      });
+    }
+  };
   return (
-    <ErrorPopup
-      isOpen={isOpen}
-      onClose={onClose}
-      onSelectAnotherHeadset={onSelectAnotherHeadset}
-      onCancelSession={onCancelSession}
-      closeSelectingAHeadset={closeSelectingAHeadset}
-      errorMessages={errorMessages}
-    />
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent h="400px" w="800px" bgColor="#FFFFFF" borderRadius="10px">
+          <ModalHeader textAlign="center" fontSize="30px">
+            Start a session
+          </ModalHeader>
+          <ModalBody fontSize="20px" fontWeight="600" mt="15px">
+            <Text mt="25px">
+              The selected headset could not be found on this network
+            </Text>
+
+            <Button
+              w="12rem"
+              h="54px"
+              bg="#00DEA3"
+              borderRadius="12px"
+              color="#FFFFFF"
+              fontFamily="Roboto"
+              fontWeight="700"
+              fontSize="1rem"
+              marginLeft="10px"
+              onClick={OpenModulemodal}
+            >
+              Continue to select module
+            </Button>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              w="214px"
+              h="54px"
+              bg="#00DEA3"
+              borderRadius="12px"
+              color="#FFFFFF"
+              fontFamily="Roboto"
+              fontWeight="700"
+              fontSize="1rem"
+              marginRight="10px"
+              onClick={endSessionId}
+            >
+              Cancel session
+            </Button>
+            <Button
+              w="214px"
+              h="54px"
+              bg="#00DEA3"
+              borderRadius="12px"
+              color="#FFFFFF"
+              fontFamily="Roboto"
+              fontWeight="700"
+              fontSize="1rem"
+              marginLeft="10px"
+              onClick={SelectAnother}
+            >
+              Select another headset
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {onmoduleOpen && (
+        <SelectingModule isOpen={ismoduleopen} onClose={CloseModuleModal} />
+      )}
+    </>
   );
 };
 
-const SelectingHeadset = (props: SelectingHeadsetProps) => {
+interface SelectingHeadsetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  centerId: string;
+  childId: string;
+}
+
+interface FormData {
+  headset: string;
+}
+
+const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
+  const {
+    isOpen: isErrorOpen,
+    onOpen: onErrorOpen,
+    onClose: onErrorClose,
+  } = useDisclosure();
+  const [headsets, setHeadsets] = useState<any[]>([]);
+  const { setStartSession, setheadsetid } = useStartSessionContext();
+  const toast = useToast();
+  const [errorMessages, setErrorMessages] = useState('');
+  const selectedCenterContext = useContext(dataContext);
   const { addFunction } = usePopupsHandler();
   const {
     dispatchSocketMessage,
@@ -86,15 +263,6 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
 
   const [deviceIsFound, setDeviceIsFound] = useState(false);
   const [sessionId, setSessionId] = useState<string>(null);
-  const {
-    isOpen: isErrorOpen,
-    onOpen: onErrorOpen,
-    onClose: onErrorClose,
-  } = useDisclosure();
-  const [headsets, setHeadsets] = useState([]);
-  const selectedCenterContext = useContext(dataContext);
-  const [errorMessages, setErrorMessages] = useState('');
-
   const schema = Joi.object({
     headset: Joi.string().required().messages({
       'string.empty': 'You must select a headset',
@@ -108,7 +276,7 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
     reset,
     setValue,
     getValues,
-  } = useForm({
+  } = useForm<FormData>({
     resolver: joiResolver(schema),
     mode: 'onTouched',
   });
@@ -129,37 +297,14 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
     }
   };
 
-  const handleFormSubmit = async () => {
-    const headsetId = getValues(HEADSET_FIELD);
-    const existingDevice = await checkIfServiceExists(headsetId);
-    const appIsConnectedToInternet = await checkAppNetWorkConnection();
-
-    if (appIsConnectedToInternet && existingDevice) {
-      // end old session
-      dispatchSocketMessage(
-        END_SESSION_MESSAGE,
-        { deviceId: headsetId },
-        headsetId
-      );
-
-      setSessionIdState();
-
-      console.log(headsetId);
-      console.log(existingDevice);
-      setDeviceIsFound(true);
-    } else {
-      const errorMessage = !appIsConnectedToInternet
-        ? 'You are not connected to the internet.'
-        : 'The selected headset is not connected.';
-
-      setErrorMessages(errorMessage);
-      onErrorOpen();
-    }
+  const handleFormSubmit = () => {
+    console.log('Form submitted with data in headset.');
+    setErrorMessages('This is a test error message.');
+    onErrorOpen();
   };
 
   const setSessionIdState = useCallback(async () => {
     const token = getMe().token;
-
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -185,7 +330,6 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
       // TODO: remove this after integrating a working session id API call
       if (!sessionId) {
         const sessionID = localStorage.getItem('sessionID');
-
         const sessionHex = Math.floor(
           Math.random() * 0xffffff * 10000000
         ).toString(12);
@@ -198,19 +342,17 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
 
   const handleCancelSession = () => {
     onErrorClose();
-    props.onClose(); // Close the SelectingHeadset component
+    props.onClose();
   };
 
   const handleSelectAnotherHeadset = () => {
     onErrorClose();
-    // Additional logic to open the component for selecting another headset
   };
 
   useEffect(() => {
     if (selectedCenterContext.id) {
       getHeadsets();
     }
-
     addFunction('closeSelectingAHeadset', props.onClose);
     addFunction('renderDisconnectedHeadSetError', (errorMessage = '') => {
       setDeviceIsFound(false);
@@ -265,7 +407,7 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
                   fontFamily="Roboto"
                   fontWeight="700"
                   fontSize="18px"
-                  onClick={handleFormSubmit}
+                  onClick={handleSubmit(handleFormSubmit)}
                 >
                   Connect to headset
                 </Button>
@@ -282,10 +424,10 @@ const SelectingHeadset = (props: SelectingHeadsetProps) => {
       <ErrorsModal
         isOpen={isErrorOpen}
         onClose={onErrorClose}
-        closeSelectingAHeadset={props.onClose}
+        closeselectingheadset={props.onClose}
         onCancelSession={handleCancelSession}
         onSelectAnotherHeadset={handleSelectAnotherHeadset}
-        errorMessages={errorMessages}
+        // errorMessages={errorMessages}
       />
 
       {deviceIsFound && (
