@@ -15,11 +15,11 @@ import {
 import useSocketManager from '../../Context/SocketManagerProvider';
 import { END_SESSION_MESSAGE } from '@main/constants';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import { useNavigate } from '@reach/router';
 import axios from 'axios';
 import { config } from '@renderer/config';
 import { getMe } from '@renderer/cache';
 import SelectEvaluation from './Evaluation';
+import { useNavigate } from 'react-router-dom';
 
 interface OpenConnectedProps {
   isOpen: boolean;
