@@ -10,6 +10,10 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import theme from './theme';
 import { Fonts } from './theme/Fonts';
+import './index.css';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { AdminProvider } from './Context/AdminContext';
+import { StartSessionProvider } from './Context/StartSesstionContext';
 
 const queryClient = new QueryClient();
 
@@ -22,12 +26,14 @@ root.render(
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <StartSessionProvider>
+         
           <AdminProvider>
-            <Fonts />
-            <SocketManagerProvider>
+              <Fonts />
+              <SocketManagerProvider>
               <App />
-            </SocketManagerProvider>
+              </SocketManagerProvider>
           </AdminProvider>
+       
         </StartSessionProvider>
       </QueryClientProvider>
     </ChakraProvider>

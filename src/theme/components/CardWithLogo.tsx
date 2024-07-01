@@ -11,24 +11,25 @@ import {
   TagLabel,
   Grid,
   GridItem,
+  
   Box,
-  Link,
-  IconButton,
 } from '@chakra-ui/react';
 import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { getMe } from '@renderer/cache';
 
 const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
   const token = getMe()?.token;
-  let facebookLink;
-  let linkedinLink;
+  let facebookLink ;
+  let linkedinLink ;
   if (token) {
-    facebookLink = centerData?.centerData?.attributes?.center_social_links.find(
-      (link: { link_type: string }) => link.link_type === 'facebook'
-    );
-    linkedinLink = centerData?.centerData?.attributes?.center_social_links.find(
-      (link: { link_type: string }) => link.link_type === 'twitter'
-    );
+    facebookLink =
+      centerData?.centerData?.attributes?.center_social_links.find(
+        (link: { link_type: string }) => link.link_type === 'facebook'
+      );
+    linkedinLink =
+      centerData?.centerData?.attributes?.center_social_links.find(
+        (link: { link_type: string }) => link.link_type === 'twitter'
+      );
   }
 
   return (
@@ -103,7 +104,7 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
             </Link>
           </Flex>
         )}
-      </GridItem>
+        </GridItem>
       <GridItem colSpan={4}>
         <Text my={2}>
           Age Range: {Module?.Module.attributes?.min_age} -{' '}
@@ -118,8 +119,9 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
           {' '}
           Package_name : {Module?.Module.attributes?.package_name}
         </Text>
+        
       </GridItem>
-      <GridItem colSpan={4}>
+      <GridItem colSpan={4} >
         <Text my={2}>
           Specialties :{' '}
           {Module?.Module?.attributes.targeted_skills?.map((skill: any) => (

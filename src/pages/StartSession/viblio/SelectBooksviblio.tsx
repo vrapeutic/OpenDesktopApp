@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import SelectDistractors from './SelectDistractorsviblio';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import Openconnected from '../openconnected';
+import OpenConnectedVi from './openConnectedVi';
 
 const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ const SelectBooksViblio = (props: any) => {
     } else {
       navigate('/Therapycenters');
       onOpenConnected()
-      console.log("session id",sessionId)
+      // console.log("session id",sessionId)
 
       toast({
         title: 'Success',
@@ -79,11 +80,11 @@ const SelectBooksViblio = (props: any) => {
         position: 'top-right',
       });
   
-      console.log(
-        `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} 
-        module name is ${module} and session id is ${sessionId}`
-      );
-      console.log('Array of menu choices', updatedFormData);
+      // console.log(
+      //   `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} 
+      //   module name is ${module} and session id is ${sessionId}`
+      // );
+      // console.log('Array of menu choices', updatedFormData);
     }
   };
   
@@ -195,16 +196,17 @@ const SelectBooksViblio = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
           onCloseBooks={props.onClose}
+         
         />
       )}
         {onOpenConnected && (
-        <Openconnected
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
-          onclosemodules={props.onclosemodules}
-          onCloseBooks={props.onClose}
-          oncloseselectlevel={props.oncloseselectlevel}
-        />
+         <OpenConnectedVi
+         isOpen={isOpenConnected}
+         onClose={onCloseConnected}
+         onCloseSelectBooksviblio={props.onClose}
+         oncloseselectlevel={props.oncloseselectlevel}
+         onclosemodules={props.onclosemodules}
+         onCloseSelectDistractors={props.onClose}    />
       )}
     </>
   );

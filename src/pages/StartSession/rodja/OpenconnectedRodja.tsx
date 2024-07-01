@@ -20,6 +20,8 @@ import axios from 'axios';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 import SelectEvaluation from '../Evaluation';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import { END_SESSION_MESSAGE } from '@main/constants';
 
 export default function OpenconnectedRodja(props: any) {
   const { startSession, sessionId , headsetid } = useStartSessionContext();
@@ -30,17 +32,23 @@ export default function OpenconnectedRodja(props: any) {
     onOpen: onevaluationOpen,
     onClose: onevalutionClose,
   } = useDisclosure();
-
+  const { dispatchSocketMessage } = useSocketManager();
   const handle = async () => {
    
     try {
+      localStorage.removeItem('sessionID');
+      dispatchSocketMessage(
+        END_SESSION_MESSAGE,
+        { deviceId: headsetid },
+        headsetid
+      );
       await endSissionApi();
       onevaluationOpen()
       // props.onClose();
       // props.onclosemodules();
       // navigate('/');
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       toast({
         title: 'error',
         description: `${error.response.data.error}`,
@@ -68,11 +76,11 @@ export default function OpenconnectedRodja(props: any) {
     // Format the date string
     const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
   
-    console.log(formattedDate);
+    // console.log(formattedDate);
   
     const date1String = startSession;
     const date2String = formattedDate;
-    console.log(date1String, date2String);
+    // console.log(date1String, date2String);
   
     // Create Date objects
     const date1:any = new Date(date1String);
@@ -80,12 +88,12 @@ export default function OpenconnectedRodja(props: any) {
   
     // Calculate the difference in milliseconds
     const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
-    console.log(timeDifferenceInMilliseconds);
+    // console.log(timeDifferenceInMilliseconds);
     // Convert milliseconds to seconds
     const differenceInMinutes = Math.floor(
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
-    console.log(differenceInMinutes);
+    // console.log(differenceInMinutes);
 
     
     return   axios.put(
@@ -96,7 +104,6 @@ export default function OpenconnectedRodja(props: any) {
   };
   const antherModule =()=>{
     props.onClose()
- 
     props.onCloseSelectEnvrodja()
     props.oncloseselectlevel()
     props.onCloseSelectJewel()

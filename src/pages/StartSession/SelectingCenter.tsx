@@ -21,6 +21,7 @@ import { dataContext } from '@renderer/shared/Provider';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useForm } from 'react-hook-form';
 import { PopupsHandlerProvider } from '@renderer/Context/PopupsHandlerContext';
+import SelectingHeadset2 from './headset2';
 
 export default function SelectingCenter(props: any) {
   const {
@@ -48,7 +49,7 @@ export default function SelectingCenter(props: any) {
     mode: 'onTouched',
   });
 
-  const getKids = async () => {
+  const getKids = async () => { 
     const token = await (window as any).electronAPI.getPassword('token');
     const headers = { Authorization: `Bearer ${token}` };
     try {
@@ -66,7 +67,7 @@ export default function SelectingCenter(props: any) {
   const handleFormSubmit = (data: any) => {
     console.log('Form submitted with data: ', data);
     console.log(
-      `center id   ${selectedCenterContext.id} , child id  ${data.kid}`
+      `center id ${selectedCenterContext.id} , child id  ${data.kid}`
     );
     setChildId(data.kid);
     onHeadsetOpen();
@@ -141,15 +142,15 @@ export default function SelectingCenter(props: any) {
           </ModalContent>
         </Modal>
 
-        {isHeadsetOpen && (
-          <SelectingHeadset
-            isOpen={isHeadsetOpen}
-            onClose={onHeadsetClose}
-            centerId={selectedCenterContext.id}
-            childId={childId}
-          />
-        )}
-      </Box>
+      {isHeadsetOpen && (
+        <SelectingHeadset2
+        isOpen={isHeadsetOpen}
+        onClose={onHeadsetClose}
+        centerId={selectedCenterContext.id}
+        childId={childId}
+      />
+      )}
+    </Box>
     </PopupsHandlerProvider>
   );
 }

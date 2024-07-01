@@ -13,7 +13,6 @@ import {
   Button,
   useDisclosure,
   Box,
-  ModalCloseButton,
   useToast,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
@@ -21,7 +20,6 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';
-import Selectlevel from './viblio/SelectLevelviblio';
 import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import SelectLevelViblio from './viblio/SelectLevelviblio';
@@ -30,7 +28,9 @@ import axios from 'axios';
 import { getMe } from '@renderer/cache';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
-import ConnectedVR from './ConnectedVR';
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import { END_SESSION_MESSAGE } from '@main/constants';
+import SelectLevelGar from './Gardendo/SelectLevelGar';
 
 export default function SelectingModule(props: any) {
   const { popupFunctions, addFunction } = usePopupsHandler();
@@ -39,25 +39,32 @@ export default function SelectingModule(props: any) {
     setSocketError,
     checkIfServiceExists,
     checkAppNetWorkConnection,
+    dispatchSocketMessage,
   } = useSocketManager();
+  const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMEssage] = useState(null);
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
-
+  const [packageName, setPackagename] = useState('');
+  const { startSession, sessionId, headsetid } = useStartSessionContext();
   const { closeSelectingAHeadset, renderDisconnectedHeadSetError } =
     popupFunctions;
   const [modules, setModules] = useState([]);
-  const {
-    isOpen: isOpenSelectlevelviblio,
-    onOpen: onOpenSelectlevelviblio,
-    onClose: onCloseSelectlevelviblio,
-  } = useDisclosure();
+
   const {
     isOpen: isOpenSelectlevelrodja,
     onOpen: onOpenSelectlevelrodja,
     onClose: onCloseSelectlevelrodja,
   } = useDisclosure();
 
+  const {
+    isOpen: isOpenSelectlevelviblio,
+    onOpen: onOpenSelectlevelviblio,
+    onClose: onCloseSelectlevelviblio,
+  } = useDisclosure();
+
   const selectedCenter = useContext(dataContext);
   const navigate = useNavigate();
+
   const [values, setValues] = useState({
     selectedModule: '',
   });
@@ -67,9 +74,13 @@ export default function SelectingModule(props: any) {
     onOpen: onOpenSelectlevelArcheeko,
     onClose: onCloseSelectlevelArcheeko,
   } = useDisclosure();
+  const {
+    isOpen: isOpenSelectlevelGar,
+    onOpen: onOpenSelectlevelGar,
+    onClose: onCloseSelectlevelGar,
+  } = useDisclosure();
   const [name, setName] = useState('Modules');
   const { setModule } = useStartSessionContext();
-
   const [errors, setErrors] = useState({
     selectedModule: null,
   });
@@ -77,7 +88,7 @@ export default function SelectingModule(props: any) {
   const schema = Joi.object().keys({
     selectedModule: Joi.string().required().label('module Name'),
   });
-
+  console.log('to make sure ', headsetid, sessionId);
   // old Code
   // const handleSubmit = (): void => {
   //   switch (name) {
@@ -103,57 +114,74 @@ export default function SelectingModule(props: any) {
   //new Code
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-console.log("iam here one")
-    const existingDevice = await checkIfServiceExists(props.headsetId);
-    console.log("iam here 2",props.headsetId)
-    const appIsConnectedToInternet = await checkAppNetWorkConnection();
-    console.log("iam here 3",appIsConnectedToInternet)
-    //---------------------------- now this line i think it,s for error or not get id head
-    // if (!existingDevice || !appIsConnectedToInternet) {
-    //   renderDisconnectedHeadSetError(
-    //     !appIsConnectedToInternet && 'You are not connected to the internet'
-    //   );
-    //   return;
-    // }
-
-    if (socketError) {
-      setSocketError(null);
-      setOpenRunningPopup(false);
-    }
+    const existingDevice = await checkIfServiceExists(headsetid);
+    const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+    console.log(appIsConnectedToInternet);
 
     const { error } = schema.validate(values, { abortEarly: false });
-    console.log(error);
 
     if (error) {
-      console.log("iam here 4", error)
       const validationErrors: any = {};
       error.details.forEach((detail) => {
         validationErrors[detail.path[0]] = detail.message;
       });
       setErrors(validationErrors);
-      console.log(validationErrors);
     } else {
-      console.log("i am here")
-      setErrors({ selectedModule: null });
-      switch (name) {
-        case 'Archeeko':
-          console.log('Archeekon', name);
-          return onOpenSelectlevelArcheeko();
-        case 'Viblio':
-          console.log('Viblio', name);
-          return onOpenSelectlevelviblio();
-        case 'Rodja':
-          console.log('Rodja', name);
-          return onOpenSelectlevelrodja();
-        default:
-          toast({
-            title: 'error',
-            description: `This module is not available, please select anther module`,
-            status: 'error',
-            duration: 5000,
-            position: 'top-right',
-          });
+      console.log('eles switch ');
+      // if (!appIsConnectedToInternet&&existingDevice) {
+      if (appIsConnectedToInternet) {
+        const socketMessage = {
+          sessionId,
+          [MODULE_PACKAGE_KEY]: packageName,
+          deviceId: headsetid,
+        };
+
+        dispatchSocketMessage(
+          START_APP_MESSAGE,
+          socketMessage,
+          headsetid,
+          ...[1, 2] // this array for holding settings
+        );
+
+        switch (name) {
+          case 'Archeeko':
+            console.log('Archeekon', name);
+            return onOpenSelectlevelArcheeko();
+          case 'Viblio':
+            console.log('Viblio', name);
+            return onOpenSelectlevelviblio();
+          case 'Rodja':
+            console.log('Rodja', name);
+            return onOpenSelectlevelrodja();
+          case 'GardenDo':
+            console.log('GardenDo', name);
+            return onOpenSelectlevelGar();
+          default:
+            toast({
+              title: 'error',
+              description: `This module is not available, please select anther module`,
+              status: 'error',
+              duration: 5000,
+              position: 'top-right',
+            });
+        }
+        props.setOpenRunningPopup(true);
+      } else {
+        console.log('eless');
+        console.log(headsetid);
+        console.log(existingDevice);
+        const errorMessage = !appIsConnectedToInternet
+          ? 'You are not connected to the internet'
+          : 'No headset found';
+
+        setErrorMEssage(errorMessage);
+        setNotFound(true);
       }
+      if (socketError) {
+        setSocketError(null);
+        setOpenRunningPopup(false);
+      }
+      setErrors({ selectedModule: null });
     }
   };
 
@@ -222,7 +250,7 @@ console.log("iam here one")
   useEffect(() => {
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
-      console.log('token: ', token);
+
       fetch(
         `${config.apiURL}/api/v1/centers/${selectedCenter.id}/assigned_modules`,
         {
@@ -234,7 +262,7 @@ console.log("iam here one")
         .then((response) => response.json())
         .then((result) => {
           selectedCenter.id && setModules(result.data);
-          console.log(result);
+          selectedCenter.id && setModules(result.data);
         })
         .catch((error) => console.log('error', error));
     })();
@@ -250,8 +278,6 @@ console.log("iam here one")
     console.log('Selected Module:', module);
   };
 
-  const { startSession, sessionId } = useStartSessionContext();
-  console.log(sessionId, startSession);
   const token = getMe()?.token;
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -288,6 +314,7 @@ console.log("iam here one")
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
+    console.log(sessionId, startSession);
     return axios.put(
       `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
       { vr_duration: differenceInMinutes },
@@ -297,6 +324,11 @@ console.log("iam here one")
 
   const CloseModule = async () => {
     try {
+      dispatchSocketMessage(
+        END_SESSION_MESSAGE,
+        { deviceId: headsetid },
+        headsetid
+      );
       await endSessionApi();
       props.onClose();
       navigate('/home');
@@ -315,6 +347,7 @@ console.log("iam here one")
       });
     }
   };
+
   return (
     <Box>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -322,8 +355,7 @@ console.log("iam here one")
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
-              You have been connected successfully to the headset{' '}
-              {props.headsetId}
+              You have been connected successfully to the headset {headsetid}
             </Text>
             {socketError && (
               <Text
@@ -455,7 +487,13 @@ console.log("iam here one")
           onClose={onCloseSelectlevelArcheeko}
           onclosemodules={props.onClose}
         />
-      )}{' '}
+      )}
+        {onOpenSelectlevelGar && (
+        <SelectLevelGar
+          isOpen={isOpenSelectlevelGar}
+          onClose={onCloseSelectlevelGar}
+          onclosemodules={props.onClose}
+        />)}
     </Box>
   );
 }

@@ -15,10 +15,10 @@ import SelectingModule from './SelectingModule';
 
 interface ErrorPopupPropType {
   isOpen: boolean;
-  onClose: () => void;
-  onSelectAnotherHeadset: () => void;
-  onCancelSession: () => void;
-  closeSelectingAHeadset: () => void;
+  onClose?: () => void;
+  onSelectAnotherHeadset?: () => void;
+  onCancelSession?: () => void;
+  closeSelectingAHeadset?: () => void;
   continueToSelectModule?: boolean;
   errorMessages?: string;
 }
@@ -46,6 +46,7 @@ export const ErrorPopup = ({
     navigate('/');
   };
 
+  
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>

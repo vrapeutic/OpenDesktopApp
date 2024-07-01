@@ -21,6 +21,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import Openconnected from '../openconnected';
+import OpenConnectedVi from './openConnectedVi';
 
 const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
@@ -73,12 +74,10 @@ const SelectDistractors = (props: any) => {
       position: 'top-right',
     });
 
-    console.log(
-      `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
-      module name is ${module} and session id is ${sessionId}`
-    );
-    console.log('Array of menu choices', updatedFormData);
+ 
+
   };
+
 
   const handleBackToSelectBook = () => {
     props.onClose();
@@ -179,7 +178,7 @@ const SelectDistractors = (props: any) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenConnected && (
+      {/* {onOpenConnected && (
         <Openconnected
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
@@ -187,7 +186,17 @@ const SelectDistractors = (props: any) => {
           onCloseBooks={props.onCloseBooks}
           oncloseselectlevel={props.oncloseselectlevel}
         />
+      )} */}
+        {onOpenConnected && (
+         <OpenConnectedVi
+         isOpen={isOpenConnected}
+         onClose={onCloseConnected}
+         onclosemodules={props.onclosemodules}
+         onCloseSelectBooksviblio={props.onCloseSelectBooksviblio}
+         onCloseSelectDistractors={props.onClose}
+       />
       )}
+      
     </>
   );
 };
