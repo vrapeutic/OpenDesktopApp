@@ -7,7 +7,7 @@ const ViewModule = () => {
   const location = useLocation();
   const Module = location.state;
   const navigate = useNavigate();
- console.log(module)
+  console.log(module);
   useEffect(() => {
     if (Module) {
       console.log('Clicked module Data from module:', Module);
@@ -21,8 +21,7 @@ const ViewModule = () => {
         rightText="Edit Module"
         onButtonClick={() => navigate('/Editmodule', { state: Module })}
       />{' '}
-
-<CardWithLogo Module={Module} />
+      <CardWithLogo Module={Module} />
       {/* <CardWithLogo centerData={centerData} />
       <TabsViewCenter centerData={centerData} /> */}
     </>
