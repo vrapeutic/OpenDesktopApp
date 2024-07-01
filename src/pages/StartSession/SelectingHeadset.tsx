@@ -33,7 +33,7 @@ interface ErrorsModalProps {
   onSelectAnotherHeadset: () => void;
   onCancelSession: () => void;
   closeselectingheadset: () => void;
-  closeSelectingAHeadset?:() => void
+  closeSelectingAHeadset?: () => void;
 }
 
 interface SelectingHeadsetProps {
@@ -221,45 +221,6 @@ interface ErrorsModalProps {
 //   );
 // };
 
-
-const endSessionApi = async () => {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-      const day = String(currentDate.getDate()).padStart(2, '0');
-      const hours = String(currentDate.getHours()).padStart(2, '0');
-      const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-      const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-      const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
-  
-      // Format the date string
-      const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
-  
-      console.log(formattedDate);
-  
-      const date1String = startSession;
-      const date2String = formattedDate;
-      console.log(date1String, date2String);
-  
-      // Create Date objects
-      const date1: any = new Date(date1String);
-      const date2: any = new Date(date2String);
-  
-      // Calculate the difference in milliseconds
-      const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
-      console.log(timeDifferenceInMilliseconds);
-      // Convert milliseconds to seconds
-      const differenceInMinutes = Math.floor(
-        (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
-      );
-      console.log(differenceInMinutes);
-      return axios.put(
-        `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
-        { vr_duration: differenceInMinutes },
-        { headers }
-      );
-    };
-  
 const ErrorsModal = ({
   isOpen,
   onClose,
@@ -317,7 +278,15 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
     checkAppNetWorkConnection,
   } = useSocketManager();
   const [deviceIsFound, setDeviceIsFound] = useState(false);
-  const { setSessionId, setStartSession, setheadsetid, headsetid } = useStartSessionContext();
+  const {
+    setSessionId,
+    setStartSession,
+    setheadsetid,
+    headsetid,
+    startSession,
+    sessionId,
+  } = useStartSessionContext();
+
   const toast = useToast();
   const [errorMessages, setErrorMessages] = useState('');
 
@@ -354,12 +323,12 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
     }
   };
 
+  const token = getMe().token;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
   const getSessionId = async (dataheadset: string) => {
     console.log('getSessionId');
-    const token = getMe().token;
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
     try {
       const response = await axios.post(
         `${config.apiURL}/api/v1/sessions`,
@@ -385,7 +354,7 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
     const appIsConnectedToInternet = await checkAppNetWorkConnection();
 
     if (appIsConnectedToInternet && existingDevice) {
-      console.log(appIsConnectedToInternet,existingDevice)
+      console.log(appIsConnectedToInternet, existingDevice);
       // end old session
       dispatchSocketMessage(
         END_SESSION_MESSAGE,
@@ -406,26 +375,60 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
         : 'The selected headset is not connected.';
 
       setErrorMessages(errorMessage);
-          const { success, error } = await getSessionId(data.headset);
-    console.log(data.headset);
-    setDeviceIsFound(false);
-    if (!success) {
-      toast({
-        title: 'Error',
-        description: error,
-        status: 'error',
-        duration: 5000,
-        position: 'top-right',
-      });
-      return;
+      const { success, error } = await getSessionId(data.headset);
+      console.log(data.headset);
+      setDeviceIsFound(false);
+      if (!success) {
+        toast({
+          title: 'Error',
+          description: error,
+          status: 'error',
+          duration: 5000,
+          position: 'top-right',
+        });
+        return;
+      }
+      onErrorOpen();
     }
-    onErrorOpen();
-    }
-
-
   };
+  const endSessionApi = async () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
 
-  const handleCancelSession = async() => {
+    // Format the date string
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+
+    console.log(formattedDate);
+
+    const date1String = startSession;
+    const date2String = formattedDate;
+    console.log(date1String, date2String);
+
+    // Create Date objects
+    const date1: any = new Date(date1String);
+    const date2: any = new Date(date2String);
+
+    // Calculate the difference in milliseconds
+    const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
+    console.log(timeDifferenceInMilliseconds);
+    // Convert milliseconds to seconds
+    const differenceInMinutes = Math.floor(
+      (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    console.log(differenceInMinutes);
+    return axios.put(
+      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+      { vr_duration: differenceInMinutes },
+      { headers }
+    );
+  };
+  const handleCancelSession = async () => {
     await endSessionApi();
     onErrorClose();
     props.onClose();

@@ -1,11 +1,8 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { AdminProvider } from './Context/AdminContext';
 import { SocketManagerProvider } from './Context/SocketManagerProvider';
-import { StartSessionProvider } from './Context/StartSesstionContext';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import theme from './theme';
@@ -26,14 +23,12 @@ root.render(
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <StartSessionProvider>
-         
           <AdminProvider>
-              <Fonts />
-              <SocketManagerProvider>
+            <Fonts />
+            <SocketManagerProvider>
               <App />
-              </SocketManagerProvider>
+            </SocketManagerProvider>
           </AdminProvider>
-       
         </StartSessionProvider>
       </QueryClientProvider>
     </ChakraProvider>
