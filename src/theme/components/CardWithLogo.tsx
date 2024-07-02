@@ -104,6 +104,7 @@ const CardWithLogo = (centerData: { centerData: { attributes: any } }) => {
             </Link>
           </Flex>
         )}
+        </GridItem>
       <GridItem colSpan={4}>
         <Text my={2}>
           Age Range: {Module?.Module.attributes?.min_age} -{' '}
