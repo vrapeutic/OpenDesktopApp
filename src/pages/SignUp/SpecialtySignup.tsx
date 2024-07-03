@@ -25,6 +25,9 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
   sliding,
   formData,
 }) => {
+  const [specialistslist, setspecialistslist] = useState([]);
+  const [defaultSpecialties, setDefaultSpecialties] = useState([]);
+
   const schema = joi.object({
     specializationschema: joi
       .array()
@@ -48,8 +51,6 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
     nextHandler();
   };
 
-  const [specialistslist, setspecialistslist] = useState([]);
-
   useEffect(() => {
     getSpecialists();
   }, []);
@@ -57,10 +58,27 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
   const getSpecialists = async () => {
     try {
       const response = await axios.get(`${config.apiURL}/api/v1/specialties`);
-      setspecialistslist(response.data);
+      const specialties = response.data.map((speciality: any) => ({
+        id: speciality.id,
+        label: speciality.name,
+        value: speciality.id,
+      }));
+      setspecialistslist(specialties);
+      setDefaultSpecialtiesList(specialties);
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const setDefaultSpecialtiesList = (specialties: any) => {
+    const defaultSpecialties = specialties.filter(
+      (specialty: any) =>
+        formData?.specializationschema?.some(
+          (selected: any) => selected.value === specialty.value
+        )
+    );
+    setDefaultSpecialties(defaultSpecialties);
+    setValue('specializationschema', defaultSpecialties);
   };
 
   const animatedComponents = makeAnimated();
@@ -69,12 +87,12 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
     setValue('specializationschema', options || []);
   };
 
-  const specialties = specialistslist.map((speciality) => ({
-    id: speciality.id,
-    label: speciality.name,
-    value: speciality.id,
-  }));
-
+  const remainingSpecialties = specialistslist.filter(
+    (specialty) =>
+      !defaultSpecialties.some((selected) => selected.value === specialty.value)
+  );
+  console.log('remainingSpecialties', remainingSpecialties);
+  console.log('defaultSpecialties', defaultSpecialties);
   return (
     <Box
       bg="#FFFFFF"
@@ -103,10 +121,11 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
           <Select
             components={animatedComponents}
             isMulti
-            options={specialties}
+            options={remainingSpecialties}
             id="specializationschema"
             name="specializationschema"
             onChange={handleSpecializations}
+            defaultValue={defaultSpecialties}
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,

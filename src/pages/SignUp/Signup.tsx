@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDisclosure } from '@chakra-ui/react';
+import { Box, Flex, Image, useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { config } from '../../config';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import { useAdminContext } from '../../Context/AdminContext';
 import GeneralInfoSignup from './GeneralInfoSignup';
 import SpecialtySignup from './SpecialtySignup';
 import EductionIInfoSignup from './EducationinfoSignup';
+import VRapeutic from '../../assets/images/VRapeutic.png';
 
 interface Center {
   id: number;
@@ -115,13 +116,32 @@ const Signup: React.FC = () => {
             formData={formData}
           />
         );
-  
+
       default:
         return null;
     }
   };
 
-  return <>{renderFormStep()}</>;
+  return (
+    <Flex height="inherit">
+      <Flex
+        pos="sticky"
+        h="inherit"
+        background="#FFFFFF"
+        boxShadow="0px 3px 8px rgba(0, 0, 0, 0.08)"
+        borderRadius="0px 20px 20px 0px;"
+      >
+        <Box marginX="24px">
+          <Flex paddingY="27px">
+            <Image src={VRapeutic} />
+          </Flex>
+        </Box>
+      </Flex>
+      <Flex height="inherit" flexGrow="1" flexDir="column" bg="#F5F5F5">
+        {renderFormStep()}
+      </Flex>
+    </Flex>
+  );
 };
 
 export default Signup;
