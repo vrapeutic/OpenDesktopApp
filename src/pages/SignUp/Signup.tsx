@@ -28,13 +28,6 @@ const Signup: React.FC = () => {
   const totalSteps = 3;
   const [sliding, setSliding] = useState(1);
   const [formData, setFormData] = useState({});
-  const [softwaremodules, setsoftwaremodules] = useState<Center[]>([]);
-  const [selectedModuleId, setSelectedModuleId] = useState(null);
-
-  const { otp } = useAdminContext();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const navigate = useNavigate();
-
   const handleFormSubmit = (data: any) => {
     // Use the previous state to ensure the latest form data is captured
     setFormData((prevFormData) => ({ ...prevFormData, ...data }));
@@ -58,32 +51,6 @@ const Signup: React.FC = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    onClose();
-  };
-
-  useEffect(() => {
-    getModules();
-  }, []);
-
-  const headers = {
-    otp: `${otp}`,
-  };
-  const getModules = async () => {
-    try {
-      const response = await axios.get(
-        `${config.apiURL}/api/v1/software_modules`,
-        { headers }
-      );
-      console.log('response modules', response);
-      setsoftwaremodules(response.data.data);
-      console.log(response.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  console.log('software modules state', softwaremodules);
   const renderFormStep = () => {
     switch (sliding) {
       case 1:
@@ -123,13 +90,17 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <Flex height="inherit">
+    <Flex height="inherit" direction={{ base: 'column', md: 'row', lg: 'row' }}>
       <Flex
-        pos="sticky"
+        pos={{ md: 'sticky' }}
         h="inherit"
         background="#FFFFFF"
         boxShadow="0px 3px 8px rgba(0, 0, 0, 0.08)"
-        borderRadius="0px 20px 20px 0px;"
+        borderRadius={{
+          base: '0px',
+          md: '0px 20px 20px 0px',
+          lg: '0px 20px 20px 0px',
+        }}
       >
         <Box marginX="24px">
           <Flex paddingY="27px">
@@ -137,7 +108,7 @@ const Signup: React.FC = () => {
           </Flex>
         </Box>
       </Flex>
-      <Flex height="inherit" flexGrow="1" flexDir="column" bg="#F5F5F5">
+      <Flex height="inherit" flex="1" flexDir="column" bg="#F5F5F5">
         {renderFormStep()}
       </Flex>
     </Flex>

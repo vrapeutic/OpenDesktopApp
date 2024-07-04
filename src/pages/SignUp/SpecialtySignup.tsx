@@ -91,8 +91,7 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
     (specialty) =>
       !defaultSpecialties.some((selected) => selected.value === specialty.value)
   );
-  console.log('remainingSpecialties', remainingSpecialties);
-  console.log('defaultSpecialties', defaultSpecialties);
+
   return (
     <Box
       bg="#FFFFFF"
@@ -125,7 +124,7 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
             id="specializationschema"
             name="specializationschema"
             onChange={handleSpecializations}
-            defaultValue={defaultSpecialties}
+            defaultValue={formData?.specializationschema}
             styles={{
               control: (baseStyles, state) => ({
                 ...baseStyles,
