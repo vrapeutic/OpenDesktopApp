@@ -10,6 +10,7 @@ import {
   Input,
   Text,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
@@ -18,6 +19,10 @@ import ProgressBarSignup from '../../theme/components/ProgressBarSignup';
 import { Image } from '../../assets/icons/Image';
 import { SignupFormProps } from './signupFormInterface';
 import UploadlogoSignup from './UploadlogoSignup';
+import axios from 'axios';
+import { config } from '../../config';
+import { useNavigate } from 'react-router-dom';
+import CongratulationsSginUp from './CongratulationsSginUp';
 
 const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   onSubmit,
@@ -26,22 +31,37 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   sliding,
   formData
 }) => {
+  const [imagePreview, setImagePreview] = useState('');
+  const [logo, setLogo] = useState<File>();
+  const [imagePreviewError,setImagePreviewError] = useState(true);
+  const navigate = useNavigate();
+  const toast = useToast();
   const schema = joi.object({
     Degree: joi.string().required().label('Degree'),
     University: joi.string().required().label('University'),
-    certification: joi.required().custom((value, helpers) => {
-      if (value) {
-        const ext = value.name.split('.').pop().toLowerCase();
-        if (ext === 'pdf') {
-          return value;
-        } else {
-          return helpers.error('Invalid file type. Please upload a PDF file.');
-        }
+    certification: joi.any().custom((value, helpers) => {
+      // Check if the value is provided and has a name property
+      if (!value || !value.name) {
+        return helpers.error('any.required', { message: 'Please upload a certification file.' });
       }
+      const ext = value.name.split('.').pop().toLowerCase();
+      if (ext !== 'pdf') {
+        return helpers.error('any.invalid', { message: 'Invalid file type. Please upload a PDF file.' });
+      }
+      
       return value;
-    }),
+    }).required(),
+   
   });
-
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files[0];
+    setLogo(file);
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+    if(file){
+      setImagePreviewError(true)
+    }
+  }
   const {
     register,
     handleSubmit,
@@ -71,19 +91,76 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   };
 
   const FormonSubmit = (data: { certification: File }) => {
+   console.log(imagePreview)
+    if(!imagePreview){
+      setImagePreviewError(false)
+      return
+    }
+  
     if (!selectedFile) {
       setError('certification', {
-        type: 'manual',
         message: 'Please upload a PDF file.',
       });
     } else {
       clearErrors('certification');
       data.certification = selectedFile;
-
+console.log(formData, data)
       onSubmit(data);
-      onOpen()
+      
+      SendDataToApi(data)
     }
   };
+  const createFormData = (data:any) => {
+    const formDataSet = new FormData();
+    formDataSet.append('name', formData.Name);
+    formDataSet.append('email', formData.Email);
+    formDataSet.append('password', formData.Password);
+    formDataSet.append('degree', data.Degree);
+    formDataSet.append('university', data.University);
+    formDataSet.append('photo', logo);
+    formDataSet.append('certificate', data.certification);
+
+    formData.specializationschema.forEach(
+      (specialty: { id: string | Blob }) =>
+        formDataSet.append('specialty_ids[]', specialty.id)
+    );
+
+    return formDataSet;
+  };
+
+  const postFormData = (formDataSet: formDataSet) => {
+ 
+
+    return axios.post(`${config.apiURL}/api/v1/doctors`, formDataSet);
+  };
+
+  const SendDataToApi = async (data:any) => {
+    const formDataSet = createFormData(data);
+
+    try {
+      await postFormData(formDataSet);
+      handleSuccess();
+    } catch (error) {
+      handleError(error);
+    } 
+  }
+  const handleSuccess = () => {
+
+    onOpen()
+  };
+
+  const handleError = (error: any) => {
+  onClose();
+     console.log("errrrrror",error)
+    toast({
+      title: 'Error',
+      description: error.response.data.error,
+      status: 'error',
+      duration: 9000,
+      position: 'top-right',
+    });
+  };
+
 
   return (
     <Box
@@ -119,7 +196,72 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
             <Text color="red.500">{errors.Degree.message as string}</Text>
           )}
         </GridItem>
-        <GridItem rowSpan={2}>
+        
+       
+        <GridItem>
+          <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+            University
+          </FormLabel>
+          <Input
+            {...register('University')}
+            id="University"
+            borderColor="#4965CA"
+            border="2px solid #E8E8E8"
+            _hover={{ border: '1px solid #4965CA' }}
+            boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+            mt="0.75em"
+            mb="1em"
+            borderRadius="8px"
+          />
+          {errors.University && (
+            <Text color="red.500">{errors.University.message as string}</Text>
+          )}
+        </GridItem>
+        <GridItem >
+          <FormControl>
+          <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Upload Image
+              </FormLabel>
+              <Button
+                h="128px"
+                w="174px"
+                border="2px solid #E8E8E8"
+                borderRadius="8px"
+                bg="#FFFFFF"
+              >
+                   {imagePreview ? (
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                  
+                  />
+                ) : (
+                  <>
+                    <label>
+                      <Image />
+
+                      <Input
+                        type="file"
+                        accept="image/png,image/jpeg"
+                        name="image"
+                      
+                        onChange={(e) => handleImageChange(e)}
+                        style={{ display: 'none' }}
+                        hidden
+                        
+                        
+                      />
+                    </label>
+            </>
+                   )}
+              </Button>
+              {!imagePreviewError&& (
+            <Text color="red.500">"Image" is required"</Text>
+          )}
+              
+          </FormControl>
+        </GridItem>
+        <GridItem >
           <>
             <FormControl>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
@@ -146,37 +288,19 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
               </Button>
             </FormControl>
             {selectedFile && (
-              <Text mt="1em">Selected File: {selectedFile.name}</Text>
+              <Text mt="1em" width={"400px"}>Selected File: {selectedFile.name}</Text>
             )}
             {errors.certification && (
-              <Text color="red.500">
+              <Text color="red.500" >
                 {errors.certification.message as string}
               </Text>
             )}
+            
           </>
-        </GridItem>
-        <GridItem>
-          <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-            University
-          </FormLabel>
-          <Input
-            {...register('University')}
-            id="University"
-            borderColor="#4965CA"
-            border="2px solid #E8E8E8"
-            _hover={{ border: '1px solid #4965CA' }}
-            boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-            mt="0.75em"
-            mb="1em"
-            borderRadius="8px"
-          />
-          {errors.University && (
-            <Text color="red.500">{errors.taxID.message as string}</Text>
-          )}
         </GridItem>
       </Grid>
 
-      <Flex flexDirection="row-reverse">
+      <Flex flexDirection="row-reverse" my={15}>
         <Button
           type="submit"
           bg="#4AA6CA"
@@ -213,11 +337,11 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
         )}
       </Flex>
       {onOpen && (
-        <UploadlogoSignup
+        <CongratulationsSginUp
           isOpen={isOpen}
           onClose={onClose}
           onSubmit={onSubmit}
-          formData={formData}
+        
         />
       )}
     </Box>

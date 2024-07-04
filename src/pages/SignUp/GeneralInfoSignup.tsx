@@ -20,6 +20,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
   nextHandler,
   formData
 }) => {
+
   const schema = Joi.object({
     Name: Joi.string()
      
@@ -30,7 +31,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
     Email: Joi.string()
       .email({ tlds: { allow: false } })
       .required(),
-    Password: Joi.string().min(4).required(),
+    Password: Joi.string().min(6).required(),
   });
   const {
     register,
@@ -54,6 +55,8 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
 
     nextHandler();
   };
+ 
+
 
   return (
     <>
