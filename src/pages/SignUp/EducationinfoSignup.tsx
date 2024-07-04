@@ -219,7 +219,7 @@ console.log(formData, data)
         </GridItem>
         <GridItem >
           <FormControl>
-          <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+          <FormLabel m="0em"  letterSpacing="0.256px" color="#15134B">
                 Upload Image
               </FormLabel>
               <Button
@@ -228,6 +228,7 @@ console.log(formData, data)
                 border="2px solid #E8E8E8"
                 borderRadius="8px"
                 bg="#FFFFFF"
+                mt={"0.75em"}
               >
                    {imagePreview ? (
                   <img
@@ -244,7 +245,6 @@ console.log(formData, data)
                         type="file"
                         accept="image/png,image/jpeg"
                         name="image"
-                      
                         onChange={(e) => handleImageChange(e)}
                         style={{ display: 'none' }}
                         hidden
@@ -270,6 +270,7 @@ console.log(formData, data)
               <Button
                 h="128px"
                 w="174px"
+                mt={"0.75em"}
                 border="2px solid #E8E8E8"
                 borderRadius="8px"
                 bg="#FFFFFF"

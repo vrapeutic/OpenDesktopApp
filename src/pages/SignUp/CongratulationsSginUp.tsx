@@ -17,7 +17,7 @@ import React from 'react';
 
 export default function CongratulationsSginUp(props: any) {
   const navigate = useNavigate();
-  console.log(props.kids)
+  console.log(props.kids);
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -44,9 +44,9 @@ export default function CongratulationsSginUp(props: any) {
               backgroundColor="#3DB39E"
               margin="20px 140px"
               borderRadius="50%"
-              display= "flex"
-    justifyContent= "center"
-    alignItems= "center"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
             >
               <CheckIcon
                 color="#F2F1EF"
@@ -78,6 +78,12 @@ export default function CongratulationsSginUp(props: any) {
           </ModalBody>
 
           <ModalFooter display="table-column">
+          <Link
+                _hover={{
+                  textDecoration: 'none',
+                }}
+                onClick={() => navigate('/')}
+                >
             <Button
               h="54px"
               w="265px"
@@ -94,21 +100,11 @@ export default function CongratulationsSginUp(props: any) {
               onClick={props.onClose}
             >
               
-      
-             
-        
-                <Link
-                _hover={{
-                  textDecoration: 'none',
-                }}
-                onClick={() => navigate('/')}
-              >
-                Go to SginIn
-              </Link>
               
-            
+                Go to SginIn
               
             </Button>
+            </Link>
           </ModalFooter>
         </ModalContent>
       </Modal>
