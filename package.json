@@ -1,6 +1,6 @@
 {
   "name": "opendesktopapp",
-  "productName": "opendesktopapp",
+  "productName": "Vraputic Desktop App",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
@@ -75,7 +75,6 @@
     "electron-store": "^8.1.0",
     "electron-winstaller": "^5.2.1",
     "express": "^4.19.1",
-    "framer-motion": "^10.12.4",
     "joi": "^17.9.2",
     "object-to-formdata": "^4.5.1",
     "papaparse": "^5.4.1",
