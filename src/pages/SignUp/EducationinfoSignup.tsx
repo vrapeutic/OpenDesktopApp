@@ -11,6 +11,7 @@ import {
   Text,
   useDisclosure,
   useToast,
+  Spinner,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
@@ -18,7 +19,6 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import ProgressBarSignup from '../../theme/components/ProgressBarSignup';
 import { Image } from '../../assets/icons/Image';
 import { SignupFormProps } from './signupFormInterface';
-import UploadlogoSignup from './UploadlogoSignup';
 import axios from 'axios';
 import { config } from '../../config';
 import { useNavigate } from 'react-router-dom';
@@ -29,39 +29,48 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   nextHandler,
   backHandler,
   sliding,
-  formData
+  formData,
 }) => {
   const [imagePreview, setImagePreview] = useState('');
   const [logo, setLogo] = useState<File>();
-  const [imagePreviewError,setImagePreviewError] = useState(true);
+  const [imagePreviewError, setImagePreviewError] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
   const navigate = useNavigate();
   const toast = useToast();
   const schema = joi.object({
     Degree: joi.string().required().label('Degree'),
     University: joi.string().required().label('University'),
-    certification: joi.any().custom((value, helpers) => {
-      // Check if the value is provided and has a name property
-      if (!value || !value.name) {
-        return helpers.error('any.required', { message: 'Please upload a certification file.' });
-      }
-      const ext = value.name.split('.').pop().toLowerCase();
-      if (ext !== 'pdf') {
-        return helpers.error('any.invalid', { message: 'Invalid file type. Please upload a PDF file.' });
-      }
-      
-      return value;
-    }).required(),
-   
+    certification: joi
+      .any()
+      .custom((value, helpers) => {
+        if (!value || !value.name) {
+          return helpers.error('any.required', {
+            message: 'Please upload a certification file.',
+          });
+        }
+        const ext = value.name.split('.').pop().toLowerCase();
+        if (ext !== 'pdf') {
+          return helpers.error('any.invalid', {
+            message: 'Invalid file type. Please upload a PDF file.',
+          });
+        }
+
+        return value;
+      })
+      .required(),
   });
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
-    setLogo(file);
-    const previewUrl = URL.createObjectURL(file);
-    setImagePreview(previewUrl);
-    if(file){
-      setImagePreviewError(true)
+    if (file) {
+      setLogo(file);
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      setImagePreviewError(false);
     }
-  }
+  };
+
   const {
     register,
     handleSubmit,
@@ -77,11 +86,10 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   const [selectedFile, setSelectedFile] = useState<File>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-
   const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
     const ext = file.name.split('.').pop();
-    if (ext == 'pdf') {
+    if (ext === 'pdf') {
       setSelectedFile(file);
       setValue('certification', file);
       clearErrors('certification');
@@ -91,12 +99,13 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   };
 
   const FormonSubmit = (data: { certification: File }) => {
-   console.log(imagePreview)
-    if(!imagePreview){
-      setImagePreviewError(false)
-      return
+    setIsFormSubmitted(true);
+
+    if (!logo) {
+      setImagePreviewError(true);
+      return;
     }
-  
+
     if (!selectedFile) {
       setError('certification', {
         message: 'Please upload a PDF file.',
@@ -104,13 +113,13 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
     } else {
       clearErrors('certification');
       data.certification = selectedFile;
-console.log(formData, data)
+      console.log(formData, data);
       onSubmit(data);
-      
-      SendDataToApi(data)
+      SendDataToApi(data);
     }
   };
-  const createFormData = (data:any) => {
+
+  const createFormData = (data: any) => {
     const formDataSet = new FormData();
     formDataSet.append('name', formData.Name);
     formDataSet.append('email', formData.Email);
@@ -120,38 +129,38 @@ console.log(formData, data)
     formDataSet.append('photo', logo);
     formDataSet.append('certificate', data.certification);
 
-    formData.specializationschema.forEach(
-      (specialty: { id: string | Blob }) =>
-        formDataSet.append('specialty_ids[]', specialty.id)
+    formData.specializationschema.forEach((specialty: { id: string | Blob }) =>
+      formDataSet.append('specialty_ids[]', specialty.id)
     );
 
     return formDataSet;
   };
 
   const postFormData = (formDataSet: formDataSet) => {
- 
-
     return axios.post(`${config.apiURL}/api/v1/doctors`, formDataSet);
   };
 
-  const SendDataToApi = async (data:any) => {
+  const SendDataToApi = async (data: any) => {
     const formDataSet = createFormData(data);
+    setIsLoading(true); // Set loading state to true
 
     try {
       await postFormData(formDataSet);
       handleSuccess();
     } catch (error) {
       handleError(error);
-    } 
-  }
-  const handleSuccess = () => {
+    } finally {
+      setIsLoading(false); // Set loading state to false
+    }
+  };
 
-    onOpen()
+  const handleSuccess = () => {
+    onOpen();
   };
 
   const handleError = (error: any) => {
-  onClose();
-     console.log("errrrrror",error)
+    onClose();
+    console.log('error', error);
     toast({
       title: 'Error',
       description: error.response.data.error,
@@ -160,7 +169,6 @@ console.log(formData, data)
       position: 'top-right',
     });
   };
-
 
   return (
     <Box
@@ -191,13 +199,13 @@ console.log(formData, data)
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData.Degree}
           />
           {errors.Degree && (
             <Text color="red.500">{errors.Degree.message as string}</Text>
           )}
         </GridItem>
-        
-       
+
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
             University
@@ -212,56 +220,49 @@ console.log(formData, data)
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData.University}
           />
           {errors.University && (
             <Text color="red.500">{errors.University.message as string}</Text>
           )}
         </GridItem>
-        <GridItem >
+        <GridItem>
           <FormControl>
-          <FormLabel m="0em"  letterSpacing="0.256px" color="#15134B">
-                Upload Image
-              </FormLabel>
-              <Button
-                h="128px"
-                w="174px"
-                border="2px solid #E8E8E8"
-                borderRadius="8px"
-                bg="#FFFFFF"
-                mt={"0.75em"}
-              >
-                   {imagePreview ? (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                  
-                  />
-                ) : (
-                  <>
-                    <label>
-                      <Image />
-
-                      <Input
-                        type="file"
-                        accept="image/png,image/jpeg"
-                        name="image"
-                        onChange={(e) => handleImageChange(e)}
-                        style={{ display: 'none' }}
-                        hidden
-                        
-                        
-                      />
-                    </label>
-            </>
-                   )}
-              </Button>
-              {!imagePreviewError&& (
-            <Text color="red.500">"Image" is required"</Text>
-          )}
-              
+            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+              Upload Image
+            </FormLabel>
+            <Button
+              h="128px"
+              w="174px"
+              border="2px solid #E8E8E8"
+              borderRadius="8px"
+              bg="#FFFFFF"
+              mt={'0.75em'}
+            >
+              {imagePreview ? (
+                <img src={imagePreview} alt="Preview" />
+              ) : (
+                <>
+                  <label>
+                    <Image />
+                    <Input
+                      type="file"
+                      accept="image/png,image/jpeg"
+                      name="image"
+                      onChange={handleImageChange}
+                      style={{ display: 'none' }}
+                      hidden
+                    />
+                  </label>
+                </>
+              )}
+            </Button>
+            {isFormSubmitted && imagePreviewError && (
+              <Text color="red.500">"Image" is required</Text>
+            )}
           </FormControl>
         </GridItem>
-        <GridItem >
+        <GridItem>
           <>
             <FormControl>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
@@ -270,7 +271,7 @@ console.log(formData, data)
               <Button
                 h="128px"
                 w="174px"
-                mt={"0.75em"}
+                mt={'0.75em'}
                 border="2px solid #E8E8E8"
                 borderRadius="8px"
                 bg="#FFFFFF"
@@ -281,7 +282,7 @@ console.log(formData, data)
                     {...register('certification')}
                     id="certification"
                     type="file"
-                    accept="application/pdf" // Update this line to accept PDF files
+                    accept="application/pdf"
                     onChange={(e) => handleCertificateChange(e)}
                     style={{ display: 'none' }}
                   />
@@ -289,14 +290,15 @@ console.log(formData, data)
               </Button>
             </FormControl>
             {selectedFile && (
-              <Text mt="1em" width={"400px"}>Selected File: {selectedFile.name}</Text>
+              <Text mt="1em" width={'400px'}>
+                Selected File: {selectedFile.name}
+              </Text>
             )}
             {errors.certification && (
-              <Text color="red.500" >
+              <Text color="red.500">
                 {errors.certification.message as string}
               </Text>
             )}
-            
           </>
         </GridItem>
       </Grid>
@@ -314,8 +316,10 @@ console.log(formData, data)
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
+          isDisabled={isLoading} // Disable button while loading
         >
-          Next
+          {isLoading ? <Spinner size="md" /> : 'Submit'}{' '}
+          {/* Show spinner while loading */}
         </Button>
 
         {sliding === 1 ? null : (
@@ -342,10 +346,10 @@ console.log(formData, data)
           isOpen={isOpen}
           onClose={onClose}
           onSubmit={onSubmit}
-        
         />
       )}
     </Box>
   );
 };
+
 export default EductionIInfoSignup;

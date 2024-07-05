@@ -18,15 +18,14 @@ import ProgressBarSignup from '../../theme/components/ProgressBarSignup';
 const GeneralInfoSignup: React.FC<SignupFormProps> = ({
   onSubmit,
   nextHandler,
-  formData
+  formData,
 }) => {
-
   const schema = Joi.object({
     Name: Joi.string()
-     
+
       .min(3)
       .max(30)
-    
+
       .required(),
     Email: Joi.string()
       .email({ tlds: { allow: false } })
@@ -40,9 +39,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
-  
   });
-
 
   const FormonSubmit = (data: {
     Name: string;
@@ -55,8 +52,6 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
 
     nextHandler();
   };
- 
-
 
   return (
     <>
@@ -94,6 +89,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
               mt="0.75em"
               mb="1em"
               borderRadius="8px"
+              defaultValue={formData.Name}
             />
             {errors.Name && (
               <Text color="red.500">{errors.Name.message as string}</Text>
@@ -120,8 +116,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
               mt="0.75em"
               mb="1em"
               borderRadius="8px"
-          
-
+              defaultValue={formData.Email}
             />
             {errors.Email && (
               <Text color="red.500">{errors.Email.message as string}</Text>
@@ -149,7 +144,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
               mt="0.75em"
               mb="1em"
               borderRadius="8px"
-
+              defaultValue={formData.Password}
             />
             {errors.Password && (
               <Text color="red.500">{errors.Password.message as string}</Text>

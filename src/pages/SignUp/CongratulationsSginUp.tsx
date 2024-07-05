@@ -78,32 +78,29 @@ export default function CongratulationsSginUp(props: any) {
           </ModalBody>
 
           <ModalFooter display="table-column">
-          <Link
-                _hover={{
-                  textDecoration: 'none',
-                }}
-                onClick={() => navigate('/')}
-                >
-            <Button
-              h="54px"
-              w="265px"
-              top="-50px"
-              left="18%"
-              borderRadius="12px"
-              bg="#00DEA3"
-              color="#FFFFFF"
-              fontFamily="Roboto"
-              fontWeight="700"
-              fontSize="18px"
-              lineHeight="21.09px"
-              textDecoration="none"
-              onClick={props.onClose}
+            <Link
+              _hover={{
+                textDecoration: 'none',
+              }}
+              onClick={() => navigate('/')}
             >
-              
-              
-                Go to SginIn
-              
-            </Button>
+              <Button
+                h="54px"
+                w="265px"
+                top="-50px"
+                left="18%"
+                borderRadius="12px"
+                bg="#00DEA3"
+                color="#FFFFFF"
+                fontFamily="Roboto"
+                fontWeight="700"
+                fontSize="18px"
+                lineHeight="21.09px"
+                textDecoration="none"
+                onClick={props.onClose}
+              >
+                Go to Login
+              </Button>
             </Link>
           </ModalFooter>
         </ModalContent>
