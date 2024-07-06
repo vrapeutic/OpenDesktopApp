@@ -1,29 +1,29 @@
 name: Build/Release Staging Environment
 
 on:
-    push:
-        branches:
-            - staging
+  push:
+    branches:
+      - staging
 
 jobs:
-    release:
-        runs-on: ${{ matrix.os }}
-        environment: staging
-        strategy:
-            matrix:
-                os: [macos-latest, ubuntu-20.04, windows-latest]
+  release:
+    runs-on: ${{ matrix.os }}
+    environment: staging
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-20.04, windows-latest]
 
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@master
-              with:
-                  node-version: 18
-            - name: install dependencies
-              run: yarn install --frozen-lockfile
-            - name: publish
-              env:
-                  GH_TOKEN: ${{ secrets.GH_TOKEN }}
-                  API_URL: ${{ vars.API_URL }}
-                  STORE_SECRET: ${{ secrets.STORE_SECRET }}
-                  appEnv: staging
-              run: npm run publish
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@master
+        with:
+          node-version: 18
+      - name: install dependencies
+        run: yarn install --frozen-lockfile
+      - name: publish
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          API_URL: ${{ vars.API_URL }}
+          STORE_SECRET: ${{ secrets.STORE_SECRET }}
+          appEnv: staging
+        run: npm run publish
