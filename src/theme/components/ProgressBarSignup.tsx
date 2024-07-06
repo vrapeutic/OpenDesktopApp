@@ -47,7 +47,6 @@ export default function ProgressbarSignup(props: any) {
   const inCompleteTitle = {
     width: '150px',
     marginTop: '20px',
-
     color: '#A0A0A0',
     textAlign: 'center',
   };
@@ -88,9 +87,7 @@ export default function ProgressbarSignup(props: any) {
                         borderRadius="50%"
                         color="#FFFFFF"
                       />
-                      <StepTitle
-                        style={{ width: '100px' }}
-                      >
+                      <StepTitle style={{ width: '100px' }}>
                         {step.title}
                       </StepTitle>
                     </Box>
@@ -102,7 +99,14 @@ export default function ProgressbarSignup(props: any) {
                       style={inCompleteStatus}
                     >
                       {step.icon}{' '}
-                      <StepTitle style={inCompleteTitle}>
+                      <StepTitle
+                        style={{
+                          width: '150px',
+                          marginTop: '20px',
+                          color: '#A0A0A0',
+                          textAlign: 'center',
+                        }}
+                      >
                         {step.title}
                       </StepTitle>
                     </Flex>
@@ -114,7 +118,15 @@ export default function ProgressbarSignup(props: any) {
                       style={activeStatus}
                     >
                       {step.icon}{' '}
-                      <StepTitle style={title}>{step.title}</StepTitle>
+                      <StepTitle
+                        style={{
+                          marginTop: '25px',
+                          width: '120px',
+                          textAlign: 'center',
+                        }}
+                      >
+                        {step.title}
+                      </StepTitle>
                     </Flex>
                   }
                 />
