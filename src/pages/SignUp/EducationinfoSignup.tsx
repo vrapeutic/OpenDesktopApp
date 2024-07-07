@@ -136,7 +136,10 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
     return formDataSet;
   };
 
-  const postFormData = (formDataSet: any) => {
+
+  const postFormData = ({formDataSet: formDataSet}:any) => {
+
+  
     return axios.post(`${config.apiURL}/api/v1/doctors`, formDataSet);
   };
 
