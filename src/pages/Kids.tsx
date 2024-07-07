@@ -117,7 +117,7 @@ export default function Kids() {
         <>
           <HeaderSpaceBetween
             Title=" Kids"
-            ButtonText="Add New Kids"
+            ButtonText= { selectedCenter.id&& "Add New Kids"}
             onClickFunction={nextHandler}
           />
          

@@ -7,9 +7,10 @@ import {
   VStack,
   Button,
   useDisclosure,
+  background,
 } from '@chakra-ui/react';
 import { Link as ReachLink, useLocation, useNavigate } from 'react-router-dom';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useContext, useEffect } from 'react';
 import VRapeutic from '../../assets/images/VRapeutic.png';
 import { Dashboard } from '../../assets/icons/Dashboard';
 import { Assessmenttools } from '../../assets/icons/Assessmenttools';
@@ -24,8 +25,10 @@ import { Subscriptions } from '../../assets/icons/Subscriptions';
 import SelectingCenter from '../../pages/StartSession/SelectingCenter';
 import { useAdminContext } from '../../Context/AdminContext';
 import Lostconnection from '@renderer/pages/StartSession/lostconnection';
+import { dataContext } from '../Provider';
 
 export default function Sidebar() {
+  const selectedCenterContext = useContext(dataContext );
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: islostconnection,
@@ -69,7 +72,8 @@ export default function Sidebar() {
       icon: (
         <Kids color={location.pathname === '/Kids' ? '#00DEA3' : '#333333'} />
       ),
-      path: '/Kids',
+       path:'/Kids' ,
+     
     },
 
     {
@@ -98,7 +102,7 @@ export default function Sidebar() {
       link: 'Subscriptions',
       icon: (
         <Subscriptions
-          color={location.pathname === '/Subscriptions' ? '#00DEA3' : '#333333'}
+          color={location.pathname === '/Subscriptions' ? '#00DEA3' :"#333333"}
         />
       ),
       path: '/Subscriptions',
@@ -183,10 +187,11 @@ export default function Sidebar() {
                 </Fragment>
               ))
             : sideItemsDoctor.map((item) => (
-                <Fragment key={item.path}>
+                <Fragment key={item.path} >
                   <Box
                     position="absolute"
                     style={location.pathname === item.path ? Sidebar : null}
+                   
                   />
                   <Flex
                     mb="24px"
@@ -201,6 +206,7 @@ export default function Sidebar() {
                       _hover={{
                         textDecoration: 'none',
                       }}
+                     
                     >
                       {item.link}
                     </Link>
