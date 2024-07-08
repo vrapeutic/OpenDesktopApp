@@ -28,7 +28,7 @@ import Lostconnection from '@renderer/pages/StartSession/lostconnection';
 import { dataContext } from '../Provider';
 
 export default function Sidebar() {
-  const selectedCenterContext = useContext(dataContext );
+  const selectedCenterContext = useContext(dataContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: islostconnection,
@@ -72,8 +72,7 @@ export default function Sidebar() {
       icon: (
         <Kids color={location.pathname === '/Kids' ? '#00DEA3' : '#333333'} />
       ),
-       path:'/Kids' ,
-     
+      path: '/Kids',
     },
 
     {
@@ -102,7 +101,7 @@ export default function Sidebar() {
       link: 'Subscriptions',
       icon: (
         <Subscriptions
-          color={location.pathname === '/Subscriptions' ? '#00DEA3' :"#333333"}
+          color={location.pathname === '/Subscriptions' ? '#00DEA3' : '#333333'}
         />
       ),
       path: '/Subscriptions',
@@ -154,6 +153,7 @@ export default function Sidebar() {
       borderRadius="0px 20px 20px 0px;"
       flexDir="column"
       justifyContent="space-between"
+      paddingX={10}
     >
       <VStack>
         <Box ml="24px">
@@ -187,11 +187,10 @@ export default function Sidebar() {
                 </Fragment>
               ))
             : sideItemsDoctor.map((item) => (
-                <Fragment key={item.path} >
+                <Fragment key={item.path}>
                   <Box
                     position="absolute"
                     style={location.pathname === item.path ? Sidebar : null}
-                   
                   />
                   <Flex
                     mb="24px"
@@ -206,7 +205,6 @@ export default function Sidebar() {
                       _hover={{
                         textDecoration: 'none',
                       }}
-                     
                     >
                       {item.link}
                     </Link>
@@ -214,7 +212,7 @@ export default function Sidebar() {
                 </Fragment>
               ))}
 
-          <Button
+          {/* <Button
             w="143px"
             h="40px"
             ml="24px"
@@ -226,7 +224,7 @@ export default function Sidebar() {
             onClick={onopenlostconnection}
           >
             lost connection
-          </Button>
+          </Button> */}
 
           <Flex
             justify="center"
@@ -236,7 +234,7 @@ export default function Sidebar() {
             me={{ base: '20px' }}
             position="relative"
           >
-            <Flex
+            {/* <Flex
               border="5px solid #F5F5F5"
               bg="#F5F5F5"
               borderRadius="50%"
@@ -252,8 +250,8 @@ export default function Sidebar() {
               transform="translate(-50%, 0%)"
             >
               <Lamp />
-            </Flex>
-            <Flex
+            </Flex> */}
+            {/* <Flex
               direction="column"
               mb="12px"
               align="center"
@@ -289,32 +287,12 @@ export default function Sidebar() {
                 We don’t have any notice for you, till then you can share your
                 thoughts with your peers.
               </Text>
-            </Flex>
+            </Flex> */}
           </Flex>
 
-          <Flex
-            w="143px"
-            h="40px"
-            ml="24px"
-            mt="55px"
-            padding="12px 24px"
-            bg="#F5B50E"
-            borderRadius="8px"
-            fontSize="14px"
-            fontFamily="Roboto"
-            boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-          >
-            <Text color="#FFFFFF" fontWeight="400">
-              Create
-            </Text>
-            <Link color="#007C5B" fontWeight="700" textDecoration="underline">
-              New kid
-            </Link>
-          </Flex>
           <Button
             w="143px"
             h="40px"
-            ml="24px"
             mt="55px"
             padding="12px 24px"
             bg="#F5B50E"
