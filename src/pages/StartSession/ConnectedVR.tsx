@@ -1,73 +1,98 @@
-import {
-  Box,
-  Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-  Text,
-} from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+import useSocketManager from '../../Context/SocketManagerProvider';
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import PlayModule from './PlayModule';
+import { ErrorPopup } from './ErrorPopup';
+import { useNavigate } from 'react-router-dom';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 
 const ConnectedVR = (props: any) => {
-  return (
-    <Modal
+  const navigate = useNavigate();
+
+  const { socketError } = useSocketManager();
+  const { popupFunctions } = usePopupsHandler();
+  const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
+
+  const {
+    dispatchSocketMessage,
+    checkIfServiceExists,
+    checkAppNetWorkConnection,
+  } = useSocketManager();
+
+  const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMEssage] = useState(null);
+
+  const handleSubmit = async () => {
+    const { packageName, headsetId, sessionId } = props;
+    const existingDevice = await checkIfServiceExists(headsetId);
+    const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+
+    if (appIsConnectedToInternet && existingDevice) {
+      const socketMessage = {
+        sessionId,
+        [MODULE_PACKAGE_KEY]: packageName,
+        deviceId: headsetId,
+      };
+
+      dispatchSocketMessage(
+        START_APP_MESSAGE,
+        socketMessage,
+        headsetId,
+        ...[1, 2] // this array for holding settings
+      );
+      props.setOpenRunningPopup(true);
+    } else {
+      console.log(headsetId);
+      console.log(existingDevice);
+      const errorMessage = !appIsConnectedToInternet
+        ? 'You are not connected to the internet'
+        : 'No headset found';
+
+      setErrorMEssage(errorMessage);
+      setNotFound(true);
+    }
+  };
+
+  const cancelSession = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+    closeSelectingAHeadset();
+    navigate('/');
+  };
+
+  const closeErrorModal = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  const selectAnotherHeadset = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  if (socketError) {
+    return null;
+  }
+
+  return notFound ? (
+    <ErrorPopup
+      isOpen={notFound}
+      onClose={closeErrorModal}
+      closeSelectingAHeadset={closeSelectingAHeadset}
+      onCancelSession={cancelSession}
+      onSelectAnotherHeadset={selectAnotherHeadset}
+      errorMessages={errorMEssage}
+    />
+  ) : (
+    <PlayModule
+      handleSubmit={handleSubmit}
       isOpen={props.isOpen}
-      onClose={props.onClose}
-      closeOnOverlayClick={false}
-    >
-      <ModalOverlay />
-      <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-        <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
-          <ModalCloseButton marginLeft="100px" />
-        </Box>
-
-        <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-          <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
-            You are now connected to
-            {props.headsetId}
-          </Text>
-
-          <Box h={'70%'} display={'flex'} alignItems={'center'}>
-            <Text fontSize="20px" color="red" fontFamily="Graphik LCG">
-              This screen should show the selected module’s UI.
-            </Text>
-          </Box>
-        </ModalBody>
-        <ModalFooter display={'flex'} justifyContent={'center'}>
-          <Button
-            w="180px"
-            h="54px"
-            mx={2}
-            bg="#00DEA3"
-            borderRadius="12px"
-            color="#FFFFFF"
-            fontFamily="Graphik LCG"
-            fontWeight="700"
-            fontSize="15px"
-            onClick={props.onClose}
-          >
-            Cancel session
-          </Button>
-          <Button
-            w="180px"
-            h="54px"
-            bg="#00DEA3"
-            borderRadius="12px"
-            color="#FFFFFF"
-            fontFamily="Graphik LCG"
-            fontWeight="700"
-            fontSize="15px"
-            // onClick={handleSubmit}
-            mx={2}
-          >
-            Play
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+      onClose={closeSelectingAModule}
+      headsetId={props.headsetId}
+      openRunningPopup={props.openRunningPopup}
+      setOpenRunningPopup={props.setOpenRunningPopup}
+    />
   );
 };
 

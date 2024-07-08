@@ -49,10 +49,7 @@ const SelectLevelRodja = (props: any) => {
 
   const handleFormSubmit = (data: any) => {
     setFormData([data.selectLevel, ...formData.slice(1)]);
-    console.log('Form Data Submitted in level rodja: ', [
-      data.selectLevel,
-      ...formData.slice(1),
-    ]);
+  
     onOpenSelectEnvrodja();
   };
 

@@ -29,7 +29,7 @@ const SelectjewelRodja = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
   const { module,sessionId } = useStartSessionContext();
-  console.log("select form data in jewel in 30",props.formData)
+  // console.log("select form data in jewel in 30",props.formData)
   const toast = useToast();
   const {
     isOpen: isOpenConnected,
@@ -68,13 +68,13 @@ const SelectjewelRodja = (props: any) => {
     ];
     props.setFormData(updatedFormData);
   
-    console.log("updated form data in jewel",updatedFormData)
+    // console.log("updated form data in jewel",updatedFormData)
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
       navigate('/Therapycenters');
       onOpenConnected()
-      console.log("session id",sessionId)
+      // console.log("session id",sessionId)
 
       toast({
         title: 'Success',
@@ -86,11 +86,11 @@ const SelectjewelRodja = (props: any) => {
         position: 'top-right',
       });
   
-      console.log(
-        `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
-         module name is ${module} and session id is ${sessionId}`
-      );
-      console.log('Array of menu choices', updatedFormData);
+      // console.log(
+      //   `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
+      //    module name is ${module} and session id is ${sessionId}`
+      // );
+      // console.log('Array of menu choices', updatedFormData);
     }
   };
   
