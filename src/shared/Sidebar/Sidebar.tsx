@@ -153,7 +153,7 @@ export default function Sidebar() {
       borderRadius="0px 20px 20px 0px;"
       flexDir="column"
       justifyContent="space-between"
-      paddingX={10}
+      paddingX={5}
     >
       <VStack>
         <Box ml="24px">

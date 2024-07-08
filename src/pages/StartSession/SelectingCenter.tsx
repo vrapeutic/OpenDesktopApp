@@ -49,7 +49,7 @@ export default function SelectingCenter(props: any) {
     mode: 'onTouched',
   });
 
-  const getKids = async () => { 
+  const getKids = async () => {
     const token = await (window as any).electronAPI.getPassword('token');
     const headers = { Authorization: `Bearer ${token}` };
     try {
@@ -118,7 +118,21 @@ export default function SelectingCenter(props: any) {
                     <Text color="red.500">{errors.kid.message as string}</Text>
                   )}
                 </ModalBody>
-                <ModalFooter>
+                <ModalFooter display={'flex'} justifyContent={'center'}>
+                  <Button
+                    w="180px"
+                    h="54px"
+                    mx={2}
+                    bg="#00DEA3"
+                    borderRadius="12px"
+                    color="#FFFFFF"
+                    fontFamily="Graphik LCG"
+                    fontWeight="700"
+                    fontSize="15px"
+                    onClick={props.onClose}
+                  >
+                    Cancel Session
+                  </Button>
                   <Button
                     w="214px"
                     h="54px"
@@ -142,15 +156,15 @@ export default function SelectingCenter(props: any) {
           </ModalContent>
         </Modal>
 
-      {isHeadsetOpen && (
-        <SelectingHeadset2
-        isOpen={isHeadsetOpen}
-        onClose={onHeadsetClose}
-        centerId={selectedCenterContext.id}
-        childId={childId}
-      />
-      )}
-    </Box>
+        {isHeadsetOpen && (
+          <SelectingHeadset2
+            isOpen={isHeadsetOpen}
+            onClose={onHeadsetClose}
+            centerId={selectedCenterContext.id}
+            childId={childId}
+          />
+        )}
+      </Box>
     </PopupsHandlerProvider>
   );
 }
