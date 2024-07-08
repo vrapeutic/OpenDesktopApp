@@ -104,7 +104,7 @@ const Theraputicmodules: React.FC = () => {
         return (
           <>
             <HeaderSpaceBetween
-              Title={'therapeutic modules'}
+              Title={'Therapeutic modules'}
               ButtonText={'Add New Module'}
               onClickFunction={nextHandler}
             />
@@ -127,16 +127,15 @@ const Theraputicmodules: React.FC = () => {
               <Tbody>
                 {softwaremodules?.map((Module) =>
                   Module?.attributes.image?.url ? (
-                    <Tr
-                      key={Module.id}
-                      cursor={'pointer'}
-                      onClick={() => {
-                        navigate('/viewmodule', {
-                          state: { Module: Module },
-                        });
-                      }}
-                    >
-                      <Td>
+                    <Tr key={Module.id}>
+                      <Td
+                        onClick={() => {
+                          navigate('/viewmodule', {
+                            state: { Module: Module },
+                          });
+                        }}
+                        cursor={'pointer'}
+                      >
                         <Flex direction="row" gap={2}>
                           <Box
                             width={197}
@@ -162,7 +161,8 @@ const Theraputicmodules: React.FC = () => {
                       </Td>
                       <Td>
                         <Button
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevents the row click event
                             navigate('/Assigntocenter', {
                               state: { Module: Module },
                             });
@@ -171,7 +171,14 @@ const Theraputicmodules: React.FC = () => {
                           Assign to center
                         </Button>
                       </Td>
-                      <Td>
+                      <Td
+                        onClick={() => {
+                          navigate('/viewmodule', {
+                            state: { Module: Module },
+                          });
+                        }}
+                        cursor={'pointer'}
+                      >
                         {Module?.attributes.targeted_skills?.map((skill) => (
                           <Tag
                             key={skill.id}
