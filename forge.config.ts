@@ -8,6 +8,12 @@ import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 import { PublisherGithub } from '@electron-forge/publisher-github';
 import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
+const ForgeExternalsPlugin = require('@timfish/forge-externals-plugin');
+
+const forgeExternalsPlugin = new ForgeExternalsPlugin({
+  externals: ['mdns'],
+  includeDeps: true,
+});
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -36,6 +42,7 @@ const config: ForgeConfig = {
         ],
       },
     }),
+    forgeExternalsPlugin
   ],
   publishers: [
     new PublisherGithub({

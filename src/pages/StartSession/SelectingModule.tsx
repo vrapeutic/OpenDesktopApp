@@ -13,7 +13,6 @@ import {
   Button,
   useDisclosure,
   Box,
-  ModalCloseButton,
   useToast,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
@@ -21,70 +20,256 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';
-import Selectlevel from './viblio/SelectLevelviblio';
 import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import SelectLevelViblio from './viblio/SelectLevelviblio';
 import SelectLevelRodja from './rodja/SelectLevelrodja';
 import axios from 'axios';
 import { getMe } from '@renderer/cache';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import { END_SESSION_MESSAGE } from '@main/constants';
+import SelectLevelGar from './Gardendo/SelectLevelGar';
 
 export default function SelectingModule(props: any) {
-  const [modules, setModules] = useState([]);
+  const { popupFunctions, addFunction } = usePopupsHandler();
   const {
-    isOpen: isOpenSelectlevelviblio,
-    onOpen: onOpenSelectlevelviblio,
-    onClose: onCloseSelectlevelviblio,
-  } = useDisclosure();
+    socketError,
+    setSocketError,
+    checkIfServiceExists,
+    checkAppNetWorkConnection,
+    dispatchSocketMessage,
+  } = useSocketManager();
+  const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMEssage] = useState(null);
+  const [openRunningPopup, setOpenRunningPopup] = useState(false);
+  const [packageName, setPackagename] = useState('');
+  const { startSession, sessionId, headsetid } = useStartSessionContext();
+  const { closeSelectingAHeadset, renderDisconnectedHeadSetError } =
+    popupFunctions;
+  const [modules, setModules] = useState([]);
+
   const {
     isOpen: isOpenSelectlevelrodja,
     onOpen: onOpenSelectlevelrodja,
     onClose: onCloseSelectlevelrodja,
   } = useDisclosure();
 
+  const {
+    isOpen: isOpenSelectlevelviblio,
+    onOpen: onOpenSelectlevelviblio,
+    onClose: onCloseSelectlevelviblio,
+  } = useDisclosure();
+
   const selectedCenter = useContext(dataContext);
   const navigate = useNavigate();
+
   const [values, setValues] = useState({
     selectedModule: '',
   });
-
 
   const {
     isOpen: isOpenSelectlevelArcheeko,
     onOpen: onOpenSelectlevelArcheeko,
     onClose: onCloseSelectlevelArcheeko,
   } = useDisclosure();
+  const {
+    isOpen: isOpenSelectlevelGar,
+    onOpen: onOpenSelectlevelGar,
+    onClose: onCloseSelectlevelGar,
+  } = useDisclosure();
   const [name, setName] = useState('Modules');
   const { setModule } = useStartSessionContext();
-
   const [errors, setErrors] = useState({
     selectedModule: null,
   });
 
   const schema = Joi.object().keys({
-    selectedModule: Joi.string().required(),
+    selectedModule: Joi.string().required().label('module Name'),
   });
+  console.log('to make sure ', headsetid, sessionId);
+  // old Code
+  // const handleSubmit = (): void => {
+  //   switch (name) {
+  //     case 'Archeeko':
+  //       console.log('Archeekon', name);
+  //       return onOpenSelectlevelArcheeko();
+  //     case 'Viblio':
+  //       console.log('Viblio', name);
+  //       return onOpenSelectlevelviblio();
+  //       case 'Rodja':
+  //       console.log('Rodja', name);
+  //       return onOpenSelectlevelrodja();
+  //     default: toast({
+  //         title: 'error',
+  //         description: `This module is not available, please select anther module`,
+  //         status: 'error',
+  //         duration: 5000,
+  //         position: 'top-right',
+  //       });
+  //   }
+  // };
 
-  const handleSubmit = (): void => {
-    switch (name) {
-      case 'Archeeko':
-        console.log('Archeekon', name);
-        return onOpenSelectlevelArcheeko();
-      case 'Viblio':
-        console.log('Viblio', name);
-        return onOpenSelectlevelviblio();
-        case 'Rodja':
-        console.log('Rodja', name);
-        return onOpenSelectlevelrodja();
-      default: toast({
-          title: 'error',
-          description: `This module is not available, please select anther module`,
-          status: 'error',
-          duration: 5000,
-          position: 'top-right',
-        });
+  //new Code
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    const existingDevice = await checkIfServiceExists(headsetid);
+    const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+    console.log(appIsConnectedToInternet);
+
+    const { error } = schema.validate(values, { abortEarly: false });
+
+    if (error) {
+      const validationErrors: any = {};
+      error.details.forEach((detail) => {
+        validationErrors[detail.path[0]] = detail.message;
+      });
+      setErrors(validationErrors);
+    } else {
+      console.log('eles switch ');
+      // if (!appIsConnectedToInternet&&existingDevice) {
+      if (appIsConnectedToInternet) {
+        const socketMessage = {
+          sessionId,
+          [MODULE_PACKAGE_KEY]: packageName,
+          deviceId: headsetid,
+        };
+
+        dispatchSocketMessage(
+          START_APP_MESSAGE,
+          socketMessage,
+          headsetid,
+          ...[1, 2] // this array for holding settings
+        );
+
+        switch (name) {
+          case 'Archeeko':
+            console.log('Archeekon', name);
+            return onOpenSelectlevelArcheeko();
+          case 'Viblio':
+            console.log('Viblio', name);
+            return onOpenSelectlevelviblio();
+          case 'Rodja':
+            console.log('Rodja', name);
+            return onOpenSelectlevelrodja();
+          case 'GardenDo':
+            console.log('GardenDo', name);
+            return onOpenSelectlevelGar();
+          default:
+            toast({
+              title: 'error',
+              description: `This module is not available, please select anther module`,
+              status: 'error',
+              duration: 5000,
+              position: 'top-right',
+            });
+        }
+        props.setOpenRunningPopup(true);
+      } else {
+        console.log('eless');
+        console.log(headsetid);
+        console.log(existingDevice);
+        const errorMessage = !appIsConnectedToInternet
+          ? 'You are not connected to the internet'
+          : 'No headset found';
+
+        setErrorMEssage(errorMessage);
+        setNotFound(true);
+      }
+      if (socketError) {
+        setSocketError(null);
+        setOpenRunningPopup(false);
+      }
+      setErrors({ selectedModule: null });
     }
   };
+
+  //both old and new code
+  // const handleSubmit = async (event: any) => {
+  //   event.preventDefault();
+
+  //   const existingDevice = await checkIfServiceExists(props.headsetId);
+  //   const appIsConnectedToInternet = await checkAppNetWorkConnection();
+
+  //   if (!existingDevice || !appIsConnectedToInternet) {
+  //     renderDisconnectedHeadSetError(
+  //       !appIsConnectedToInternet && 'You are not connected to the internet'
+  //     );
+  //     return;
+  //   }
+
+  //   if (socketError) {
+  //     setSocketError(null);
+  //     setOpenRunningPopup(false);
+  //   }
+
+  //   const { error } = schema.validate(values, { abortEarly: false });
+  //   console.log(error);
+
+  //   if (error) {
+  //     const validationErrors: any = {};
+  //     error.details.forEach((detail) => {
+  //       validationErrors[detail.path[0]] = detail.message;
+  //     });
+  //     setErrors(validationErrors);
+  //     console.log(validationErrors);
+  //     return;
+  //   } else {
+  //     setErrors({ selectedModule: null });
+  //   }
+
+  //   switch (
+  //     values.selectedModule // Assuming values.selectedModule contains the module name
+  //   ) {
+  //     case 'Archeeko':
+  //       console.log('Archeeko', values.selectedModule);
+  //       onOpenSelectlevelArcheeko();
+  //       break;
+  //     case 'Viblio':
+  //       console.log('Viblio', values.selectedModule);
+  //       onOpenSelectlevelviblio();
+  //       break;
+  //     case 'Rodja':
+  //       console.log('Rodja', values.selectedModule);
+  //       onOpenSelectlevelrodja();
+  //       break;
+  //     default:
+  //       toast({
+  //         title: 'error',
+  //         description: `This module is not available, please select another module`,
+  //         status: 'error',
+  //         duration: 5000,
+  //         position: 'top-right',
+  //       });
+  //   }
+
+  //  props.onOpen();
+  // };
+
+  useEffect(() => {
+    (async () => {
+      const token = await (window as any).electronAPI.getPassword('token');
+
+      fetch(
+        `${config.apiURL}/api/v1/centers/${selectedCenter.id}/assigned_modules`,
+        {
+          method: 'Get',
+          redirect: 'follow',
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          selectedCenter.id && setModules(result.data);
+          selectedCenter.id && setModules(result.data);
+        })
+        .catch((error) => console.log('error', error));
+    })();
+
+    addFunction('closeSelectingAModule', props.onClose);
+    addFunction('closeConnectedVrPopup', props.onClose);
+  }, [selectedCenter.id]);
 
   const handleModuleSelect = (module: any) => {
     setValues({ selectedModule: module.id });
@@ -93,32 +278,12 @@ export default function SelectingModule(props: any) {
     console.log('Selected Module:', module);
   };
 
-  useEffect(() => {
-    (async () => {
-      const token = await (window as any).electronAPI.getPassword('token');
-      console.log('token: ', token);
-      fetch(`${config.apiURL}/api/v1/centers/${selectedCenter.id}/assigned_modules`, {
-        method: 'Get',
-        redirect: 'follow',
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((response) => response.json())
-        .then((result) => {
-          selectedCenter.id && setModules(result.data);
-          console.log(result);
-        })
-        .catch((error) => console.log('error', error));
-    })();
-  }, [selectedCenter.id]);
-
-  const { startSession, sessionId } = useStartSessionContext();
-  console.log(sessionId, startSession);
   const token = getMe()?.token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
   const toast = useToast();
-  const endSissionApi = () => {
+  const endSessionApi = () => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
@@ -149,6 +314,7 @@ export default function SelectingModule(props: any) {
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
+    console.log(sessionId, startSession);
     return axios.put(
       `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
       { vr_duration: differenceInMinutes },
@@ -158,7 +324,12 @@ export default function SelectingModule(props: any) {
 
   const CloseModule = async () => {
     try {
-      await endSissionApi();
+      dispatchSocketMessage(
+        END_SESSION_MESSAGE,
+        { deviceId: headsetid },
+        headsetid
+      );
+      await endSessionApi();
       props.onClose();
       navigate('/home');
       setValues({ selectedModule: '' });
@@ -178,15 +349,24 @@ export default function SelectingModule(props: any) {
   };
 
   return (
-    <Box as="form" onSubmit={handleSubmit}>
+    <Box>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
-              You have been connected successfully to the headset{' '}
-              {props.headsetId}
+              You have been connected successfully to the headset {headsetid}
             </Text>
+            {socketError && (
+              <Text
+                textAlign="center"
+                fontSize="1.2rem"
+                color="red"
+                fontFamily="Graphik LCG"
+              >
+                {socketError}
+              </Text>
+            )}
 
             {selectedCenter.id ? (
               <>
@@ -294,7 +474,7 @@ export default function SelectingModule(props: any) {
           onclosemodules={props.onClose}
         />
       )}
-           {onOpenSelectlevelrodja && (
+      {onOpenSelectlevelrodja && (
         <SelectLevelRodja
           isOpen={isOpenSelectlevelrodja}
           onClose={onCloseSelectlevelrodja}
@@ -308,6 +488,12 @@ export default function SelectingModule(props: any) {
           onclosemodules={props.onClose}
         />
       )}
+        {onOpenSelectlevelGar && (
+        <SelectLevelGar
+          isOpen={isOpenSelectlevelGar}
+          onClose={onCloseSelectlevelGar}
+          onclosemodules={props.onClose}
+        />)}
     </Box>
   );
 }

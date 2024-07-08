@@ -1,8 +1,10 @@
+import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import { SocketManagerProvider } from './Context/SocketManagerProvider';
+import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { ChakraProvider } from '@chakra-ui/react';
 import theme from './theme';
 import { Fonts } from './theme/Fonts';
 import './index.css';
@@ -23,7 +25,9 @@ root.render(
         <StartSessionProvider>
           <AdminProvider>
             <Fonts />
-            <App />
+            <SocketManagerProvider>
+              <App />
+            </SocketManagerProvider>
           </AdminProvider>
         </StartSessionProvider>
       </QueryClientProvider>

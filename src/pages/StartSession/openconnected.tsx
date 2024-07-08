@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useCallback } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -10,101 +10,55 @@ import {
   useDisclosure,
   ModalBody,
   Text,
-  useToast,
 } from '@chakra-ui/react';
-import { getMe } from '@renderer/cache';
+import useSocketManager from '../../Context/SocketManagerProvider';
+import { END_SESSION_MESSAGE } from '@main/constants';
 
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+interface OpenConnectedProps {
+  isOpen: boolean;
+  onClose: () => void;
+  closeSelectingAHeadset?: () => void;
+  closeSelectingAModule?: () => void;
+  closeConnectedVrPopup?: () => void;
+  headsetId?: string;
+}
+export default function Openconnected({
+  isOpen,
+  onClose,
+  closeSelectingAHeadset,
+  closeSelectingAModule,
+  closeConnectedVrPopup,
+  headsetId,
+}: OpenConnectedProps) {
+  const { dispatchSocketMessage } = useSocketManager();
+  const handlePlayAnotherModule = useCallback(() => {
 
-import axios from 'axios';
-import { config } from '@renderer/config';
-import { useNavigate } from 'react-router-dom';
-import SelectEvalution from './Evaluation';
+    onClose();
+  }, []);
 
-export default function Openconnected(props: any) {
-  const { startSession, sessionId , headsetid} = useStartSessionContext();
-  const {
-    isOpen: isevaluationopen,
-    onOpen: onevaluationOpen,
-    onClose: onevalutionClose,
-  } = useDisclosure();
-  const toast = useToast();
-  const navigate = useNavigate();
-
-  const handle = async () => {
-   
-    try {
-      await endSissionApi();
-      onevaluationOpen()
-      // props.onClose();
-      // props.onclosemodules();
-      // navigate('/');
-    } catch (error) {
-      console.log(error.response);
-      toast({
-        title: 'error',
-        description: `${error.response.data.error}`,
-        status: 'error',
-        duration: 3000,
-        position: 'top-right',
-      });
-    }
-  };
-  const token = getMe()?.token;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-
-  const endSissionApi = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const hours = String(currentDate.getHours()).padStart(2, '0');
-    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-    const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
-  
-    // Format the date string
-    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
-  
-    console.log(formattedDate);
-  
-    const date1String = startSession;
-    const date2String = formattedDate;
-    console.log(date1String, date2String);
-  
-    // Create Date objects
-    const date1:any = new Date(date1String);
-    const date2:any = new Date(date2String);
-  
-    // Calculate the difference in milliseconds
-    const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
-    console.log(timeDifferenceInMilliseconds);
-    // Convert milliseconds to seconds
-    const differenceInMinutes = Math.floor(
-      (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+  const handleEndSession = useCallback(() => {
+    localStorage.removeItem('sessionID');
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetId },
+      headsetId
     );
-    console.log(differenceInMinutes);
-    return   axios.put(
-      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
-      {   "vr_duration": differenceInMinutes },
-      { headers }
-    );
-  };
-  const antherModule =()=>{
-    props.onClose()
-    { props.onCloseBooks& props.onCloseBooks()}
-    { props.oncloseselectlevel& props.oncloseselectlevel()}
 
-   
-  }
-  
+    // closeConnectedVrPopup();
+    // closeSelectingAHeadset();
+    // closeSelectingAModule();
+    onClose();
+  }, [
+    // closeConnectedVrPopup,
+    // closeSelectingAHeadset,
+    // closeSelectingAModule,
+    onClose,
+  ]);
 
   return (
     <>
       <Box>
-        <Modal isOpen={props.isOpen} onClose={props.onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
           <ModalOverlay />
           <ModalContent
             h="400px"
@@ -113,7 +67,7 @@ export default function Openconnected(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset {headsetid}
+              You are connected to the VR headset {headsetId}
             </ModalHeader>
 
             <ModalBody>
@@ -150,7 +104,7 @@ export default function Openconnected(props: any) {
                 fontWeight="700"
                 fontSize="18px"
                 marginRight="10px"
-                onClick={handle}
+                onClick={handleEndSession}
               >
                 End session
               </Button>
@@ -164,7 +118,7 @@ export default function Openconnected(props: any) {
                 fontWeight="700"
                 fontSize="18px"
                 marginLeft="10px"
-                onClick={antherModule}
+                onClick={handlePlayAnotherModule}
               >
                 Play Another Module
               </Button>
@@ -172,16 +126,6 @@ export default function Openconnected(props: any) {
           </ModalContent>
         </Modal>
       </Box>
-
-
-      {onevaluationOpen && (
-        <SelectEvalution
-          isOpen={isevaluationopen}
-          onClose={onevalutionClose}
-         closeopenconnected={props.onClose}
-         closemodules={props.onclosemodules}
-        />
-      )}
     </>
   );
 }

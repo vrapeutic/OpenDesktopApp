@@ -15,24 +15,23 @@ import {
 import { getMe } from '@renderer/cache';
 
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-
+import { END_SESSION_MESSAGE } from '@main/constants'
 import axios from 'axios';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 import SelectEvaluation from '../Evaluation';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
-import { END_SESSION_MESSAGE } from '@main/constants'
-export default function OpenconnectedArcheeko(props: any) {
+
+export default function OpenConnectedVi(props: any) {
+  const { dispatchSocketMessage } = useSocketManager();
   const { startSession, sessionId , headsetid } = useStartSessionContext();
   const toast = useToast();
-  const navigate = useNavigate();
-  
   const {
     isOpen: isevaluationopen,
     onOpen: onevaluationOpen,
     onClose: onevalutionClose,
   } = useDisclosure();
-  const { dispatchSocketMessage } = useSocketManager();
+
   const handle = async () => {
    
     try {
@@ -58,7 +57,7 @@ export default function OpenconnectedArcheeko(props: any) {
       });
     }
   };
-  const token = getMe()?.token;
+  const token = getMe().token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
@@ -94,19 +93,21 @@ export default function OpenconnectedArcheeko(props: any) {
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
-    return   axios.put(
-      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
-      {   "vr_duration": differenceInMinutes },
-      { headers }
-    );
+
+
+    const api = axios.put(
+        `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+        {   "vr_duration": differenceInMinutes },
+        { headers }
+      );
+    return  api
   };
   const antherModule =()=>{
     props.onClose()
-   
-    props.onCloseSelectEnvironment()
-    props.SelectDistractors()
-    props.onCloseSelectNumber()
+    props.onCloseSelectBooksviblio()
+
     props.oncloseselectlevel()
+    props.onCloseSelectDistractors()
    
   }
   

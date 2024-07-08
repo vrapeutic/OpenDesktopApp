@@ -15,13 +15,15 @@ import {
 import { getMe } from '@renderer/cache';
 
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-
+import { END_SESSION_MESSAGE } from '@main/constants'
 import axios from 'axios';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 import SelectEvaluation from '../Evaluation';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
 
 export default function OpenconnectedGar(props: any) {
+  const { dispatchSocketMessage } = useSocketManager();
   const { startSession, sessionId , headsetid } = useStartSessionContext();
   const toast = useToast();
   const {
@@ -33,6 +35,12 @@ export default function OpenconnectedGar(props: any) {
   const handle = async () => {
    
     try {
+      localStorage.removeItem('sessionID');
+      dispatchSocketMessage(
+        END_SESSION_MESSAGE,
+        { deviceId: headsetid },
+        headsetid
+      );
       await endSissionApi();
       onevaluationOpen()
       // props.onClose();
@@ -49,7 +57,7 @@ export default function OpenconnectedGar(props: any) {
       });
     }
   };
-  const token = getMe()?.token;
+  const token = getMe().token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
