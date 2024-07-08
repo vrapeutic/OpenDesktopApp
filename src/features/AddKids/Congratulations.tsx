@@ -67,7 +67,7 @@ export default function Congratulations(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-             you can check therpy analysis
+             You can check your Kid now
             </Text>
           </ModalBody>
 

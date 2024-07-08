@@ -110,7 +110,7 @@ export default function Home() {
                 </ModalBody>
 
                 <ModalFooter display="flex" justifyContent={'space-around'}>
-                  {centers.length > 0 && (
+                  {centers.length === 0 && (
                     <Button
                       h="50px"
                       w="auto"

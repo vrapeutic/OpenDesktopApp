@@ -1,33 +1,30 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
 import {
+  Button,
+  GridItem,
   Modal,
-  ModalOverlay,
+  ModalBody,
   ModalContent,
   ModalFooter,
-  ModalBody,
-  Text,
-  Button,
   ModalHeader,
-  GridItem,
+  ModalOverlay,
   Select,
+  Text,
   useDisclosure,
-  Flex,
 } from '@chakra-ui/react';
+import { joiResolver } from '@hookform/resolvers/joi';
 import { config } from '@renderer/config';
-import axios from 'axios';
 import { dataContext } from '@renderer/shared/Provider';
+import axios from 'axios';
+import Joi from 'joi';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import Joi from 'joi';
-import { joiResolver } from '@hookform/resolvers/joi';
-
-
+import { END_SESSION_MESSAGE } from '@main/constants';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import { getMe } from '@renderer/cache';
 import useSocketManager from '../../Context/SocketManagerProvider';
 import { ErrorPopup } from './ErrorPopup';
-import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
-import { getMe } from '@renderer/cache';
-import { END_SESSION_MESSAGE } from '@main/constants';
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import SelectingModule from './SelectingModule';
 
 const HEADSET_FIELD = 'headset';
@@ -79,7 +76,8 @@ const ErrorsModal = ({
 };
 
 const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
-  const { setStartSession, setheadsetid, headsetid ,sessionId,setSessionId} = useStartSessionContext();
+  const { setStartSession, setheadsetid, headsetid, sessionId, setSessionId } =
+    useStartSessionContext();
   const { addFunction } = usePopupsHandler();
   const {
     dispatchSocketMessage,
@@ -98,6 +96,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   const [headsets, setHeadsets] = useState([]);
   const selectedCenterContext = useContext(dataContext);
   const [errorMessages, setErrorMessages] = useState('');
+  const navigate = useNavigate();
 
   const schema = Joi.object({
     headset: Joi.string().required().messages({
@@ -132,28 +131,33 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       onErrorOpen();
     }
   };
-  const handleFormSubmit = async (data:any) => {
+  const handleFormSubmit = async (data: any) => {
     console.log(data.headset);
     // const headsetId = data.headset;
     await setheadsetid(data.headset);
-  
+
     const existingDevice = await checkIfServiceExists(data.headset);
     const appIsConnectedToInternet = await checkAppNetWorkConnection();
     console.log(appIsConnectedToInternet, sessionId, existingDevice);
-  
+
     if (appIsConnectedToInternet) {
       // End old session
-      dispatchSocketMessage(END_SESSION_MESSAGE, { deviceId: headsetid }, headsetid);
-  
+      dispatchSocketMessage(
+        END_SESSION_MESSAGE,
+        { deviceId: headsetid },
+        headsetid
+      );
+
       const sessionResponse = await getSessionId(data.headset);
-  
+
       if (sessionResponse.success) {
         console.log(headsetid);
         console.log(existingDevice);
         setDeviceIsFound(true);
       } else {
         // Handle error from getSessionId
-        const errorMessage = sessionResponse.error || 'Error assigning session ID.';
+        const errorMessage =
+          sessionResponse.error || 'Error assigning session ID.';
         setErrorMessages(errorMessage);
         onErrorOpen();
       }
@@ -161,13 +165,13 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       const errorMessage = !appIsConnectedToInternet
         ? 'You are not connected to the internet.'
         : 'The selected headset is not connected.';
-  
+
       setErrorMessages(errorMessage);
       onErrorOpen();
     }
   };
-  
-  const getSessionId = async (dataheadset:any) => {
+
+  const getSessionId = async (dataheadset: any) => {
     console.log('getSessionId');
     const token = getMe().token;
     const headers = {
@@ -183,11 +187,11 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
         },
         { headers }
       );
-      console.log("setSessionId",response?.data?.data?.id)
+      console.log('setSessionId', response?.data?.data?.id);
       // setSessionId(response.data.data.id);
-      setSessionId(response.data.data.id)
+      setSessionId(response.data.data.id);
       setStartSession(response.data.data.attributes.created_at);
-  
+
       return { success: true }; // Success
     } catch (error) {
       onErrorOpen();
@@ -195,22 +199,6 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       return { success: false, error: error.response.data.error };
     }
   };
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // const setSessionIdState = useCallback(async () => {
   //   console.log('setSessionIdState');
@@ -236,7 +224,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   //       'API Response from session id: data.data.id',
   //       response.data.data.id
   //     );
-    
+
   //   } catch (error) {
   //     console.log('Error assigning center to module:', error);
   //     setDeviceIsFound(false);
@@ -255,8 +243,6 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   //     //   }
   //   }
   // }, [getValues, props.centerId, props.childId]);
-
- 
 
   const handleCancelSession = () => {
     onErrorClose();
@@ -292,7 +278,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
           {headsets.length > 0 ? (
             <>
               <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-                <Text mt="25px">Select a headset</Text>
+                <Text mt="25px">Select a VR Headset</Text>
                 <GridItem>
                   <Select
                     {...register('headset')}
@@ -314,7 +300,24 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
                   </Text>
                 )}
               </ModalBody>
-              <ModalFooter>
+              <ModalFooter display={'flex'} justifyContent={'center'}>
+                <Button
+                  w="180px"
+                  h="54px"
+                  mx={2}
+                  bg="#00DEA3"
+                  borderRadius="12px"
+                  color="#FFFFFF"
+                  fontFamily="Graphik LCG"
+                  fontWeight="700"
+                  fontSize="15px"
+                  onClick={() => {
+                    props.onClose();
+                    navigate('/home');
+                  }}
+                >
+                  Cancel Session
+                </Button>
                 <Button
                   w="214px"
                   h="54px"

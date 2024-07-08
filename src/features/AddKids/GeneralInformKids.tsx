@@ -10,49 +10,70 @@ import {
   Input,
   Flex,
   useDisclosure,
+  useToast,
+  FormControl,
+  Spinner,
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { TherapyFormProps } from '../AddCenterForm/therapyFormInterface';
 import { config } from '@renderer/config';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import axios from 'axios';
 import UploadKidImg from './UploadKidImg';
+import { Image } from '../../assets/icons/Image';
+import Congratulations from './Congratulations';
+import { getMe } from '@renderer/cache';
+import { dataContext } from '@renderer/shared/Provider';
 
 const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
   onSubmit,
-  // nextHandler,
   backHandler,
   sliding,
   formData,
 }) => {
   const animatedComponents = makeAnimated();
-
   const [diagnoses, setDiagnoses] = useState([]);
   const [age, setAge] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
+  const [logo, setLogo] = useState<File>();
+  const [imagePreviewError, setImagePreviewError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const selectedCenter = useContext(dataContext);
+  const toast = useToast();
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: any) => {
     let value = e.target.value;
-    // Ensure only numeric characters are entered
     if (/^\d*$/.test(value)) {
-      // Truncate the value if it exceeds the maximum length
       if (value.length > 2) {
         value = value.slice(0, 2);
       }
       setAge(value);
     }
   };
-  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files[0];
+    if (file) {
+      setLogo(file);
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      setImagePreviewError(false);
+    }
+  };
+
   const schema = joi.object({
     Name: joi.string().min(3).max(30).required().label('Name'),
     Email: joi
       .string()
       .email({ tlds: { allow: false } })
       .required(),
-    Age: joi.string().required(),
-    diagnoses: joi.array().required().label('diagnoses'),
+    Age: joi.number().min(6).required(),
+    diagnoses: joi.array().min(1).required().label('diagnoses'),
   });
+
   const {
     register,
     handleSubmit,
@@ -64,23 +85,27 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
   });
 
   const FormonSubmit = (data: {
-    name: string;
-    email: string;
-    age: number;
+    Name: string;
+    Email: string;
+    Age: number;
     diagnoses: any[];
   }) => {
+    if (!logo) {
+      setImagePreviewError(true);
+      return;
+    }
     onSubmit(data);
-
-    onOpen();
+    SendDataToApi(data);
   };
+
   useEffect(() => {
     getAllDiagnoses();
   }, []);
+
   const getAllDiagnoses = async () => {
     try {
       const response = await axios.get(`${config.apiURL}/api/v1/diagnoses`);
       setDiagnoses(response.data);
-
     } catch (error) {
       console.error(error);
     }
@@ -91,11 +116,13 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
     label: diagnose.name,
     value: diagnose.id,
   }));
+
   const handleSpecializations = (options: any) => {
-    setValue('diagnoses', [...options]);
+    setValue('diagnoses', options);
   };
+
   const customStyles = {
-    control: (provided: any, state: any) => ({
+    control: (provided: any) => ({
       ...provided,
       border: '2px solid #E8E8E8',
       borderRadius: '8px',
@@ -104,8 +131,60 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
         border: '1px solid #4965CA',
       },
     }),
-  
   };
+
+  const createFormData = (data: any) => {
+    const formData = new FormData();
+    formData.append('name', data.Name);
+    formData.append('email', data.Email);
+    formData.append('age', data.Age.toString());
+    formData.append('photo', logo as File);
+    data.diagnoses.forEach((diagnose: { id: string | Blob }) =>
+      formData.append('diagnosis_ids[]', diagnose.id)
+    );
+    return formData;
+  };
+
+  const postFormData = (formData: FormData) => {
+    const token = getMe()?.token;
+    const headers = { Authorization: `Bearer ${token}` };
+    return axios.post(
+      `${config.apiURL}/api/v1/centers/${selectedCenter.id}/add_child`,
+      formData,
+      { headers }
+    );
+  };
+
+  const SendDataToApi = async (data: any) => {
+    const formData = createFormData(data);
+    setIsLoading(true);
+
+    try {
+      await postFormData(formData);
+      handleSuccess();
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSuccess = () => {
+    onOpen();
+  };
+
+  const handleError = (error: any) => {
+    onClose();
+    console.log('error', error);
+    toast({
+      title: 'Error',
+      description: error.response.data.error,
+      status: 'error',
+      duration: 9000,
+      position: 'top-right',
+    });
+  };
+
   return (
     <Box
       bg="#FFFFFF"
@@ -173,6 +252,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             <Text color="red.500">{errors.Email.message as string}</Text>
           )}
         </GridItem>
+
         <GridItem mb="5">
           <FormLabel
             display="inline"
@@ -202,6 +282,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             <Text color="red.500">{errors.Age.message as string}</Text>
           )}
         </GridItem>
+
         <GridItem mb="5">
           <FormLabel
             display="inline"
@@ -224,14 +305,50 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
               styles={customStyles}
             />
           </Box>
-
           {errors.diagnoses && (
             <Text color="red.500">{errors.diagnoses.message as string}</Text>
           )}
         </GridItem>
+
+        <GridItem>
+          <FormControl>
+            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+              Upload Image
+            </FormLabel>
+            <Button
+              h="128px"
+              w="174px"
+              border="2px solid #E8E8E8"
+              borderRadius="8px"
+              bg="#FFFFFF"
+              mt={'0.75em'}
+            >
+              {imagePreview ? (
+                <img src={imagePreview} alt="Preview" />
+              ) : (
+                <>
+                  <label>
+                    <Image />
+                    <Input
+                      type="file"
+                      accept="image/png,image/jpeg"
+                      name="image"
+                      onChange={handleImageChange}
+                      style={{ display: 'none' }}
+                      hidden
+                    />
+                  </label>
+                </>
+              )}
+            </Button>
+            {imagePreviewError && (
+              <Text color="red.500">"Image" is required</Text>
+            )}
+          </FormControl>
+        </GridItem>
       </Grid>
 
-      <Flex flexDirection="row-reverse">
+      <Flex flexDirection="row-reverse" my={15}>
         <Button
           type="submit"
           bg="#4AA6CA"
@@ -244,8 +361,9 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
+          isDisabled={isLoading}
         >
-          Next
+          {isLoading ? <Spinner size="md" /> : 'Submit'}
         </Button>
 
         {sliding === 1 ? null : (
@@ -267,15 +385,9 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
           </Button>
         )}
       </Flex>
-      {onOpen && (
-        <UploadKidImg
-          isOpen={isOpen}
-          onClose={onClose}
-          onSubmit={onSubmit}
-          formData={formData}
-        />
-      )}
+      {onOpen && <Congratulations isOpen={isOpen} onClose={onClose} />}
     </Box>
   );
 };
+
 export default GeneralInfoFormKids;

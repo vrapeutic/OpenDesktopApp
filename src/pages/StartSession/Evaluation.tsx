@@ -23,16 +23,14 @@ import axios from 'axios';
 import { config } from '@renderer/config';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
-export default function SelectEvaluation(props:any) {
+export default function SelectEvaluation(props: any) {
   const { sessionId } = useStartSessionContext();
   const toast = useToast();
   const schema = Joi.object({
     Evaluation: Joi.string().required().messages({
       'string.empty': 'You must select an Evaluation',
     }),
-    Notes: Joi.string().required().messages({
-      'string.empty': 'You must enter Notes',
-    }),
+    Notes: Joi.string().optional(),
   });
   const navigate = useNavigate();
 
@@ -48,73 +46,58 @@ export default function SelectEvaluation(props:any) {
 
   const [value, setValue] = useState('');
 
-  const handleInputChange = (e:any) => {
+  const handleInputChange = (e: any) => {
     const inputValue = e.target.value;
     setValue(inputValue);
   };
 
-
-
-
-  const handleFormSubmit = (data:any) => {
+  const handleFormSubmit = (data: any) => {
     console.log('Evaluation:', data.Evaluation);
     console.log('Notes:', data.Notes);
 
-    evaluation()
-
-
-  
-
-
-
+    evaluation();
   };
-   
 
-const evaluation = async() => {
+  const evaluation = async () => {
+    const token = await (window as any).electronAPI.getPassword('token'); // Replace 'your_token_here' with your actual token
 
+    const data = {
+      evaluation: 'good',
+      note: 'Hellouu World!',
+    };
 
-   const token = await (window as any).electronAPI.getPassword('token'); // Replace 'your_token_here' with your actual token
+    const configD = {
+      method: 'put', // Method should be in lowercase
+      url: `${config.apiURL}/api/v1/sessions/${sessionId}/add_evaluation`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
 
-   const data = {
-     evaluation: 'good',
-     note: 'Hellouu World!'
-   };
-   
-   const configD = {
-     method: 'put', // Method should be in lowercase
-     url: `${config.apiURL}/api/v1/sessions/${sessionId}/add_evaluation`,
-     headers: {
-       'Authorization': `Bearer ${token}`,
-       'Content-Type': 'application/json'
-     },
-     data: data
-   };
-   
-   axios(configD)
-     .then(response => {
-       console.log(response.data);
-       // Handle response
-       props.onClose();
-       props.closeopenconnected();
-       props.closemodules()
-            navigate('/');
-     })
-     .catch(error => {
-       console.error(error);
-       toast({
-        title: 'error',
-        description: `${error.response.data.error}`,
-    
-        status: 'error',
-        duration: 9000,
-        position: 'top-right',
+    axios(configD)
+      .then((response) => {
+        console.log(response.data);
+        // Handle response
+        props.onClose();
+        props.closeopenconnected();
+        props.closemodules();
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error(error);
+        toast({
+          title: 'error',
+          description: `${error.response.data.error}`,
+
+          status: 'error',
+          duration: 9000,
+          position: 'top-right',
+        });
+        // Handle error
       });
-       // Handle error
-     });
-
-
-}
-
+  };
 
   return (
     <Box>
