@@ -485,7 +485,20 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
                   </Text>
                 )}
               </ModalBody>
-              <ModalFooter>
+              <ModalFooter display={'flex'} justifyContent={'center'}>
+                <Button
+                  w="180px"
+                  h="54px"
+                  mx={2}
+                  bg="#00DEA3"
+                  borderRadius="12px"
+                  color="#FFFFFF"
+                  fontFamily="Graphik LCG"
+                  fontWeight="700"
+                  fontSize="15px"
+                >
+                  Cancel session
+                </Button>
                 <Button
                   w="214px"
                   h="54px"
