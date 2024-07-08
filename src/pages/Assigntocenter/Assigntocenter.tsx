@@ -15,6 +15,7 @@ import {
   Select,
   useToast,
   useDisclosure,
+  Text,
 } from '@chakra-ui/react';
 import { useAdminContext } from '../../Context/AdminContext';
 import { config } from '../../config';
@@ -147,7 +148,10 @@ const Assigntocenter: React.FC = () => {
               ))}
             </Select>
           </GridItem>
-          <GridItem>
+          <GridItem display={"flex"} alignItems={"center"}>
+            <Text mx={2}>
+            Assign until :
+            </Text>
             <DatePicker
               showIcon
               selected={startDate}
