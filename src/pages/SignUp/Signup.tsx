@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDisclosure } from '@chakra-ui/react';
+import { Box, Flex, Image, useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { config } from '../../config';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import { useAdminContext } from '../../Context/AdminContext';
 import GeneralInfoSignup from './GeneralInfoSignup';
 import SpecialtySignup from './SpecialtySignup';
 import EductionIInfoSignup from './EducationinfoSignup';
+import VRapeutic from '../../assets/images/VRapeutic.png';
 
 interface Center {
   id: number;
@@ -27,13 +28,6 @@ const Signup: React.FC = () => {
   const totalSteps = 3;
   const [sliding, setSliding] = useState(1);
   const [formData, setFormData] = useState({});
-  const [softwaremodules, setsoftwaremodules] = useState<Center[]>([]);
-  const [selectedModuleId, setSelectedModuleId] = useState(null);
-
-  const { otp } = useAdminContext();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const navigate = useNavigate();
-
   const handleFormSubmit = (data: any) => {
     // Use the previous state to ensure the latest form data is captured
     setFormData((prevFormData) => ({ ...prevFormData, ...data }));
@@ -57,32 +51,6 @@ const Signup: React.FC = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    onClose();
-  };
-
-  useEffect(() => {
-    getModules();
-  }, []);
-
-  const headers = {
-    otp: `${otp}`,
-  };
-  const getModules = async () => {
-    try {
-      const response = await axios.get(
-        `${config.apiURL}/api/v1/software_modules`,
-        { headers }
-      );
-      console.log('response modules', response);
-      setsoftwaremodules(response.data.data);
-      console.log(response.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  console.log('software modules state', softwaremodules);
   const renderFormStep = () => {
     switch (sliding) {
       case 1:
@@ -115,13 +83,36 @@ const Signup: React.FC = () => {
             formData={formData}
           />
         );
-  
+
       default:
         return null;
     }
   };
 
-  return <>{renderFormStep()}</>;
+  return (
+    <Flex height="inherit" direction={{ base: 'column', md: 'row', lg: 'row' }}>
+      <Flex
+        pos={{ md: 'sticky' }}
+        h="inherit"
+        background="#FFFFFF"
+        boxShadow="0px 3px 8px rgba(0, 0, 0, 0.08)"
+        borderRadius={{
+          base: '0px',
+          md: '0px 20px 20px 0px',
+          lg: '0px 20px 20px 0px',
+        }}
+      >
+        <Box marginX="24px">
+          <Flex paddingY="27px">
+            <Image src={VRapeutic} />
+          </Flex>
+        </Box>
+      </Flex>
+      <Flex height="inherit" flex="1" flexDir="column" bg="#F5F5F5">
+        {renderFormStep()}
+      </Flex>
+    </Flex>
+  );
 };
 
 export default Signup;

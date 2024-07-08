@@ -72,7 +72,7 @@ export default function OTP() {
           .then((response) => response.json())
           .then((data) => {
             console.log('GET request response:', data);
-            navigate('/');
+            navigate('/home');
             // Add your logic here for handling the GET request response
           })
         
@@ -99,7 +99,7 @@ export default function OTP() {
             if (response.ok && response.status >= 200 && response.status < 300) {
               // If response is successful (status code 200-299)
               // onOpen();
-              navigate('/');
+              navigate('/home');
               console.log(response);
             } else {
               // If response is not successful (status code outside 200-299)

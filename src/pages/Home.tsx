@@ -12,6 +12,14 @@ import {
   Text,
   Link,
   Spinner,
+  Modal,
+  ModalOverlay,
+  ModalHeader,
+  ModalBody,
+  ModalContent,
+  ModalCloseButton,
+  ModalFooter,
+  useDisclosure,
 } from '@chakra-ui/react';
 import VRminutesCard from '../shared/VRminutetsPerMonth/VRminutesCard';
 import VRsessionsCard from '../shared/VRsessions/VRsessionsCard';
@@ -20,6 +28,7 @@ import { config } from '../config';
 import StatistcsCards from '../theme/components/StatistcsCards';
 import { dataContext } from '@renderer/shared/Provider';
 import { Link as ReachLink } from 'react-router-dom';
+import { RedArrow } from '@renderer/assets/icons/RedArrow';
 
 export default function Home() {
   const [centers, setCenters] = useState([]);
@@ -27,12 +36,15 @@ export default function Home() {
   const [refreshKey, setRefreshKey] = useState(0);
   let selectedCenter = useContext(dataContext);
   const [Loading, setLoading] = useState(false);
-
+  const [arrow, setArrow] = useState(false);
+  const selectedCenterContext = useContext(dataContext);
   const handleClick = (center: object) => {
     setIsLoading(true);
     selectedCenter = Object.assign(selectedCenter, center);
     setRefreshKey((oldKey) => oldKey + 1);
+    setArrow(false);
   };
+  const { isOpen: isOpen, onOpen: onOpen, onClose: onClose } = useDisclosure();
 
   useEffect(() => {
     (async () => {
@@ -51,7 +63,20 @@ export default function Home() {
         .catch((error) => console.log('error', error));
     })();
   }, []);
-  console.log('centers length', centers.length);
+  console.log(
+    'centers length',
+    centers.length,
+    selectedCenterContext.id,
+    centers
+  );
+
+  useEffect(() => {
+    if (Object.keys(selectedCenterContext).length === 0) {
+      onOpen();
+      setArrow(true);
+    }
+  }, []);
+
   return (
     <>
       {Loading ? (
@@ -62,53 +87,132 @@ export default function Home() {
         <NotFound />
       ) : (
         <>
-          <Text
-            position="absolute"
-            alignItems="center"
-            left="279px"
-            top="129px"
-            fontFamily="Graphik LCG"
-            fontSize="29px"
-            fontWeight="500"
-            lineHeight="29px"
-            letterSpacing="-0.01em"
-          >
-            Home
-          </Text>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              bgColor="#FFFFFF"
-              border="2px solid #00DEA3"
-              borderRadius="8px"
-              color="#00DEA3"
-              marginLeft="200px"
-              marginTop="45px"
-            >
-              Centers
-            </MenuButton>
-            <MenuList>
-              {centers?.map((center) => (
-                <MenuItem key={center.id} onClick={() => handleClick(center)}>
-                  {center.attributes.name}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
+          {onOpen && (
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent
+                w="645px"
+           
+                bgColor="#FFFFFF"
+                borderRadius="10px"
+              >
+                <ModalBody>
+                  <Text
+                    fontFamily="Graphik LCG"
+                    fontSize="20px"
+                    fontWeight="400"
+                    textAlign="center"
+                    color="red"
+                    mt={5}
+                  >
+                 { centers.length > 0 ?"It seems you haven't joined any center yet. Please create a center first, or ask a center administrator to send you an invitation.":"Before you can proceed, please choose a center from the home page beside the red arrow."}
+                  </Text>
+                </ModalBody>
+
+                <ModalFooter display="flex" justifyContent={'space-around'}>
+                  {centers.length > 0 && (
+                    <Button
+                      h="50px"
+                      w="auto"
+                      borderRadius="12px"
+                      bg="#00DEA3"
+                      color="#FFFFFF"
+                      fontFamily="Roboto"
+                      fontWeight="700"
+                      fontSize="18px"
+                      lineHeight="21.09px"
+                      textDecoration="none"
+                      onClick={onClose}
+                    >
+                      Cancel
+                    </Button>
+                  )}
+
+                  <Button
+                    h="50px"
+                    w="auto"
+                    borderRadius="12px"
+                    bg="#00DEA3"
+                    color="#FFFFFF"
+                    fontFamily="Roboto"
+                    fontWeight="700"
+                    fontSize="18px"
+                    lineHeight="21.09px"
+                    textDecoration="none"
+                    onClick={onClose}
+                  >
+                   Let’s go choose a center
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          )}
 
           <Flex
-            width="90%"
-            justifyContent="space-between"
-            padding="20px"
-            marginBottom="20px"
-            flexWrap="wrap"
+            justifyContent={'space-between'}
+            py={15}
+            px={30}
+            alignItems={'center'}
           >
-            <VRminutesCard loading={isLoading} refreshKey={refreshKey} />
-            <VRsessionsCard loading={isLoading} refreshKey={refreshKey} />
+            <Text
+              alignItems="center"
+              top="129px"
+              fontFamily="Graphik LCG"
+              fontSize="29px"
+              fontWeight="500"
+              lineHeight="29px"
+              letterSpacing="-0.01em"
+            >
+              Home
+            </Text>
+            <Flex alignItems={'center'}>
+              {arrow && (
+                <Box mx={10}>
+                  <RedArrow />
+                </Box>
+              )}
+
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rightIcon={<ChevronDownIcon />}
+                  bgColor="#FFFFFF"
+                  border="2px solid #00DEA3"
+                  borderRadius="8px"
+                  color="#00DEA3"
+                >
+                  Select Centers
+                </MenuButton>
+                <MenuList>
+                  {centers?.map((center) => (
+                    <MenuItem
+                      key={center.id}
+                      onClick={() => handleClick(center)}
+                    >
+                      {center.attributes.name}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
+            </Flex>
           </Flex>
 
-          <StatistcsCards refreshKey={refreshKey} />
+          {selectedCenterContext.id && (
+            <>
+              <Flex
+                width="90%"
+                justifyContent="space-between"
+                padding="20px"
+                marginBottom="20px"
+                flexWrap="wrap"
+              >
+                <VRminutesCard loading={isLoading} refreshKey={refreshKey} />
+                <VRsessionsCard loading={isLoading} refreshKey={refreshKey} />
+              </Flex>
+
+              <StatistcsCards refreshKey={refreshKey} />
+            </>
+          )}
         </>
       )}
     </>

@@ -24,8 +24,6 @@ import GeneralInfoEditModule from './features/EditModuleForm/GeneralInfoEditModu
 import SpecialtyFormEditModule from './features/EditModuleForm/SpecialityFormEditModule';
 import ViewCenterAdmin from './pages/ViewCenterAdmin';
 
-
-
 function App() {
   const { adminBoolean } = useAdminContext();
   useEffect(() => {
@@ -44,8 +42,8 @@ function App() {
     <MemoryRouter>
       <Routes>
         <Route path="login" element={<Login />} />
+        <Route path="signup" element={<Signup />} />
         <Route path="/" element={<Layout />}>
-          <Route path="signup" element={<Signup />} />
           <Route path="home" element={<Home />} />
           <Route path="Kids" element={<Kids />} />
           <Route path="Theraputicmodules" element={<Theraputicmodules />} />
@@ -57,10 +55,10 @@ function App() {
           <Route path="Therapycentersadmin" element={<Therapycentersadmin />} />
 
           <Route path="setting" element={<Setting />} />
-          <Route path="Assigntocenter" element={<Assigntocenter />} /> 
-          <Route path="Editmodule" element={<GeneralInfoEditModule  />} />
+          <Route path="Assigntocenter" element={<Assigntocenter />} />
+          <Route path="Editmodule" element={<GeneralInfoEditModule />} />
 
-          <Route path="Editmodule2" element={<SpecialtyFormEditModule/>} /> 
+          <Route path="Editmodule2" element={<SpecialtyFormEditModule />} />
 
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />
@@ -68,7 +66,6 @@ function App() {
 
           <Route path="ViewCenterAdmin" element={<ViewCenterAdmin />} />
 
-          
           <Route path="ViewKids" element={<ViewKids />} />
           {/* Add more routes as needed */}
         </Route>

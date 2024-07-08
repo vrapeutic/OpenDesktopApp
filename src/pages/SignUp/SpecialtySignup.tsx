@@ -17,14 +17,23 @@ import ProgressBarSignup from '../../theme/components/ProgressBarSignup';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { SignupFormProps } from './signupFormInterface';
+
 const SpecialtySignup: React.FC<SignupFormProps> = ({
   onSubmit,
   nextHandler,
   backHandler,
   sliding,
+  formData,
 }) => {
+  const [specialistslist, setspecialistslist] = useState([]);
+  const [defaultSpecialties, setDefaultSpecialties] = useState([]);
+
   const schema = joi.object({
-    specializationschema: joi.array().required().label('specializationschema'),
+    specializationschema: joi
+      .array()
+      .min(1)
+      .required()
+      .label('Specializations'),
   });
 
   const {
@@ -42,8 +51,6 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
     nextHandler();
   };
 
-  const [specialistslist, setspecialistslist] = useState([]);
-
   useEffect(() => {
     getSpecialists();
   }, []);
@@ -51,22 +58,39 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
   const getSpecialists = async () => {
     try {
       const response = await axios.get(`${config.apiURL}/api/v1/specialties`);
-      setspecialistslist(response.data);
+      const specialties = response.data.map((speciality: any) => ({
+        id: speciality.id,
+        label: speciality.name,
+        value: speciality.id,
+      }));
+      setspecialistslist(specialties);
+      setDefaultSpecialtiesList(specialties);
     } catch (error) {
       console.error(error);
     }
   };
 
+  const setDefaultSpecialtiesList = (specialties: any) => {
+    const defaultSpecialties = specialties.filter(
+      (specialty: any) =>
+        formData?.specializationschema?.some(
+          (selected: any) => selected.value === specialty.value
+        )
+    );
+    setDefaultSpecialties(defaultSpecialties);
+    setValue('specializationschema', defaultSpecialties);
+  };
+
   const animatedComponents = makeAnimated();
 
   const handleSpecializations = (options: any) => {
-    setValue('specializationschema', [...options]);
+    setValue('specializationschema', options || []);
   };
-  const specialties = specialistslist.map((speciality) => ({
-    id: speciality.id,
-    label: speciality.name,
-    value: speciality.id,
-  }));
+
+  const remainingSpecialties = specialistslist.filter(
+    (specialty) =>
+      !defaultSpecialties.some((selected) => selected.value === specialty.value)
+  );
 
   return (
     <Box
@@ -77,7 +101,6 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
       onSubmit={handleSubmit(FormonSubmit)}
     >
       <ProgressBarSignup index={1} />
-
       <Grid
         m="2.625em 1.5em 0em 1.5em"
         templateColumns="repeat(2, 1fr)"
@@ -95,14 +118,21 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
             Physical Therapy, etc.)
           </FormLabel>
           <Select
-            {...register('specializationschema')}
-            closeMenuOnSelect={false}
             components={animatedComponents}
             isMulti
-            options={specialties}
+            options={remainingSpecialties}
             id="specializationschema"
             name="specializationschema"
             onChange={handleSpecializations}
+            defaultValue={formData?.specializationschema}
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                marginTop: '0.75em',
+                marginBottom: '1em',
+                borderRadius: '8px',
+              }),
+            }}
           />
           {errors.specializationschema && (
             <Text color="red.500">
@@ -111,7 +141,6 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
           )}
         </GridItem>
       </Grid>
-
       <Flex flexDirection="row-reverse">
         <Button
           type="submit"
@@ -151,4 +180,5 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
     </Box>
   );
 };
+
 export default SpecialtySignup;
