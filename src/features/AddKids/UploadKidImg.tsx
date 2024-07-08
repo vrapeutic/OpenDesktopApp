@@ -177,7 +177,7 @@ return childFormData;
                 textAlign="center"
               >
                 {' '}
-                Upload Logo
+                Upload Image
               </ModalHeader>
               <ModalCloseButton marginLeft="100px" />
             </Box>
@@ -238,7 +238,7 @@ return childFormData;
                 lineHeight="18px"
                 color="#595959"
               >
-                Please upload your Therapy Logo
+                Please add a child photo
               </Text>
             </ModalBody>
 
