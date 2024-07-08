@@ -105,15 +105,15 @@ export default function Home() {
                     color="red"
                     mt={5}
                   >
-                 { centers.length == 0 ?"It seems you haven't joined any center yet. Please create a center first, or ask a center administrator to send you an invitation.":"Please Select Center"}
+                 { centers.length > 0 ?"It seems you haven't joined any center yet. Please create a center first, or ask a center administrator to send you an invitation.":"Before you can proceed, please choose a center from the home page beside the red arrow."}
                   </Text>
                 </ModalBody>
 
                 <ModalFooter display="flex" justifyContent={'space-around'}>
-                  {centers.length == 0 && (
+                  {centers.length > 0 && (
                     <Button
                       h="50px"
-                      w="140px"
+                      w="auto"
                       borderRadius="12px"
                       bg="#00DEA3"
                       color="#FFFFFF"
@@ -130,7 +130,7 @@ export default function Home() {
 
                   <Button
                     h="50px"
-                    w="140px"
+                    w="auto"
                     borderRadius="12px"
                     bg="#00DEA3"
                     color="#FFFFFF"
@@ -141,7 +141,7 @@ export default function Home() {
                     textDecoration="none"
                     onClick={onClose}
                   >
-                    Go to home
+                   Let’s go choose a center
                   </Button>
                 </ModalFooter>
               </ModalContent>
