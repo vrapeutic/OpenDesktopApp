@@ -47,7 +47,6 @@ export default function ProgressbarSignup(props: any) {
   const inCompleteTitle = {
     width: '150px',
     marginTop: '20px',
-
     color: '#A0A0A0',
     textAlign: 'center',
   };
