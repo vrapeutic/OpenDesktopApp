@@ -27,13 +27,16 @@ import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { ErrorPopup } from '../ErrorPopup';
 const SelectDistractorsRodja = (props: any) => {
-  console.log("selected book in select distractors",props.selectBook)
+  console.log('selected book in select distractors', props.selectBook);
 
-  console.log("props.formData array in distractor rodja",props.formData)
-  console.log(",props.updatedFormData in distractor updatedFormData",props.updatedFormData)
+  console.log('props.formData array in distractor rodja', props.formData);
+  console.log(
+    ',props.updatedFormData in distractor updatedFormData',
+    props.updatedFormData
+  );
 
   const navigate = useNavigate();
-  const { module, sessionId,headsetid } = useStartSessionContext();
+  const { module, sessionId, headsetid } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -42,7 +45,7 @@ const SelectDistractorsRodja = (props: any) => {
 
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
-  
+
   const {
     dispatchSocketMessage,
     checkIfServiceExists,
@@ -70,8 +73,7 @@ const SelectDistractorsRodja = (props: any) => {
     mode: 'onTouched',
   });
 
-  const handleFormSubmit =  async(data: any) => {
-  
+  const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
       props.formData[0],
       props.formData[1],
@@ -79,14 +81,13 @@ const SelectDistractorsRodja = (props: any) => {
       data.selectDistractor,
       ...props.formData.slice(4),
     ];
-   
 
-    console.log("all subimtted data in distractor",updatedFormData)
+    console.log('all subimtted data in distractor', updatedFormData);
     props.setFormData(updatedFormData);
 
     navigate('/Therapycenters');
     props.onClose();
-  
+
     onOpenConnected();
     toast({
       title: 'Success',
@@ -98,12 +99,10 @@ const SelectDistractorsRodja = (props: any) => {
       position: 'top-right',
     });
 
-
-
     const existingDevice = await checkIfServiceExists(headsetid);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    // if (appIsConnectedToInternet && existingDevice) {
-    if (appIsConnectedToInternet) {
+    if (appIsConnectedToInternet && existingDevice) {
+      // if (appIsConnectedToInternet) {
       console.log('updatedFormData', updatedFormData);
       const socketMessage = {
         sessionId,
@@ -259,7 +258,6 @@ const SelectDistractorsRodja = (props: any) => {
         </ModalContent>
       </Modal>
 
-
       {notFound ? (
         <ErrorPopup
           isOpen={notFound}
@@ -269,15 +267,17 @@ const SelectDistractorsRodja = (props: any) => {
           onSelectAnotherHeadset={selectAnotherHeadset}
           errorMessages={errorMEssage}
         />
-      ) : ( <OpenconnectedRodja
-        isOpen={isOpenConnected}
-        onClose={onCloseConnected}
-        onclosemodules={props.onclosemodules}
-        onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
-        oncloseselectlevel={props.oncloseselectlevel}
-        onCloseSelectJewel={props.onCloseSelectJewel}
-        onCloseSelectDistractors={props.onClose}
-      />)}
+      ) : (
+        <OpenconnectedRodja
+          isOpen={isOpenConnected}
+          onClose={onCloseConnected}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
+          oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectJewel={props.onCloseSelectJewel}
+          onCloseSelectDistractors={props.onClose}
+        />
+      )}
       {/* {onOpenConnected && (
         <OpenconnectedRodja
           isOpen={isOpenConnected}

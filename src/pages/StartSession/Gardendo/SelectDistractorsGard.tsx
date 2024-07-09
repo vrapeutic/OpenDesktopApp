@@ -101,8 +101,8 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 
       const existingDevice = await checkIfServiceExists(headsetid);
       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-      // if (appIsConnectedToInternet && existingDevice) {
-      if (appIsConnectedToInternet) {
+      if (appIsConnectedToInternet && existingDevice) {
+      // if (appIsConnectedToInternet) {
         console.log('updatedFormData', updatedFormData);
         const socketMessage = {
           sessionId,

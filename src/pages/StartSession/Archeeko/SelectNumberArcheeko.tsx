@@ -28,7 +28,7 @@ import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 const SelectNumberArcheeko = (props: any) => {
   console.log('select form data in number in 30', props.formData);
   const toast = useToast();
-  const { module, sessionId ,headsetid} = useStartSessionContext();
+  const { module, sessionId, headsetid } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -66,7 +66,6 @@ const SelectNumberArcheeko = (props: any) => {
     mode: 'onSubmit',
   });
 
-
   let updatedFormData;
   const handleFormSubmit = async (data: any) => {
     console.log(data.selectNumber);
@@ -83,7 +82,7 @@ const SelectNumberArcheeko = (props: any) => {
       onOpenSelectDistractors();
     } else {
       navigate('/Therapycenters');
-      
+
       console.log('session id', sessionId);
 
       toast({
@@ -96,19 +95,17 @@ const SelectNumberArcheeko = (props: any) => {
         position: 'top-right',
       });
 
-
-
       const existingDevice = await checkIfServiceExists(headsetid);
       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-      // if (appIsConnectedToInternet && existingDevice) {
-      if (appIsConnectedToInternet ) {
-        console.log(updatedFormData)
+      if (appIsConnectedToInternet && existingDevice) {
+        // if (appIsConnectedToInternet ) {
+        console.log(updatedFormData);
         const socketMessage = {
           sessionId,
           [MODULE_PACKAGE_KEY]: module,
           deviceId: headsetid,
         };
-  
+
         dispatchSocketMessage(
           START_APP_MESSAGE,
           socketMessage,
@@ -122,15 +119,11 @@ const SelectNumberArcheeko = (props: any) => {
         const errorMessage = !appIsConnectedToInternet
           ? 'You are not connected to the internet'
           : 'No headset found';
-  
-          console.log(errorMessage);
+
+        console.log(errorMessage);
         setErrorMEssage(errorMessage);
         setNotFound(true);
       }
-
-
-
-
 
       console.log(
         `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, Number ${selectedNumber} ,
@@ -144,10 +137,6 @@ const SelectNumberArcheeko = (props: any) => {
     setSelectedNumber(number);
     setValue('selectNumber', number);
   };
-
-
-
-
 
   const cancelSession = () => {
     setNotFound(false);
@@ -272,28 +261,26 @@ const SelectNumberArcheeko = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
-{
-notFound?
-
-<ErrorPopup
-isOpen={notFound}
-onClose={closeErrorModal}
-closeSelectingAHeadset={closeSelectingAHeadset}
-onCancelSession={cancelSession}
-onSelectAnotherHeadset={selectAnotherHeadset}
-errorMessages={errorMEssage}
-/>:
- <OpenconnectedArcheeko
- isOpen={isOpenConnected}
- onClose={onCloseConnected}
- onclosemodules={props.onclosemodules}
- onCloseSelectEnvironment={props.onCloseSelectEnvironment}
- SelectDistractors={onCloseSelectDistractors}
- onCloseSelectNumber={props.onClose}
- oncloseselectlevel={props.oncloseselectlevel}
-/>
-
-}
+      {notFound ? (
+        <ErrorPopup
+          isOpen={notFound}
+          onClose={closeErrorModal}
+          closeSelectingAHeadset={closeSelectingAHeadset}
+          onCancelSession={cancelSession}
+          onSelectAnotherHeadset={selectAnotherHeadset}
+          errorMessages={errorMEssage}
+        />
+      ) : (
+        <OpenconnectedArcheeko
+          isOpen={isOpenConnected}
+          onClose={onCloseConnected}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+          SelectDistractors={onCloseSelectDistractors}
+          onCloseSelectNumber={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
+        />
+      )}
       {/* {onOpenConnected && (
         <OpenconnectedArcheeko
           isOpen={isOpenConnected}

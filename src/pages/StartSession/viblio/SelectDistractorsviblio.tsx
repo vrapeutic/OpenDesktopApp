@@ -29,7 +29,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 
 const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
-  const { module, sessionId ,headsetid} = useStartSessionContext();
+  const { module, sessionId, headsetid } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -49,8 +49,8 @@ const SelectDistractors = (props: any) => {
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
   const { socketError } = useSocketManager();
-  const toast = useToast()
- 
+  const toast = useToast();
+
   const schema = joi.object({
     selectDistractor: joi.number().required(),
   });
@@ -65,7 +65,7 @@ const SelectDistractors = (props: any) => {
     mode: 'onTouched',
   });
 
-  const handleFormSubmit =  async(data: any) => {
+  const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
       props.formData[0],
       props.formData[1],
@@ -91,9 +91,9 @@ const SelectDistractors = (props: any) => {
 
     const existingDevice = await checkIfServiceExists(headsetid);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    // if (appIsConnectedToInternet && existingDevice) {
-    if (appIsConnectedToInternet ) {
-      console.log(updatedFormData)
+    if (appIsConnectedToInternet && existingDevice) {
+      // if (appIsConnectedToInternet ) {
+      console.log(updatedFormData);
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: module,
@@ -114,21 +114,11 @@ const SelectDistractors = (props: any) => {
         ? 'You are not connected to the internet'
         : 'No headset found';
 
-        console.log(errorMessage);
+      console.log(errorMessage);
       setErrorMEssage(errorMessage);
       setNotFound(true);
     }
-
-
-
-
-
- 
-
   };
-
-
-  
 
   const cancelSession = () => {
     setNotFound(false);
@@ -260,7 +250,7 @@ const SelectDistractors = (props: any) => {
         />
       )} */}
 
-{notFound ? (
+      {notFound ? (
         <ErrorPopup
           isOpen={notFound}
           onClose={closeErrorModal}
@@ -269,19 +259,18 @@ const SelectDistractors = (props: any) => {
           onSelectAnotherHeadset={selectAnotherHeadset}
           errorMessages={errorMEssage}
         />
-      ) : ( <OpenConnectedVi
-        isOpen={isOpenConnected}
-        onClose={onCloseConnected}
-        onclosemodules={props.onclosemodules}
-        onCloseSelectBooksviblio={props.onCloseSelectBooksviblio}
-        onCloseSelectDistractors={props.onClose}
-        oncloseselectlevel={props.oncloseselectlevel}
-      />)}
+      ) : (
+        <OpenConnectedVi
+          isOpen={isOpenConnected}
+          onClose={onCloseConnected}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectBooksviblio={props.onCloseSelectBooksviblio}
+          onCloseSelectDistractors={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
+        />
+      )}
 
-
-
-
-{/* 
+      {/* 
         {onOpenConnected && (
          <OpenConnectedVi
          isOpen={isOpenConnected}
@@ -291,7 +280,6 @@ const SelectDistractors = (props: any) => {
          onCloseSelectDistractors={props.onClose}
        />
       )} */}
-      
     </>
   );
 };
