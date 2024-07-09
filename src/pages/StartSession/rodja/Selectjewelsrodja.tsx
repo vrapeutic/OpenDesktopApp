@@ -19,18 +19,29 @@ import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
-import SelectDistractors from './SelectDistractorsrodja';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import Openconnected from '../openconnected';
 import SelectDistractorsRodja from './SelectDistractorsrodja';
 import OpenconnectedRodja from './OpenconnectedRodja';
-
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import { ErrorPopup } from '../ErrorPopup';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectjewelRodja = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
-  const { module,sessionId } = useStartSessionContext();
-  // console.log("select form data in jewel in 30",props.formData)
+  const { module, sessionId, headsetid } = useStartSessionContext();
+
   const toast = useToast();
+  const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMEssage] = useState(null);
+  const {
+    dispatchSocketMessage,
+    checkIfServiceExists,
+    checkAppNetWorkConnection,
+  } = useSocketManager();
+  const { popupFunctions } = usePopupsHandler();
+  const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
+  const { socketError } = useSocketManager();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -57,35 +68,64 @@ const SelectjewelRodja = (props: any) => {
     mode: 'onTouched',
   });
 
-  let updatedFormData 
-  const handleFormSubmit = (data: any) => {
-
-     updatedFormData = [
+  let updatedFormData;
+  const handleFormSubmit = async (data: any) => {
+    updatedFormData = [
       props.formData[0],
       props.formData[1],
       data.selectBook,
       ...props.formData.slice(3),
     ];
     props.setFormData(updatedFormData);
-  
+
     // console.log("updated form data in jewel",updatedFormData)
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
       navigate('/Therapycenters');
-      onOpenConnected()
+      onOpenConnected();
       // console.log("session id",sessionId)
 
       toast({
         title: 'Success',
         description: `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
          module name is ${module} and session id is ${sessionId}`,
-         status: 'success',
+        status: 'success',
 
         duration: 5000,
         position: 'top-right',
       });
-  
+
+      const existingDevice = await checkIfServiceExists(headsetid);
+      const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+      // if (appIsConnectedToInternet && existingDevice) {
+      if (appIsConnectedToInternet) {
+        console.log('updatedFormData', updatedFormData);
+        const socketMessage = {
+          sessionId,
+          [MODULE_PACKAGE_KEY]: module,
+          deviceId: headsetid,
+        };
+
+        dispatchSocketMessage(
+          START_APP_MESSAGE,
+          socketMessage,
+          headsetid,
+          updatedFormData
+        );
+        onOpenConnected();
+      } else {
+        console.log(headsetid);
+        console.log(existingDevice);
+        const errorMessage = !appIsConnectedToInternet
+          ? 'You are not connected to the internet'
+          : 'No headset found';
+
+        console.log(errorMessage);
+        setErrorMEssage(errorMessage);
+        setNotFound(true);
+      }
+
       // console.log(
       //   `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
       //    module name is ${module} and session id is ${sessionId}`
@@ -93,7 +133,7 @@ const SelectjewelRodja = (props: any) => {
       // console.log('Array of menu choices', updatedFormData);
     }
   };
-  
+
   const handleBackToSelectLevel = () => {
     props.onClose();
   };
@@ -102,6 +142,27 @@ const SelectjewelRodja = (props: any) => {
     setselectedBook(book);
     setValue('selectBook', book);
   };
+
+  const cancelSession = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+    closeSelectingAHeadset();
+    navigate('/');
+  };
+
+  const closeErrorModal = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  const selectAnotherHeadset = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  if (socketError) {
+    return null;
+  }
   return (
     <>
       <Modal
@@ -188,11 +249,14 @@ const SelectjewelRodja = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-             {props.formData[0] == 2  || props.formData[0] == 3 ? "select distractor" : "play"}
+              {props.formData[0] == 2 || props.formData[0] == 3
+                ? 'select distractor'
+                : 'play'}
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
+
       {onOpenSelectDistractors && (
         <SelectDistractorsRodja
           isOpen={isOpenSelectDistractors}
@@ -208,7 +272,28 @@ const SelectjewelRodja = (props: any) => {
           onCloseBooks={props.onClose}
         />
       )}
-        {onOpenConnected && (
+
+      {notFound ? (
+        <ErrorPopup
+          isOpen={notFound}
+          onClose={closeErrorModal}
+          closeSelectingAHeadset={closeSelectingAHeadset}
+          onCancelSession={cancelSession}
+          onSelectAnotherHeadset={selectAnotherHeadset}
+          errorMessages={errorMEssage}
+        />
+      ) : (
+        <OpenconnectedRodja
+          oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
+          onCloseSelectJewel={props.onClose}
+          isOpen={isOpenConnected}
+          onClose={onCloseConnected}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectDistractors={props.onClose}
+        />
+      )}
+      {/* {onOpenConnected && (
         <OpenconnectedRodja
         oncloseselectlevel={props.oncloseselectlevel}
         onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
@@ -218,7 +303,7 @@ const SelectjewelRodja = (props: any) => {
           onclosemodules={props.onclosemodules}
           onCloseSelectDistractors={props.onClose}
         />
-      )}
+      )} */}
     </>
   );
 };

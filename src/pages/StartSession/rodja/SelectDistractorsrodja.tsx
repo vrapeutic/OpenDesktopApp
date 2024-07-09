@@ -22,7 +22,10 @@ import { useNavigate } from 'react-router-dom';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import Openconnected from '../openconnected';
 import OpenconnectedRodja from './OpenconnectedRodja';
-
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import { ErrorPopup } from '../ErrorPopup';
 const SelectDistractorsRodja = (props: any) => {
   console.log("selected book in select distractors",props.selectBook)
 
@@ -30,12 +33,24 @@ const SelectDistractorsRodja = (props: any) => {
   console.log(",props.updatedFormData in distractor updatedFormData",props.updatedFormData)
 
   const navigate = useNavigate();
-  const { module, sessionId } = useStartSessionContext();
+  const { module, sessionId,headsetid } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
+
+  const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMEssage] = useState(null);
+  
+  const {
+    dispatchSocketMessage,
+    checkIfServiceExists,
+    checkAppNetWorkConnection,
+  } = useSocketManager();
+  const { popupFunctions } = usePopupsHandler();
+  const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
+  const { socketError } = useSocketManager();
   const [selectedDistractor, setselectedDistractor] = useState<number | null>(
     null
   );
@@ -55,7 +70,7 @@ const SelectDistractorsRodja = (props: any) => {
     mode: 'onTouched',
   });
 
-  const handleFormSubmit = (data: any) => {
+  const handleFormSubmit =  async(data: any) => {
   
     const updatedFormData = [
       props.formData[0],
@@ -83,6 +98,38 @@ const SelectDistractorsRodja = (props: any) => {
       position: 'top-right',
     });
 
+
+
+    const existingDevice = await checkIfServiceExists(headsetid);
+    const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+    // if (appIsConnectedToInternet && existingDevice) {
+    if (appIsConnectedToInternet) {
+      console.log('updatedFormData', updatedFormData);
+      const socketMessage = {
+        sessionId,
+        [MODULE_PACKAGE_KEY]: module,
+        deviceId: headsetid,
+      };
+
+      dispatchSocketMessage(
+        START_APP_MESSAGE,
+        socketMessage,
+        headsetid,
+        updatedFormData
+      );
+      onOpenConnected();
+    } else {
+      console.log(headsetid);
+      console.log(existingDevice);
+      const errorMessage = !appIsConnectedToInternet
+        ? 'You are not connected to the internet'
+        : 'No headset found';
+
+      console.log(errorMessage);
+      setErrorMEssage(errorMessage);
+      setNotFound(true);
+    }
+
     console.log(
       `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
        distractor  ${selectedDistractor} 
@@ -99,6 +146,27 @@ const SelectDistractorsRodja = (props: any) => {
     setselectedDistractor(distractor);
     setValue('selectDistractor', distractor);
   };
+
+  const cancelSession = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+    closeSelectingAHeadset();
+    navigate('/');
+  };
+
+  const closeErrorModal = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  const selectAnotherHeadset = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  if (socketError) {
+    return null;
+  }
   return (
     <>
       <Modal
@@ -190,7 +258,27 @@ const SelectDistractorsRodja = (props: any) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenConnected && (
+
+
+      {notFound ? (
+        <ErrorPopup
+          isOpen={notFound}
+          onClose={closeErrorModal}
+          closeSelectingAHeadset={closeSelectingAHeadset}
+          onCancelSession={cancelSession}
+          onSelectAnotherHeadset={selectAnotherHeadset}
+          errorMessages={errorMEssage}
+        />
+      ) : ( <OpenconnectedRodja
+        isOpen={isOpenConnected}
+        onClose={onCloseConnected}
+        onclosemodules={props.onclosemodules}
+        onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
+        oncloseselectlevel={props.oncloseselectlevel}
+        onCloseSelectJewel={props.onCloseSelectJewel}
+        onCloseSelectDistractors={props.onClose}
+      />)}
+      {/* {onOpenConnected && (
         <OpenconnectedRodja
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
@@ -200,7 +288,7 @@ const SelectDistractorsRodja = (props: any) => {
           onCloseSelectJewel={props.onCloseSelectJewel}
           onCloseSelectDistractors={props.onClose}
         />
-      )}
+      )} */}
     </>
   );
 };
