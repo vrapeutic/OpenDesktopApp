@@ -144,7 +144,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
     const appIsConnectedToInternet = await checkAppNetWorkConnection();
     console.log(appIsConnectedToInternet, sessionId, existingDevice);
     // if (appIsConnectedToInternet&&existingDevice)
-    if (appIsConnectedToInternet&&existingDevice) {
+    if (appIsConnectedToInternet) {
       // End old session
       dispatchSocketMessage(
         END_SESSION_MESSAGE,

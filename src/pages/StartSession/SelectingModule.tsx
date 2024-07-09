@@ -121,7 +121,7 @@ export default function SelectingModule(props: any) {
     const existingDevice = await checkIfServiceExists(headsetid);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     console.log(appIsConnectedToInternet);
-    if (!existingDevice || !appIsConnectedToInternet) {
+    if ( !appIsConnectedToInternet) {
       renderDisconnectedHeadSetError(
         !appIsConnectedToInternet && 'You are not connected to the internet'
       );

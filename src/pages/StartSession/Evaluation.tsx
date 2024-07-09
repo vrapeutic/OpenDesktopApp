@@ -124,10 +124,10 @@ export default function SelectEvaluation(props: any) {
               </Select>
             </GridItem>
             {errors.Evaluation && (
-              <Text color="red.500">{errors.Evaluation.message as string}</Text>
+              <Text color="red.500" fontSize={"17px"}>{errors.Evaluation.message as string}</Text>
             )}
             <GridItem>
-              <Text mt="25px">Session Notes (Optional)</Text>
+              <Text mt="25px">Session Notes </Text>
               <Textarea
                 {...register('Notes')}
                 id="Notes"
