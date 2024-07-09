@@ -24,11 +24,14 @@ import {
   
   import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import OpenconnectedGar from './OpenconnectedGar';
-  
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import { ErrorPopup } from '../ErrorPopup';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
   const SelectDistractorsGard = (props: any) => {
     const navigate = useNavigate();
     const toast = useToast();
-    const { module, sessionId } = useStartSessionContext();
+    const { module, sessionId ,headsetid} = useStartSessionContext();
     const {
       isOpen: isOpenConnected,
       onOpen: onOpenConnected,
@@ -39,7 +42,16 @@ import OpenconnectedGar from './OpenconnectedGar';
     const [selectedDistractors, setSelectedDistractors] = useState<number | null>(
       null
     );
-  
+    const [notFound, setNotFound] = useState(false);
+    const [errorMEssage, setErrorMEssage] = useState(null);
+    const {
+      dispatchSocketMessage,
+      checkIfServiceExists,
+      checkAppNetWorkConnection,
+    } = useSocketManager();
+    const { popupFunctions } = usePopupsHandler();
+    const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
+    const { socketError } = useSocketManager();
     const schema = joi.object({
       selectDistractors: joi.number().required(),
     });
@@ -58,7 +70,7 @@ import OpenconnectedGar from './OpenconnectedGar';
   
   
   
-    const handleFormSubmit = (data: any) => {
+    const handleFormSubmit =  async(data: any) => {
     
       const updatedFormData = [
         props.formData[0],
@@ -75,7 +87,6 @@ import OpenconnectedGar from './OpenconnectedGar';
       navigate('/Therapycenters');
       props.onClose();
     
-      onOpenConnected();
       toast({
         title: 'Success',
         description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
@@ -86,6 +97,38 @@ import OpenconnectedGar from './OpenconnectedGar';
         position: 'top-right',
       });
   
+
+
+      const existingDevice = await checkIfServiceExists(headsetid);
+      const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+      // if (appIsConnectedToInternet && existingDevice) {
+      if (appIsConnectedToInternet) {
+        console.log('updatedFormData', updatedFormData);
+        const socketMessage = {
+          sessionId,
+          [MODULE_PACKAGE_KEY]: module,
+          deviceId: headsetid,
+        };
+
+        dispatchSocketMessage(
+          START_APP_MESSAGE,
+          socketMessage,
+          headsetid,
+          updatedFormData
+        );
+        onOpenConnected();
+      } else {
+        console.log(headsetid);
+        console.log(existingDevice);
+        const errorMessage = !appIsConnectedToInternet
+          ? 'You are not connected to the internet'
+          : 'No headset found';
+
+        console.log(errorMessage);
+        setErrorMEssage(errorMessage);
+        setNotFound(true);
+      }
+
       console.log(
         `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
          distractor ${selectedDistractors} 
@@ -93,6 +136,27 @@ import OpenconnectedGar from './OpenconnectedGar';
       );
       console.log('Array of menu choices', updatedFormData);
     };
+
+    const cancelSession = () => {
+      setNotFound(false);
+      closeSelectingAModule();
+      closeSelectingAHeadset();
+      navigate('/');
+    };
+  
+    const closeErrorModal = () => {
+      setNotFound(false);
+      closeSelectingAModule();
+    };
+  
+    const selectAnotherHeadset = () => {
+      setNotFound(false);
+      closeSelectingAModule();
+    };
+  
+    if (socketError) {
+      return null;
+    }
     const handleButtonClick = (distractors: number) => {
       setSelectedDistractors(distractors);
       setValue('selectDistractors', distractors);
@@ -186,7 +250,32 @@ import OpenconnectedGar from './OpenconnectedGar';
             </ModalFooter>
           </ModalContent>
         </Modal>
-        {onOpenConnected && (
+
+
+
+        {notFound ? (
+        <ErrorPopup
+          isOpen={notFound}
+          onClose={closeErrorModal}
+          closeSelectingAHeadset={closeSelectingAHeadset}
+          onCancelSession={cancelSession}
+          onSelectAnotherHeadset={selectAnotherHeadset}
+          errorMessages={errorMEssage}
+        />
+      ) :(
+
+
+        <OpenconnectedGar
+        isOpen={isOpenConnected}
+        onClose={onCloseConnected}
+        onclosemodules={props.onclosemodules}
+        onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+        SelectDistractors={props.onClose}
+        onCloseSelectNumber={props.onCloseSelectNumber}
+        oncloseselectlevel={props.oncloseselectlevel}
+      />
+      )}
+        {/* {onOpenConnected && (
           <OpenconnectedGar
             isOpen={isOpenConnected}
             onClose={onCloseConnected}
@@ -196,7 +285,7 @@ import OpenconnectedGar from './OpenconnectedGar';
             onCloseSelectNumber={props.onCloseSelectNumber}
             oncloseselectlevel={props.oncloseselectlevel}
           />
-        )}
+        )} */}
       </>
     );
   };

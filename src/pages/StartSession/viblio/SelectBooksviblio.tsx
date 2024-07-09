@@ -21,13 +21,16 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import SelectDistractors from './SelectDistractorsviblio';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import Openconnected from '../openconnected';
-import OpenConnectedVi from './openConnectedVi';
 
+import OpenConnectedVi from './openConnectedVi';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { ErrorPopup } from '../ErrorPopup';
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
-  const { module,sessionId } = useStartSessionContext();
+  const { module,sessionId,headsetid } = useStartSessionContext();
   const toast = useToast();
   const {
     isOpen: isOpenConnected,
@@ -39,7 +42,17 @@ const SelectBooksViblio = (props: any) => {
     onOpen: onOpenSelectDistractors,
     onClose: onCloseSelectDistractors,
   } = useDisclosure();
+  const {
+    dispatchSocketMessage,
+    checkIfServiceExists,
+    checkAppNetWorkConnection,
+  } = useSocketManager();
+  const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMEssage] = useState(null);
 
+  const { popupFunctions } = usePopupsHandler();
+  const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
+  const { socketError } = useSocketManager();
   const schema = joi.object({
     selectBook: joi.number().required(),
   });
@@ -55,7 +68,7 @@ const SelectBooksViblio = (props: any) => {
     mode: 'onTouched',
   });
 
-  const handleFormSubmit = (data: any) => {
+  const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
       props.formData[0],
       data.selectBook,
@@ -67,7 +80,7 @@ const SelectBooksViblio = (props: any) => {
       onOpenSelectDistractors();
     } else {
       navigate('/Therapycenters');
-      onOpenConnected()
+  
       // console.log("session id",sessionId)
 
       toast({
@@ -80,14 +93,73 @@ const SelectBooksViblio = (props: any) => {
         position: 'top-right',
       });
   
-      // console.log(
-      //   `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} 
-      //   module name is ${module} and session id is ${sessionId}`
-      // );
-      // console.log('Array of menu choices', updatedFormData);
+
+
+
+
+
+
+
+      const existingDevice = await checkIfServiceExists(headsetid);
+      const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+      // if (appIsConnectedToInternet && existingDevice) {
+      if (appIsConnectedToInternet ) {
+        console.log(updatedFormData)
+        const socketMessage = {
+          sessionId,
+          [MODULE_PACKAGE_KEY]: module,
+          deviceId: headsetid,
+        };
+  
+        dispatchSocketMessage(
+          START_APP_MESSAGE,
+          socketMessage,
+          headsetid,
+          updatedFormData
+        );
+        onOpenConnected();
+      } else {
+        console.log(headsetid);
+        console.log(existingDevice);
+        const errorMessage = !appIsConnectedToInternet
+          ? 'You are not connected to the internet'
+          : 'No headset found';
+  
+          console.log(errorMessage);
+        setErrorMEssage(errorMessage);
+        setNotFound(true);
+      }
+
+
+
+
+
+
+
+   
+      console.log('Array of menu choices', updatedFormData);
     }
   };
-  
+  const cancelSession = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+    closeSelectingAHeadset();
+    navigate('/');
+  };
+
+  const closeErrorModal = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  const selectAnotherHeadset = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  if (socketError) {
+    return null;
+  }
   const handleBackToSelectLevel = () => {
     props.onClose();
   };
@@ -196,11 +268,22 @@ const SelectBooksViblio = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
           onCloseBooks={props.onClose}
-         
+          onCloseSelectBooksviblio={props.onClose}
+        
         />
       )}
-        {onOpenConnected && (
-         <OpenConnectedVi
+
+{notFound ? (
+        <ErrorPopup
+          isOpen={notFound}
+          onClose={closeErrorModal}
+          closeSelectingAHeadset={closeSelectingAHeadset}
+          onCancelSession={cancelSession}
+          onSelectAnotherHeadset={selectAnotherHeadset}
+          errorMessages={errorMEssage}
+        />
+      ) : (
+        <OpenConnectedVi
          isOpen={isOpenConnected}
          onClose={onCloseConnected}
          onCloseSelectBooksviblio={props.onClose}
@@ -208,6 +291,15 @@ const SelectBooksViblio = (props: any) => {
          onclosemodules={props.onclosemodules}
          onCloseSelectDistractors={props.onClose}    />
       )}
+        {/* {onOpenConnected && (
+         <OpenConnectedVi
+         isOpen={isOpenConnected}
+         onClose={onCloseConnected}
+         onCloseSelectBooksviblio={props.onClose}
+         oncloseselectlevel={props.oncloseselectlevel}
+         onclosemodules={props.onclosemodules}
+         onCloseSelectDistractors={props.onClose}    />
+      )} */}
     </>
   );
 };

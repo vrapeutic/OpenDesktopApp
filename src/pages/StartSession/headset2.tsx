@@ -76,6 +76,7 @@ const ErrorsModal = ({
 };
 
 const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
+
   const { setStartSession, setheadsetid, headsetid, sessionId, setSessionId } =
     useStartSessionContext();
   const { addFunction } = usePopupsHandler();
@@ -103,6 +104,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       'string.empty': 'You must select a headset',
     }),
   });
+
 
   const {
     register,
@@ -132,6 +134,8 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
     }
   };
   const handleFormSubmit = async (data: any) => {
+
+    // const headsetId = getValues(HEADSET_FIELD);
     console.log(data.headset);
     // const headsetId = data.headset;
     await setheadsetid(data.headset);
@@ -139,7 +143,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
     const existingDevice = await checkIfServiceExists(data.headset);
     const appIsConnectedToInternet = await checkAppNetWorkConnection();
     console.log(appIsConnectedToInternet, sessionId, existingDevice);
-
+    // if (appIsConnectedToInternet&&existingDevice)
     if (appIsConnectedToInternet) {
       // End old session
       dispatchSocketMessage(

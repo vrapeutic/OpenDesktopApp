@@ -18,21 +18,33 @@ import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectDistractors from './SelectDistractors';
-
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import OpenconnectedArcheeko from './OpenconnectedArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import { useNavigate } from 'react-router-dom';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import { ErrorPopup } from '../ErrorPopup';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 const SelectNumberArcheeko = (props: any) => {
   console.log('select form data in number in 30', props.formData);
   const toast = useToast();
-  const { module, sessionId } = useStartSessionContext();
+  const { module, sessionId ,headsetid} = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<any[]>([]);
+  const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMEssage] = useState(null);
+  const {
+    dispatchSocketMessage,
+    checkIfServiceExists,
+    checkAppNetWorkConnection,
+  } = useSocketManager();
+  const { popupFunctions } = usePopupsHandler();
+  const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
+  const { socketError } = useSocketManager();
   const {
     isOpen: isOpenSelectDistractors,
     onOpen: onOpenSelectDistractors,
@@ -56,7 +68,7 @@ const SelectNumberArcheeko = (props: any) => {
 
 
   let updatedFormData;
-  const handleFormSubmit = (data: any) => {
+  const handleFormSubmit = async (data: any) => {
     console.log(data.selectNumber);
     updatedFormData = [
       props.formData[0],
@@ -71,7 +83,7 @@ const SelectNumberArcheeko = (props: any) => {
       onOpenSelectDistractors();
     } else {
       navigate('/Therapycenters');
-      onOpenConnected();
+      
       console.log('session id', sessionId);
 
       toast({
@@ -83,6 +95,42 @@ const SelectNumberArcheeko = (props: any) => {
         duration: 5000,
         position: 'top-right',
       });
+
+
+
+      const existingDevice = await checkIfServiceExists(headsetid);
+      const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+      // if (appIsConnectedToInternet && existingDevice) {
+      if (appIsConnectedToInternet ) {
+        console.log(updatedFormData)
+        const socketMessage = {
+          sessionId,
+          [MODULE_PACKAGE_KEY]: module,
+          deviceId: headsetid,
+        };
+  
+        dispatchSocketMessage(
+          START_APP_MESSAGE,
+          socketMessage,
+          headsetid,
+          updatedFormData
+        );
+        onOpenConnected();
+      } else {
+        console.log(headsetid);
+        console.log(existingDevice);
+        const errorMessage = !appIsConnectedToInternet
+          ? 'You are not connected to the internet'
+          : 'No headset found';
+  
+          console.log(errorMessage);
+        setErrorMEssage(errorMessage);
+        setNotFound(true);
+      }
+
+
+
+
 
       console.log(
         `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, Number ${selectedNumber} ,
@@ -97,6 +145,30 @@ const SelectNumberArcheeko = (props: any) => {
     setValue('selectNumber', number);
   };
 
+
+
+
+
+  const cancelSession = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+    closeSelectingAHeadset();
+    navigate('/');
+  };
+
+  const closeErrorModal = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  const selectAnotherHeadset = () => {
+    setNotFound(false);
+    closeSelectingAModule();
+  };
+
+  if (socketError) {
+    return null;
+  }
   return (
     <>
       <Modal
@@ -200,8 +272,29 @@ const SelectNumberArcheeko = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
+{
+notFound?
 
-      {onOpenConnected && (
+<ErrorPopup
+isOpen={notFound}
+onClose={closeErrorModal}
+closeSelectingAHeadset={closeSelectingAHeadset}
+onCancelSession={cancelSession}
+onSelectAnotherHeadset={selectAnotherHeadset}
+errorMessages={errorMEssage}
+/>:
+ <OpenconnectedArcheeko
+ isOpen={isOpenConnected}
+ onClose={onCloseConnected}
+ onclosemodules={props.onclosemodules}
+ onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+ SelectDistractors={onCloseSelectDistractors}
+ onCloseSelectNumber={props.onClose}
+ oncloseselectlevel={props.oncloseselectlevel}
+/>
+
+}
+      {/* {onOpenConnected && (
         <OpenconnectedArcheeko
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
@@ -211,7 +304,7 @@ const SelectNumberArcheeko = (props: any) => {
           onCloseSelectNumber={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
         />
-      )}
+      )} */}
     </>
   );
 };
