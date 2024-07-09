@@ -40,7 +40,8 @@ export default function OpenconnectedArcheeko(props: any) {
       dispatchSocketMessage(
         END_SESSION_MESSAGE,
         { deviceId: headsetid },
-        headsetid
+        headsetid,
+        
       );
       await endSissionApi();
       onevaluationOpen()

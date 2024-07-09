@@ -32,7 +32,9 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { END_SESSION_MESSAGE } from '@main/constants';
 import SelectLevelGar from './Gardendo/SelectLevelGar';
 
+
 export default function SelectingModule(props: any) {
+  
   const { popupFunctions, addFunction } = usePopupsHandler();
   const {
     socketError,
@@ -41,15 +43,14 @@ export default function SelectingModule(props: any) {
     checkAppNetWorkConnection,
     dispatchSocketMessage,
   } = useSocketManager();
+  
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
   const [packageName, setPackagename] = useState('');
   const { startSession, sessionId, headsetid } = useStartSessionContext();
-  const { closeSelectingAHeadset, renderDisconnectedHeadSetError } =
-    popupFunctions;
+  const { closeSelectingAHeadset, renderDisconnectedHeadSetError } = popupFunctions;
   const [modules, setModules] = useState([]);
-
   const {
     isOpen: isOpenSelectlevelrodja,
     onOpen: onOpenSelectlevelrodja,
@@ -84,6 +85,7 @@ export default function SelectingModule(props: any) {
   const [errors, setErrors] = useState({
     selectedModule: null,
   });
+  
 
   const schema = Joi.object().keys({
     selectedModule: Joi.string().required().label('module Name'),
@@ -114,9 +116,25 @@ export default function SelectingModule(props: any) {
   //new Code
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+
+   
     const existingDevice = await checkIfServiceExists(headsetid);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     console.log(appIsConnectedToInternet);
+    if (!existingDevice || !appIsConnectedToInternet) {
+      renderDisconnectedHeadSetError(
+        !appIsConnectedToInternet && 'You are not connected to the internet'
+      );
+      return;
+    }
+
+
+
+    if (socketError) {
+      setSocketError(null);
+      setOpenRunningPopup(false);
+    }
+    
 
     const { error } = schema.validate(values, { abortEarly: false });
 
@@ -128,60 +146,57 @@ export default function SelectingModule(props: any) {
       setErrors(validationErrors);
     } else {
       console.log('eles switch ');
+      switch (name) {
+        case 'Archeeko':
+          console.log('Archeekon', name);
+          return onOpenSelectlevelArcheeko();
+        case 'Viblio':
+          console.log('Viblio', name);
+          return onOpenSelectlevelviblio();
+        case 'Rodja':
+          console.log('Rodja', name);
+          return onOpenSelectlevelrodja();
+        case 'GardenDo':
+          console.log('GardenDo', name);
+          return onOpenSelectlevelGar();
+        default:
+          toast({
+            title: 'error',
+            description: `This module is not available, please select anther module`,
+            status: 'error',
+            duration: 5000,
+            position: 'top-right',
+          });
+      }
       // if (!appIsConnectedToInternet&&existingDevice) {
-      if (appIsConnectedToInternet) {
-        const socketMessage = {
-          sessionId,
-          [MODULE_PACKAGE_KEY]: packageName,
-          deviceId: headsetid,
-        };
+      // if (appIsConnectedToInternet) {
+      //   const socketMessage = {
+      //     sessionId,
+      //     [MODULE_PACKAGE_KEY]: packageName,
+      //     deviceId: headsetid,
+      //   };
 
-        dispatchSocketMessage(
-          START_APP_MESSAGE,
-          socketMessage,
-          headsetid,
-          ...[1, 2] // this array for holding settings
-        );
+      //   dispatchSocketMessage(
+      //     START_APP_MESSAGE,
+      //     socketMessage,
+      //     headsetid,
+      //     ...[1, 2] // this array for holding settings
+      //   );
 
-        switch (name) {
-          case 'Archeeko':
-            console.log('Archeekon', name);
-            return onOpenSelectlevelArcheeko();
-          case 'Viblio':
-            console.log('Viblio', name);
-            return onOpenSelectlevelviblio();
-          case 'Rodja':
-            console.log('Rodja', name);
-            return onOpenSelectlevelrodja();
-          case 'GardenDo':
-            console.log('GardenDo', name);
-            return onOpenSelectlevelGar();
-          default:
-            toast({
-              title: 'error',
-              description: `This module is not available, please select anther module`,
-              status: 'error',
-              duration: 5000,
-              position: 'top-right',
-            });
-        }
-        props.setOpenRunningPopup(true);
-      } else {
-        console.log('eless');
-        console.log(headsetid);
-        console.log(existingDevice);
-        const errorMessage = !appIsConnectedToInternet
-          ? 'You are not connected to the internet'
-          : 'No headset found';
+       
+      //   props.setOpenRunningPopup(true);
+      // } else {
+      //   console.log('eless');
+      //   console.log(headsetid);
+      //   console.log(existingDevice);
+      //   const errorMessage = !appIsConnectedToInternet
+      //     ? 'You are not connected to the internet'
+      //     : 'No headset found';
 
-        setErrorMEssage(errorMessage);
-        setNotFound(true);
-      }
-      if (socketError) {
-        setSocketError(null);
-        setOpenRunningPopup(false);
-      }
-      setErrors({ selectedModule: null });
+      //   setErrorMEssage(errorMessage);
+      //   setNotFound(true);
+      // }
+     
     }
   };
 
