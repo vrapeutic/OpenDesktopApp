@@ -105,7 +105,6 @@ export default function OpenConnectedVi(props: any) {
   const antherModule =()=>{
     props.onClose()
     props.onCloseSelectBooksviblio()
-
     props.oncloseselectlevel()
     props.onCloseSelectDistractors()
    
