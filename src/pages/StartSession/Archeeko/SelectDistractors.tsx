@@ -1,18 +1,14 @@
 import {
-
   Button,
   Modal,
   ModalBody,
-
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
-
   FormControl,
   FormErrorMessage,
-
   useToast,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -32,7 +28,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
   const toast = useToast();
-  const { module, sessionId,headsetid } = useStartSessionContext();
+  const { module, sessionId, headsetid } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -67,12 +63,7 @@ const SelectDistractors = (props: any) => {
     mode: 'onSubmit',
   });
 
- 
-
-
-
   const handleFormSubmit = async (data: any) => {
-  
     const updatedFormData = [
       props.formData[0],
       props.formData[1],
@@ -80,15 +71,13 @@ const SelectDistractors = (props: any) => {
       data.selectDistractors,
       ...props.formData.slice(4),
     ];
-   
 
-    console.log("all subimtted data in distractor",updatedFormData)
+    console.log('all subimtted data in distractor', updatedFormData);
     props.setFormData(updatedFormData);
 
     navigate('/Therapycenters');
     props.onClose();
-  
-    
+
     toast({
       title: 'Success',
       description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
@@ -99,12 +88,11 @@ const SelectDistractors = (props: any) => {
       position: 'top-right',
     });
 
-
     const existingDevice = await checkIfServiceExists(headsetid);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    // if (appIsConnectedToInternet && existingDevice) {
-    if (appIsConnectedToInternet ) {
-      console.log(updatedFormData)
+    if (appIsConnectedToInternet && existingDevice) {
+      // if (appIsConnectedToInternet ) {
+      console.log(updatedFormData);
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: module,
@@ -125,7 +113,7 @@ const SelectDistractors = (props: any) => {
         ? 'You are not connected to the internet'
         : 'No headset found';
 
-        console.log(errorMessage);
+      console.log(errorMessage);
       setErrorMEssage(errorMessage);
       setNotFound(true);
     }
@@ -140,7 +128,6 @@ const SelectDistractors = (props: any) => {
     setSelectedDistractors(distractors);
     setValue('selectDistractors', distractors);
   };
-
 
   const cancelSession = () => {
     setNotFound(false);
@@ -252,8 +239,6 @@ const SelectDistractors = (props: any) => {
         </ModalContent>
       </Modal>
 
-
-      
       {notFound ? (
         <ErrorPopup
           isOpen={notFound}
