@@ -24,7 +24,7 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 
 export default function OpenconnectedGar(props: any) {
   const { dispatchSocketMessage } = useSocketManager();
-  const { startSession, sessionId , headsetid } = useStartSessionContext();
+  const { startSession, sessionId , headsetKey } = useStartSessionContext();
   const toast = useToast();
   const {
     isOpen: isevaluationopen,
@@ -38,8 +38,8 @@ export default function OpenconnectedGar(props: any) {
       localStorage.removeItem('sessionID');
       dispatchSocketMessage(
         END_SESSION_MESSAGE,
-        { deviceId: headsetid },
-        headsetid
+        { deviceId: headsetKey },
+        headsetKey
       );
       await endSissionApi();
       onevaluationOpen()
@@ -124,7 +124,7 @@ export default function OpenconnectedGar(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset {headsetid}
+              You are connected to the VR headset {headsetKey}
             </ModalHeader>
 
             <ModalBody>

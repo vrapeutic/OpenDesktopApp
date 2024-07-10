@@ -24,6 +24,8 @@ const ConnectedVR = (props: any) => {
   const [errorMEssage, setErrorMEssage] = useState(null);
 
   const handleSubmit = async () => {
+    
+const HEADSET_FIELD = 'headset';
     const { packageName, headsetId, sessionId } = props;
     const existingDevice = await checkIfServiceExists(headsetId);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
