@@ -42,6 +42,7 @@ export const ErrorPopup = ({
   
     startSession,
     sessionId,
+    setSessionId
   } = useStartSessionContext();
   const {
     isOpen: ismoduleopen,
@@ -63,7 +64,8 @@ export const ErrorPopup = ({
   };
  
 
-  const endSessionApi = () => {
+  const endSessionApi =async() => {
+    try{
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
@@ -95,11 +97,22 @@ export const ErrorPopup = ({
     );
     console.log(differenceInMinutes);
     console.log(sessionId, startSession);
-    return axios.put(
+    const response = await axios.put(
       `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
       { vr_duration: differenceInMinutes },
       { headers }
     );
+
+    // If successful, set sessionId to null
+    setSessionId("")
+
+    // Return the response data or handle as needed
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error('Error ending session:', error);
+    throw error; // Optionally rethrow to propagate the error
+  }
   };
 
 
