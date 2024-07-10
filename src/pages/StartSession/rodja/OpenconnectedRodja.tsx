@@ -24,7 +24,7 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import { END_SESSION_MESSAGE } from '@main/constants';
 
 export default function OpenconnectedRodja(props: any) {
-  const { startSession, sessionId , headsetid } = useStartSessionContext();
+  const { startSession, sessionId , headsetKey } = useStartSessionContext();
   const toast = useToast();
   const navigate = useNavigate();
   const {
@@ -39,8 +39,8 @@ export default function OpenconnectedRodja(props: any) {
       localStorage.removeItem('sessionID');
       dispatchSocketMessage(
         END_SESSION_MESSAGE,
-        { deviceId: headsetid },
-        headsetid
+        { deviceId: headsetKey },
+        headsetKey
       );
       await endSissionApi();
       onevaluationOpen()
@@ -124,7 +124,7 @@ export default function OpenconnectedRodja(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset {headsetid}
+              You are connected to the VR headset {headsetKey}
             </ModalHeader>
 
             <ModalBody>

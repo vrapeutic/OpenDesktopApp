@@ -30,7 +30,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
-  const { module, sessionId, headsetid } = useStartSessionContext();
+  const { module, sessionId, headsetid ,headsetKey} = useStartSessionContext();
   const toast = useToast();
   const {
     isOpen: isOpenConnected,
@@ -93,21 +93,21 @@ const SelectBooksViblio = (props: any) => {
         position: 'top-right',
       });
 
-      const existingDevice = await checkIfServiceExists(headsetid);
+      const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
       if (appIsConnectedToInternet && existingDevice) {
-        // if (appIsConnectedToInternet ) {
+      
         console.log(updatedFormData);
         const socketMessage = {
           sessionId,
           [MODULE_PACKAGE_KEY]: module,
-          deviceId: headsetid,
+          deviceId: headsetKey,
         };
 
         dispatchSocketMessage(
           START_APP_MESSAGE,
           socketMessage,
-          headsetid,
+          headsetKey,
           updatedFormData
         );
         onOpenConnected();

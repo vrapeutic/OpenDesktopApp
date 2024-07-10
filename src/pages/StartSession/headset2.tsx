@@ -141,10 +141,11 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   const handleFormSubmit = async (data: any) => {
     // Access the selected headset value from data
     const selectedHeadsetId = data.headset;
-
+console.log(selectedHeadsetId)
     // If headsets array is available, find the corresponding headset
     const selectedHeadset = headsets.find(
       (headset) => headset.id === selectedHeadsetId
+
     );
 
     if (selectedHeadset) {
@@ -330,7 +331,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
         <SelectingModule
           isOpen={deviceIsFound}
           onClose={() => setDeviceIsFound(false)}
-          headsetId={getValues(HEADSET_FIELD)}
+          headsetId={headsetKey}
           sessionId={sessionId}
         />
       )}

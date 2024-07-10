@@ -48,7 +48,7 @@ export default function SelectingModule(props: any) {
   const [errorMEssage, setErrorMEssage] = useState(null);
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
   const [packageName, setPackagename] = useState('');
-  const { startSession, sessionId, headsetid } = useStartSessionContext();
+  const { startSession, sessionId, headsetid ,headsetKey} = useStartSessionContext();
   const { closeSelectingAHeadset, renderDisconnectedHeadSetError } = popupFunctions;
   const [modules, setModules] = useState([]);
   const {
@@ -90,54 +90,28 @@ export default function SelectingModule(props: any) {
   const schema = Joi.object().keys({
     selectedModule: Joi.string().required().label('module Name'),
   });
-  console.log('to make sure ', headsetid, sessionId);
-  // old Code
-  // const handleSubmit = (): void => {
-  //   switch (name) {
-  //     case 'Archeeko':
-  //       console.log('Archeekon', name);
-  //       return onOpenSelectlevelArcheeko();
-  //     case 'Viblio':
-  //       console.log('Viblio', name);
-  //       return onOpenSelectlevelviblio();
-  //       case 'Rodja':
-  //       console.log('Rodja', name);
-  //       return onOpenSelectlevelrodja();
-  //     default: toast({
-  //         title: 'error',
-  //         description: `This module is not available, please select anther module`,
-  //         status: 'error',
-  //         duration: 5000,
-  //         position: 'top-right',
-  //       });
-  //   }
-  // };
+
+
 
   //new Code
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-
-   
-    const existingDevice = await checkIfServiceExists(headsetid);
+    const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    console.log(appIsConnectedToInternet);
-    if ( !appIsConnectedToInternet) {
+    console.log(appIsConnectedToInternet,existingDevice);
+    if (!existingDevice || !appIsConnectedToInternet) {
+     
       renderDisconnectedHeadSetError(
         !appIsConnectedToInternet && 'You are not connected to the internet'
       );
       return;
     }
 
-
-
     if (socketError) {
       setSocketError(null);
       setOpenRunningPopup(false);
     }
-    
-
     const { error } = schema.validate(values, { abortEarly: false });
-
     if (error) {
       const validationErrors: any = {};
       error.details.forEach((detail) => {
@@ -168,99 +142,11 @@ export default function SelectingModule(props: any) {
             position: 'top-right',
           });
       }
-      // if (!appIsConnectedToInternet&&existingDevice) {
-      // if (appIsConnectedToInternet) {
-      //   const socketMessage = {
-      //     sessionId,
-      //     [MODULE_PACKAGE_KEY]: packageName,
-      //     deviceId: headsetid,
-      //   };
-
-      //   dispatchSocketMessage(
-      //     START_APP_MESSAGE,
-      //     socketMessage,
-      //     headsetid,
-      //     ...[1, 2] // this array for holding settings
-      //   );
-
-       
-      //   props.setOpenRunningPopup(true);
-      // } else {
-      //   console.log('eless');
-      //   console.log(headsetid);
-      //   console.log(existingDevice);
-      //   const errorMessage = !appIsConnectedToInternet
-      //     ? 'You are not connected to the internet'
-      //     : 'No headset found';
-
-      //   setErrorMEssage(errorMessage);
-      //   setNotFound(true);
-      // }
-     
+      
     }
   };
 
-  //both old and new code
-  // const handleSubmit = async (event: any) => {
-  //   event.preventDefault();
-
-  //   const existingDevice = await checkIfServiceExists(props.headsetId);
-  //   const appIsConnectedToInternet = await checkAppNetWorkConnection();
-
-  //   if (!existingDevice || !appIsConnectedToInternet) {
-  //     renderDisconnectedHeadSetError(
-  //       !appIsConnectedToInternet && 'You are not connected to the internet'
-  //     );
-  //     return;
-  //   }
-
-  //   if (socketError) {
-  //     setSocketError(null);
-  //     setOpenRunningPopup(false);
-  //   }
-
-  //   const { error } = schema.validate(values, { abortEarly: false });
-  //   console.log(error);
-
-  //   if (error) {
-  //     const validationErrors: any = {};
-  //     error.details.forEach((detail) => {
-  //       validationErrors[detail.path[0]] = detail.message;
-  //     });
-  //     setErrors(validationErrors);
-  //     console.log(validationErrors);
-  //     return;
-  //   } else {
-  //     setErrors({ selectedModule: null });
-  //   }
-
-  //   switch (
-  //     values.selectedModule // Assuming values.selectedModule contains the module name
-  //   ) {
-  //     case 'Archeeko':
-  //       console.log('Archeeko', values.selectedModule);
-  //       onOpenSelectlevelArcheeko();
-  //       break;
-  //     case 'Viblio':
-  //       console.log('Viblio', values.selectedModule);
-  //       onOpenSelectlevelviblio();
-  //       break;
-  //     case 'Rodja':
-  //       console.log('Rodja', values.selectedModule);
-  //       onOpenSelectlevelrodja();
-  //       break;
-  //     default:
-  //       toast({
-  //         title: 'error',
-  //         description: `This module is not available, please select another module`,
-  //         status: 'error',
-  //         duration: 5000,
-  //         position: 'top-right',
-  //       });
-  //   }
-
-  //  props.onOpen();
-  // };
+  
 
   useEffect(() => {
     (async () => {
