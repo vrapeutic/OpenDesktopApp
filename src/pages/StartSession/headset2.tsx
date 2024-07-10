@@ -76,9 +76,15 @@ const ErrorsModal = ({
 };
 
 const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
-
-  const { setStartSession, setheadsetid, headsetid, sessionId, setSessionId } =
-    useStartSessionContext();
+  const {
+    setStartSession,
+    setheadsetid,
+    headsetid,
+    sessionId,
+    setSessionId,
+    headsetKey,
+    setHeadsetKey,
+  } = useStartSessionContext();
   const { addFunction } = usePopupsHandler();
   const {
     dispatchSocketMessage,
@@ -104,7 +110,6 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       'string.empty': 'You must select a headset',
     }),
   });
-
 
   const {
     register,
@@ -134,22 +139,33 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
     }
   };
   const handleFormSubmit = async (data: any) => {
+    // Access the selected headset value from data
+    const selectedHeadsetId = data.headset;
 
-    // const headsetId = getValues(HEADSET_FIELD);
-    console.log(data.headset);
-    // const headsetId = data.headset;
-    await setheadsetid(data.headset);
+    // If headsets array is available, find the corresponding headset
+    const selectedHeadset = headsets.find(
+      (headset) => headset.id === selectedHeadsetId
+    );
 
-    const existingDevice = await checkIfServiceExists(data.headset);
+    if (selectedHeadset) {
+      const headsetKeyt = selectedHeadset.attributes.key;
+      setHeadsetKey(headsetKeyt);
+      console.log('Selected headset key:', headsetKey);
+      // You can use the headsetKey value here as needed
+    }
+
+    await setheadsetid(selectedHeadsetId);
+    const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection();
     console.log(appIsConnectedToInternet, sessionId, existingDevice);
-    // if (appIsConnectedToInternet&&existingDevice)
-    if (appIsConnectedToInternet) {
+    if (appIsConnectedToInternet && existingDevice) {
+      console.log('finddivice', existingDevice);
+      // if (appIsConnectedToInternet) {
       // End old session
       dispatchSocketMessage(
         END_SESSION_MESSAGE,
-        { deviceId: headsetid },
-        headsetid
+        { deviceId: headsetKey },
+        headsetKey
       );
 
       const sessionResponse = await getSessionId(data.headset);
@@ -168,7 +184,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
     } else {
       const errorMessage = !appIsConnectedToInternet
         ? 'You are not connected to the internet.'
-        : 'The selected headset is not connected.';
+        : 'The selected headset is not connected. You might need first to click on Start Service in the Master App on the VR headset.';
 
       setErrorMessages(errorMessage);
       onErrorOpen();
@@ -203,50 +219,6 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       return { success: false, error: error.response.data.error };
     }
   };
-
-  // const setSessionIdState = useCallback(async () => {
-  //   console.log('setSessionIdState');
-
-  //   try {
-  //     const token = await (window as any).electronAPI.getPassword('token');
-
-  //     const headers = {
-  //       Authorization: `Bearer ${token}`,
-  //     };
-  //     const response = await axios.post(
-  //       `${config.apiURL}/api/v1/sessions`,
-  //       {
-  //         center_id: props.centerId,
-  //         child_id: props.childId,
-  //         headset_id: headsetid,
-  //       },
-  //       { headers }
-  //     );
-
-  //     console.log('API Response from session id');
-  //     console.log(
-  //       'API Response from session id: data.data.id',
-  //       response.data.data.id
-  //     );
-
-  //   } catch (error) {
-  //     console.log('Error assigning center to module:', error);
-  //     setDeviceIsFound(false);
-  //   } finally {
-  //     console.log('finally');
-  //     // TODO: remove this after integrating a working session id API call
-  //     //   if (!sessionId) {
-  //     //     const sessionID = localStorage.getItem('sessionID');
-
-  //     //     const sessionHex = Math.floor(
-  //     //       Math.random() * 0xffffff * 10000000
-  //     //     ).toString(12);
-
-  //     //     localStorage.setItem('sessionID', sessionID || sessionHex);
-  //     //     setSessionId(sessionHex);
-  //     //   }
-  //   }
-  // }, [getValues, props.centerId, props.childId]);
 
   const handleCancelSession = () => {
     onErrorClose();
