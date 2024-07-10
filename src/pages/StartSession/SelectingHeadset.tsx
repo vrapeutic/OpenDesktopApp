@@ -352,8 +352,8 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
     console.log('handleFormSubmit');
     const existingDevice = await checkIfServiceExists(headsetid);
     const appIsConnectedToInternet = await checkAppNetWorkConnection();
-    // if (appIsConnectedToInternet && existingDevice) 
-    if (appIsConnectedToInternet ) {
+    if (appIsConnectedToInternet && existingDevice) {
+      // if (appIsConnectedToInternet ) {
       console.log(appIsConnectedToInternet, existingDevice);
       // end old session
       dispatchSocketMessage(

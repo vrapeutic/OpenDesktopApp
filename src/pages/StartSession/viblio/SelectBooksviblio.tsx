@@ -30,7 +30,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
-  const { module,sessionId,headsetid } = useStartSessionContext();
+  const { module, sessionId, headsetid } = useStartSessionContext();
   const toast = useToast();
   const {
     isOpen: isOpenConnected,
@@ -75,42 +75,35 @@ const SelectBooksViblio = (props: any) => {
       ...props.formData.slice(2),
     ];
     props.setFormData(updatedFormData);
-  
+
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
       navigate('/Therapycenters');
-  
+
       // console.log("session id",sessionId)
 
       toast({
         title: 'Success',
         description: `You assigned level ${updatedFormData[0]} , book ${selectedBook} ,
          module name is ${module} and session id is ${sessionId}`,
-         status: 'success',
+        status: 'success',
 
         duration: 5000,
         position: 'top-right',
       });
-  
-
-
-
-
-
-
 
       const existingDevice = await checkIfServiceExists(headsetid);
       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-      // if (appIsConnectedToInternet && existingDevice) {
-      if (appIsConnectedToInternet ) {
-        console.log(updatedFormData)
+      if (appIsConnectedToInternet && existingDevice) {
+        // if (appIsConnectedToInternet ) {
+        console.log(updatedFormData);
         const socketMessage = {
           sessionId,
           [MODULE_PACKAGE_KEY]: module,
           deviceId: headsetid,
         };
-  
+
         dispatchSocketMessage(
           START_APP_MESSAGE,
           socketMessage,
@@ -124,19 +117,12 @@ const SelectBooksViblio = (props: any) => {
         const errorMessage = !appIsConnectedToInternet
           ? 'You are not connected to the internet'
           : 'No headset found';
-  
-          console.log(errorMessage);
+
+        console.log(errorMessage);
         setErrorMEssage(errorMessage);
         setNotFound(true);
       }
 
-
-
-
-
-
-
-   
       console.log('Array of menu choices', updatedFormData);
     }
   };
@@ -254,7 +240,9 @@ const SelectBooksViblio = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-             {props.formData[0] == 2  || props.formData[0] == 3 ? "select distractor" : "play"}
+              {props.formData[0] == 2 || props.formData[0] == 3
+                ? 'select distractor'
+                : 'play'}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -269,11 +257,10 @@ const SelectBooksViblio = (props: any) => {
           onclosemodules={props.onclosemodules}
           onCloseBooks={props.onClose}
           onCloseSelectBooksviblio={props.onClose}
-        
         />
       )}
 
-{notFound ? (
+      {notFound ? (
         <ErrorPopup
           isOpen={notFound}
           onClose={closeErrorModal}
@@ -284,14 +271,15 @@ const SelectBooksViblio = (props: any) => {
         />
       ) : (
         <OpenConnectedVi
-         isOpen={isOpenConnected}
-         onClose={onCloseConnected}
-         onCloseSelectBooksviblio={props.onClose}
-         oncloseselectlevel={props.oncloseselectlevel}
-         onclosemodules={props.onclosemodules}
-         onCloseSelectDistractors={props.onClose}    />
+          isOpen={isOpenConnected}
+          onClose={onCloseConnected}
+          onCloseSelectBooksviblio={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectDistractors={props.onClose}
+        />
       )}
-        {/* {onOpenConnected && (
+      {/* {onOpenConnected && (
          <OpenConnectedVi
          isOpen={isOpenConnected}
          onClose={onCloseConnected}
