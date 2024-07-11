@@ -48,7 +48,7 @@ export default function SelectingModule(props: any) {
   const [errorMEssage, setErrorMEssage] = useState(null);
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
   const [packageName, setPackagename] = useState('');
-  const { startSession, sessionId, headsetid ,headsetKey} = useStartSessionContext();
+  const { startSession, sessionId ,headsetKey} = useStartSessionContext();
   const { closeSelectingAHeadset, renderDisconnectedHeadSetError } = popupFunctions;
   const [modules, setModules] = useState([]);
   const {
@@ -98,7 +98,7 @@ export default function SelectingModule(props: any) {
     event.preventDefault();
     const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    console.log(appIsConnectedToInternet,existingDevice);
+    console.log("moadel",appIsConnectedToInternet,existingDevice);
     if (!existingDevice || !appIsConnectedToInternet) {
      
       renderDisconnectedHeadSetError(
@@ -227,8 +227,8 @@ export default function SelectingModule(props: any) {
     try {
       dispatchSocketMessage(
         END_SESSION_MESSAGE,
-        { deviceId: headsetid },
-        headsetid
+        { deviceId: headsetKey },
+        headsetKey
       );
       await endSessionApi();
       props.onClose();
@@ -256,7 +256,7 @@ export default function SelectingModule(props: any) {
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
-              You have been connected successfully to the headset {headsetid}
+              You have been connected successfully to the headset {headsetKey}
             </Text>
             {socketError && (
               <Text
