@@ -75,7 +75,7 @@ const SelectDistractors = (props: any) => {
     props.setFormData(updatedFormData);
 
     navigate('/Therapycenters');
-    props.onClose();
+    // props.onClose();
     // props.oncloseselectlevel();
     // props.onclosemodules();
     // props.onCloseBooks();
