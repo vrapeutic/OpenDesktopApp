@@ -75,7 +75,7 @@ const SelectDistractors = (props: any) => {
     props.setFormData(updatedFormData);
 
     navigate('/Therapycenters');
-    props.onClose();
+    // props.onClose();
     // props.oncloseselectlevel();
     // props.onclosemodules();
     // props.onCloseBooks();
@@ -114,7 +114,6 @@ const SelectDistractors = (props: any) => {
         ? 'You are not connected to the internet'
         : 'No headset found';
 
-      console.log(errorMessage);
       setErrorMEssage(errorMessage);
       setNotFound(true);
     }
@@ -240,15 +239,7 @@ const SelectDistractors = (props: any) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {/* {onOpenConnected && (
-        <Openconnected
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
-          onclosemodules={props.onclosemodules}
-          onCloseBooks={props.onCloseBooks}
-          oncloseselectlevel={props.oncloseselectlevel}
-        />
-      )} */}
+
 
       {notFound ? (
         <ErrorPopup

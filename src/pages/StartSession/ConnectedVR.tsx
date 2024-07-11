@@ -26,26 +26,26 @@ const ConnectedVR = (props: any) => {
   const handleSubmit = async () => {
     
 const HEADSET_FIELD = 'headset';
-    const { packageName, headsetId, sessionId } = props;
-    const existingDevice = await checkIfServiceExists(headsetId);
+    const { packageName, headsetKey, sessionId } = props;
+    const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
 
     if (appIsConnectedToInternet && existingDevice) {
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: packageName,
-        deviceId: headsetId,
+        deviceId: headsetKey,
       };
 
       dispatchSocketMessage(
         START_APP_MESSAGE,
         socketMessage,
-        headsetId,
+        headsetKey,
         ...[1, 2] // this array for holding settings
       );
       props.setOpenRunningPopup(true);
     } else {
-      console.log(headsetId);
+      console.log(headsetKey);
       console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
         ? 'You are not connected to the internet'
@@ -91,7 +91,7 @@ const HEADSET_FIELD = 'headset';
       handleSubmit={handleSubmit}
       isOpen={props.isOpen}
       onClose={closeSelectingAModule}
-      headsetId={props.headsetId}
+      headsetKey={props.headsetKey}
       openRunningPopup={props.openRunningPopup}
       setOpenRunningPopup={props.setOpenRunningPopup}
     />

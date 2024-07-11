@@ -28,7 +28,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
   const toast = useToast();
-  const { module, sessionId, headsetid } = useStartSessionContext();
+  const { module, sessionId, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -88,7 +88,7 @@ const SelectDistractors = (props: any) => {
       position: 'top-right',
     });
 
-    const existingDevice = await checkIfServiceExists(headsetid);
+    const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     if (appIsConnectedToInternet && existingDevice) {
       // if (appIsConnectedToInternet ) {
@@ -96,18 +96,18 @@ const SelectDistractors = (props: any) => {
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: module,
-        deviceId: headsetid,
+        deviceId: headsetKey,
       };
 
       dispatchSocketMessage(
         START_APP_MESSAGE,
         socketMessage,
-        headsetid,
+        headsetKey,
         updatedFormData
       );
       onOpenConnected();
     } else {
-      console.log(headsetid);
+      console.log(headsetKey);
       console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
         ? 'You are not connected to the internet'

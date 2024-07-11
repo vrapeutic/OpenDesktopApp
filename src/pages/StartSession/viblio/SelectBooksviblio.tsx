@@ -81,7 +81,6 @@ const SelectBooksViblio = (props: any) => {
     } else {
       navigate('/Therapycenters');
 
-      // console.log("session id",sessionId)
 
       toast({
         title: 'Success',
@@ -94,16 +93,16 @@ const SelectBooksViblio = (props: any) => {
       });
 
       const existingDevice = await checkIfServiceExists(headsetKey);
-      const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+      const appIsConnectedToInternet = await checkAppNetWorkConnection();
+       //TODO: consider move this flow to HOC
+       console.log("vibloi",appIsConnectedToInternet,existingDevice)
       if (appIsConnectedToInternet && existingDevice) {
-      
         console.log(updatedFormData);
         const socketMessage = {
           sessionId,
           [MODULE_PACKAGE_KEY]: module,
           deviceId: headsetKey,
         };
-
         dispatchSocketMessage(
           START_APP_MESSAGE,
           socketMessage,
@@ -112,12 +111,9 @@ const SelectBooksViblio = (props: any) => {
         );
         onOpenConnected();
       } else {
-        console.log(headsetid);
-        console.log(existingDevice);
         const errorMessage = !appIsConnectedToInternet
           ? 'You are not connected to the internet'
           : 'No headset found';
-
         console.log(errorMessage);
         setErrorMEssage(errorMessage);
         setNotFound(true);

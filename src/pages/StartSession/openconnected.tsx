@@ -20,7 +20,7 @@ interface OpenConnectedProps {
   closeSelectingAHeadset?: () => void;
   closeSelectingAModule?: () => void;
   closeConnectedVrPopup?: () => void;
-  headsetId?: string;
+  headsetKey?: string;
 }
 export default function Openconnected({
   isOpen,
@@ -28,7 +28,7 @@ export default function Openconnected({
   closeSelectingAHeadset,
   closeSelectingAModule,
   closeConnectedVrPopup,
-  headsetId,
+  headsetKey,
 }: OpenConnectedProps) {
   const { dispatchSocketMessage } = useSocketManager();
   const handlePlayAnotherModule = useCallback(() => {
@@ -40,8 +40,8 @@ export default function Openconnected({
     localStorage.removeItem('sessionID');
     dispatchSocketMessage(
       END_SESSION_MESSAGE,
-      { deviceId: headsetId },
-      headsetId
+      { deviceId: headsetKey },
+      headsetKey
     );
 
     // closeConnectedVrPopup();
@@ -67,7 +67,7 @@ export default function Openconnected({
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset {headsetId}
+              You are connected to the VR headset {headsetKey}
             </ModalHeader>
 
             <ModalBody>
