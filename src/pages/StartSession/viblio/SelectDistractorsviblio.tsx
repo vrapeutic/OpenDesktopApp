@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -29,7 +29,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 
 const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
-  const { module, sessionId, headsetid ,headsetKey} = useStartSessionContext();
+  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -92,7 +92,6 @@ const SelectDistractors = (props: any) => {
     const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     if (appIsConnectedToInternet && existingDevice) {
-    
       console.log(updatedFormData);
       const socketMessage = {
         sessionId,
@@ -136,9 +135,22 @@ const SelectDistractors = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) {
-    return null;
-  }
+  useEffect(() => {
+    if (socketError) {
+      toast({
+        title: 'Socket Error',
+        description:
+          'There is a socket error. Please resolve it before proceeding.',
+        status: 'error',
+        duration: 5000,
+        position: 'top-right',
+      });
+      setErrorMEssage(
+        'There is a socket error. Please resolve it before proceeding.'
+      );
+      setNotFound(true);
+    }
+  }, [socketError]);
 
   const handleBackToSelectBook = () => {
     props.onClose();
@@ -239,7 +251,6 @@ const SelectDistractors = (props: any) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
 
       {notFound ? (
         <ErrorPopup

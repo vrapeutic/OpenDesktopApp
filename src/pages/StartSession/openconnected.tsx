@@ -21,6 +21,7 @@ interface OpenConnectedProps {
   closeSelectingAModule?: () => void;
   closeConnectedVrPopup?: () => void;
   headsetKey?: string;
+  headsetId?: string;
 }
 export default function Openconnected({
   isOpen,
@@ -32,7 +33,6 @@ export default function Openconnected({
 }: OpenConnectedProps) {
   const { dispatchSocketMessage } = useSocketManager();
   const handlePlayAnotherModule = useCallback(() => {
-
     onClose();
   }, []);
 

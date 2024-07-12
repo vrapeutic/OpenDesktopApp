@@ -17,10 +17,11 @@ import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 interface PlayModuleProps {
   isOpen: boolean;
   onClose: () => void;
-  headsetId: string;
+  headsetId?: string;
   handleSubmit: () => void;
   openRunningPopup: boolean;
   setOpenRunningPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  headsetKey?: string;
 }
 
 const PlayModule = ({

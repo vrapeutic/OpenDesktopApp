@@ -44,7 +44,7 @@ const SelectDistractors = (props: any) => {
   } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-  const { socketError } = useSocketManager();
+  const { socketError, setSocketError } = useSocketManager();
   const [selectedDistractors, setSelectedDistractors] = useState<number | null>(
     null
   );
@@ -147,7 +147,15 @@ const SelectDistractors = (props: any) => {
   };
 
   if (socketError) {
-    return null;
+    toast({
+      title: 'Socket Error',
+      description:
+        'There is a socket error. Please resolve it before proceeding.',
+      status: 'error',
+      duration: 5000,
+      position: 'top-right',
+    });
+    return;
   }
 
   return (

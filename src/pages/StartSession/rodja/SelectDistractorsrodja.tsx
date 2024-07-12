@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -163,9 +163,23 @@ const SelectDistractorsRodja = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) {
-    return null;
-  }
+  useEffect(() => {
+    if (socketError) {
+      toast({
+        title: 'Socket Error',
+        description:
+          'There is a socket error. Please resolve it before proceeding.',
+        status: 'error',
+        duration: 5000,
+        position: 'top-right',
+      });
+      setErrorMEssage(
+        'There is a socket error. Please resolve it before proceeding.'
+      );
+      setNotFound(true);
+    }
+  }, [socketError]);
+  
   return (
     <>
       <Modal

@@ -66,6 +66,7 @@ export default function SelectingModule(props: any) {
     }
 
     if (socketError) {
+      console.log(socketError, 'socketError');
       setSocketError(null);
       setOpenRunningPopup(false);
     }

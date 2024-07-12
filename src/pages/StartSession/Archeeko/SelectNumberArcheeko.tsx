@@ -13,7 +13,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -155,9 +155,22 @@ const SelectNumberArcheeko = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) {
-    return null;
-  }
+  useEffect(() => {
+    if (socketError) {
+      toast({
+        title: 'Socket Error',
+        description:
+          'There is a socket error. Please resolve it before proceeding.',
+        status: 'error',
+        duration: 5000,
+        position: 'top-right',
+      });
+      setErrorMEssage(
+        'There is a socket error. Please resolve it before proceeding.'
+      );
+      setNotFound(true);
+    }
+  }, [socketError]);
   return (
     <>
       <Modal

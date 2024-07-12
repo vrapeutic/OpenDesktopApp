@@ -13,7 +13,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -28,7 +28,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectNumberGar = (props: any) => {
   console.log('select form data in number in 30', props.formData);
   const toast = useToast();
-  const { module, sessionId, headsetid ,headsetKey} = useStartSessionContext();
+  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -98,7 +98,6 @@ const SelectNumberGar = (props: any) => {
       const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
       if (appIsConnectedToInternet && existingDevice) {
-      
         console.log('updatedFormData', updatedFormData);
         const socketMessage = {
           sessionId,
@@ -149,9 +148,23 @@ const SelectNumberGar = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) {
-    return null;
-  }
+  useEffect(() => {
+    if (socketError) {
+      toast({
+        title: 'Socket Error',
+        description:
+          'There is a socket error. Please resolve it before proceeding.',
+        status: 'error',
+        duration: 5000,
+        position: 'top-right',
+      });
+      setErrorMEssage(
+        'There is a socket error. Please resolve it before proceeding.'
+      );
+      setNotFound(true);
+    }
+  }, [socketError]);
+
   const handleButtonClick = (number: number) => {
     setSelectedNumber(number);
     setValue('selectNumber', number);

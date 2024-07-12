@@ -55,6 +55,7 @@ interface SelectingHeadsetProps {
   isOpen: boolean;
   childId: string;
 }
+
 const ErrorsModal = ({
   isOpen,
   onClose,
@@ -93,8 +94,6 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   } = useSocketManager();
 
   const [deviceIsFound, setDeviceIsFound] = useState(false);
-  // const [sessionId, setSessionId] = useState<string>(null);
-
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
@@ -138,57 +137,48 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       onErrorOpen();
     }
   };
+
   const handleFormSubmit = async (data: any) => {
-    // Access the selected headset value from data
     const selectedHeadsetId = data.headset;
-console.log(selectedHeadsetId)
-    // If headsets array is available, find the corresponding headset
     const selectedHeadset = headsets.find(
       (headset) => headset.id === selectedHeadsetId
-
     );
 
     if (selectedHeadset) {
-      const headsetKeyt = selectedHeadset.attributes.key;
-      setHeadsetKey(headsetKeyt);
-      console.log('Selected headset key:', headsetKey);
-      // You can use the headsetKey value here as needed
-    }
+      const newHeadsetKey = selectedHeadset.attributes.key;
+      setHeadsetKey(newHeadsetKey);
+      setheadsetid(selectedHeadsetId);
+      console.log('set headsetKey', newHeadsetKey);
+      console.log('set headsetid', selectedHeadsetId);
 
-    await setheadsetid(selectedHeadsetId);
-    const existingDevice = await checkIfServiceExists(headsetKey);
-    const appIsConnectedToInternet = await checkAppNetWorkConnection();
-    console.log(appIsConnectedToInternet, sessionId, existingDevice);
-    if (appIsConnectedToInternet && existingDevice) {
-      console.log('finddivice', existingDevice);
-      // if (appIsConnectedToInternet) {
-      // End old session
-      dispatchSocketMessage(
-        END_SESSION_MESSAGE,
-        { deviceId: headsetKey },
-        headsetKey
-      );
+      const existingDevice = await checkIfServiceExists(newHeadsetKey);
+      const appIsConnectedToInternet = await checkAppNetWorkConnection();
+      console.log(appIsConnectedToInternet, sessionId, existingDevice);
+      if (appIsConnectedToInternet && existingDevice) {
+        dispatchSocketMessage(
+          END_SESSION_MESSAGE,
+          { deviceId: newHeadsetKey },
+          newHeadsetKey
+        );
 
-      const sessionResponse = await getSessionId(data.headset);
+        const sessionResponse = await getSessionId(data.headset);
 
-      if (sessionResponse.success) {
-        console.log(headsetid);
-        console.log(existingDevice);
-        setDeviceIsFound(true);
+        if (sessionResponse.success) {
+          setDeviceIsFound(true);
+        } else {
+          const errorMessage =
+            sessionResponse.error || 'Error assigning session ID.';
+          setErrorMessages(errorMessage);
+          onErrorOpen();
+        }
       } else {
-        // Handle error from getSessionId
-        const errorMessage =
-          sessionResponse.error || 'Error assigning session ID.';
+        const errorMessage = !appIsConnectedToInternet
+          ? 'You are not connected to the internet.'
+          : 'The selected headset is not connected. You might need first to click on Start Service in the Master App on the VR headset.';
+
         setErrorMessages(errorMessage);
         onErrorOpen();
       }
-    } else {
-      const errorMessage = !appIsConnectedToInternet
-        ? 'You are not connected to the internet.'
-        : 'The selected headset is not connected. You might need first to click on Start Service in the Master App on the VR headset.';
-
-      setErrorMessages(errorMessage);
-      onErrorOpen();
     }
   };
 
@@ -209,11 +199,10 @@ console.log(selectedHeadsetId)
         { headers }
       );
       console.log('setSessionId', response?.data?.data?.id);
-      // setSessionId(response.data.data.id);
       setSessionId(response.data.data.id);
       setStartSession(response.data.data.attributes.created_at);
 
-      return { success: true }; // Success
+      return { success: true };
     } catch (error) {
       onErrorOpen();
       console.error('Error assigning session id:', error.response.data.error);
@@ -223,12 +212,11 @@ console.log(selectedHeadsetId)
 
   const handleCancelSession = () => {
     onErrorClose();
-    props.onClose(); // Close the SelectingHeadset component
+    props.onClose();
   };
 
   const handleSelectAnotherHeadset = () => {
     onErrorClose();
-    // Additional logic to open the component for selecting another headset
   };
 
   useEffect(() => {
@@ -243,6 +231,10 @@ console.log(selectedHeadsetId)
       onErrorOpen();
     });
   }, [selectedCenterContext.id]);
+
+  useEffect(() => {
+    console.log('Headset key after setting:', headsetKey);
+  }, [headsetKey]);
 
   return (
     <>

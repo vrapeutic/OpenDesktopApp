@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -29,7 +29,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectjewelRodja = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
-  const { module, sessionId, headsetid,headsetKey } = useStartSessionContext();
+  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
 
   const toast = useToast();
   const [notFound, setNotFound] = useState(false);
@@ -160,9 +160,22 @@ const SelectjewelRodja = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) {
-    return null;
-  }
+  useEffect(() => {
+    if (socketError) {
+      toast({
+        title: 'Socket Error',
+        description:
+          'There is a socket error. Please resolve it before proceeding.',
+        status: 'error',
+        duration: 5000,
+        position: 'top-right',
+      });
+      setErrorMEssage(
+        'There is a socket error. Please resolve it before proceeding.'
+      );
+      setNotFound(true);
+    }
+  }, [socketError]);
   return (
     <>
       <Modal

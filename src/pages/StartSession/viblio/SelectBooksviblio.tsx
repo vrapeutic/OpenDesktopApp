@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -30,7 +30,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
-  const { module, sessionId, headsetid ,headsetKey} = useStartSessionContext();
+  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const toast = useToast();
   const {
     isOpen: isOpenConnected,
@@ -81,7 +81,6 @@ const SelectBooksViblio = (props: any) => {
     } else {
       navigate('/Therapycenters');
 
-
       toast({
         title: 'Success',
         description: `You assigned level ${updatedFormData[0]} , book ${selectedBook} ,
@@ -94,8 +93,8 @@ const SelectBooksViblio = (props: any) => {
 
       const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection();
-       //TODO: consider move this flow to HOC
-       console.log("vibloi",appIsConnectedToInternet,existingDevice)
+      //TODO: consider move this flow to HOC
+      console.log('vibloi', appIsConnectedToInternet, existingDevice);
       if (appIsConnectedToInternet && existingDevice) {
         console.log(updatedFormData);
         const socketMessage = {
@@ -139,9 +138,22 @@ const SelectBooksViblio = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) {
-    return null;
-  }
+  useEffect(() => {
+    if (socketError) {
+      toast({
+        title: 'Socket Error',
+        description:
+          'There is a socket error. Please resolve it before proceeding.',
+        status: 'error',
+        duration: 5000,
+        position: 'top-right',
+      });
+      setErrorMEssage(
+        'There is a socket error. Please resolve it before proceeding.'
+      );
+      setNotFound(true);
+    }
+  }, [socketError]);
   const handleBackToSelectLevel = () => {
     props.onClose();
   };
