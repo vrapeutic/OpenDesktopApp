@@ -77,7 +77,7 @@ const SelectDistractorsRodja = (props: any) => {
     console.log('all subimtted data in distractor', updatedFormData);
     props.setFormData(updatedFormData);
 
-    navigate('/Therapycenters');
+    navigate('/home');
     props.onClose();
 
     onOpenConnected();
@@ -142,7 +142,7 @@ const SelectDistractorsRodja = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
     closeSelectingAHeadset();
-    navigate('/');
+    navigate('/home');
   };
 
   const closeErrorModal = () => {
@@ -218,7 +218,7 @@ const SelectDistractorsRodja = (props: any) => {
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
-          <ModalFooter display="flex" justifyContent="center">
+          <ModalFooter display="flex" justifyContent="space-between">
             <Button
               w="180px"
               h="54px"

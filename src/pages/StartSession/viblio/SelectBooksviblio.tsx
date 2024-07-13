@@ -79,7 +79,7 @@ const SelectBooksViblio = (props: any) => {
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      navigate('/Therapycenters');
+      navigate('/home');
 
       toast({
         title: 'Success',
@@ -125,7 +125,7 @@ const SelectBooksViblio = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
     closeSelectingAHeadset();
-    navigate('/');
+    navigate('/home');
   };
 
   const closeErrorModal = () => {
@@ -208,7 +208,7 @@ const SelectBooksViblio = (props: any) => {
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
-          <ModalFooter display="flex" justifyContent="center">
+          <ModalFooter display="flex" justifyContent="space-between">
             <Button
               w="180px"
               h="54px"

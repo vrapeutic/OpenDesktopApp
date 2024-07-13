@@ -74,7 +74,7 @@ const SelectDistractors = (props: any) => {
     ];
     props.setFormData(updatedFormData);
 
-    navigate('/Therapycenters');
+    navigate('/home');
     // props.onClose();
     // props.oncloseselectlevel();
     // props.onclosemodules();
@@ -122,7 +122,7 @@ const SelectDistractors = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
     closeSelectingAHeadset();
-    navigate('/');
+    navigate('/home');
   };
 
   const closeErrorModal = () => {
@@ -206,7 +206,7 @@ const SelectDistractors = (props: any) => {
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
-          <ModalFooter display="flex" justifyContent="center">
+          <ModalFooter display="flex" justifyContent="space-between">
             <Button
               w="180px"
               h="54px"

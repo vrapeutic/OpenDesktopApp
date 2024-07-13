@@ -208,7 +208,7 @@ const SelectDistractorsGard = (props: any) => {
           </ModalBody>
           <ModalFooter display="flex" justifyContent="space-between">
             <Button
-              w="120px"
+              w="180px"
               h="54px"
               mx={2}
               bg="#00DEA3"
@@ -222,8 +222,9 @@ const SelectDistractorsGard = (props: any) => {
               Back
             </Button>
             <Button
-              w="120px"
+              w="180px"
               h="54px"
+              mx={2}
               bg="#00DEA3"
               borderRadius="12px"
               color="#FFFFFF"
@@ -231,7 +232,6 @@ const SelectDistractorsGard = (props: any) => {
               fontWeight="700"
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
-              mx={2}
             >
               play
             </Button>

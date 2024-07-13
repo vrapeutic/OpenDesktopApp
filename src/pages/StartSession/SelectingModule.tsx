@@ -47,8 +47,11 @@ export default function SelectingModule(props: any) {
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
   const [packageName, setPackagename] = useState('');
   const { startSession, sessionId, headsetKey } = useStartSessionContext();
-  const { closeSelectingAHeadset, renderDisconnectedHeadSetError } =
-    popupFunctions;
+  const {
+    closeSelectingAHeadset,
+    renderDisconnectedHeadSetError,
+    closeSelectingAChild,
+  } = popupFunctions;
   const [modules, setModules] = useState([]);
   const {
     isOpen: isOpenSelectlevelrodja,
@@ -225,6 +228,8 @@ export default function SelectingModule(props: any) {
       );
       await endSessionApi();
       props.onClose();
+      closeSelectingAChild();
+      closeSelectingAHeadset();
       navigate('/home');
       setValues({ selectedModule: '' });
 

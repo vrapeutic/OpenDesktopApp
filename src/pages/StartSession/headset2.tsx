@@ -86,7 +86,9 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
     headsetKey,
     setHeadsetKey,
   } = useStartSessionContext();
-  const { addFunction } = usePopupsHandler();
+  const { addFunction, popupFunctions } = usePopupsHandler();
+  const { closeSelectingAChild } = popupFunctions;
+
   const {
     dispatchSocketMessage,
     checkIfServiceExists,
@@ -211,8 +213,10 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   };
 
   const handleCancelSession = () => {
-    onErrorClose();
+    closeSelectingAChild();
     props.onClose();
+    onErrorClose();
+    navigate('/home');
   };
 
   const handleSelectAnotherHeadset = () => {

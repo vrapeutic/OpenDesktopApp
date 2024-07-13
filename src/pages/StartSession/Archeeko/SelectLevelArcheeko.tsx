@@ -23,9 +23,9 @@ const SelectLevelArcheeko = (props: any) => {
   const {
     isOpen: isOpenSelectEnvironment,
     onOpen: onOpenSelectEnvironment,
-    onClose:onCloseSelectEnvironment,
+    onClose: onCloseSelectEnvironment,
   } = useDisclosure();
- 
+
   const [formData, setFormData] = useState<any[]>([
     -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000,
   ]);
@@ -45,7 +45,6 @@ const SelectLevelArcheeko = (props: any) => {
     mode: 'onSubmit',
   });
 
- 
   const handleFormSubmit = (data: any) => {
     setFormData([data.selectLevel, ...formData.slice(1)]);
     console.log('Form Data Submitted in level Arc: ', [
@@ -59,7 +58,6 @@ const SelectLevelArcheeko = (props: any) => {
     setSelectedLevel(level);
     setValue('selectLevel', level);
   };
-
 
   return (
     <>
@@ -121,7 +119,7 @@ const SelectLevelArcheeko = (props: any) => {
           </ModalBody>
           <ModalFooter display="flex" justifyContent="space-between">
             <Button
-              w="120px"
+              w="180px"
               h="54px"
               mx={2}
               bg="#00DEA3"
@@ -136,8 +134,9 @@ const SelectLevelArcheeko = (props: any) => {
               Back
             </Button>
             <Button
-              w="120px"
+              w="180px"
               h="54px"
+              mx={2}
               bg="#00DEA3"
               borderRadius="12px"
               color="#FFFFFF"
@@ -145,7 +144,6 @@ const SelectLevelArcheeko = (props: any) => {
               fontWeight="700"
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
-              mx={2}
             >
               Next
             </Button>
@@ -158,7 +156,6 @@ const SelectLevelArcheeko = (props: any) => {
           onClose={onCloseSelectEnvironment}
           formData={formData}
           setFormData={setFormData}
-          
           oncloseselectlevel={props.onClose}
           onclosemodules={props.onclosemodules}
         />

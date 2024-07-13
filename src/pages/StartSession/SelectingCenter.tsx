@@ -20,7 +20,9 @@ import axios from 'axios';
 import { dataContext } from '@renderer/shared/Provider';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useForm } from 'react-hook-form';
-import { PopupsHandlerProvider } from '@renderer/Context/PopupsHandlerContext';
+import usePopupsHandler, {
+  PopupsHandlerProvider,
+} from '@renderer/Context/PopupsHandlerContext';
 import SelectingHeadset2 from './headset2';
 
 export default function SelectingCenter(props: any) {
@@ -32,6 +34,7 @@ export default function SelectingCenter(props: any) {
   const [kids, setKids] = useState([]);
   const [childId, setChildId] = useState('');
   const selectedCenterContext = useContext(dataContext);
+  const { addFunction } = usePopupsHandler();
 
   const schema = Joi.object({
     kid: Joi.string().required().messages({
@@ -71,100 +74,94 @@ export default function SelectingCenter(props: any) {
     );
     setChildId(data.kid);
     onHeadsetOpen();
-    // props.onClose();
+    props.onClose();
     // reset();
   };
 
   useEffect(() => {
     if (selectedCenterContext.id) {
       getKids();
+      addFunction('closeSelectingAChild', props.onClose);
     }
   }, [selectedCenterContext.id]);
 
   return (
-    <PopupsHandlerProvider>
-      <Box>
-        <Modal isOpen={props.isOpen} onClose={props.onClose}>
-          <ModalOverlay />
-          <ModalContent
-            h="400px"
-            w="500px"
-            bgColor="#FFFFFF"
-            borderRadius="10px"
-          >
-            <ModalHeader textAlign="center" fontSize="30px">
-              Start a session
+    <Box>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+        <ModalOverlay />
+        <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
+          <ModalHeader textAlign="center" fontSize="30px">
+            Start a session
+          </ModalHeader>
+          {selectedCenterContext.id ? (
+            <>
+              <ModalBody fontSize="20px" fontWeight="600" mt="15px">
+                <Text mt="25px">Select a child</Text>
+                <GridItem>
+                  <Select
+                    {...register('kid')}
+                    id="kid"
+                    name="kid"
+                    placeholder="Select Child"
+                    size="sm"
+                  >
+                    {kids.map((kid) => (
+                      <option value={kid.id} key={kid.id}>
+                        {kid?.attributes.name}
+                      </option>
+                    ))}
+                  </Select>
+                </GridItem>
+                {errors.kid && (
+                  <Text color="red.500">{errors.kid.message as string}</Text>
+                )}
+              </ModalBody>
+              <ModalFooter display={'flex'} justifyContent={'center'}>
+                <Button
+                  w="180px"
+                  h="54px"
+                  mx={2}
+                  bg="#00DEA3"
+                  borderRadius="12px"
+                  color="#FFFFFF"
+                  fontFamily="Graphik LCG"
+                  fontWeight="700"
+                  fontSize="15px"
+                  onClick={props.onClose}
+                >
+                  Cancel Session
+                </Button>
+                <Button
+                  w="214px"
+                  h="54px"
+                  bg="#00DEA3"
+                  borderRadius="12px"
+                  color="#FFFFFF"
+                  fontFamily="Roboto"
+                  fontWeight="700"
+                  fontSize="18px"
+                  onClick={handleSubmit(handleFormSubmit)}
+                >
+                  Next
+                </Button>
+              </ModalFooter>
+            </>
+          ) : (
+            <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
+              You should select a center first from home
             </ModalHeader>
-            {selectedCenterContext.id ? (
-              <>
-                <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-                  <Text mt="25px">Select a child</Text>
-                  <GridItem>
-                    <Select
-                      {...register('kid')}
-                      id="kid"
-                      name="kid"
-                      placeholder="Select Child"
-                      size="sm"
-                    >
-                      {kids.map((kid) => (
-                        <option value={kid.id} key={kid.id}>
-                          {kid?.attributes.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </GridItem>
-                  {errors.kid && (
-                    <Text color="red.500">{errors.kid.message as string}</Text>
-                  )}
-                </ModalBody>
-                <ModalFooter display={'flex'} justifyContent={'center'}>
-                  <Button
-                    w="180px"
-                    h="54px"
-                    mx={2}
-                    bg="#00DEA3"
-                    borderRadius="12px"
-                    color="#FFFFFF"
-                    fontFamily="Graphik LCG"
-                    fontWeight="700"
-                    fontSize="15px"
-                    onClick={props.onClose}
-                  >
-                    Cancel Session
-                  </Button>
-                  <Button
-                    w="214px"
-                    h="54px"
-                    bg="#00DEA3"
-                    borderRadius="12px"
-                    color="#FFFFFF"
-                    fontFamily="Roboto"
-                    fontWeight="700"
-                    fontSize="18px"
-                    onClick={handleSubmit(handleFormSubmit)}
-                  >
-                    Next
-                  </Button>
-                </ModalFooter>
-              </>
-            ) : (
-              <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
-                You should select a center first from home
-              </ModalHeader>
-            )}
-          </ModalContent>
-        </Modal>
+          )}
+        </ModalContent>
+      </Modal>
 
-        {isHeadsetOpen && (
-          <SelectingHeadset2
-            isOpen={isHeadsetOpen}
-            onClose={onHeadsetClose}
-            centerId={selectedCenterContext.id}
-            childId={childId}
-          />
-        )}
-      </Box>
-    </PopupsHandlerProvider>
+      {isHeadsetOpen && (
+        <SelectingHeadset2
+          isOpen={isHeadsetOpen}
+          onClose={onHeadsetClose}
+          centerId={selectedCenterContext.id}
+          childId={childId}
+        />
+      )}
+    </Box>
   );
 }

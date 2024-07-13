@@ -214,7 +214,7 @@ const SelectNumberGar = (props: any) => {
           </ModalBody>
           <ModalFooter display="flex" justifyContent="space-between">
             <Button
-              w="120px"
+              w="180px"
               h="54px"
               mx={2}
               bg="#00DEA3"
@@ -228,7 +228,7 @@ const SelectNumberGar = (props: any) => {
               Back
             </Button>
             <Button
-              w="120px"
+              w="180px"
               h="54px"
               bg="#00DEA3"
               borderRadius="12px"

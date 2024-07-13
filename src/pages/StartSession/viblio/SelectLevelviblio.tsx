@@ -116,7 +116,21 @@ const SelectLevelViblio = (props: any) => {
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
-          <ModalFooter display="flex" justifyContent="center">
+          <ModalFooter display="flex" justifyContent="space-between">
+            <Button
+              w="180px"
+              h="54px"
+              mx={2}
+              bg="#00DEA3"
+              borderRadius="12px"
+              color="#FFFFFF"
+              fontFamily="Graphik LCG"
+              fontWeight="700"
+              fontSize="15px"
+              onClick={props.onClose}
+            >
+              Back
+            </Button>
             <Button
               w="180px"
               h="54px"

@@ -82,7 +82,7 @@ const SelectjewelRodja = (props: any) => {
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      navigate('/Therapycenters');
+      navigate('/home');
       onOpenConnected();
       // console.log("session id",sessionId)
 
@@ -147,7 +147,7 @@ const SelectjewelRodja = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
     closeSelectingAHeadset();
-    navigate('/');
+    navigate('/home');
   };
 
   const closeErrorModal = () => {
@@ -222,7 +222,7 @@ const SelectjewelRodja = (props: any) => {
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
-          <ModalFooter display="flex" justifyContent="center">
+          <ModalFooter display="flex" justifyContent="space-between">
             <Button
               w="180px"
               h="54px"
