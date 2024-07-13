@@ -27,14 +27,6 @@ import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { ErrorPopup } from '../ErrorPopup';
 const SelectDistractorsRodja = (props: any) => {
-  console.log('selected book in select distractors', props.selectBook);
-
-  console.log('props.formData array in distractor rodja', props.formData);
-  console.log(
-    ',props.updatedFormData in distractor updatedFormData',
-    props.updatedFormData
-  );
-
   const navigate = useNavigate();
   const { module, sessionId, headsetKey } = useStartSessionContext();
   const {
@@ -163,23 +155,10 @@ const SelectDistractorsRodja = (props: any) => {
     closeSelectingAModule();
   };
 
-  useEffect(() => {
-    if (socketError) {
-      toast({
-        title: 'Socket Error',
-        description:
-          'There is a socket error. Please resolve it before proceeding.',
-        status: 'error',
-        duration: 5000,
-        position: 'top-right',
-      });
-      setErrorMEssage(
-        'There is a socket error. Please resolve it before proceeding.'
-      );
-      setNotFound(true);
-    }
-  }, [socketError]);
-  
+  if (socketError) {
+    return null;
+  }
+
   return (
     <>
       <Modal

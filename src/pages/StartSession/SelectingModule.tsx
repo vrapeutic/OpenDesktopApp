@@ -101,28 +101,10 @@ export default function SelectingModule(props: any) {
       );
       return;
     }
-    if (socketError) {
-      toast({
-        title: 'Socket Error',
-        description:
-          'There is a socket error. Please resolve it before proceeding.',
-        status: 'error',
-        duration: 5000,
-        position: 'top-right',
-      });
-      return;
-    }
+
     if (socketError) {
       setSocketError(null);
       setOpenRunningPopup(false);
-      toast({
-        title: 'Socket Error',
-        description:
-          'There is a socket error. Please resolve it before proceeding.',
-        status: 'error',
-        duration: 5000,
-        position: 'top-right',
-      });
       return;
     }
     const { error } = schema.validate(values, { abortEarly: false });
@@ -186,7 +168,7 @@ export default function SelectingModule(props: any) {
   const handleModuleSelect = (module: any) => {
     setValues({ selectedModule: module.id });
     setName(module.attributes.name);
-    setModule(module.attributes.name);
+    setModule(module.attributes.package_name);
     console.log('Selected Module:', module);
   };
 

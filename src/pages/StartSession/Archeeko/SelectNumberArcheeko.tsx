@@ -26,7 +26,6 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 const SelectNumberArcheeko = (props: any) => {
-  console.log('select form data in number in 30', props.formData);
   const toast = useToast();
   const { module, sessionId, headsetKey } = useStartSessionContext();
   const {
@@ -155,22 +154,9 @@ const SelectNumberArcheeko = (props: any) => {
     closeSelectingAModule();
   };
 
-  useEffect(() => {
-    if (socketError) {
-      toast({
-        title: 'Socket Error',
-        description:
-          'There is a socket error. Please resolve it before proceeding.',
-        status: 'error',
-        duration: 5000,
-        position: 'top-right',
-      });
-      setErrorMEssage(
-        'There is a socket error. Please resolve it before proceeding.'
-      );
-      setNotFound(true);
-    }
-  }, [socketError]);
+  if (socketError) {
+    return null;
+  }
   return (
     <>
       <Modal

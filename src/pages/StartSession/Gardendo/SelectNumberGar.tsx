@@ -26,7 +26,6 @@ import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectNumberGar = (props: any) => {
-  console.log('select form data in number in 30', props.formData);
   const toast = useToast();
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
@@ -148,22 +147,9 @@ const SelectNumberGar = (props: any) => {
     closeSelectingAModule();
   };
 
-  useEffect(() => {
-    if (socketError) {
-      toast({
-        title: 'Socket Error',
-        description:
-          'There is a socket error. Please resolve it before proceeding.',
-        status: 'error',
-        duration: 5000,
-        position: 'top-right',
-      });
-      setErrorMEssage(
-        'There is a socket error. Please resolve it before proceeding.'
-      );
-      setNotFound(true);
-    }
-  }, [socketError]);
+  if (socketError) {
+    return null;
+  }
 
   const handleButtonClick = (number: number) => {
     setSelectedNumber(number);

@@ -138,22 +138,9 @@ const SelectBooksViblio = (props: any) => {
     closeSelectingAModule();
   };
 
-  useEffect(() => {
-    if (socketError) {
-      toast({
-        title: 'Socket Error',
-        description:
-          'There is a socket error. Please resolve it before proceeding.',
-        status: 'error',
-        duration: 5000,
-        position: 'top-right',
-      });
-      setErrorMEssage(
-        'There is a socket error. Please resolve it before proceeding.'
-      );
-      setNotFound(true);
-    }
-  }, [socketError]);
+  if (socketError) {
+    return null;
+  }
   const handleBackToSelectLevel = () => {
     props.onClose();
   };

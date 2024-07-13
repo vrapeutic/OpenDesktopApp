@@ -41,10 +41,10 @@ const SelectDistractors = (props: any) => {
     dispatchSocketMessage,
     checkIfServiceExists,
     checkAppNetWorkConnection,
+    socketError,
   } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-  const { socketError, setSocketError } = useSocketManager();
   const [selectedDistractors, setSelectedDistractors] = useState<number | null>(
     null
   );
