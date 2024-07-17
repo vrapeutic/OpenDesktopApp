@@ -75,7 +75,7 @@ const SelectDistractors = (props: any) => {
     console.log('all subimtted data in distractor', updatedFormData);
     props.setFormData(updatedFormData);
 
-    navigate('/Therapycenters');
+    navigate('/home');
     props.onClose();
 
     toast({
@@ -133,7 +133,7 @@ const SelectDistractors = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
     closeSelectingAHeadset();
-    navigate('/');
+    navigate('/home');
   };
 
   const closeErrorModal = () => {

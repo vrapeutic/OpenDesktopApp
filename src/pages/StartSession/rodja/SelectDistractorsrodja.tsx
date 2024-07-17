@@ -26,6 +26,21 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { ErrorPopup } from '../ErrorPopup';
+
+const useSocketErrorHandler = () => {
+  const [socketErrorState, setSocketErrorState] = useState(null);
+  const { socketError } = useSocketManager();
+
+  useEffect(() => {
+    if (socketError) {
+      console.log('Socket error detected:', socketError); // Logging for debugging
+      setSocketErrorState(socketError);
+    }
+  }, [socketError]);
+
+  return { socketErrorState, setSocketErrorState };
+};
+
 const SelectDistractorsRodja = (props: any) => {
   const navigate = useNavigate();
   const { module, sessionId, headsetKey } = useStartSessionContext();
@@ -34,10 +49,9 @@ const SelectDistractorsRodja = (props: any) => {
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
-
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
-
+  const { socketErrorState, setSocketErrorState } = useSocketErrorHandler();
   const {
     dispatchSocketMessage,
     checkIfServiceExists,
@@ -45,7 +59,6 @@ const SelectDistractorsRodja = (props: any) => {
   } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-  const { socketError } = useSocketManager();
   const [selectedDistractor, setselectedDistractor] = useState<number | null>(
     null
   );
@@ -66,49 +79,51 @@ const SelectDistractorsRodja = (props: any) => {
   });
 
   const handleFormSubmit = async (data: any) => {
-    const updatedFormData = [
-      props.formData[0],
-      props.formData[1],
-      props.selectBook,
-      data.selectDistractor,
-      ...props.formData.slice(4),
-    ];
-
-    console.log('all subimtted data in distractor', updatedFormData);
-    props.setFormData(updatedFormData);
-
-    navigate('/home');
-    props.onClose();
-
-    onOpenConnected();
-    toast({
-      title: 'Success',
-      description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
-       distractor  ${selectedDistractor} 
-      module name is ${module} and session id is ${sessionId}`,
-      status: 'success',
-      duration: 9000,
-      position: 'top-right',
-    });
-
     const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     if (appIsConnectedToInternet && existingDevice) {
       // if (appIsConnectedToInternet) {
+
+      const updatedFormData = [
+        props.formData[0],
+        props.formData[1],
+        props.selectBook,
+        data.selectDistractor,
+        ...props.formData.slice(4),
+      ];
+
+      console.log('all subimtted data in distractor', updatedFormData);
+      props.setFormData(updatedFormData);
       console.log('updatedFormData', updatedFormData);
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: module,
         deviceId: headsetKey,
       };
-
       dispatchSocketMessage(
         START_APP_MESSAGE,
         socketMessage,
         headsetKey,
         updatedFormData
       );
+      navigate('/home');
+      props.onClose();
       onOpenConnected();
+      toast({
+        title: 'Success',
+        description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
+       distractor  ${selectedDistractor} 
+      module name is ${module} and session id is ${sessionId}`,
+        status: 'success',
+        duration: 9000,
+        position: 'top-right',
+      });
+      console.log(
+        `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
+         distractor  ${selectedDistractor} 
+        module name is ${module} and session id is ${sessionId}`
+      );
+      console.log('Array of menu choices', updatedFormData);
     } else {
       console.log(headsetKey);
       console.log(existingDevice);
@@ -118,15 +133,9 @@ const SelectDistractorsRodja = (props: any) => {
 
       console.log(errorMessage);
       setErrorMEssage(errorMessage);
+      setSocketErrorState(socketErrorState);
       setNotFound(true);
     }
-
-    console.log(
-      `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
-       distractor  ${selectedDistractor} 
-      module name is ${module} and session id is ${sessionId}`
-    );
-    console.log('Array of menu choices', updatedFormData);
   };
 
   const handleBackToSelectBook = () => {
@@ -155,9 +164,13 @@ const SelectDistractorsRodja = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) {
-    return null;
-  }
+  useEffect(() => {
+    if (socketErrorState) {
+      console.log('Socket Error:', socketErrorState);
+      setNotFound(true);
+      props.onClose();
+    }
+  }, [socketErrorState]);
 
   return (
     <>
@@ -253,12 +266,12 @@ const SelectDistractorsRodja = (props: any) => {
 
       {notFound ? (
         <ErrorPopup
-          isOpen={notFound}
+          isOpen={notFound || !!socketErrorState}
           onClose={closeErrorModal}
           closeSelectingAHeadset={closeSelectingAHeadset}
           onCancelSession={cancelSession}
           onSelectAnotherHeadset={selectAnotherHeadset}
-          errorMessages={errorMEssage}
+          errorMessages={errorMEssage || socketErrorState}
         />
       ) : (
         <OpenconnectedRodja

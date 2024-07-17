@@ -23,10 +23,8 @@ import { EyeIcon } from '../../assets/icons/EyeIcon';
 import { ArrowForwardIcon, CheckIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { useLoginMutation } from './hooks/useLoginMutation';
-import  { useAdminContext } from '../../Context/AdminContext';
+import { useAdminContext } from '../../Context/AdminContext';
 const Login = () => {
- 
-
   const [data, setData] = useState({ identifier: '', password: '' });
   const [error, setError] = useState({ identifier: null, password: null });
   const [showPassword, setShowPassword] = useState(false);
@@ -35,25 +33,24 @@ const Login = () => {
 
   const { setAdminBoolean } = useAdminContext();
 
-  const onLoginSuccess = (response:any) => {
+  const onLoginSuccess = (response: any) => {
     console.log('onLoginSuccess my function:', response);
 
     setAdminBoolean(response.is_admin);
 
     response.is_admin
       ? navigate('/validateotp', {
-        state: {
-          id: null,
-          email: null,
-          admin: response.is_admin
-        },
-      })
-      : 
-      navigate('/validateotp', {
+          state: {
+            id: null,
+            email: null,
+            admin: response.is_admin,
+          },
+        })
+      : navigate('/validateotp', {
           state: {
             id: response.doctor.id,
             email: response.doctor.attributes.email,
-            admin: response.is_admin
+            admin: response.is_admin,
           },
         });
   };
@@ -178,11 +175,7 @@ const Login = () => {
                       h="unset"
                       placeholder="0123 456 7890"
                     />
-                    <InputRightElement
-                      h="100%"
-                      pr="11.33px"
-                 
-                    />
+                    <InputRightElement h="100%" pr="11.33px" />
                   </InputGroup>
                   <FormLabel
                     pt="24px"
@@ -221,7 +214,15 @@ const Login = () => {
                       children={<EyeIcon />}
                     />
                   </InputGroup>
-                  <FormHelperText pt="12px" color="#C76565" fontSize="0.875rem">
+                  <FormHelperText
+                    pt="12px"
+                    color="#C76565"
+                    fontSize="0.875rem"
+                    cursor={'pointer'}
+                    onClick={() => {
+                      navigate('/EnterEmail');
+                    }}
+                  >
                     Forgot Password ?
                   </FormHelperText>
                   <Button

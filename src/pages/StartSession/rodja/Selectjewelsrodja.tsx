@@ -41,7 +41,6 @@ const SelectjewelRodja = (props: any) => {
   } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-  const { socketError } = useSocketManager();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -114,6 +113,7 @@ const SelectjewelRodja = (props: any) => {
           updatedFormData
         );
         onOpenConnected();
+        props.onClose();
       } else {
         console.log(headsetKey);
         console.log(existingDevice);
@@ -160,9 +160,6 @@ const SelectjewelRodja = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) {
-    return null;
-  }
   return (
     <>
       <Modal

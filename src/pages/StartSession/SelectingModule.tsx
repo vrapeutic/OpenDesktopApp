@@ -108,7 +108,6 @@ export default function SelectingModule(props: any) {
     if (socketError) {
       setSocketError(null);
       setOpenRunningPopup(false);
-      return;
     }
     const { error } = schema.validate(values, { abortEarly: false });
     if (error) {

@@ -52,6 +52,7 @@ const SelectenvRodja = (props: any) => {
     ];
     props.setFormData(updatedFormData);
     onOpenSelectJewel();
+    props.onClose();
   };
   const handleButtonClick = (envienment: number) => {
     setSelectedEniverinment(envienment);

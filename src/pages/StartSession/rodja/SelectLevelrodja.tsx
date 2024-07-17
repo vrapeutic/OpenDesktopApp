@@ -51,6 +51,7 @@ const SelectLevelRodja = (props: any) => {
     setFormData([data.selectLevel, ...formData.slice(1)]);
 
     onOpenSelectEnvrodja();
+    props.onClose();
   };
 
   const handleButtonClick = (level: number) => {
