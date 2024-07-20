@@ -28,6 +28,7 @@ export default function OTP() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [otp, setOtp] = useState('');
   const location = useLocation();
+  console.log('location state in otp', location);
   const toast = useToast();
   const [errormessage, seterrormessage] = useState<string | undefined>(
     undefined
@@ -75,9 +76,9 @@ export default function OTP() {
             navigate('/home');
             // Add your logic here for handling the GET request response
           })
-        
+
           .catch((error) => {
-            console.log('GET request error:', error)
+            console.log('GET request error:', error);
             console.log('from result includes', 'OTP is not valid or expired');
             seterrormessage('OTP is not valid or expired');
           });
@@ -96,7 +97,11 @@ export default function OTP() {
         )
           .then((response) => {
             console.log('response in response', response);
-            if (response.ok && response.status >= 200 && response.status < 300) {
+            if (
+              response.ok &&
+              response.status >= 200 &&
+              response.status < 300
+            ) {
               // If response is successful (status code 200-299)
               // onOpen();
               navigate('/home');
@@ -104,7 +109,7 @@ export default function OTP() {
             } else {
               // If response is not successful (status code outside 200-299)
               console.log(`Error: ${response}`);
-  
+
               console.log(`Error: ${response.status} - ${response.statusText}`);
             }
             return response.text();
@@ -113,22 +118,22 @@ export default function OTP() {
             console.log('with name params', params);
             const resultObject = JSON.parse(params[0]);
             console.log('result object', resultObject);
-  
+
             const token = resultObject.token;
-  
+
             console.log('Accessing the token object params:', token);
-  
+
             setApiToken(token);
             setMe(resultObject);
             (window as any).electronAPI.setPassword('token', token);
-  
+
             // if (resultObject.error) {
             //   console.log('from result includes', 'OTP is not valid or expired');
             //   seterrormessage('OTP is not valid or expired');
             // }
           })
           .catch((error) => {
-            console.log('GET request error:', error)
+            console.log('GET request error:', error);
             console.log('from result includes', 'OTP is not valid or expired');
             seterrormessage('OTP is not valid or expired');
           });

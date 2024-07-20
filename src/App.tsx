@@ -23,7 +23,8 @@ import ViewModule from './pages/viewmodule';
 import GeneralInfoEditModule from './features/EditModuleForm/GeneralInfoEditModule';
 import SpecialtyFormEditModule from './features/EditModuleForm/SpecialityFormEditModule';
 import ViewCenterAdmin from './pages/ViewCenterAdmin';
-import EnterEmail from './features/auth/components/EnterEmail';
+import EnterEmail from './features/auth/components/forgetPassword/EnterEmail';
+import ResetPassword from './features/auth/components/forgetPassword/ResetPassword';
 
 function App() {
   const { adminBoolean } = useAdminContext();
@@ -45,6 +46,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
         <Route path="EnterEmail" element={<EnterEmail />} />
+        <Route path="ResetPassword" element={<ResetPassword />} />
         <Route path="/" element={<Layout />}>
           <Route path="home" element={<Home />} />
           <Route path="Kids" element={<Kids />} />

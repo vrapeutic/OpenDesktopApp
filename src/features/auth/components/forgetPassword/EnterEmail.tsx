@@ -20,66 +20,32 @@ import { useAdminContext } from '@renderer/Context/AdminContext';
 import Joi from 'joi';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BackgroundLogin from '../../../assets/images/BackgroundLogin.png';
-import VRapeutic from '../../../assets/images/VRapeutic.png';
-import { useLoginMutation } from '../hooks/useLoginMutation';
-import LoginNavigation from './LoginNavigation';
+import BackgroundLogin from '../../../../assets/images/BackgroundLogin.png';
+import VRapeutic from '../../../../assets/images/VRapeutic.png';
+import LoginNavigation from '../LoginNavigation';
+import { useLoginMutation } from '../../hooks/useLoginMutation';
+import { useSendEmail } from '../../hooks/ForgetPassword';
 
 const EnterEmail = () => {
   const [data, setData] = useState({ identifier: '' });
   const [error, setError] = useState({ identifier: null });
-  const loginMutation = useLoginMutation();
   const navigate = useNavigate();
-  const { setAdminBoolean } = useAdminContext();
+  const mutation = useSendEmail();
 
-  const onLoginSuccess = (response: any) => {
-    console.log('onLoginSuccess my function:', response);
-
-    setAdminBoolean(response.is_admin);
-
-    response.is_admin
-      ? navigate('/validateotp', {
-          state: {
-            id: null,
-            email: null,
-            admin: response.is_admin,
-          },
-        })
-      : navigate('/validateotp', {
-          state: {
-            id: response.doctor.id,
-            email: response.doctor.attributes.email,
-            admin: response.is_admin,
-          },
-        });
-  };
-
-  const identifierSchema = Joi.alternatives()
-    .try(
-      Joi.string()
-        .lowercase()
-        .email({
-          minDomainSegments: 2,
-          tlds: {
-            allow: ['com', 'net', 'in', 'co'],
-          },
-        }),
-      Joi.string()
-        .length(11)
-        .pattern(/^[0-9]+$/)
-    )
-    .required();
-
-  const passwordSchema = Joi.string().min(4).required();
-
-  const schema = Joi.object().keys({
-    identifier: identifierSchema,
+  const identifierSchema = Joi.object({
+    email: Joi.string()
+      .lowercase()
+      .email({
+        minDomainSegments: 2,
+        tlds: {
+          allow: ['com', 'net', 'in', 'co'],
+        },
+      }),
   });
 
   const handleIdentifierChange = (email: string) => {
     setData((prev) => ({ ...prev, identifier: email }));
     const result = identifierSchema.validate(email);
-
     if (result.error) {
       setError((prev) => ({ ...prev, identifier: result.error }));
     } else {
@@ -89,13 +55,19 @@ const EnterEmail = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-
-    const result = schema.validate(data);
-
-    if (result.error) {
-      // TODO: handle error
-      console.log(result.error);
+    const result = identifierSchema.validate(data);
+    console.log(result);
+    if (result) {
+      mutation.mutate(data.identifier);
+      console.log(mutation.data);
     }
+    // navigate('/validateotp', {
+    //   state: 'ResetPassword',
+    // });
+    // if (result.error) {
+    //   // TODO: handle error
+    //   console.log(result.error);
+    // }
   };
   return (
     <Grid
@@ -170,6 +142,23 @@ const EnterEmail = () => {
                 </Button>
               </FormControl>
             </form>
+            <Box display={'flex'} onClick={() => navigate('/login')}>
+              <ArrowBackIcon
+                mt="27px"
+                fontWeight="500"
+                fontSize="1rem"
+                cursor={'pointer'}
+                mr={'10px'}
+              />
+              <Text
+                mt="24px"
+                fontWeight="500"
+                fontSize="1rem"
+                cursor={'pointer'}
+              >
+                Back to Login
+              </Text>
+            </Box>
             <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
               New to VRapeutic?{' '}
               <Link
@@ -194,23 +183,6 @@ const EnterEmail = () => {
                 Terms & Conditions
               </Link>
             </Text>
-            <Box display={'flex'} onClick={() => navigate('/login')}>
-              <ArrowBackIcon
-                mt="27px"
-                fontWeight="500"
-                fontSize="1rem"
-                cursor={'pointer'}
-                mr={'10px'}
-              />
-              <Text
-                mt="24px"
-                fontWeight="500"
-                fontSize="1rem"
-                cursor={'pointer'}
-              >
-                Back to Login
-              </Text>
-            </Box>
           </Box>
           <Text
             position="relative"

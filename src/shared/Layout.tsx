@@ -10,7 +10,7 @@ export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const { adminBoolean } = useAdminContext(); 
+  const { adminBoolean } = useAdminContext();
 
   useEffect(() => {
     (async () => {
@@ -20,7 +20,7 @@ export default function Layout() {
       console.log('token: ', token);
 
       if (!token && !adminBoolean) {
-        console.log("redirect to login in layout");
+        console.log('redirect to login in layout');
         navigate('/login');
       }
     })();
