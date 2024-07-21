@@ -103,7 +103,13 @@ export default function OpenConnectedVi(props: any) {
     return  api
   };
   const antherModule =()=>{
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetKey },
+      headsetKey
+    );
     props.onClose()
+    
     props.onCloseSelectBooksviblio()
     props.oncloseselectlevel()
     props.onCloseSelectDistractors()

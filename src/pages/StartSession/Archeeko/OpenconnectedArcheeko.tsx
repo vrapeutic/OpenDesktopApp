@@ -102,6 +102,11 @@ export default function OpenconnectedArcheeko(props: any) {
     );
   };
   const antherModule =()=>{
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetKey },
+      headsetKey
+    );
     props.onClose()
    
     props.onCloseSelectEnvironment()
