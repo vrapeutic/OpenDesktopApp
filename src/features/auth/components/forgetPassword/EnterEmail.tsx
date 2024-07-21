@@ -27,38 +27,40 @@ import { useLoginMutation } from '../../hooks/useLoginMutation';
 import { useSendEmail } from '../../hooks/ForgetPassword';
 
 const EnterEmail = () => {
-  const [data, setData] = useState({ identifier: '' });
-  const [error, setError] = useState({ identifier: null });
+  const [data, setData] = useState({ email: '' });
+  const [error, setError] = useState({ email: null });
   const navigate = useNavigate();
   const mutation = useSendEmail();
 
-  const identifierSchema = Joi.object({
-    email: Joi.string()
-      .lowercase()
-      .email({
-        minDomainSegments: 2,
-        tlds: {
-          allow: ['com', 'net', 'in', 'co'],
-        },
-      }),
+  const emailSchema = Joi.string()
+    .lowercase()
+    .email({
+      minDomainSegments: 2,
+      tlds: {
+        allow: ['com', 'net', 'in', 'co'],
+      },
+    });
+
+  const schema = Joi.object().keys({
+    email: emailSchema,
   });
 
-  const handleIdentifierChange = (email: string) => {
-    setData((prev) => ({ ...prev, identifier: email }));
-    const result = identifierSchema.validate(email);
+  const handleEmailChange = (email: string) => {
+    setData((prev) => ({ ...prev, email: email }));
+    const result = emailSchema.validate(email);
     if (result.error) {
-      setError((prev) => ({ ...prev, identifier: result.error }));
+      setError((prev) => ({ ...prev, email: result.error }));
     } else {
-      setError((prev) => ({ ...prev, identifier: null }));
+      setError((prev) => ({ ...prev, email: null }));
     }
   };
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const result = identifierSchema.validate(data);
+    const result = schema.validate(data);
     console.log(result);
     if (result) {
-      mutation.mutate(data.identifier);
+      mutation.mutate(data.email);
       console.log(mutation.data);
     }
     // navigate('/validateotp', {
@@ -105,11 +107,9 @@ const EnterEmail = () => {
                 </FormLabel>
                 <InputGroup>
                   <Input
-                    isInvalid={
-                      data.identifier.length > 0 && Boolean(error.identifier)
-                    }
-                    onChange={(e) => handleIdentifierChange(e.target.value)}
-                    value={data.identifier}
+                    isInvalid={data.email.length > 0 && Boolean(error.email)}
+                    onChange={(e) => handleEmailChange(e.target.value)}
+                    value={data.email}
                     type="email"
                     borderRadius="8px"
                     border="1px"
