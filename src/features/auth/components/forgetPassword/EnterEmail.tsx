@@ -45,11 +45,16 @@ const EnterEmail = () => {
   const handleEmailChange = (email: string) => {
     setData((prev) => ({ ...prev, email: email }));
     const result = emailSchema.validate(email);
-    if (result.error) {
-      setError((prev) => ({ ...prev, email: result.error }));
-    } else {
-      setError((prev) => ({ ...prev, email: null }));
-    }
+    const handleEmailChange = (email: string) => {
+      setData((prev) => ({ ...prev, email: email }));
+      const result = emailSchema.validate(email);
+      if (result.error) {
+        setError((prev) => ({ ...prev, email: result.error }));
+      } else {
+        setError((prev) => ({ ...prev, email: null }));
+        setError((prev) => ({ ...prev, email: null }));
+      }
+    };
   };
 
   const onSubmit = (e: FormEvent) => {

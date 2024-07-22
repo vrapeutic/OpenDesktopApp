@@ -103,6 +103,11 @@ export default function OpenconnectedRodja(props: any) {
     );
   };
   const antherModule =()=>{
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetKey },
+      headsetKey
+    );
     props.onClose()
     props.onCloseSelectEnvrodja()
     props.oncloseselectlevel()

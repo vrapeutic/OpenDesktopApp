@@ -82,7 +82,7 @@ const data = [
 const LineChartLineChart = (props: { refreshKey: number }) => {
    const center = useContext(dataContext);
    const [lineChart, setLineChart] = useState({})
-  
+   const selectedCenterContext = useContext(dataContext);
     const getData = async () => {
     const token = await (window as any).electronAPI.getPassword('token');
     const date = new Date();
@@ -108,7 +108,7 @@ const LineChartLineChart = (props: { refreshKey: number }) => {
     }, {});
     if (center.id !== undefined) {
       await fetch(
-        `${config.apiURL}/api/v1/doctors/center_vr_minutes?center_id=${center.id}`,
+        `${config.apiURL}/api/v1/doctors/center_vr_minutes?center_id=${selectedCenterContext.id}`,
         {
           method: 'Get',
           redirect: 'follow',

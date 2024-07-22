@@ -32,6 +32,7 @@ import { RedArrow } from '@renderer/assets/icons/RedArrow';
 
 export default function Home() {
   const [centers, setCenters] = useState([]);
+  const [centerName, setCenterName] = useState("Select Centers")
   const [isLoading, setIsLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   let selectedCenter = useContext(dataContext);
@@ -39,10 +40,13 @@ export default function Home() {
   const [arrow, setArrow] = useState(false);
   const selectedCenterContext = useContext(dataContext);
   const handleClick = (center: object) => {
+    console.log(center?.attributes?.name)
+    setCenterName(center?.attributes?.name)
     setIsLoading(true);
     selectedCenter = Object.assign(selectedCenter, center);
     setRefreshKey((oldKey) => oldKey + 1);
     setArrow(false);
+   
   };
   const { isOpen: isOpen, onOpen: onOpen, onClose: onClose } = useDisclosure();
 
@@ -181,7 +185,7 @@ export default function Home() {
                   borderRadius="8px"
                   color="#00DEA3"
                 >
-                  Select Centers
+            {  selectedCenterContext.id ?selectedCenterContext.attributes.name : centerName}
                 </MenuButton>
                 <MenuList>
                   {centers?.map((center) => (

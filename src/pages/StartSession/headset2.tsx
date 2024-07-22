@@ -157,11 +157,11 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       const appIsConnectedToInternet = await checkAppNetWorkConnection();
       console.log(appIsConnectedToInternet, sessionId, existingDevice);
       if (appIsConnectedToInternet && existingDevice) {
-        dispatchSocketMessage(
-          END_SESSION_MESSAGE,
-          { deviceId: newHeadsetKey },
-          newHeadsetKey
-        );
+        // dispatchSocketMessage(
+        //   END_SESSION_MESSAGE,
+        //   { deviceId: newHeadsetKey },
+        //   newHeadsetKey
+        // );
 
         const sessionResponse = await getSessionId(data.headset);
 

@@ -19,8 +19,9 @@ export default function VRminutesCard(props: any) {
           maxWidth="606px"
         >
           <CardBody>
-            {props.loading && <LineChartLineChart refreshKey={props.refreshKey} />}
-          {!props.loading && (
+          <LineChartLineChart refreshKey={props.refreshKey} />
+            {/* {props.loading && <LineChartLineChart refreshKey={props.refreshKey} />} */}
+          {/* {!props.loading && (
             <>
               <Text
                 textAlign="left"
@@ -38,7 +39,7 @@ export default function VRminutesCard(props: any) {
                 Select center to show chart...
               </Text>
             </>
-          )}
+          )} */}
           </CardBody>
         </Card>
       </Flex>

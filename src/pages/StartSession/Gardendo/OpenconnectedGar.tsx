@@ -103,6 +103,11 @@ export default function OpenconnectedGar(props: any) {
     return  api
   };
   const antherModule =()=>{
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetKey },
+      headsetKey
+    );
     props.onClose()
     props.onCloseSelectEnvironment()
     props.SelectDistractors()
