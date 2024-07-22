@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   FormControl,
-  FormHelperText,
   FormLabel,
   Grid,
   GridItem,
@@ -16,58 +15,66 @@ import {
   Link,
   Text,
 } from '@chakra-ui/react';
-import { useAdminContext } from '@renderer/Context/AdminContext';
 import Joi from 'joi';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BackgroundLogin from '../../../../assets/images/BackgroundLogin.png';
 import VRapeutic from '../../../../assets/images/VRapeutic.png';
-import LoginNavigation from '../LoginNavigation';
-import { useLoginMutation } from '../../hooks/useLoginMutation';
 import { useSendEmail } from '../../hooks/ForgetPassword';
+import LoginNavigation from '../LoginNavigation';
 
 const EnterEmail = () => {
-  const [data, setData] = useState({ identifier: '' });
-  const [error, setError] = useState({ identifier: null });
+  const [data, setData] = useState({ email: '' });
+  const [error, setError] = useState({ email: null });
   const navigate = useNavigate();
   const mutation = useSendEmail();
 
-  const identifierSchema = Joi.object({
-    email: Joi.string()
-      .lowercase()
-      .email({
-        minDomainSegments: 2,
-        tlds: {
-          allow: ['com', 'net', 'in', 'co'],
-        },
-      }),
+  const emailSchema = Joi.string()
+    .lowercase()
+    .email({
+      minDomainSegments: 2,
+      tlds: {
+        allow: ['com', 'net', 'in', 'co'],
+      },
+    });
+
+  const schema = Joi.object().keys({
+    email: emailSchema,
   });
 
-  const handleIdentifierChange = (email: string) => {
-    setData((prev) => ({ ...prev, identifier: email }));
-    const result = identifierSchema.validate(email);
+  const handleEmailChange = (email: string) => {
+    setData((prev) => ({ ...prev, email: email }));
+    const result = emailSchema.validate(email);
     if (result.error) {
-      setError((prev) => ({ ...prev, identifier: result.error }));
+      setError((prev) => ({ ...prev, email: result.error }));
     } else {
-      setError((prev) => ({ ...prev, identifier: null }));
+      setError((prev) => ({ ...prev, email: null }));
     }
   };
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const result = identifierSchema.validate(data);
-    console.log(result);
+    const result = schema.validate(data);
     if (result) {
-      mutation.mutate(data.identifier);
-      console.log(mutation.data);
+      mutation.mutate(data.email, {
+        onSuccess: (response) => {
+          navigate('/validateotp', {
+            state: {
+              id: response.id,
+              email: response.attributes.email,
+              path: 'ResetPassword',
+            },
+          });
+        },
+        onError: (error) => {
+          console.log('error', error);
+        },
+      });
     }
-    // navigate('/validateotp', {
-    //   state: 'ResetPassword',
-    // });
-    // if (result.error) {
-    //   // TODO: handle error
-    //   console.log(result.error);
-    // }
+    if (result.error) {
+      // TODO: handle error
+      console.log(result.error);
+    }
   };
   return (
     <Grid
@@ -105,11 +112,9 @@ const EnterEmail = () => {
                 </FormLabel>
                 <InputGroup>
                   <Input
-                    isInvalid={
-                      data.identifier.length > 0 && Boolean(error.identifier)
-                    }
-                    onChange={(e) => handleIdentifierChange(e.target.value)}
-                    value={data.identifier}
+                    isInvalid={data.email.length > 0 && Boolean(error.email)}
+                    onChange={(e) => handleEmailChange(e.target.value)}
+                    value={data.email}
                     type="email"
                     borderRadius="8px"
                     border="1px"
@@ -137,6 +142,7 @@ const EnterEmail = () => {
                   fontSize="1.5rem"
                   justifyContent="space-between"
                   rightIcon={<ArrowForwardIcon />}
+                  isLoading={mutation.isLoading}
                 >
                   Submit
                 </Button>

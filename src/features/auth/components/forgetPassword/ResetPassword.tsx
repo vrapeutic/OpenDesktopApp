@@ -1,4 +1,4 @@
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon, ViewOffIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -15,70 +15,68 @@ import {
   InputRightElement,
   Link,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import Joi from 'joi';
 import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { EyeIcon } from '../../../../assets/icons/EyeIcon';
 import VRapeutic from '../../../../assets/images/VRapeutic.png';
 import LoginNavigation from '../../../../features/auth/components/LoginNavigation';
 import BackgroundLogin from '../../../../assets/images/BackgroundLogin.png';
+import CongratulationsReset from './CongratulationsReset';
+import { useResetPassword } from '../../hooks/ForgetPassword';
 
 const ResetPassword = () => {
   const [data, setData] = useState({ password: '', confirmPassword: '' });
   const [error, setError] = useState({ password: null, confirmPassword: null });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const navigate = useNavigate();
-
-  const onLoginSuccess = (response: any) => {
-    console.log('onLoginSuccess my function:', response);
-
-    response.is_admin
-      ? navigate('/validateotp', {
-          state: {
-            id: null,
-            email: null,
-            admin: response.is_admin,
-          },
-        })
-      : navigate('/validateotp', {
-          state: {
-            id: response.doctor.id,
-            email: response.doctor.attributes.email,
-            admin: response.is_admin,
-          },
-        });
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const mutation = useResetPassword();
+  const location = useLocation();
 
   const schema = Joi.object({
-    password: Joi.string().min(4).required(),
+    password: Joi.string().min(4).required().messages({
+      'string.empty': 'Password is required',
+      'string.min': 'Password must be at least 4 characters long',
+    }),
     confirmPassword: Joi.string()
       .valid(Joi.ref('password'))
       .required()
       .messages({
         'any.only': 'Passwords do not match',
+        'string.empty': 'Confirm Password is required',
       }),
   });
 
   const handlePasswordChange = (password: string) => {
-    setData((prev) => ({ ...prev, password }));
     const result = schema.validate({ ...data, password });
-    console.log(result);
+    setData((prev) => ({ ...prev, password }));
     if (result.error) {
-      setError((prev) => ({ ...prev, password: result.error.message }));
+      const errorDetails = result.error.details.find(
+        (detail) => detail.context?.key === 'password'
+      );
+      setError((prev) => ({
+        ...prev,
+        password: errorDetails?.message || null,
+      }));
     } else {
       setError((prev) => ({ ...prev, password: null }));
     }
   };
 
   const handleConfirmPasswordChange = (confirmPassword: string) => {
-    setData((prev) => ({ ...prev, confirmPassword }));
     const result = schema.validate({ ...data, confirmPassword });
-    console.log(result);
-
+    setData((prev) => ({ ...prev, confirmPassword }));
     if (result.error) {
-      setError((prev) => ({ ...prev, confirmPassword: result.error.message }));
+      const errorDetails = result.error.details.find(
+        (detail) => detail.context?.key === 'confirmPassword'
+      );
+      setError((prev) => ({
+        ...prev,
+        confirmPassword: errorDetails?.message || null,
+      }));
     } else {
       setError((prev) => ({ ...prev, confirmPassword: null }));
     }
@@ -91,9 +89,27 @@ const ResetPassword = () => {
       console.log(result.error);
     } else {
       console.log('Form is valid');
-      // Perform your login logic here
+      mutation.mutate(
+        {
+          token: location.state.token,
+          requestBody: {
+            password: data.password,
+            confirmPassword: data.confirmPassword,
+          },
+        },
+        {
+          onSuccess: (response) => {
+            onOpen();
+          },
+          onError: (error) => {
+            console.log('error', error);
+            // Handle the error and show appropriate feedback to the user
+          },
+        }
+      );
     }
   };
+
   return (
     <>
       <Grid
@@ -137,9 +153,7 @@ const ResetPassword = () => {
                   </FormLabel>
                   <InputGroup>
                     <Input
-                      isInvalid={
-                        data.password.length > 0 && Boolean(error.password)
-                      }
+                      isInvalid={Boolean(error.password)}
                       onChange={(e) => handlePasswordChange(e.target.value)}
                       value={data.password}
                       type={showPassword ? 'text' : 'password'}
@@ -160,9 +174,24 @@ const ResetPassword = () => {
                       h="100%"
                       cursor="pointer"
                       onClick={() => setShowPassword(!showPassword)}
-                      children={<EyeIcon />}
+                      children={
+                        showPassword ? (
+                          <EyeIcon />
+                        ) : (
+                          <ViewOffIcon
+                            color={'#b6bfcd'}
+                            width="20px"
+                            height="20px"
+                          />
+                        )
+                      }
                     />
                   </InputGroup>
+                  {error.password && (
+                    <Text color="red.500" fontSize="sm" mt="5px">
+                      {error.password}
+                    </Text>
+                  )}
                   <FormLabel
                     pt="24px"
                     pb="12px"
@@ -174,10 +203,7 @@ const ResetPassword = () => {
                   </FormLabel>
                   <InputGroup>
                     <Input
-                      isInvalid={
-                        data.confirmPassword.length > 0 &&
-                        Boolean(error.confirmPassword)
-                      }
+                      isInvalid={Boolean(error.confirmPassword)}
                       onChange={(e) =>
                         handleConfirmPasswordChange(e.target.value)
                       }
@@ -202,9 +228,22 @@ const ResetPassword = () => {
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
-                      children={<EyeIcon />}
+                      children={showConfirmPassword ? (
+                        <EyeIcon />
+                      ) : (
+                        <ViewOffIcon
+                          color={'#b6bfcd'}
+                          width="20px"
+                          height="20px"
+                        />
+                      )}
                     />
                   </InputGroup>
+                  {error.confirmPassword && (
+                    <Text color="red.500" fontSize="sm" mt="5px">
+                      {error.confirmPassword}
+                    </Text>
+                  )}
                   <Button
                     type="submit"
                     w="380px"
@@ -221,6 +260,7 @@ const ResetPassword = () => {
                     fontSize="1.5rem"
                     justifyContent="space-between"
                     rightIcon={<ArrowForwardIcon />}
+                    isLoading={mutation.isLoading}
                   >
                     Submit
                   </Button>
@@ -259,6 +299,7 @@ const ResetPassword = () => {
           <LoginNavigation />
         </GridItem>
       </Grid>
+      {isOpen && <CongratulationsReset isOpen={isOpen} onClose={onClose} />}
     </>
   );
 };
