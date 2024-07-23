@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   FormControl,
-  FormHelperText,
   FormLabel,
   Grid,
   GridItem,
@@ -16,15 +15,13 @@ import {
   Link,
   Text,
 } from '@chakra-ui/react';
-import { useAdminContext } from '@renderer/Context/AdminContext';
 import Joi from 'joi';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BackgroundLogin from '../../../../assets/images/BackgroundLogin.png';
 import VRapeutic from '../../../../assets/images/VRapeutic.png';
-import LoginNavigation from '../LoginNavigation';
-import { useLoginMutation } from '../../hooks/useLoginMutation';
 import { useSendEmail } from '../../hooks/ForgetPassword';
+import LoginNavigation from '../LoginNavigation';
 
 const EnterEmail = () => {
   const [data, setData] = useState({ email: '' });
@@ -48,28 +45,41 @@ const EnterEmail = () => {
   const handleEmailChange = (email: string) => {
     setData((prev) => ({ ...prev, email: email }));
     const result = emailSchema.validate(email);
-    if (result.error) {
-      setError((prev) => ({ ...prev, email: result.error }));
-    } else {
-      setError((prev) => ({ ...prev, email: null }));
-    }
+    const handleEmailChange = (email: string) => {
+      setData((prev) => ({ ...prev, email: email }));
+      const result = emailSchema.validate(email);
+      if (result.error) {
+        setError((prev) => ({ ...prev, email: result.error }));
+      } else {
+        setError((prev) => ({ ...prev, email: null }));
+        setError((prev) => ({ ...prev, email: null }));
+      }
+    };
   };
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const result = schema.validate(data);
-    console.log(result);
     if (result) {
-      mutation.mutate(data.email);
-      console.log(mutation.data);
+      mutation.mutate(data.email, {
+        onSuccess: (response) => {
+          navigate('/validateotp', {
+            state: {
+              id: response.id,
+              email: response.attributes.email,
+              path: 'ResetPassword',
+            },
+          });
+        },
+        onError: (error) => {
+          console.log('error', error);
+        },
+      });
     }
-    // navigate('/validateotp', {
-    //   state: 'ResetPassword',
-    // });
-    // if (result.error) {
-    //   // TODO: handle error
-    //   console.log(result.error);
-    // }
+    if (result.error) {
+      // TODO: handle error
+      console.log(result.error);
+    }
   };
   return (
     <Grid
@@ -137,6 +147,7 @@ const EnterEmail = () => {
                   fontSize="1.5rem"
                   justifyContent="space-between"
                   rightIcon={<ArrowForwardIcon />}
+                  isLoading={mutation.isLoading}
                 >
                   Submit
                 </Button>

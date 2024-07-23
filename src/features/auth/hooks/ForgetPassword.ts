@@ -1,3 +1,4 @@
+import { config } from '@renderer/config';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -8,29 +9,34 @@ interface ResetPassword {
 
 interface ResetPasswordParams {
   token: string;
+  email?: string;
   requestBody: ResetPassword;
 }
 
 const sendEmail = async (email: string) => {
   try {
     const response = await axios.get(
-      `http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/forget_password`,
+      `${config.apiURL}/api/v1/forget_password`,
       {
         params: {
           email: email,
         },
       }
     );
-    return response;
+    return response.data.data;
   } catch (error) {
     console.log(error);
   }
 };
-const resetPassword = async ({ token, requestBody }: ResetPasswordParams) => {
+const resetPassword = async ({
+  token,
+  email,
+  requestBody,
+}: ResetPasswordParams) => {
   try {
     const response = await axios.post(
-      `http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1//reset_password?token=${token}`,
-      requestBody
+      `${config.apiURL}/api/v1/reset_password?token=${token}`,
+      { data: requestBody }
     );
     return response;
   } catch (error) {
