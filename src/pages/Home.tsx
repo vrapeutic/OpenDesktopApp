@@ -39,7 +39,7 @@ export default function Home() {
   const [Loading, setLoading] = useState(false);
   const [arrow, setArrow] = useState(false);
   const selectedCenterContext = useContext(dataContext);
-  const handleClick = (center: object) => {
+  const handleClick = (center: any) => {
     console.log(center?.attributes?.name)
     setCenterName(center?.attributes?.name)
     setIsLoading(true);

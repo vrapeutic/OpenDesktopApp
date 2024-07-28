@@ -28,7 +28,7 @@ import { useAdminContext } from '@renderer/Context/AdminContext';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 import { dataContext } from '@renderer/shared/Provider';
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 interface Center {
   id: number;
@@ -77,6 +77,7 @@ export default function Therapycentersadmin() {
   const [modelValues, setModelValues] = useState<{ [key: string]: string }>({});
   const [keyValues, setKeyValues] = useState<{ [key: string]: string }>({});
   const { otp } = useAdminContext();
+  const [showEdit, setShowEdit] = useState(true);
   const selectedCenter = useContext(dataContext);
   const schema = Joi.object().keys({
     model: Joi.string().min(3).max(30).required(),
@@ -233,13 +234,13 @@ export default function Therapycentersadmin() {
       );
       console.log(response);
       handleSuccess();
+      setShowEdit(!showEdit);
     } catch (error) {
       handleError(error);
       console.error(error);
     }
   };
-  const handleDelete = async(x: any) => {
-
+  const handleDelete = async (x: any) => {
     try {
       const response = await axios.delete(
         `${config.apiURL}/api/v1/admins/delete_headset/${x}`,
@@ -248,8 +249,7 @@ export default function Therapycentersadmin() {
       console.log(response);
       handleSuccess();
       const updatedData = childData.filter((item) => item.id !== x);
-    setChildData(updatedData);
-
+      setChildData(updatedData);
     } catch (error) {
       handleError(error);
       console.error(error);
@@ -464,53 +464,94 @@ export default function Therapycentersadmin() {
             {childData.map((x: any) => {
               return (
                 <Flex alignItems={'center'} justifyContent={'center'}>
-                  <Text mx={3}>modal:</Text>
-                  <Input
-                    type="text"
-                    height="40px"
-                    width="180px"
-                    borderWidth="2px"
-                    borderColor="gray.400"
-                    _focus={{
-                      borderColor: 'blue.400',
-                      boxShadow: 'outline',
-                    }}
-                    mx={2}
-                    placeholder={x.attributes.model}
-                    onChange={(e) => handleChangeModel(e, x.id)}
-                    value={modelValues[x.id] || ''}
-                  />
+                  {showEdit ? (
+                    <>
+                      <Text mx={3}  fontWeight={500}>modal:</Text>
+                      <Text mx={3} width={"20%"}>{x.attributes.model}</Text>
+                      <Text mx={3} fontWeight={500}>Key:</Text>
+                      <Text mx={3} width={"20%"}>{x.attributes.key}</Text>
 
-                  <Text mx={3}>modal:</Text>
-                  <Input
-                    type="text"
-                    height="40px"
-                    width="180px"
-                    borderWidth="2px"
-                    borderColor="gray.400"
-                    _focus={{
-                      borderColor: 'blue.400',
-                      boxShadow: 'outline',
-                    }}
-                    mx={2}
-                    placeholder={x.attributes.key}
-                    onChange={(e) => handleChangeKey(e, x.id)}
-                    value={keyValues[x.id] || ''}
-                  />
-                  <Button
-                    type="button"
-                    padding="10px"
-                    margin="5px"
-                    bg="green"
-                    borderRadius="8px"
-                    fontSize="14px"
-                    fontFamily="Graphik LCG"
-                    boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-                    color={'white'}
-                    onClick={() => editModel(x.id)}
-                  >
-                    <EditIcon />
-                  </Button>
+                      <Button
+                        type="button"
+                        padding="10px"
+                        margin="5px"
+                        bg="green"
+                        borderRadius="8px"
+                        fontSize="14px"
+                        fontFamily="Graphik LCG"
+                        boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                        color={'white'}
+                        onClick={() => setShowEdit(!showEdit)}
+                      >
+                        <EditIcon />
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Text mx={3}>modal:</Text>
+                      <Input
+                        type="text"
+                        height="40px"
+                        width="180px"
+                        borderWidth="2px"
+                        borderColor="gray.400"
+                        _focus={{
+                          borderColor: 'blue.400',
+                          boxShadow: 'outline',
+                        }}
+                        mx={2}
+                        placeholder={x.attributes.model}
+                        onChange={(e) => handleChangeModel(e, x.id)}
+                        value={modelValues[x.id] || ''}
+                      />
+
+                      <Text mx={3}>Key:</Text>
+                      <Input
+                        type="text"
+                        height="40px"
+                        width="180px"
+                        borderWidth="2px"
+                        borderColor="gray.400"
+                        _focus={{
+                          borderColor: 'blue.400',
+                          boxShadow: 'outline',
+                        }}
+                        mx={2}
+                        placeholder={x.attributes.key}
+                        onChange={(e) => handleChangeKey(e, x.id)}
+                        value={keyValues[x.id] || ''}
+                      />
+                       <Button
+                        type="button"
+                        padding="10px"
+                        margin="5px"
+                        bg="orange"
+                        borderRadius="8px"
+                        fontSize="14px"
+                        fontFamily="Graphik LCG"
+                        boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                        color={'white'}
+                        onClick={() => setShowEdit(!showEdit)}
+                      >
+                        <CloseIcon />
+                      </Button>
+                      <Button
+                        type="button"
+                        padding="10px"
+                        margin="5px"
+                        bg="green"
+                        borderRadius="8px"
+                        fontSize="14px"
+                        fontFamily="Graphik LCG"
+                        boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                        color={'white'}
+                        onClick={() => editModel(x.id)}
+                      >
+                        <CheckIcon />
+                      </Button>
+
+                    </>
+                  )}
                   <Button
                     type="button"
                     padding="10px"
@@ -521,7 +562,6 @@ export default function Therapycentersadmin() {
                     fontFamily="Graphik LCG"
                     boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                     color={'white'}
-                    
                     onClick={() => handleDelete(x.id)}
                   >
                     <DeleteIcon />
@@ -577,7 +617,7 @@ const DataTable = ({
   const getHeadset = async (x: any) => {
     try {
       const response = await axios.get(
-        `${config.apiURL}/api/v1//admins/headsets?q[center_id_eq]=${x}`,
+        `${config.apiURL}/api/v1/admins/headsets?q[center_id_eq]=${x}`,
         { headers }
       );
       console.log('response getHeadset', response);
