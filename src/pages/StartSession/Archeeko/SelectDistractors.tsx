@@ -84,7 +84,7 @@ const SelectDistractors = (props: any) => {
        distractor  ${selectedDistractors} 
       module name is ${module} and session id is ${sessionId}`,
       status: 'success',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
 

@@ -85,7 +85,7 @@ const SelectDistractors = (props: any) => {
       description: `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
       module name is ${module} and session id is ${sessionId}`,
       status: 'success',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
 

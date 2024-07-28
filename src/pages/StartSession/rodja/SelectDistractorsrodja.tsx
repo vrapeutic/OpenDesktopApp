@@ -115,7 +115,7 @@ const SelectDistractorsRodja = (props: any) => {
        distractor  ${selectedDistractor} 
       module name is ${module} and session id is ${sessionId}`,
         status: 'success',
-        duration: 9000,
+        duration: 5000,
         position: 'top-right',
       });
       console.log(

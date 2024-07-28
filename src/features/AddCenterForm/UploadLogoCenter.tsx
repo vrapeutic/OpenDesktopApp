@@ -125,7 +125,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
       title: 'Error',
       description: error.response.data.error,
       status: 'success',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
   };

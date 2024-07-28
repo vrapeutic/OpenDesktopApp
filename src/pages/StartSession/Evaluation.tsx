@@ -99,7 +99,7 @@ export default function SelectEvaluation(props: any) {
           description: `${error.response.data.error}`,
 
           status: 'error',
-          duration: 9000,
+          duration: 5000,
           position: 'top-right',
         });
         // Handle error
