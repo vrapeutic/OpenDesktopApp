@@ -289,19 +289,20 @@ export default function Sidebar() {
               </Text>
             </Flex> */}
           </Flex>
-
-          <Button
-            w="143px"
-            h="40px"
-            mt="55px"
-            padding="12px 24px"
-            bg="#F5B50E"
-            color="#FFFFFF"
-            fontWeight="500"
-            onClick={onOpen}
-          >
-            Start a Session
-          </Button>
+          {!adminBoolean && (
+            <Button
+              w="143px"
+              h="40px"
+              mt="55px"
+              padding="12px 24px"
+              bg="#F5B50E"
+              color="#FFFFFF"
+              fontWeight="500"
+              onClick={onOpen}
+            >
+              Start a Session
+            </Button>
+          )}
         </Box>
       </VStack>
       {onopenlostconnection && (
