@@ -1,12 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
 import {
   Box,
   Button,
-  Card,
   Flex,
-  Grid,
-  GridItem,
-  Image,
   Input,
   Modal,
   ModalBody,
@@ -25,10 +20,11 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import { config } from '../config';
-import Joi from 'joi';
 import { dataContext } from '@renderer/shared/Provider';
 import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
+import Joi from 'joi';
+import { useContext, useEffect, useState } from 'react';
+import { config } from '../config';
 
 export default function Specialists() {
   const selectedCenter = useContext(dataContext);
@@ -109,7 +105,7 @@ export default function Specialists() {
         onClickFunction={onOpen}
       />
 
-      <Table variant="simple" background="#FFFFFF">
+      <Table variant="simple" background="#FFFFFF" mx={5}>
         <Thead>
           <Tr>
             <Th>Name</Th>
