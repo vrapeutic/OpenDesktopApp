@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   GridItem,
   Modal,
@@ -8,6 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Spinner,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -105,7 +107,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   const selectedCenterContext = useContext(dataContext);
   const [errorMessages, setErrorMessages] = useState('');
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
   const schema = Joi.object({
     headset: Joi.string().required().messages({
       'string.empty': 'You must select a headset',
@@ -125,6 +127,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   });
 
   const getHeadsets = async () => {
+    setLoading(true);
     const token = await (window as any).electronAPI.getPassword('token');
     const headers = { Authorization: `Bearer ${token}` };
     try {
@@ -133,6 +136,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
         { headers }
       );
       setHeadsets(response.data.data);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching center headsets:', error);
       setErrorMessages('Error fetching center headsets');
@@ -248,68 +252,77 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
           <ModalHeader textAlign="center" fontSize="30px">
             Start a session
           </ModalHeader>
-          {headsets.length > 0 ? (
-            <>
-              <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-                <Text mt="25px">Select a VR Headset</Text>
-                <GridItem>
-                  <Select
-                    {...register('headset')}
-                    id="headset"
-                    name="headset"
-                    placeholder="Select headset"
-                    size="sm"
-                  >
-                    {headsets.map((headset) => (
-                      <option value={headset.id} key={headset.id}>
-                        {headset?.attributes.key}
-                      </option>
-                    ))}
-                  </Select>
-                </GridItem>
-                {errors.headset && (
-                  <Text color="red.500">
-                    {errors.headset.message as string}
-                  </Text>
-                )}
-              </ModalBody>
-              <ModalFooter display={'flex'} justifyContent={'center'}>
-                <Button
-                  w="180px"
-                  h="54px"
-                  mx={2}
-                  bg="#00DEA3"
-                  borderRadius="12px"
-                  color="#FFFFFF"
-                  fontFamily="Graphik LCG"
-                  fontWeight="700"
-                  fontSize="15px"
-                  onClick={() => {
-                    props.onClose();
-                    navigate('/home');
-                  }}
-                >
-                  Cancel Session
-                </Button>
-                <Button
-                  w="214px"
-                  h="54px"
-                  bg="#00DEA3"
-                  borderRadius="12px"
-                  color="#FFFFFF"
-                  fontFamily="Roboto"
-                  fontWeight="700"
-                  fontSize="18px"
-                  onClick={handleSubmit(handleFormSubmit)}
-                >
-                  Connect to headset
-                </Button>
-              </ModalFooter>
-            </>
+
+          {loading ? (
+            <Box textAlign="center" py={10} px={6}>
+              <Spinner />
+            </Box>
           ) : (
-            <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
-              No VR headsets are available in this center
-            </ModalHeader>
+            <>
+              {headsets.length > 0 ? (
+                <>
+                  <ModalBody fontSize="20px" fontWeight="600" mt="15px">
+                    <Text mt="25px">Select a VR Headset</Text>
+                    <GridItem>
+                      <Select
+                        {...register('headset')}
+                        id="headset"
+                        name="headset"
+                        placeholder="Select headset"
+                        size="sm"
+                      >
+                        {headsets.map((headset) => (
+                          <option value={headset.id} key={headset.id}>
+                            {headset?.attributes.key}
+                          </option>
+                        ))}
+                      </Select>
+                    </GridItem>
+                    {errors.headset && (
+                      <Text color="red.500">
+                        {errors.headset.message as string}
+                      </Text>
+                    )}
+                  </ModalBody>
+                  <ModalFooter display={'flex'} justifyContent={'center'}>
+                    <Button
+                      w="180px"
+                      h="54px"
+                      mx={2}
+                      bg="#00DEA3"
+                      borderRadius="12px"
+                      color="#FFFFFF"
+                      fontFamily="Graphik LCG"
+                      fontWeight="700"
+                      fontSize="15px"
+                      onClick={() => {
+                        props.onClose();
+                        navigate('/home');
+                      }}
+                    >
+                      Cancel Session
+                    </Button>
+                    <Button
+                      w="214px"
+                      h="54px"
+                      bg="#00DEA3"
+                      borderRadius="12px"
+                      color="#FFFFFF"
+                      fontFamily="Roboto"
+                      fontWeight="700"
+                      fontSize="18px"
+                      onClick={handleSubmit(handleFormSubmit)}
+                    >
+                      Connect to headset
+                    </Button>
+                  </ModalFooter>
+                </>
+              ) : (
+                <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
+                  No VR headsets are available in this center
+                </ModalHeader>
+              )}
+            </>
           )}
         </ModalContent>
       </Modal>
