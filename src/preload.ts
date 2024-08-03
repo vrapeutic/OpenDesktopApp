@@ -18,3 +18,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.invoke('checkServiceExistence', [deviceId]),
   checkNetworkConnection: () => ipcRenderer.invoke('checkNetworkConnection'),
 });
+
+contextBridge.exposeInMainWorld('electron', {
+  listFiles: (directoryPath: any) =>
+    ipcRenderer.invoke('list-files', directoryPath),
+  readFile: (filePath: any) => ipcRenderer.invoke('read-file', filePath),
+});
