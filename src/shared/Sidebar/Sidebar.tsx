@@ -131,6 +131,18 @@ export default function Sidebar() {
       ),
       path: '/Therapycentersadmin',
     },
+    // {
+    //   link: 'Kids',
+    //   icon: (
+    //     <Kids
+    //       color={
+    //         location.pathname === '/kidsAdmin' ? '#00DEA3' : '#333333'
+    //       }
+    //     />
+    //   ),
+    //   path: '/kidsAdmin',
+    // },
+
   ];
 
   const CloseCongratulationsModal = () => {

@@ -115,6 +115,7 @@ const Theraputicmodules: React.FC = () => {
                 selectedModuleId={selectedModuleId}
               />
             )}
+            <Box mx={18}>
             <Table variant="simple" background="#FFFFFF">
               <Thead>
                 <Tr>
@@ -138,8 +139,8 @@ const Theraputicmodules: React.FC = () => {
                       >
                         <Flex direction="row" gap={2}>
                           <Box
-                            width={197}
-                            height={197}
+                            width={130}
+                            height={130}
                             alignItems={'center'}
                             display={'flex'}
                           >
@@ -196,6 +197,8 @@ const Theraputicmodules: React.FC = () => {
                 )}
               </Tbody>
             </Table>
+            </Box>
+            
           </>
         );
       case 2:
