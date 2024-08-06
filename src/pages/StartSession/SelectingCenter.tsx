@@ -87,7 +87,8 @@ export default function SelectingCenter(props: any) {
 
   return (
     <Box>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}     closeOnOverlayClick={false}
+        closeOnEsc={false}>
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
@@ -149,6 +150,21 @@ export default function SelectingCenter(props: any) {
           ) : (
             <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
               You should select a center first from home
+              <Button
+                  w="180px"
+                  h="54px"
+                  mt={50}
+                  mx={2}
+                  bg="#00DEA3"
+                  borderRadius="12px"
+                  color="#FFFFFF"
+                  fontFamily="Graphik LCG"
+                  fontWeight="700"
+                  fontSize="15px"
+                  onClick={props.onClose}
+                >
+                  Cancel 
+                </Button>
             </ModalHeader>
           )}
         </ModalContent>

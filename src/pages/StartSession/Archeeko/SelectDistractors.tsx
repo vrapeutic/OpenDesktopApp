@@ -84,8 +84,8 @@ const SelectDistractors = (props: any) => {
        distractor  ${selectedDistractors} 
       module name is ${module} and session id is ${sessionId}`,
       status: 'success',
-      duration: 5000,
-      position: 'top-right',
+      duration: null, 
+      position: 'bottom-left',
     });
 
     const existingDevice = await checkIfServiceExists(headsetKey);

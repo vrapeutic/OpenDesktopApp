@@ -13,7 +13,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -54,7 +54,7 @@ const SelectNumberArcheeko = (props: any) => {
     selectNumber: joi.number().required(),
   });
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
-
+  const toastIdRef = useRef();
   const {
     register,
     handleSubmit,
@@ -89,11 +89,38 @@ const SelectNumberArcheeko = (props: any) => {
         description: `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, Number ${selectedNumber} ,
          module name is ${module} and session id is ${sessionId}`,
         status: 'success',
-
-        duration: 5000,
-        position: 'top-right',
+        duration: null, 
+        position: 'bottom-left',
+       
       });
+     
 
+      toastIdRef.current = toast({
+        title: 'Success',
+        description: (
+          <Box>
+            {`You assigned level ${updatedFormData[0]}, environment ${props.formData[1]}, Number ${props.selectedNumber}, module name is ${module} and session id is ${sessionId}`}
+            <Button
+              colorScheme="blue"
+              onClick={() => {
+                if (toastIdRef.current) {
+                  toast.close(toastIdRef.current);
+                }
+              }}
+              mt={4}
+            >
+              Close
+            </Button>
+          </Box>
+        ),
+        status: 'success',
+        duration: null,
+        position: 'bottom-left',
+        onCloseComplete: () => {
+          console.log('Toast has been removed.');
+          // Additional logic for when the toast is removed
+        },
+      });
       const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
       if (appIsConnectedToInternet && existingDevice) {
