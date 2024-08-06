@@ -120,7 +120,8 @@ export default function OpenConnectedVi(props: any) {
   return (
     <>
       <Box>
-        <Modal isOpen={props.isOpen} onClose={props.onClose}>
+        <Modal isOpen={props.isOpen} onClose={props.onClose}  closeOnOverlayClick={false}
+        closeOnEsc={false}>
           <ModalOverlay />
           <ModalContent
             h="400px"

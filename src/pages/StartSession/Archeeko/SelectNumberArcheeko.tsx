@@ -89,38 +89,38 @@ const SelectNumberArcheeko = (props: any) => {
         description: `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, Number ${selectedNumber} ,
          module name is ${module} and session id is ${sessionId}`,
         status: 'success',
-        duration: null, 
+        duration: 3000,
         position: 'bottom-left',
        
       });
      
 
-      toastIdRef.current = toast({
-        title: 'Success',
-        description: (
-          <Box>
-            {`You assigned level ${updatedFormData[0]}, environment ${props.formData[1]}, Number ${props.selectedNumber}, module name is ${module} and session id is ${sessionId}`}
-            <Button
-              colorScheme="blue"
-              onClick={() => {
-                if (toastIdRef.current) {
-                  toast.close(toastIdRef.current);
-                }
-              }}
-              mt={4}
-            >
-              Close
-            </Button>
-          </Box>
-        ),
-        status: 'success',
-        duration: null,
-        position: 'bottom-left',
-        onCloseComplete: () => {
-          console.log('Toast has been removed.');
-          // Additional logic for when the toast is removed
-        },
-      });
+      // toastIdRef.current = toast({
+      //   title: 'Success',
+      //   description: (
+      //     <Box>
+      //       {`You assigned level ${updatedFormData[0]}, environment ${props.formData[1]}, Number ${props.selectedNumber}, module name is ${module} and session id is ${sessionId}`}
+      //       <Button
+      //         colorScheme="blue"
+      //         onClick={() => {
+      //           if (toastIdRef.current) {
+      //             toast.close(toastIdRef.current);
+      //           }
+      //         }}
+      //         mt={4}
+      //       >
+      //         Close
+      //       </Button>
+      //     </Box>
+      //   ),
+      //   status: 'success',
+      //   duration: null,
+      //   position: 'bottom-left',
+      //   onCloseComplete: () => {
+      //     console.log('Toast has been removed.');
+      //     // Additional logic for when the toast is removed
+      //   },
+      // });
       const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
       if (appIsConnectedToInternet && existingDevice) {

@@ -62,7 +62,7 @@ const Login = () => {
         .email({
           minDomainSegments: 2,
           tlds: {
-            allow: ['com', 'net', 'in', 'co'],
+            allow: false,
           },
         }),
       Joi.string()

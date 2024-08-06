@@ -166,6 +166,7 @@ const SelectjewelRodja = (props: any) => {
         isOpen={props.isOpen}
         onClose={props.onClose}
         closeOnOverlayClick={false}
+        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">

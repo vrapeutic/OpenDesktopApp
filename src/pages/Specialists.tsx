@@ -40,7 +40,9 @@ export default function Specialists() {
   const schema = Joi.object().keys({
     email: Joi.string().email({
       minDomainSegments: 2,
-      tlds: { allow: ['com', 'net', 'in', 'co'] },
+      tlds: {
+        allow: false,
+      },
     }),
   });
 

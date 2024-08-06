@@ -34,7 +34,7 @@ const EnterEmail = () => {
     .email({
       minDomainSegments: 2,
       tlds: {
-        allow: ['com', 'net', 'in', 'co'],
+        allow: false,
       },
     });
 

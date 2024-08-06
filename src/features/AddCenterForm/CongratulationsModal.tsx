@@ -17,7 +17,8 @@ import { Link as ReachLink } from 'react-router-dom';
 export default function Congratulations(props: any) {
   return (
     <>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}  closeOnOverlayClick={false}
+        closeOnEsc={false}>
         <ModalOverlay />
         <ModalContent w="645px" h="466px" bgColor="#FFFFFF" borderRadius="10px">
           <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
