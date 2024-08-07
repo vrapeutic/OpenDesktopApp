@@ -11,8 +11,9 @@ import {
   FormErrorMessage,
   useToast,
   useDisclosure,
+  Box,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -26,8 +27,10 @@ import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 
 const SelectDistractors = (props: any) => {
+
   const navigate = useNavigate();
   const toast = useToast();
+  const toastIdRef:any = useRef();
   const { module, sessionId, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
@@ -77,17 +80,39 @@ const SelectDistractors = (props: any) => {
 
     navigate('/home');
     props.onClose();
-
-    toast({
+    toastIdRef.current = toast({
       title: 'Success',
-      description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
-       distractor  ${selectedDistractors} 
-      module name is ${module} and session id is ${sessionId}`,
+      description: (
+        <Box>
+          {`You assigned level ${updatedFormData[0]}, environment ${props.formData[1]}, Number ${props.selectedNumber}, module name is ${module} and session id is ${sessionId}`}
+          <Button
+              color={"white"}
+           
+               width={3}
+               height={5}
+               onClick={() => {
+                 if (toastIdRef.current) {
+                  
+                   toast.close(toastIdRef.current);
+                 }
+               }}
+             position={"absolute"}
+        
+             top={3}
+             right={3}
+          >
+        x
+          </Button>
+        </Box>
+      ),
       status: 'success',
-      duration: 5000,
+      duration: null,
       position: 'bottom-left',
+      onCloseComplete: () => {
+        console.log('Toast has been removed.');
+        // Additional logic for when the toast is removed
+      },
     });
-
     const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     if (appIsConnectedToInternet && existingDevice) {
@@ -129,6 +154,13 @@ const SelectDistractors = (props: any) => {
     setValue('selectDistractors', distractors);
   };
 
+
+  const closeAllModalsAndToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  
+  };
   const cancelSession = () => {
     setNotFound(false);
     closeSelectingAModule();
@@ -265,6 +297,8 @@ const SelectDistractors = (props: any) => {
           SelectDistractors={props.onClose}
           onCloseSelectNumber={props.onCloseSelectNumber}
           oncloseselectlevel={props.oncloseselectlevel}
+          closeAllModalsAndToast={closeAllModalsAndToast}
+          closeAllModals={closeAllModalsAndToast}
         />
       )}
       {/* {onOpenConnected && (

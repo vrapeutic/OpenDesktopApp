@@ -221,7 +221,7 @@ const TherapyCenters: React.FC = () => {
         <>
           <HeaderSpaceBetween
             Title="Therapy Centers"
-            ButtonText="Add Therapy"
+            ButtonText="Add Therapy Center"
             onClickFunction={nextHandler}
           />
           {showTable && renderTable()}
