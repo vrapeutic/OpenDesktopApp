@@ -90,6 +90,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData?.phoneNumber}
           />
           {errors.phoneNumber && (
             <Text color="red.500">{errors.phoneNumber.message as string}</Text>
@@ -111,6 +112,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData?.socialMedia}
           />
           {errors.socialMedia && (
             <Text color="red.500">{errors.socialMedia.message as string}</Text>
@@ -131,6 +133,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData?.Website}
           />
           {errors.Website && (
             <Text color="red.500">{errors.Website.message as string}</Text>
@@ -152,6 +155,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData?.Linkedin}
           />
           {errors.Linkedin && (
             <Text color="red.500">{errors.Linkedin.message as string}</Text>

@@ -30,6 +30,7 @@ import { dataContext } from '@renderer/shared/Provider';
 import { Link as ReachLink } from 'react-router-dom';
 import { RedArrow } from '@renderer/assets/icons/RedArrow';
 import Papa from 'papaparse';
+
 export default function Home() {
   const [centers, setCenters] = useState([]);
   const [centerName, setCenterName] = useState('Select Centers');
@@ -43,11 +44,24 @@ export default function Home() {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState('');
   const [fileContent, setFileContent] = useState('');
+  const [reportDir, setReportDir] = useState('');
 
+  useEffect(() => {
+    const fetchReportDir = async () => {
+      try {
+        const dir = await (window as any).electron.getReportDir();
+        setReportDir(dir);
+      } catch (error) {
+        console.error('Error fetching report directory:', error);
+      }
+    };
+
+    fetchReportDir();
+  }, []);
+
+  console.log(reportDir, 'reportDir');
   const handleListFiles = async () => {
-    const result = await (window as any).electron.listFiles(
-      'C:/Users/Issra Ismaiel/Desktop/VRapeuticSessions'
-    );
+    const result = await (window as any).electron.listFiles(reportDir);
     if (result.success) {
       setFiles(result.files);
       console.log(result.files);

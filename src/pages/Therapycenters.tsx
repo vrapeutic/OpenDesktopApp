@@ -98,6 +98,7 @@ const TherapyCenters: React.FC = () => {
             nextHandler={nextHandler}
             backHandler={backHandler}
             sliding={sliding}
+            formData={formData}
           />
         );
       case 3:
@@ -107,6 +108,7 @@ const TherapyCenters: React.FC = () => {
             nextHandler={nextHandler}
             backHandler={backHandler}
             sliding={sliding}
+            formData={formData}
           />
         );
       case 4:
@@ -116,6 +118,7 @@ const TherapyCenters: React.FC = () => {
             nextHandler={nextHandler}
             backHandler={backHandler}
             sliding={sliding}
+            formData={formData}
           />
         );
       case 5:

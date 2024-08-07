@@ -18,6 +18,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
   nextHandler,
   backHandler,
   sliding,
+  formData,
 }) => {
   const schema = joi.object({
     therapyCenterName: joi
@@ -26,7 +27,6 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
       .max(30)
       .required()
       .label('therapyCenterName'),
-
     completeAddress: joi.string().required(),
     Email: joi
       .string()
@@ -74,7 +74,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            therapyCenterName
+            Therapy Center Name
           </FormLabel>
 
           <Input
@@ -88,6 +88,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData?.therapyCenterName}
           />
           {errors.therapyCenterName && (
             <Text color="red.500">
@@ -102,7 +103,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            completeAddress
+            Complete Address
           </FormLabel>
 
           <Input
@@ -116,6 +117,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData?.completeAddress}
           />
           {errors.completeAddress && (
             <Text color="red.500">
@@ -144,6 +146,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData?.Email}
           />
           {errors.Email && (
             <Text color="red.500">{errors.Email.message as string}</Text>
@@ -156,7 +159,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            managerName
+            Manager's Name
           </FormLabel>
 
           <Input
@@ -170,6 +173,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData?.managerName}
           />
           {errors.managerName && (
             <Text color="red.500">{errors.managerName.message as string}</Text>

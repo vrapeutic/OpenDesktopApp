@@ -106,7 +106,7 @@ const handleReceivingReportMessage = (file: any, data: any) => {
   );
 };
 
-const getOrCreateReportDir = () => {
+export const getOrCreateReportDir = () => {
   const homeDir = os.homedir();
   const dirUrl = path.join(homeDir, REPORT_FILE_SAVE_PATH);
 
@@ -115,6 +115,7 @@ const getOrCreateReportDir = () => {
   }
   return dirUrl;
 };
+console.log(YELLOW_SERVER_LOGS_COLOR, `report dir: ${getOrCreateReportDir()}`);
 // TODO: make listeners respond dynamically based on events
 const CUSTOM_MESSAGE_HANDLERS = {
   playModule: handleSendPrivateMessage,
