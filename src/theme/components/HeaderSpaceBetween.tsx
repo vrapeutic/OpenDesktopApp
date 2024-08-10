@@ -37,7 +37,7 @@ function HeaderSpaceBetween({
         </Text>
         {ButtonText && (
           <Button
-            w="143px"
+            w="150px"
             h="40px"
             padding="12px"
             bg="#F5B50E"

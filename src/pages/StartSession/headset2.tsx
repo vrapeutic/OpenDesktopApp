@@ -321,6 +321,24 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
               ) : (
                 <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
                   No VR headsets are available in this center
+                  <Button
+                      w="180px"
+                      h="54px"
+                      mx={2}
+                      mt={50}
+                      bg="#00DEA3"
+                      borderRadius="12px"
+                      color="#FFFFFF"
+                      fontFamily="Graphik LCG"
+                      fontWeight="700"
+                      fontSize="15px"
+                      onClick={() => {
+                        props.onClose();
+                        navigate('/home');
+                      }}
+                    >
+                      Cancel Session
+                    </Button>
                 </ModalHeader>
               )}
             </>
