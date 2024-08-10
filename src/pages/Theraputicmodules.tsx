@@ -86,7 +86,7 @@ const Theraputicmodules: React.FC = () => {
   const getModules = async () => {
     try {
       const response = await axios.get(
-        `${config.apiURL}/api/v1/software_modules`,
+        `${config.apiURL}/api/v1/admins/software_modules`,
         { headers }
       );
       console.log('response modules', response);
@@ -115,87 +115,89 @@ const Theraputicmodules: React.FC = () => {
                 selectedModuleId={selectedModuleId}
               />
             )}
-            <Table variant="simple" background="#FFFFFF">
-              <Thead>
-                <Tr>
-                  <Th>Name</Th>
-                  <Th>Assign</Th>
-                  <Th>Specialties</Th>
-                  <Th>Technology</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {softwaremodules?.map((Module) =>
-                  Module?.attributes.image?.url ? (
-                    <Tr key={Module.id}>
-                      <Td
-                        onClick={() => {
-                          navigate('/viewmodule', {
-                            state: { Module: Module },
-                          });
-                        }}
-                        cursor={'pointer'}
-                      >
-                        <Flex direction="row" gap={2}>
-                          <Box
-                            width={197}
-                            height={197}
-                            alignItems={'center'}
-                            display={'flex'}
-                          >
-                            <img
-                              src={Module?.attributes.image?.url}
-                              alt={Module?.attributes.name}
-                            />
-                          </Box>
-                          <Text
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}
-                          >
-                            {Module?.attributes.name}
-                          </Text>
-                        </Flex>
-                      </Td>
-                      <Td>
-                        <Button
-                          onClick={(e) => {
-                            e.stopPropagation(); // Prevents the row click event
-                            navigate('/Assigntocenter', {
+            <Box mx={18}>
+              <Table variant="simple" background="#FFFFFF">
+                <Thead>
+                  <Tr>
+                    <Th>Name</Th>
+                    <Th>Assign</Th>
+                    <Th>Specialties</Th>
+                    <Th>Technology</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {softwaremodules?.map((Module) =>
+                    Module?.attributes.image?.url ? (
+                      <Tr key={Module.id}>
+                        <Td
+                          onClick={() => {
+                            navigate('/viewmodule', {
                               state: { Module: Module },
                             });
                           }}
+                          cursor={'pointer'}
                         >
-                          Assign to center
-                        </Button>
-                      </Td>
-                      <Td
-                        onClick={() => {
-                          navigate('/viewmodule', {
-                            state: { Module: Module },
-                          });
-                        }}
-                        cursor={'pointer'}
-                      >
-                        {Module?.attributes.targeted_skills?.map((skill) => (
-                          <Tag
-                            key={skill.id}
-                            size="sm"
-                            colorScheme="gray"
-                            mr={1}
+                          <Flex direction="row" gap={2}>
+                            <Box
+                              width={130}
+                              height={130}
+                              alignItems={'center'}
+                              display={'flex'}
+                            >
+                              <img
+                                src={Module?.attributes.image?.url}
+                                alt={Module?.attributes.name}
+                              />
+                            </Box>
+                            <Text
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                            >
+                              {Module?.attributes.name}
+                            </Text>
+                          </Flex>
+                        </Td>
+                        <Td>
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevents the row click event
+                              navigate('/Assigntocenter', {
+                                state: { Module: Module },
+                              });
+                            }}
                           >
-                            <TagLabel>{skill?.name}</TagLabel>
-                          </Tag>
-                        ))}
-                      </Td>
-                      <Td>{Module?.attributes.technology}</Td>
-                    </Tr>
-                  ) : null
-                )}
-              </Tbody>
-            </Table>
+                            Assign to center
+                          </Button>
+                        </Td>
+                        <Td
+                          onClick={() => {
+                            navigate('/viewmodule', {
+                              state: { Module: Module },
+                            });
+                          }}
+                          cursor={'pointer'}
+                        >
+                          {Module?.attributes.targeted_skills?.map((skill) => (
+                            <Tag
+                              key={skill.id}
+                              size="sm"
+                              colorScheme="gray"
+                              mr={1}
+                            >
+                              <TagLabel>{skill?.name}</TagLabel>
+                            </Tag>
+                          ))}
+                        </Td>
+                        <Td>{Module?.attributes.technology}</Td>
+                      </Tr>
+                    ) : null
+                  )}
+                </Tbody>
+              </Table>
+            </Box>
           </>
         );
       case 2:

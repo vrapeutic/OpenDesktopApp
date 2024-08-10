@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -29,7 +29,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectjewelRodja = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
-  const { module, sessionId, headsetid,headsetKey } = useStartSessionContext();
+  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
 
   const toast = useToast();
   const [notFound, setNotFound] = useState(false);
@@ -41,7 +41,6 @@ const SelectjewelRodja = (props: any) => {
   } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-  const { socketError } = useSocketManager();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -82,7 +81,7 @@ const SelectjewelRodja = (props: any) => {
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      navigate('/Therapycenters');
+      navigate('/home');
       onOpenConnected();
       // console.log("session id",sessionId)
 
@@ -114,6 +113,7 @@ const SelectjewelRodja = (props: any) => {
           updatedFormData
         );
         onOpenConnected();
+        props.onClose();
       } else {
         console.log(headsetKey);
         console.log(existingDevice);
@@ -147,7 +147,7 @@ const SelectjewelRodja = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
     closeSelectingAHeadset();
-    navigate('/');
+    navigate('/home');
   };
 
   const closeErrorModal = () => {
@@ -160,15 +160,13 @@ const SelectjewelRodja = (props: any) => {
     closeSelectingAModule();
   };
 
-  if (socketError) {
-    return null;
-  }
   return (
     <>
       <Modal
         isOpen={props.isOpen}
         onClose={props.onClose}
         closeOnOverlayClick={false}
+        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
@@ -222,7 +220,7 @@ const SelectjewelRodja = (props: any) => {
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
-          <ModalFooter display="flex" justifyContent="center">
+          <ModalFooter display="flex" justifyContent="space-between">
             <Button
               w="180px"
               h="54px"

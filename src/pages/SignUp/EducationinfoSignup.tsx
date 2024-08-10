@@ -31,6 +31,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   sliding,
   formData,
 }) => {
+  console.log(formData, 'formData');
   const [imagePreview, setImagePreview] = useState('');
   const [logo, setLogo] = useState<File>();
   const [imagePreviewError, setImagePreviewError] = useState(false);
@@ -113,7 +114,8 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
     } else {
       clearErrors('certification');
       data.certification = selectedFile;
-      console.log(formData, data);
+      console.log('formData in FormonSubmit:', formData);
+      console.log('data in FormonSubmit:', data);
       onSubmit(data);
       SendDataToApi(data);
     }
@@ -133,19 +135,25 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
       formDataSet.append('specialty_ids[]', specialty.id)
     );
 
+    for (let pair of formDataSet.entries()) {
+      console.log(pair[0] + ', ' + pair[1]);
+    }
+
     return formDataSet;
   };
 
-
-  const postFormData = ({formDataSet: formDataSet}:any) => {
-
-  
-    return axios.post(`${config.apiURL}/api/v1/doctors`, formDataSet);
+  const postFormData = async (formDataSet: FormData) => {
+    try {
+      await axios.post(`${config.apiURL}/api/v1/doctors`, formDataSet);
+    } catch (error) {
+      console.error('Error in postFormData:', error);
+    }
   };
 
   const SendDataToApi = async (data: any) => {
+    console.log('data in SendDataToApi:', data);
     const formDataSet = createFormData(data);
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true);
 
     try {
       await postFormData(formDataSet);
@@ -153,7 +161,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
     } catch (error) {
       handleError(error);
     } finally {
-      setIsLoading(false); // Set loading state to false
+      setIsLoading(false);
     }
   };
 
@@ -168,7 +176,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
       title: 'Error',
       description: error.response.data.error,
       status: 'error',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
   };

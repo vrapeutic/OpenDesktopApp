@@ -44,6 +44,7 @@ export default function OpenconnectedArcheeko(props: any) {
         
       );
       await endSissionApi();
+      props.closeAllModalsAndToast()
       onevaluationOpen()
       // props.onClose();
       // props.onclosemodules();
@@ -102,15 +103,21 @@ export default function OpenconnectedArcheeko(props: any) {
     );
   };
   const antherModule =()=>{
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetKey },
+      headsetKey
+    );
     props.onClose()
    
     props.onCloseSelectEnvironment()
     props.SelectDistractors()
     props.onCloseSelectNumber()
     props.oncloseselectlevel()
+    props.closeAllModalsAndToast()
    
   }
-  
+ 
 
   return (
     <>
@@ -190,6 +197,7 @@ export default function OpenconnectedArcheeko(props: any) {
           onClose={onevalutionClose}
          closeopenconnected={props.onClose}
          closemodules={props.onclosemodules}
+
         />
       )}
     </>

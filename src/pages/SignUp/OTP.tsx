@@ -28,6 +28,7 @@ export default function OTP() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [otp, setOtp] = useState('');
   const location = useLocation();
+  console.log('location state in otp', location);
   const toast = useToast();
   const [errormessage, seterrormessage] = useState<string | undefined>(
     undefined
@@ -48,91 +49,113 @@ export default function OTP() {
       title: 'Error',
       description: error.response.data.error,
       status: 'success',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
   };
   console.log('location state in otp', location.state);
   const otpHandleChange = (otp: string) => {
     setOtp(otp);
-    if (otp.length === 6) {
-      if (location.state.admin) {
-        // If location.state.admin is true, set otp in the context and make a GET request
-        setContextOtp(otp);
+    if (otp.length !== 6) return;
 
-        // Make a GET request to the specified URL
-        fetch(
-          'http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/software_modules',
-          {
-            headers: {
-              otp: `${otp}`,
-            },
+    const handleGetRequest = () => {
+      setContextOtp(otp);
+      fetch(
+        'http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/admins/software_modules',
+        {
+          headers: {
+            otp: `${otp}`,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('GET request response:', data);
+          navigate('/home');
+        })
+        .catch((error) => {
+          console.error('GET request error:', error);
+          seterrormessage('OTP is not valid or expired');
+        });
+    };
+
+    const handleResetPassword = () => {
+      fetch(
+        `${config.apiURL}/api/v1/validate_otp?otp=${otp}&email=${location.state.email}&otp_code_type=forget_password`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          redirect: 'follow',
+        }
+      )
+        .then((response) => {
+          if (response.ok && response.status >= 200 && response.status < 300) {
+            return response.json(); // Return the response.json() promise
+          } else {
+            console.error(`Error: ${response.status} - ${response.statusText}`);
+            return Promise.reject('Failed to validate OTP'); // Reject the promise if the response is not successful
           }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('GET request response:', data);
+        })
+        .then((data) => {
+          console.log('GET request response:', data.token);
+          // Add your logic here to handle the data
+          navigate('/ResetPassword', {
+            state: {
+              token: data.token,
+            },
+          });
+        })
+        .catch((error) => {
+          console.error('GET request error:', error);
+          seterrormessage('OTP is not valid or expired');
+        });
+    };
+
+    const handlePostRequest = () => {
+      fetch(
+        `${config.apiURL}/api/v1/doctors/${location.state.id}/validate_otp`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ otp }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          redirect: 'follow',
+        }
+      )
+        .then((response) => {
+          if (response.ok && response.status >= 200 && response.status < 300) {
             navigate('/home');
-            // Add your logic here for handling the GET request response
-          })
-        
-          .catch((error) => {
-            console.log('GET request error:', error)
-            console.log('from result includes', 'OTP is not valid or expired');
-            seterrormessage('OTP is not valid or expired');
-          });
-      } else {
-        // If location.state.admin is false, proceed with your existing logic for OTP validation
-        fetch(
-          `${config.apiURL}/api/v1/doctors/${location.state.id}/validate_otp`,
-          {
-            method: 'POST',
-            body: JSON.stringify({ otp }), // sending the OTP as an object
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
+          } else {
+            console.error(`Error: ${response.status} - ${response.statusText}`);
           }
-        )
-          .then((response) => {
-            console.log('response in response', response);
-            if (response.ok && response.status >= 200 && response.status < 300) {
-              // If response is successful (status code 200-299)
-              // onOpen();
-              navigate('/home');
-              console.log(response);
-            } else {
-              // If response is not successful (status code outside 200-299)
-              console.log(`Error: ${response}`);
-  
-              console.log(`Error: ${response.status} - ${response.statusText}`);
-            }
-            return response.text();
-          })
-          .then(async (...params) => {
-            console.log('with name params', params);
-            const resultObject = JSON.parse(params[0]);
-            console.log('result object', resultObject);
-  
-            const token = resultObject.token;
-  
-            console.log('Accessing the token object params:', token);
-  
-            setApiToken(token);
-            setMe(resultObject);
-            (window as any).electronAPI.setPassword('token', token);
-  
-            // if (resultObject.error) {
-            //   console.log('from result includes', 'OTP is not valid or expired');
-            //   seterrormessage('OTP is not valid or expired');
-            // }
-          })
-          .catch((error) => {
-            console.log('GET request error:', error)
-            console.log('from result includes', 'OTP is not valid or expired');
-            seterrormessage('OTP is not valid or expired');
-          });
-      }
+          return response.text();
+        })
+        .then(async (...params) => {
+          console.log('with name params', params);
+          const resultObject = JSON.parse(params[0]);
+          console.log('result object', resultObject);
+          const token = resultObject.token;
+          console.log('Accessing the token object params:', token);
+          setApiToken(token);
+          setMe(resultObject);
+          (window as any).electronAPI.setPassword('token', token);
+        })
+        .catch((error) => {
+          console.log('GET request error:', error);
+          console.log('from result includes', 'OTP is not valid or expired');
+          seterrormessage('OTP is not valid or expired');
+        });
+    };
+
+    if (location.state.admin) {
+      handleGetRequest();
+    } else if (location.state.path === 'ResetPassword') {
+      handleResetPassword();
+    } else {
+      handlePostRequest();
     }
   };
 

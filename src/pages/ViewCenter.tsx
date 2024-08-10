@@ -5,24 +5,29 @@ import HeaderWithButton from '../theme/components/HeaderWithButton';
 import CardWithLogo from '../theme/components/CardWithLogo';
 const ViewCenter = () => {
   const location = useLocation();
-  const centerData = location.state;
+  const { center, includes } = location.state;
+  console.log('centerData', center);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (centerData) {
-      console.log('Clicked Center Data from view center:', centerData);
+    if (center) {
+      console.log('Clicked Center Data from view center:', center);
     }
-  }, [centerData]);
+  }, [center]);
 
   return (
     <>
       <HeaderWithButton
         leftText="Therapy Center"
         rightText="Edit Center"
-        onButtonClick={() => navigate('/editcenter', { state: centerData })}
-      />{' '}
-      <CardWithLogo centerData={centerData} />
-      <TabsViewCenter centerData={centerData} />
+        onButtonClick={() =>
+          navigate('/editcenter', {
+            state: { centerData: center, includes: includes },
+          })
+        }
+      />
+      <CardWithLogo centerData={center} />
+      <TabsViewCenter centerData={center} />
     </>
   );
 };

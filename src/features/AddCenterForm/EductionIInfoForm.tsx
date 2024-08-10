@@ -22,6 +22,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
   nextHandler,
   backHandler,
   sliding,
+  formData,
 }) => {
   const schema = joi.object({
     registrationNumber: joi.number().required().label('Registration Number'),
@@ -108,6 +109,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData.registrationNumber}
           />
           {errors.registrationNumber && (
             <Text color="red.500">
@@ -119,7 +121,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
           <>
             <FormControl>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                certification
+                Certification
               </FormLabel>
               <Button
                 h="128px"
@@ -165,6 +167,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData.taxID}
           />
           {errors.taxID && (
             <Text color="red.500">{errors.taxID.message as string}</Text>

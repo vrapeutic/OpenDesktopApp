@@ -28,6 +28,7 @@ import { useAdminContext } from '@renderer/Context/AdminContext';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 import { dataContext } from '@renderer/shared/Provider';
+import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 interface Center {
   id: number;
@@ -36,9 +37,16 @@ interface Center {
     // Add other attributes as needed
   };
 }
+
+interface ModelKeyValues {
+  [id: string]: {
+    model?: any;
+    key?: any;
+  };
+}
 export default function Therapycentersadmin() {
   const toast = useToast();
-
+  const selectedCenterContext = useContext(dataContext);
   const {
     isOpen: isOpenVR,
     onOpen: onOpenVR,
@@ -49,22 +57,30 @@ export default function Therapycentersadmin() {
     onOpen: onOpenModal,
     onClose: onCloseModal,
   } = useDisclosure();
+  const {
+    isOpen: isOpenEdit,
+    onOpen: onOpenEdit,
+    onClose: onCloseEdit,
+  } = useDisclosure();
 
   const [values, setValues] = useState({
-    brand: '',
+    model: '',
     key: '',
   });
   const [id, setId] = useState('');
   const [errors, setErrors] = useState({
-    brand: null,
+    model: null,
     key: null,
   });
   const [centersData, setCentersData] = useState<Center[]>([]);
-
+  const [childData, setChildData] = useState([]);
+  const [modelValues, setModelValues] = useState<{ [key: string]: string }>({});
+  const [keyValues, setKeyValues] = useState<{ [key: string]: string }>({});
   const { otp } = useAdminContext();
+  const [showEdit, setShowEdit] = useState(true);
   const selectedCenter = useContext(dataContext);
   const schema = Joi.object().keys({
-    brand: Joi.string().min(3).max(30).required(),
+    model: Joi.string().min(3).max(30).required(),
 
     key: Joi.string().min(3).max(30).required(),
   });
@@ -78,7 +94,6 @@ export default function Therapycentersadmin() {
   };
 
   const handleSubmit = async (event: any) => {
-   
     event.preventDefault();
     const { error } = schema.validate(values, { abortEarly: false });
     console.log(error);
@@ -89,7 +104,7 @@ export default function Therapycentersadmin() {
       });
       setErrors(validationErrors);
     } else {
-      setErrors({ brand: null, key: null });
+      setErrors({ model: null, key: null });
       console.log(values);
       addVr(values);
       console.log('hhhhhhhhhh');
@@ -124,7 +139,7 @@ export default function Therapycentersadmin() {
       title: 'Error',
       description: error.response.data.error,
       status: 'error',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
   };
@@ -132,13 +147,12 @@ export default function Therapycentersadmin() {
     onCloseVR();
     toast({
       title: 'Success',
-      description: "Add successfully",
+      description: 'Add successfully',
       status: 'success',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
   };
-  
 
   const addVr = async (body: any) => {
     const dataSend: any = { headset: body };
@@ -149,7 +163,7 @@ export default function Therapycentersadmin() {
         { headers }
       );
       console.log(response);
-      handleSuccess()
+      handleSuccess();
     } catch (error) {
       handleError(error);
       console.error(error);
@@ -158,6 +172,88 @@ export default function Therapycentersadmin() {
   const openVr = (id: string) => {
     console.log(id);
     setId(id);
+  };
+  const openEditHandle = (id: string) => {
+    console.log('edit', id);
+    setId(id);
+  };
+
+  const receiveDataFromChild = (dataFromChild: any) => {
+    console.log('receiveDataFromChild', dataFromChild);
+    setChildData(dataFromChild);
+  };
+
+  // Function to update modelValues state
+  const handleChangeModel = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    const newValue = e.target.value;
+    setModelValues((prevState) => ({
+      ...prevState,
+      [id]: newValue,
+    }));
+  };
+
+  // Function to update keyValues state
+  const handleChangeKey = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    const newValue = e.target.value;
+    setKeyValues((prevState) => ({
+      ...prevState,
+      [id]: newValue,
+    }));
+  };
+
+  const editModel = async (x: any) => {
+    console.log(x, modelValues[x]);
+    interface Body {
+      model?: any;
+      key?: any;
+    }
+
+    const body: Body = {};
+
+    if (modelValues[x]) {
+      console.log(modelValues[id]);
+      body.model = modelValues[x];
+    }
+
+    if (keyValues[x]) {
+      body.key = keyValues[x];
+    }
+
+    const dataSend: any = { headset: body };
+    try {
+      const response = await axios.put(
+        `${config.apiURL}/api/v1/admins/edit_headset?headset_id=${x}`,
+        dataSend,
+        { headers }
+      );
+      console.log(response);
+      handleSuccess();
+      setShowEdit(!showEdit);
+    } catch (error) {
+      handleError(error);
+      console.error(error);
+    }
+  };
+  const handleDelete = async (x: any) => {
+    try {
+      const response = await axios.delete(
+        `${config.apiURL}/api/v1/admins/delete_headset/${x}`,
+        { headers }
+      );
+      console.log(response);
+      handleSuccess();
+      const updatedData = childData.filter((item) => item.id !== x);
+      setChildData(updatedData);
+    } catch (error) {
+      handleError(error);
+      console.error(error);
+    }
   };
 
   return (
@@ -202,6 +298,9 @@ export default function Therapycentersadmin() {
         onOpenModal={onOpenModal}
         data={centersData}
         openVr={openVr}
+        openEditHandle={openEditHandle}
+        onOpenEdit={onOpenEdit}
+        sendDataToParent={receiveDataFromChild}
       />
       {onOpenVR && (
         <Modal
@@ -219,13 +318,13 @@ export default function Therapycentersadmin() {
                 </Text>
                 <Input
                   type="text"
-                  name="brand"
+                  name="model"
                   onChange={handleChange}
-                  value={values.brand}
+                  value={values.model}
                   fontFamily="Graphik LCG"
                 />
                 <Text fontSize="16px" color="red" fontFamily="Graphik LCG">
-                  {errors.brand}
+                  {errors.model}
                 </Text>
                 <Text
                   fontSize="16px"
@@ -352,19 +451,184 @@ export default function Therapycentersadmin() {
           </ModalContent>
         </Modal>
       )}
+      {onOpenEdit && (
+        <Modal
+          isOpen={isOpenEdit}
+          onClose={onCloseEdit}
+          max-width={800}
+          closeOnOverlayClick={false}
+        >
+          <ModalOverlay />
+          <ModalContent maxWidth="800px" width="800px">
+            <ModalHeader textAlign={'center'}> All center Headset</ModalHeader>
+            {childData.map((x: any) => {
+              return (
+                <Flex alignItems={'center'} justifyContent={'center'}>
+                  {showEdit ? (
+                    <>
+                      <Text mx={3}  fontWeight={500}>modal:</Text>
+                      <Text mx={3} width={"20%"}>{x.attributes.model}</Text>
+                      <Text mx={3} fontWeight={500}>Key:</Text>
+                      <Text mx={3} width={"20%"}>{x.attributes.key}</Text>
+
+                      <Button
+                        type="button"
+                        padding="10px"
+                        margin="5px"
+                        bg="green"
+                        borderRadius="8px"
+                        fontSize="14px"
+                        fontFamily="Graphik LCG"
+                        boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                        color={'white'}
+                        onClick={() => setShowEdit(!showEdit)}
+                      >
+                        <EditIcon />
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Text mx={3}>modal:</Text>
+                      <Input
+                        type="text"
+                        height="40px"
+                        width="180px"
+                        borderWidth="2px"
+                        borderColor="gray.400"
+                        _focus={{
+                          borderColor: 'blue.400',
+                          boxShadow: 'outline',
+                        }}
+                        mx={2}
+                        placeholder={x.attributes.model}
+                        onChange={(e) => handleChangeModel(e, x.id)}
+                        value={modelValues[x.id] || ''}
+                      />
+
+                      <Text mx={3}>Key:</Text>
+                      <Input
+                        type="text"
+                        height="40px"
+                        width="180px"
+                        borderWidth="2px"
+                        borderColor="gray.400"
+                        _focus={{
+                          borderColor: 'blue.400',
+                          boxShadow: 'outline',
+                        }}
+                        mx={2}
+                        placeholder={x.attributes.key}
+                        onChange={(e) => handleChangeKey(e, x.id)}
+                        value={keyValues[x.id] || ''}
+                      />
+                       <Button
+                        type="button"
+                        padding="10px"
+                        margin="5px"
+                        bg="orange"
+                        borderRadius="8px"
+                        fontSize="14px"
+                        fontFamily="Graphik LCG"
+                        boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                        color={'white'}
+                        onClick={() => setShowEdit(!showEdit)}
+                      >
+                        <CloseIcon />
+                      </Button>
+                      <Button
+                        type="button"
+                        padding="10px"
+                        margin="5px"
+                        bg="green"
+                        borderRadius="8px"
+                        fontSize="14px"
+                        fontFamily="Graphik LCG"
+                        boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                        color={'white'}
+                        onClick={() => editModel(x.id)}
+                      >
+                        <CheckIcon />
+                      </Button>
+
+                    </>
+                  )}
+                  <Button
+                    type="button"
+                    padding="10px"
+                    margin="5px"
+                    bg="red"
+                    borderRadius="8px"
+                    fontSize="14px"
+                    fontFamily="Graphik LCG"
+                    boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                    color={'white'}
+                    onClick={() => handleDelete(x.id)}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </Flex>
+              );
+            })}
+
+            <ModalFooter>
+              <Button
+                type="button"
+                w="110px"
+                h="40px"
+                padding="10px"
+                margin="5px"
+                bg="#F5B50E"
+                borderRadius="8px"
+                fontSize="14px"
+                fontFamily="Graphik LCG"
+                boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                color={'white'}
+                onClick={() => onCloseEdit()}
+              >
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 }
 
-
-
-
-const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
+const DataTable = ({
+  openVr,
+  onOpenVR,
+  onOpenModal,
+  data,
+  onOpenEdit,
+  openEditHandle,
+  sendDataToParent,
+}: any) => {
+  const { otp } = useAdminContext();
   const navigate = useNavigate();
   const handleCenterClick = (center: Center) => {
     console.log('Clicked Center Data:', center);
     navigate('/ViewCenterAdmin', { state: center });
   };
+  const headers = {
+    otp: `${otp}`,
+  };
+
+  const getHeadset = async (x: any) => {
+    try {
+      const response = await axios.get(
+        `${config.apiURL}/api/v1/admins/headsets?q[center_id_eq]=${x}`,
+        { headers }
+      );
+      console.log('response getHeadset', response);
+
+      console.log(response.data.data);
+      sendDataToParent(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       {data.map((x: any) => {
@@ -441,9 +705,10 @@ const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
                       fontFamily="Graphik LCG"
                       boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                       color={'white'}
-                      onClick={(e:any) =>{ 
-                        e.stopPropagation()
-                        onOpenModal()}}
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        onOpenModal();
+                      }}
                     >
                       Assign a module
                     </Button>
@@ -458,13 +723,33 @@ const DataTable = ({ openVr, onOpenVR, onOpenModal, data }: any) => {
                       fontFamily="Graphik LCG"
                       boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
                       color={'white'}
-                      onClick={(e:any) => {
+                      onClick={(e: any) => {
                         e.stopPropagation();
                         openVr(x.id);
                         onOpenVR();
                       }}
                     >
                       Assign a headset
+                    </Button>
+                    <Button
+                      w="110px"
+                      h="40px"
+                      padding="10px"
+                      margin="5px"
+                      bg="#F5B50E"
+                      borderRadius="8px"
+                      fontSize="12px"
+                      fontFamily="Graphik LCG"
+                      boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                      color={'white'}
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        openEditHandle(x.id);
+                        onOpenEdit();
+                        getHeadset(x.id);
+                      }}
+                    >
+                      Edit or Delete
                     </Button>
                   </Box>
                 </Box>

@@ -1,5 +1,4 @@
 import {
-
   Button,
   Modal,
   ModalBody,
@@ -48,12 +47,8 @@ const SelectEnvironmentArcheeko = (props: any) => {
     mode: 'onSubmit',
   });
 
-
-
-
-
   const handleFormSubmit = (data: any) => {
-console.log(data.selectEnvironment)
+    console.log(data.selectEnvironment);
     const updatedFormData = [
       props.formData[0],
       data.selectEnvironment,
@@ -61,7 +56,7 @@ console.log(data.selectEnvironment)
     ];
 
     props.setFormData(updatedFormData);
-    console.log('Form Data : ',  [
+    console.log('Form Data : ', [
       props.formData[0],
       data.selectEnvironment,
       ...props.formData.slice(2),
@@ -71,13 +66,7 @@ console.log(data.selectEnvironment)
   const handleButtonClick = (envienment: number) => {
     setSelectedEniverinment(envienment);
     setValue('selectEnvironment', envienment);
-
   };
-
-
-
-
-
 
   return (
     <>
@@ -97,29 +86,27 @@ console.log(data.selectEnvironment)
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <FormControl isInvalid={!!errors.selectEnvironment}>
-                <Stack spacing={4} direction="column" align="center">
-                  <Button
-                    onClick={() => handleButtonClick(1)}
-                    bg={selectedEniverinment === 1 ? 'blue.300' : 'gray.300'}
-                    color="black"
-                    width="12em"
-                    fontSize="1.2rem"
-                   
-                    {...register('selectEnvironment')}
-                  >
-                    Garden
-                  </Button>
-                  <Button
-                    onClick={() => handleButtonClick(2)}
-                    bg={selectedEniverinment === 2 ? 'blue.300' : 'gray.300'}
-                    width="12em"
-                    fontSize="1.2rem"
-                    
-                    {...register('selectEnvironment')}
-                  >
-                    Room
-                  </Button>
-                </Stack>
+              <Stack spacing={4} direction="column" align="center">
+                <Button
+                  onClick={() => handleButtonClick(1)}
+                  bg={selectedEniverinment === 1 ? 'blue.300' : 'gray.300'}
+                  color="black"
+                  width="12em"
+                  fontSize="1.2rem"
+                  {...register('selectEnvironment')}
+                >
+                  Garden
+                </Button>
+                <Button
+                  onClick={() => handleButtonClick(2)}
+                  bg={selectedEniverinment === 2 ? 'blue.300' : 'gray.300'}
+                  width="12em"
+                  fontSize="1.2rem"
+                  {...register('selectEnvironment')}
+                >
+                  Room
+                </Button>
+              </Stack>
               <FormErrorMessage>
                 {errors.selectEnvironment && 'Please select a Enironment.'}
               </FormErrorMessage>
@@ -127,8 +114,7 @@ console.log(data.selectEnvironment)
           </ModalBody>
           <ModalFooter display="flex" justifyContent="space-between">
             <Button
-               width="12em"
-               fontSize="1rem"
+              w="180px"
               h="54px"
               mx={2}
               bg="#00DEA3"
@@ -136,23 +122,22 @@ console.log(data.selectEnvironment)
               color="#FFFFFF"
               fontFamily="Graphik LCG"
               fontWeight="700"
-          
+              fontSize="15px"
               onClick={props.onClose}
             >
               Back
             </Button>
             <Button
-              width="12em"
-              fontSize="1rem"
+              w="180px"
               h="54px"
+              mx={2}
               bg="#00DEA3"
               borderRadius="12px"
               color="#FFFFFF"
               fontFamily="Graphik LCG"
               fontWeight="700"
-             
+              fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
-              mx={2}
             >
               Next
             </Button>

@@ -45,8 +45,6 @@ const SelectenvRodja = (props: any) => {
   });
 
   const handleFormSubmit = (data: any) => {
-  
-
     const updatedFormData = [
       props.formData[0],
       data.selectEniverinment,
@@ -54,6 +52,7 @@ const SelectenvRodja = (props: any) => {
     ];
     props.setFormData(updatedFormData);
     onOpenSelectJewel();
+    props.onClose();
   };
   const handleButtonClick = (envienment: number) => {
     setSelectedEniverinment(envienment);
@@ -65,6 +64,7 @@ const SelectenvRodja = (props: any) => {
         isOpen={props.isOpen}
         onClose={props.onClose}
         closeOnOverlayClick={false}
+        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
@@ -106,7 +106,7 @@ const SelectenvRodja = (props: any) => {
           </ModalBody>
           <ModalFooter display="flex" justifyContent="space-between">
             <Button
-              w="120px"
+              w="180px"
               h="54px"
               mx={2}
               bg="#00DEA3"
@@ -120,8 +120,9 @@ const SelectenvRodja = (props: any) => {
               Back
             </Button>
             <Button
-              w="120px"
+              w="180px"
               h="54px"
+              mx={2}
               bg="#00DEA3"
               borderRadius="12px"
               color="#FFFFFF"
@@ -129,7 +130,6 @@ const SelectenvRodja = (props: any) => {
               fontWeight="700"
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
-              mx={2}
             >
               Next
             </Button>

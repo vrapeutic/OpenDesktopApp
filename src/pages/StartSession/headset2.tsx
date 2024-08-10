@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   GridItem,
   Modal,
@@ -8,6 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Spinner,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -55,6 +57,7 @@ interface SelectingHeadsetProps {
   isOpen: boolean;
   childId: string;
 }
+
 const ErrorsModal = ({
   isOpen,
   onClose,
@@ -85,7 +88,9 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
     headsetKey,
     setHeadsetKey,
   } = useStartSessionContext();
-  const { addFunction } = usePopupsHandler();
+  const { addFunction, popupFunctions } = usePopupsHandler();
+  const { closeSelectingAChild } = popupFunctions;
+
   const {
     dispatchSocketMessage,
     checkIfServiceExists,
@@ -93,8 +98,6 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   } = useSocketManager();
 
   const [deviceIsFound, setDeviceIsFound] = useState(false);
-  // const [sessionId, setSessionId] = useState<string>(null);
-
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
@@ -104,7 +107,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   const selectedCenterContext = useContext(dataContext);
   const [errorMessages, setErrorMessages] = useState('');
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
   const schema = Joi.object({
     headset: Joi.string().required().messages({
       'string.empty': 'You must select a headset',
@@ -124,6 +127,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   });
 
   const getHeadsets = async () => {
+    setLoading(true);
     const token = await (window as any).electronAPI.getPassword('token');
     const headers = { Authorization: `Bearer ${token}` };
     try {
@@ -132,63 +136,55 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
         { headers }
       );
       setHeadsets(response.data.data);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching center headsets:', error);
       setErrorMessages('Error fetching center headsets');
       onErrorOpen();
     }
   };
+
   const handleFormSubmit = async (data: any) => {
-    // Access the selected headset value from data
     const selectedHeadsetId = data.headset;
-console.log(selectedHeadsetId)
-    // If headsets array is available, find the corresponding headset
     const selectedHeadset = headsets.find(
       (headset) => headset.id === selectedHeadsetId
-
     );
 
     if (selectedHeadset) {
-      const headsetKeyt = selectedHeadset.attributes.key;
-      setHeadsetKey(headsetKeyt);
-      console.log('Selected headset key:', headsetKey);
-      // You can use the headsetKey value here as needed
-    }
+      const newHeadsetKey = selectedHeadset.attributes.key;
+      setHeadsetKey(newHeadsetKey);
+      setheadsetid(selectedHeadsetId);
+      console.log('set headsetKey', newHeadsetKey);
+      console.log('set headsetid', selectedHeadsetId);
 
-    await setheadsetid(selectedHeadsetId);
-    const existingDevice = await checkIfServiceExists(headsetKey);
-    const appIsConnectedToInternet = await checkAppNetWorkConnection();
-    console.log(appIsConnectedToInternet, sessionId, existingDevice);
-    if (appIsConnectedToInternet && existingDevice) {
-      console.log('finddivice', existingDevice);
-      // if (appIsConnectedToInternet) {
-      // End old session
-      dispatchSocketMessage(
-        END_SESSION_MESSAGE,
-        { deviceId: headsetKey },
-        headsetKey
-      );
+      const existingDevice = await checkIfServiceExists(newHeadsetKey);
+      const appIsConnectedToInternet = await checkAppNetWorkConnection();
+      console.log(appIsConnectedToInternet, sessionId, existingDevice);
+      if (appIsConnectedToInternet && existingDevice) {
+        // dispatchSocketMessage(
+        //   END_SESSION_MESSAGE,
+        //   { deviceId: newHeadsetKey },
+        //   newHeadsetKey
+        // );
 
-      const sessionResponse = await getSessionId(data.headset);
+        const sessionResponse = await getSessionId(data.headset);
 
-      if (sessionResponse.success) {
-        console.log(headsetid);
-        console.log(existingDevice);
-        setDeviceIsFound(true);
+        if (sessionResponse.success) {
+          setDeviceIsFound(true);
+        } else {
+          const errorMessage =
+            sessionResponse.error || 'Error assigning session ID.';
+          setErrorMessages(errorMessage);
+          onErrorOpen();
+        }
       } else {
-        // Handle error from getSessionId
-        const errorMessage =
-          sessionResponse.error || 'Error assigning session ID.';
+        const errorMessage = !appIsConnectedToInternet
+          ? 'You are not connected to the internet.'
+          : 'The selected headset is not connected. You might need first to click on Start Service in the Master App on the VR headset.';
+
         setErrorMessages(errorMessage);
         onErrorOpen();
       }
-    } else {
-      const errorMessage = !appIsConnectedToInternet
-        ? 'You are not connected to the internet.'
-        : 'The selected headset is not connected. You might need first to click on Start Service in the Master App on the VR headset.';
-
-      setErrorMessages(errorMessage);
-      onErrorOpen();
     }
   };
 
@@ -209,11 +205,10 @@ console.log(selectedHeadsetId)
         { headers }
       );
       console.log('setSessionId', response?.data?.data?.id);
-      // setSessionId(response.data.data.id);
       setSessionId(response.data.data.id);
       setStartSession(response.data.data.attributes.created_at);
 
-      return { success: true }; // Success
+      return { success: true };
     } catch (error) {
       onErrorOpen();
       console.error('Error assigning session id:', error.response.data.error);
@@ -222,13 +217,14 @@ console.log(selectedHeadsetId)
   };
 
   const handleCancelSession = () => {
+    closeSelectingAChild();
+    props.onClose();
     onErrorClose();
-    props.onClose(); // Close the SelectingHeadset component
+    navigate('/home');
   };
 
   const handleSelectAnotherHeadset = () => {
     onErrorClose();
-    // Additional logic to open the component for selecting another headset
   };
 
   useEffect(() => {
@@ -244,76 +240,108 @@ console.log(selectedHeadsetId)
     });
   }, [selectedCenterContext.id]);
 
+  useEffect(() => {
+    console.log('Headset key after setting:', headsetKey);
+  }, [headsetKey]);
+
   return (
     <>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}  closeOnOverlayClick={false}
+        closeOnEsc={false}>
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
             Start a session
           </ModalHeader>
-          {headsets.length > 0 ? (
-            <>
-              <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-                <Text mt="25px">Select a VR Headset</Text>
-                <GridItem>
-                  <Select
-                    {...register('headset')}
-                    id="headset"
-                    name="headset"
-                    placeholder="Select headset"
-                    size="sm"
-                  >
-                    {headsets.map((headset) => (
-                      <option value={headset.id} key={headset.id}>
-                        {headset?.attributes.key}
-                      </option>
-                    ))}
-                  </Select>
-                </GridItem>
-                {errors.headset && (
-                  <Text color="red.500">
-                    {errors.headset.message as string}
-                  </Text>
-                )}
-              </ModalBody>
-              <ModalFooter display={'flex'} justifyContent={'center'}>
-                <Button
-                  w="180px"
-                  h="54px"
-                  mx={2}
-                  bg="#00DEA3"
-                  borderRadius="12px"
-                  color="#FFFFFF"
-                  fontFamily="Graphik LCG"
-                  fontWeight="700"
-                  fontSize="15px"
-                  onClick={() => {
-                    props.onClose();
-                    navigate('/home');
-                  }}
-                >
-                  Cancel Session
-                </Button>
-                <Button
-                  w="214px"
-                  h="54px"
-                  bg="#00DEA3"
-                  borderRadius="12px"
-                  color="#FFFFFF"
-                  fontFamily="Roboto"
-                  fontWeight="700"
-                  fontSize="18px"
-                  onClick={handleSubmit(handleFormSubmit)}
-                >
-                  Connect to headset
-                </Button>
-              </ModalFooter>
-            </>
+
+          {loading ? (
+            <Box textAlign="center" py={10} px={6}>
+              <Spinner />
+            </Box>
           ) : (
-            <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
-              No VR headsets are available in this center
-            </ModalHeader>
+            <>
+              {headsets.length > 0 ? (
+                <>
+                  <ModalBody fontSize="20px" fontWeight="600" mt="15px">
+                    <Text mt="25px">Select a VR Headset</Text>
+                    <GridItem>
+                      <Select
+                        {...register('headset')}
+                        id="headset"
+                        name="headset"
+                        placeholder="Select headset"
+                        size="sm"
+                      >
+                        {headsets.map((headset) => (
+                          <option value={headset.id} key={headset.id}>
+                            {headset?.attributes.key}
+                          </option>
+                        ))}
+                      </Select>
+                    </GridItem>
+                    {errors.headset && (
+                      <Text color="red.500">
+                        {errors.headset.message as string}
+                      </Text>
+                    )}
+                  </ModalBody>
+                  <ModalFooter display={'flex'} justifyContent={'center'}>
+                    <Button
+                      w="180px"
+                      h="54px"
+                      mx={2}
+                      bg="#00DEA3"
+                      borderRadius="12px"
+                      color="#FFFFFF"
+                      fontFamily="Graphik LCG"
+                      fontWeight="700"
+                      fontSize="15px"
+                      onClick={() => {
+                        props.onClose();
+                        navigate('/home');
+                      }}
+                    >
+                      Cancel Session
+                    </Button>
+                    <Button
+                      w="214px"
+                      h="54px"
+                      bg="#00DEA3"
+                      borderRadius="12px"
+                      color="#FFFFFF"
+                      fontFamily="Roboto"
+                      fontWeight="700"
+                      fontSize="18px"
+                      onClick={handleSubmit(handleFormSubmit)}
+                    >
+                      Connect to headset
+                    </Button>
+                  </ModalFooter>
+                </>
+              ) : (
+                <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
+                  No VR headsets are available in this center
+                  <Button
+                      w="180px"
+                      h="54px"
+                      mx={2}
+                      mt={50}
+                      bg="#00DEA3"
+                      borderRadius="12px"
+                      color="#FFFFFF"
+                      fontFamily="Graphik LCG"
+                      fontWeight="700"
+                      fontSize="15px"
+                      onClick={() => {
+                        props.onClose();
+                        navigate('/home');
+                      }}
+                    >
+                      Cancel Session
+                    </Button>
+                </ModalHeader>
+              )}
+            </>
           )}
         </ModalContent>
       </Modal>

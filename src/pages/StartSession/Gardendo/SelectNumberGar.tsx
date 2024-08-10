@@ -13,7 +13,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -26,9 +26,8 @@ import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectNumberGar = (props: any) => {
-  console.log('select form data in number in 30', props.formData);
   const toast = useToast();
-  const { module, sessionId, headsetid ,headsetKey} = useStartSessionContext();
+  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -98,7 +97,6 @@ const SelectNumberGar = (props: any) => {
       const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
       if (appIsConnectedToInternet && existingDevice) {
-      
         console.log('updatedFormData', updatedFormData);
         const socketMessage = {
           sessionId,
@@ -152,6 +150,7 @@ const SelectNumberGar = (props: any) => {
   if (socketError) {
     return null;
   }
+
   const handleButtonClick = (number: number) => {
     setSelectedNumber(number);
     setValue('selectNumber', number);
@@ -163,6 +162,7 @@ const SelectNumberGar = (props: any) => {
         isOpen={props.isOpen}
         onClose={props.onClose}
         closeOnOverlayClick={false}
+        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
@@ -215,7 +215,7 @@ const SelectNumberGar = (props: any) => {
           </ModalBody>
           <ModalFooter display="flex" justifyContent="space-between">
             <Button
-              w="120px"
+              w="180px"
               h="54px"
               mx={2}
               bg="#00DEA3"
@@ -229,7 +229,7 @@ const SelectNumberGar = (props: any) => {
               Back
             </Button>
             <Button
-              w="120px"
+              w="180px"
               h="54px"
               bg="#00DEA3"
               borderRadius="12px"

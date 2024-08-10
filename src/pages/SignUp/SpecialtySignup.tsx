@@ -48,6 +48,7 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
 
   const FormonSubmit = (data: { specializationschema: any[] }) => {
     onSubmit(data);
+    console.log(data);
     nextHandler();
   };
 

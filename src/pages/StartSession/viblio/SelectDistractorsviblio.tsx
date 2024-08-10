@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -29,7 +29,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 
 const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
-  const { module, sessionId, headsetid ,headsetKey} = useStartSessionContext();
+  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
@@ -74,7 +74,7 @@ const SelectDistractors = (props: any) => {
     ];
     props.setFormData(updatedFormData);
 
-    navigate('/Therapycenters');
+    navigate('/home');
     // props.onClose();
     // props.oncloseselectlevel();
     // props.onclosemodules();
@@ -85,14 +85,13 @@ const SelectDistractors = (props: any) => {
       description: `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
       module name is ${module} and session id is ${sessionId}`,
       status: 'success',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
 
     const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     if (appIsConnectedToInternet && existingDevice) {
-    
       console.log(updatedFormData);
       const socketMessage = {
         sessionId,
@@ -123,7 +122,7 @@ const SelectDistractors = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
     closeSelectingAHeadset();
-    navigate('/');
+    navigate('/home');
   };
 
   const closeErrorModal = () => {
@@ -154,6 +153,7 @@ const SelectDistractors = (props: any) => {
         isOpen={props.isOpen}
         onClose={props.onClose}
         closeOnOverlayClick={false}
+        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
@@ -207,7 +207,7 @@ const SelectDistractors = (props: any) => {
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
-          <ModalFooter display="flex" justifyContent="center">
+          <ModalFooter display="flex" justifyContent="space-between">
             <Button
               w="180px"
               h="54px"
@@ -239,7 +239,6 @@ const SelectDistractors = (props: any) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
 
       {notFound ? (
         <ErrorPopup

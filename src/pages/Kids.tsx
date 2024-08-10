@@ -22,6 +22,13 @@ interface Kids {
     email: string;
     age: string;
   };
+  relationships: {
+    diagnoses: {
+      data: {
+        id: number;
+      }[];
+    };
+  };
 }
 
 export default function Kids() {
@@ -31,6 +38,8 @@ export default function Kids() {
   const [kidsList, setKidsList] = useState<Kids[]>([]);
   const [showTable, setShowTable] = useState(true);
   const [included, setIncluded] = useState([]);
+  const [error, setError] = useState<string | null>(null); // State for error handling
+
   const selectedCenter = useContext(dataContext);
 
   const {
@@ -97,118 +106,136 @@ export default function Kids() {
           headers: { Authorization: `Bearer ${token}` },
         }
       )
-        .then((response) => response.json())
+        .then(async (response) => {
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText);
+          }
+          return response.json();
+        })
         .then((result) => {
-          console.log('all results', result);
           if (result.data) {
             setKidsList(result.data);
             setIncluded(result.included);
-            console.log(result.data.length);
+          } else {
+            setError('Failed to fetch kids data');
           }
         })
-
-        .catch((error) => console.log('error', error));
+        .catch((error) => {
+          console.log('error', error);
+          setError(error.message);
+        });
     })();
-  }, []);
+  }, [selectedCenter.id]);
 
   return (
     <>
       {showTable ? (
         <>
           <HeaderSpaceBetween
-            Title=" Kids"
-            ButtonText= { selectedCenter.id&& "Add New Kids"}
+            Title="Kids"
+            ButtonText={selectedCenter.id && 'Add New Kids'}
             onClickFunction={nextHandler}
           />
-         
-          {selectedCenter.id ?
-<>
-<Grid
-            py="2"
-            mx="18"
-            my="3"
-            borderRadius="10px"
-            backgroundColor="#FFFFFF"
-            templateColumns="repeat(5, 1fr)"
-            alignItems="center"
-            color="#787486"
-            fontSize="14px"
-            fontFamily="Graphik LCG"
-            fontWeight="500"
-            lineHeight="24px"
-          >
-            <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
-              Name
-            </GridItem>
-            <GridItem colSpan={1} textAlign={'center'}>
-              Age
-            </GridItem>
-            <GridItem colSpan={1} textAlign={'center'}>
-              Diagnosis
-            </GridItem>
-            <GridItem colSpan={1} textAlign={'center'}>
-              Join in
-            </GridItem>
-            <GridItem colSpan={1} textAlign={'center'}>
-              Sessions{' '}
-            </GridItem>
-          </Grid>
-           { kidsList.map((kid: any) => {
 
-              return (
-                <>
-                  {kidsList.length >0 ? (
-                    <TableData
-                      all={kid}
-                      id={kid.id}
-                      name={kid.attributes.name}
-                      age={kid.attributes.age}
-                      included={included}
-                      data={kid.relationships.diagnoses.data}
-                    />
-                  ) : (
+          {selectedCenter.id ? (
+            error ? (
+              <Flex justifyContent="center">
+                <Text
+                  fontSize="14px"
+                  fontWeight="500"
+                  fontFamily="Graphik LCG"
+                  color="red"
+                >
+                  {error}
+                </Text>
+              </Flex>
+            ) : (
+              <>
+                {kidsList.length > 0 ? (
+                  <>
                     <Grid
-                      py="3"
+                      py="2"
                       mx="18"
-                      my="1"
+                      my="3"
                       borderRadius="10px"
                       backgroundColor="#FFFFFF"
                       templateColumns="repeat(5, 1fr)"
                       alignItems="center"
                       color="#787486"
                       fontSize="14px"
-                      fontWeight="500"
                       fontFamily="Graphik LCG"
+                      fontWeight="500"
                       lineHeight="24px"
                     >
-                      <GridItem
-                        colSpan={5}
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                      >
-                        <Text
-                          fontSize="14px"
-                          fontWeight="500"
-                          fontFamily="Graphik LCG"
-                        >
-                          There are no Kids
-                        </Text>
+                      <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
+                        Name
+                      </GridItem>
+                      <GridItem colSpan={1} textAlign={'center'}>
+                        Age
+                      </GridItem>
+                      <GridItem colSpan={1} textAlign={'center'}>
+                        Diagnosis
+                      </GridItem>
+                      <GridItem colSpan={1} textAlign={'center'}>
+                        Join in
+                      </GridItem>
+                      <GridItem colSpan={1} textAlign={'center'}>
+                        Sessions
                       </GridItem>
                     </Grid>
-                  )}
-                </>
-              );
-            })
-            }
-            
-          
-            </>       
-           : <Flex justifyContent={"center"} >
-            <Text  fontSize="14px"
-                          fontWeight="500"
-                          fontFamily="Graphik LCG"> Please Select Center</Text>
-            </Flex> }
+                    {kidsList.map((kid) => (
+                      <TableData
+                        key={kid.id}
+                        all={kid}
+                        id={kid.id}
+                        name={kid.attributes.name}
+                        age={kid.attributes.age}
+                        included={included}
+                        data={kid.relationships.diagnoses.data}
+                      />
+                    ))}
+                  </>
+                ) : (
+                  <Grid
+                    py="3"
+                    mx="18"
+                    my="1"
+                    borderRadius="10px"
+                    backgroundColor="#FFFFFF"
+                    templateColumns="repeat(5, 1fr)"
+                    alignItems="center"
+                    color="#787486"
+                    fontSize="14px"
+                    fontWeight="500"
+                    fontFamily="Graphik LCG"
+                    lineHeight="24px"
+                  >
+                    <GridItem
+                      colSpan={5}
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Text
+                        fontSize="14px"
+                        fontWeight="500"
+                        fontFamily="Graphik LCG"
+                      >
+                        There are no Kids
+                      </Text>
+                    </GridItem>
+                  </Grid>
+                )}
+              </>
+            )
+          ) : (
+            <Flex justifyContent="center">
+              <Text fontSize="14px" fontWeight="500" fontFamily="Graphik LCG">
+                Please Select Center
+              </Text>
+            </Flex>
+          )}
         </>
       ) : (
         <>{renderFormStep()}</>

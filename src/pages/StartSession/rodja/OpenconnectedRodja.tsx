@@ -103,6 +103,11 @@ export default function OpenconnectedRodja(props: any) {
     );
   };
   const antherModule =()=>{
+    dispatchSocketMessage(
+      END_SESSION_MESSAGE,
+      { deviceId: headsetKey },
+      headsetKey
+    );
     props.onClose()
     props.onCloseSelectEnvrodja()
     props.oncloseselectlevel()
@@ -115,7 +120,9 @@ export default function OpenconnectedRodja(props: any) {
   return (
     <>
       <Box>
-        <Modal isOpen={props.isOpen} onClose={props.onClose}>
+        <Modal isOpen={props.isOpen} onClose={props.onClose} 
+         closeOnOverlayClick={false}
+         closeOnEsc={false}>
           <ModalOverlay />
           <ModalContent
             h="400px"

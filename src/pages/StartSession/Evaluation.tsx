@@ -22,9 +22,14 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { config } from '@renderer/config';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 
 export default function SelectEvaluation(props: any) {
   const { sessionId } = useStartSessionContext();
+  const { popupFunctions } = usePopupsHandler();
+
+  const { closeSelectingAHeadset, closeSelectingAChild } = popupFunctions;
+
   const toast = useToast();
   const schema = Joi.object({
     Evaluation: Joi.string().required().messages({
@@ -83,7 +88,9 @@ export default function SelectEvaluation(props: any) {
         props.onClose();
         props.closeopenconnected();
         props.closemodules();
-        navigate('/');
+        closeSelectingAHeadset();
+        closeSelectingAChild();
+        navigate('/home');
       })
       .catch((error) => {
         console.error(error);
@@ -92,7 +99,7 @@ export default function SelectEvaluation(props: any) {
           description: `${error.response.data.error}`,
 
           status: 'error',
-          duration: 9000,
+          duration: 5000,
           position: 'top-right',
         });
         // Handle error
@@ -101,7 +108,8 @@ export default function SelectEvaluation(props: any) {
 
   return (
     <Box>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}  closeOnOverlayClick={false}
+        closeOnEsc={false}>
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
@@ -124,7 +132,9 @@ export default function SelectEvaluation(props: any) {
               </Select>
             </GridItem>
             {errors.Evaluation && (
-              <Text color="red.500" fontSize={"17px"}>{errors.Evaluation.message as string}</Text>
+              <Text color="red.500" fontSize={'17px'}>
+                {errors.Evaluation.message as string}
+              </Text>
             )}
             <GridItem>
               <Text mt="25px">Session Notes </Text>

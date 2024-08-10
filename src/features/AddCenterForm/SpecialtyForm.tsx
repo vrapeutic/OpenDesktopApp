@@ -23,10 +23,18 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
   nextHandler,
   backHandler,
   sliding,
+  formData,
 }) => {
+  const [defaultSpecialties, setDefaultSpecialties] = useState([]);
+  const [specialistslist, setspecialistslist] = useState([]);
+
   const schema = joi.object({
     specialtyInformation: joi.string().required().label('SpecialtyInformation'),
-    specializationschema: joi.array().required().label('specializationschema'),
+    specializationschema: joi
+      .array()
+      .min(1)
+      .required()
+      .label('specializationschema'),
   });
 
   const {
@@ -47,8 +55,6 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
     nextHandler();
   };
 
-  const [specialistslist, setspecialistslist] = useState([]);
-
   useEffect(() => {
     getSpecialists();
   }, []);
@@ -56,8 +62,13 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
   const getSpecialists = async () => {
     try {
       const response = await axios.get(`${config.apiURL}/api/v1/specialties`);
-      setspecialistslist(response.data);
-      console.log(response.data);
+      const specialties = response.data.map((speciality: any) => ({
+        id: speciality.id,
+        label: speciality.name,
+        value: speciality.id,
+      }));
+      setspecialistslist(specialties);
+      setDefaultSpecialtiesList(specialties);
     } catch (error) {
       console.error(error);
     }
@@ -65,15 +76,23 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
 
   const animatedComponents = makeAnimated();
 
+  const setDefaultSpecialtiesList = (specialties: any) => {
+    const defaultSpecialties = specialties.filter(
+      (specialty: any) =>
+        formData?.specializationschema?.some(
+          (selected: any) => selected.value === specialty.value
+        )
+    );
+    setDefaultSpecialties(defaultSpecialties);
+    setValue('specializationschema', defaultSpecialties);
+  };
   const handleSpecializations = (options: any) => {
     setValue('specializationschema', [...options]);
   };
-  const specialties = specialistslist.map((speciality) => ({
-    id: speciality.id,
-    label: speciality.name,
-    value: speciality.id,
-  }));
-
+  const remainingSpecialties = specialistslist.filter(
+    (specialty) =>
+      !defaultSpecialties.some((selected) => selected.value === specialty.value)
+  );
   return (
     <Box
       bg="#FFFFFF"
@@ -120,6 +139,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
             mt="0.75em"
             mb="1em"
             borderRadius="8px"
+            defaultValue={formData.specialtyInformation}
           />
           {errors.specialtyInformation && (
             <Text color="red.500">
@@ -128,16 +148,28 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
           )}
         </GridItem>
 
-        <GridItem>
+        <GridItem colSpan={2}>
           <Select
             {...register('specializationschema')}
             closeMenuOnSelect={false}
             components={animatedComponents}
             isMulti
-            options={specialties}
+            options={remainingSpecialties}
             id="specializationschema"
             name="specializationschema"
             onChange={handleSpecializations}
+            defaultValue={formData?.specializationschema}
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                marginTop: '0.75em',
+                marginBottom: '1em',
+                borderRadius: '8px',
+                borderColor: '#4965CA',
+                border: '2px solid #E8E8E8',
+                boxShadow: '0px 0px 4px 0px rgba(57, 97, 251, 0.30)',
+              }),
+            }}
           />
           {errors.specializationschema && (
             <Text color="red.500">

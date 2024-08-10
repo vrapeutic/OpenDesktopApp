@@ -156,7 +156,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       title: 'Error',
       description: error.response.data,
       status: 'error',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
   };

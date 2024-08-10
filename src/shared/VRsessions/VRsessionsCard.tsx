@@ -17,7 +17,8 @@ export default function VRsessionsCard(props: any) {
         width="100%"
       >
         <CardBody>
-          {props.loading && <RadialChart refreshKey={props.refreshKey} />}
+        <RadialChart refreshKey={props.refreshKey} />
+          {/* {props.loading && <RadialChart refreshKey={props.refreshKey} />}
           {!props.loading && (
             <>
               <Text
@@ -36,7 +37,7 @@ export default function VRsessionsCard(props: any) {
                 Select center to show chart...
               </Text>
             </>
-          )}
+          )} */}
         </CardBody>
       </Card>
     </Flex>

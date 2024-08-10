@@ -47,7 +47,7 @@ const SocketManagerProvider = ({ children }: { children: React.ReactNode }) => {
       const deviseIsConnected = await (
         window as any
       ).electronAPI.checkServiceExistence(deviceId);
-      console.log(deviceId)
+      console.log(deviceId);
       return !!deviseIsConnected;
     },
     [socket]

@@ -98,7 +98,7 @@ const UploadDoctorImg: React.FC<UploadKidImgProps> = (props) => {
       title: 'Error',
       description: errorMessage,
       status: 'error',
-      duration: 9000,
+      duration: 5000,
       position: 'top-right',
     });
     console.error('API Error:', error);

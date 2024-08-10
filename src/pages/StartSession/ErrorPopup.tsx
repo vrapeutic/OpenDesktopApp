@@ -17,6 +17,7 @@ import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import { config } from '@renderer/config';
 import axios from 'axios';
 import { getMe } from '@renderer/cache';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 interface ErrorPopupPropType {
   isOpen: boolean;
   onClose?: () => void;
@@ -26,7 +27,6 @@ interface ErrorPopupPropType {
   continueToSelectModule?: boolean;
   errorMessages?: string;
 }
-
 
 export const ErrorPopup = ({
   isOpen,
@@ -38,12 +38,11 @@ export const ErrorPopup = ({
   errorMessages,
 }: ErrorPopupPropType) => {
   const navigate = useNavigate();
-  const {
-  
-    startSession,
-    sessionId,
-    setSessionId
-  } = useStartSessionContext();
+  const { startSession, sessionId, setSessionId } = useStartSessionContext();
+  const { popupFunctions } = usePopupsHandler();
+
+  const { closeSelectingAChild } = popupFunctions;
+
   const {
     isOpen: ismoduleopen,
     onOpen: openSelectModule,
@@ -53,70 +52,69 @@ export const ErrorPopup = ({
   const CloseModuleModal = () => {
     closeSelectModule();
     closeSelectingAHeadset();
-    navigate('/');
+    closeSelectingAChild();
+    navigate('/home');
   };
-
-
 
   const token = getMe()?.token;
   const headers = {
     Authorization: `Bearer ${token}`,
   };
- 
 
-  const endSessionApi =async() => {
-    try{
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const hours = String(currentDate.getHours()).padStart(2, '0');
-    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-    const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
+  const endSessionApi = async () => {
+    try {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const hours = String(currentDate.getHours()).padStart(2, '0');
+      const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+      const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+      const milliseconds = String(currentDate.getMilliseconds()).padStart(
+        3,
+        '0'
+      );
 
-    // Format the date string
-    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+      // Format the date string
+      const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
 
-    console.log(formattedDate);
+      console.log(formattedDate);
 
-    const date1String = startSession;
-    const date2String = formattedDate;
-    console.log(date1String, date2String);
+      const date1String = startSession;
+      const date2String = formattedDate;
+      console.log(date1String, date2String);
 
-    // Create Date objects
-    const date1: any = new Date(date1String);
-    const date2: any = new Date(date2String);
+      // Create Date objects
+      const date1: any = new Date(date1String);
+      const date2: any = new Date(date2String);
 
-    // Calculate the difference in milliseconds
-    const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
-    console.log(timeDifferenceInMilliseconds);
-    // Convert milliseconds to seconds
-    const differenceInMinutes = Math.floor(
-      (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
-    );
-    console.log(differenceInMinutes);
-    console.log(sessionId, startSession);
-    const response = await axios.put(
-      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
-      { vr_duration: differenceInMinutes },
-      { headers }
-    );
+      // Calculate the difference in milliseconds
+      const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
+      console.log(timeDifferenceInMilliseconds);
+      // Convert milliseconds to seconds
+      const differenceInMinutes = Math.floor(
+        (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+      );
+      console.log(differenceInMinutes);
+      console.log(sessionId, startSession);
+      const response = await axios.put(
+        `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+        { vr_duration: differenceInMinutes },
+        { headers }
+      );
 
-    // If successful, set sessionId to null
-    setSessionId("")
+      // If successful, set sessionId to null
+      setSessionId('');
 
-    // Return the response data or handle as needed
-    return response.data;
-  } catch (error) {
-    // Handle error
-    console.error('Error ending session:', error);
-    throw error; // Optionally rethrow to propagate the error
-  }
+      // Return the response data or handle as needed
+      return response.data;
+    } catch (error) {
+      // Handle error
+      console.error('Error ending session:', error);
+      throw error; // Optionally rethrow to propagate the error
+    }
   };
 
-
-  
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -143,9 +141,13 @@ export const ErrorPopup = ({
               fontSize="1rem"
               marginRight="10px"
               onClick={() => {
-                {sessionId&&endSessionApi()}
+                {
+                  sessionId && endSessionApi();
+                }
                 onCancelSession();
-                navigate('/');
+                closeSelectingAHeadset();
+                closeSelectingAChild();
+                navigate('/home');
               }}
             >
               Cancel session
@@ -160,9 +162,12 @@ export const ErrorPopup = ({
               fontWeight="700"
               fontSize="1rem"
               marginLeft="10px"
-              onClick={()=>{
-                {sessionId&&endSessionApi()}
-                onSelectAnotherHeadset()}}
+              onClick={() => {
+                {
+                  sessionId && endSessionApi();
+                }
+                onSelectAnotherHeadset();
+              }}
             >
               Select another headset
             </Button>

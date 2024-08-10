@@ -32,9 +32,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { END_SESSION_MESSAGE } from '@main/constants';
 import SelectLevelGar from './Gardendo/SelectLevelGar';
 
-
 export default function SelectingModule(props: any) {
-  
   const { popupFunctions, addFunction } = usePopupsHandler();
   const {
     socketError,
@@ -43,13 +41,17 @@ export default function SelectingModule(props: any) {
     checkAppNetWorkConnection,
     dispatchSocketMessage,
   } = useSocketManager();
-  
+
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
   const [openRunningPopup, setOpenRunningPopup] = useState(false);
   const [packageName, setPackagename] = useState('');
-  const { startSession, sessionId ,headsetKey} = useStartSessionContext();
-  const { closeSelectingAHeadset, renderDisconnectedHeadSetError } = popupFunctions;
+  const { startSession, sessionId, headsetKey } = useStartSessionContext();
+  const {
+    closeSelectingAHeadset,
+    renderDisconnectedHeadSetError,
+    closeSelectingAChild,
+  } = popupFunctions;
   const [modules, setModules] = useState([]);
   const {
     isOpen: isOpenSelectlevelrodja,
@@ -85,22 +87,18 @@ export default function SelectingModule(props: any) {
   const [errors, setErrors] = useState({
     selectedModule: null,
   });
-  
 
   const schema = Joi.object().keys({
     selectedModule: Joi.string().required().label('module Name'),
   });
-
-
 
   //new Code
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    console.log("moadel",appIsConnectedToInternet,existingDevice);
+    console.log('moadel', appIsConnectedToInternet, existingDevice);
     if (!existingDevice || !appIsConnectedToInternet) {
-     
       renderDisconnectedHeadSetError(
         !appIsConnectedToInternet && 'You are not connected to the internet'
       );
@@ -142,11 +140,8 @@ export default function SelectingModule(props: any) {
             position: 'top-right',
           });
       }
-      
     }
   };
-
-  
 
   useEffect(() => {
     (async () => {
@@ -175,7 +170,7 @@ export default function SelectingModule(props: any) {
   const handleModuleSelect = (module: any) => {
     setValues({ selectedModule: module.id });
     setName(module.attributes.name);
-    setModule(module.attributes.name);
+    setModule(module.attributes.package_name);
     console.log('Selected Module:', module);
   };
 
@@ -232,6 +227,8 @@ export default function SelectingModule(props: any) {
       );
       await endSessionApi();
       props.onClose();
+      closeSelectingAChild();
+      closeSelectingAHeadset();
       navigate('/home');
       setValues({ selectedModule: '' });
 
@@ -251,7 +248,8 @@ export default function SelectingModule(props: any) {
 
   return (
     <Box>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}  closeOnOverlayClick={false}
+        closeOnEsc={false}>
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -271,9 +269,9 @@ export default function SelectingModule(props: any) {
 
             {selectedCenter.id ? (
               <>
-                <Text mt="10px">Choose a module</Text>
                 {modules.length > 0 ? (
                   <>
+                    <Text mt="10px">Choose a module</Text>
                     <Menu>
                       <MenuButton
                         as={Button}
@@ -287,7 +285,6 @@ export default function SelectingModule(props: any) {
                       >
                         {name}
                       </MenuButton>
-
                       <MenuList>
                         {modules.map((module) => (
                           <MenuItem
@@ -316,7 +313,7 @@ export default function SelectingModule(props: any) {
                       fontWeight="500"
                       fontFamily="Graphik LCG"
                     >
-                      Center don't have module
+                      This center hasn't been assigned any modules yet.
                     </Text>
                   </Box>
                 )}
@@ -389,12 +386,13 @@ export default function SelectingModule(props: any) {
           onclosemodules={props.onClose}
         />
       )}
-        {onOpenSelectlevelGar && (
+      {onOpenSelectlevelGar && (
         <SelectLevelGar
           isOpen={isOpenSelectlevelGar}
           onClose={onCloseSelectlevelGar}
           onclosemodules={props.onClose}
-        />)}
+        />
+      )}
     </Box>
   );
 }

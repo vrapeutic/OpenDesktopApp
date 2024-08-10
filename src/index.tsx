@@ -11,6 +11,7 @@ import './index.css';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AdminProvider } from './Context/AdminContext';
 import { StartSessionProvider } from './Context/StartSesstionContext';
+import { PopupsHandlerProvider } from './Context/PopupsHandlerContext';
 
 const queryClient = new QueryClient();
 
@@ -25,9 +26,11 @@ root.render(
         <StartSessionProvider>
           <AdminProvider>
             <Fonts />
-            <SocketManagerProvider>
-              <App />
-            </SocketManagerProvider>
+            <PopupsHandlerProvider>
+              <SocketManagerProvider>
+                <App />
+              </SocketManagerProvider>
+            </PopupsHandlerProvider>
           </AdminProvider>
         </StartSessionProvider>
       </QueryClientProvider>
