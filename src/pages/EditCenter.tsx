@@ -29,19 +29,53 @@ import CongratulationWithEditCenter from '../theme/components/CongratulationWith
 
 const EditCenter = () => {
   const location = useLocation();
-  const centerData = location.state;
-
-  const url = centerData?.attributes?.certificate.url;
-
-  const fileName = url.split('/').pop().split('?')[0];
-  console.log(fileName);
-
-  const socialMediaIndex = centerData?.attributes?.center_social_links.find(
-    (link: { link_type: string }) => link.link_type === 'facebook'
+  const { centerData, includes } = location.state;
+  console.log('includes', includes);
+  const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+  const [specialistslist, setspecialistslist] = useState([]);
+  const [specialistIds, setspecialistIds] = useState([]);
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const [imagePreview, setImagePreview] = useState(
+    centerData?.attributes?.logo?.url
   );
+  const [logo, setLogo] = useState<File>();
+  const navigate = useNavigate();
+  const url = centerData?.attributes?.certificate?.url;
+  const fileName = url.split('/').pop().split('?')[0];
+  const {
+    isOpen: isOpenCongratulationsEditcenter,
+    onOpen: onOpenCongratulationsEditcenter,
+    onClose: onDeleteCongratulationsEditcenter,
+  } = useDisclosure();
 
-  const linkedIndex = centerData?.attributes?.center_social_links.find(
-    (link: { link_type: string }) => link.link_type === 'twitter'
+  const centerSocialLinks = includes.filter((item: any) => {
+    console.log('Filtering for social links:', item);
+    return item.type === 'center_social_link';
+  });
+  console.log('Center social links:', centerSocialLinks);
+
+  const matchingLinks = centerData?.relationships?.center_social_links?.data
+    ?.map((link: any) => {
+      const matchingValue = centerSocialLinks.find((item: any) => {
+        return String(link.id) === String(item.id);
+      });
+
+      if (matchingValue) {
+        console.log('Matching Pair:', { link, matchingValue });
+        return matchingValue.attributes?.link;
+      }
+
+      return null;
+    })
+    .filter((link: any) => link !== null);
+
+  const socialMediaIndex =
+    centerData?.attributes?.center_social_links?.data?.find(
+      (link: { link_type: string }) => link?.link_type === 'facebook'
+    );
+
+  const linkedIndex = centerData?.attributes?.center_social_links?.data?.find(
+    (link: { link_type: string }) => link?.link_type === 'twitter'
   );
 
   const schema = joi.object({
@@ -50,7 +84,11 @@ const EditCenter = () => {
       .string()
       .email({ tlds: { allow: false } })
       .required(),
-    specialty_ids: joi.array().required().label('specialty_ids'),
+    specializationschema: joi
+      .array()
+      .min(1)
+      .required()
+      .label('specializationschema'),
     tax_id: joi.number().required().label('tax_id'),
     certificate: joi.allow(null).label('certificate'),
     phone_number: joi.number().required().label('phone_number'),
@@ -77,55 +115,53 @@ const EditCenter = () => {
       email: centerData?.attributes?.email ?? '',
       phone_number: centerData?.attributes?.phone_number ?? null,
       website: centerData?.attributes?.website ?? '',
-      specialty_ids: centerData?.attributes?.specialty_ids ?? [],
       tax_id: centerData?.attributes?.tax_id ?? null,
+      specializationschema: centerData?.relationships?.specialties?.data ?? [],
       certificate: centerData?.attributes?.certificate ?? null,
-      Linkedin: linkedIndex.link ?? '',
-      socialMedia: socialMediaIndex.link ?? '',
+      Linkedin: matchingLinks[1] ?? '',
+      socialMedia: matchingLinks[0] ?? '',
       completeAddress: '',
       managerName: '',
       specialtyInformation: '',
-      registrationNumber: null,
+      registrationNumber: centerData?.attributes?.registration_number ?? '',
     },
   });
-  const [specialistsList, setSpecialistsList] = useState([]);
-  const [specialistIds, setspecialistIds] = useState([]);
-  const animatedComponents = makeAnimated();
-  const [selectedFile, setSelectedFile] = useState<File>();
 
-  useEffect(() => {
-    if (specialistIds) {
-      setValue('specialty_ids', specialistIds);
-    }
-  }, [specialistIds]);
-  useEffect(() => {
-    if (centerData) {
-      setspecialistIds(
-        centerData?.attributes?.specialties.map(
-          (specialty: { id: number | string; name: string }) => ({
-            id: specialty.id,
-            label: specialty.name,
-            value: specialty.id,
-          })
-        )
-      );
-    }
-    getSpecialists();
-  }, []);
+  const animatedComponents = makeAnimated();
+
   const getSpecialists = async () => {
     try {
-      const response = await axios.get(
-        `http://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/specialties`
-      );
-      setSpecialistsList(response.data);
+      const response = await axios.get(`${config.apiURL}/api/v1/specialties`);
+      const specialties = centerData?.relationships?.specialties?.data || [];
+      if (specialties.length === 0) {
+        console.log('No specialties found in centerData.');
+      }
+      setspecialistslist(response.data);
+      const filteredData = response.data.filter((specialty: any) => {
+        return specialties.some((item: any) => {
+          return item.id === String(specialty.id);
+        });
+      });
+      const specialtiesSelected = filteredData.map((speciality: any) => ({
+        id: speciality.id,
+        label: speciality.name,
+        value: speciality.id,
+      }));
+      setValue('specializationschema', specialtiesSelected);
+      setSelectedSpecialties(specialtiesSelected);
     } catch (error) {
       console.error(error);
     }
   };
-  const [imagePreview, setImagePreview] = useState(
-    centerData?.attributes?.logo?.url
-  );
-  const [logo, setLogo] = useState<File>();
+
+  const specialtiesList = specialistslist.map((specialty: any) => ({
+    id: specialty.id,
+    label: specialty.name,
+    value: specialty.id,
+  }));
+  useEffect(() => {
+    getSpecialists();
+  }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
@@ -134,14 +170,10 @@ const EditCenter = () => {
     setImagePreview(previewUrl);
   };
   const handleSpecializations = (options: any) => {
-    setspecialistIds([...options]);
-    setValue('specialty_ids', [...options]);
+    setValue('specializationschema', [...options]);
+    setSelectedSpecialties([...options]);
   };
-  const specialties = specialistsList.map((speciality) => ({
-    id: speciality.id,
-    label: speciality.name,
-    value: speciality.id,
-  }));
+
   const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
     const ext = file.name.split('.').pop();
@@ -156,9 +188,7 @@ const EditCenter = () => {
     }
   };
 
-  const navigate = useNavigate();
-
-const goBack = () => {
+  const goBack = () => {
     navigate(-1);
   };
   const EditFormData = (formData: FormData) => {
@@ -166,7 +196,6 @@ const goBack = () => {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-
     return axios.put(
       `${config.apiURL}/api/v1/centers/${centerData.id}`,
       formData,
@@ -191,7 +220,7 @@ const goBack = () => {
         logo,
         Linkedin: undefined,
         socialMedia: undefined,
-        specialty_ids: [],
+        specializationschema: [],
         social_links: JSON.stringify([
           { link: data.socialMedia, link_type: 'facebook' },
           { link: data.Linkedin, link_type: 'twitter' },
@@ -201,7 +230,7 @@ const goBack = () => {
       },
       { indices: true }
     );
-    specialistIds.forEach((specialty: { id: string | Blob }) =>
+    selectedSpecialties.forEach((specialty: { id: string | Blob }) =>
       formData.append('specialty_ids[]', specialty.id)
     );
     console.log(formData);
@@ -213,13 +242,6 @@ const goBack = () => {
       handleError(error);
     }
   };
-  console.log(errors);
-
-  const {
-    isOpen: isOpenCongratulationsEditcenter,
-    onOpen: onOpenCongratulationsEditcenter,
-    onClose: onDeleteCongratulationsEditcenter,
-  } = useDisclosure();
 
   const handleSuccess = () => {
     onOpenCongratulationsEditcenter();
@@ -228,7 +250,6 @@ const goBack = () => {
 
   const handleError = (error: any) => {
     onDeleteCongratulationsEditcenter();
-
     Toast({
       title: 'Error',
       description: error.response.data.error,
@@ -252,11 +273,21 @@ const goBack = () => {
       >
         <HStack onClick={goBack} style={{ cursor: 'pointer' }}>
           <ArrowBackIcon />
-          <Text> Therapy Center</Text>
+          <Text
+            padding="12px"
+            borderRadius="8px"
+            fontFamily="Graphik LCG"
+            fontSize="29px"
+            fontWeight="500"
+            lineHeight="29px"
+            letterSpacing="-0.01em"
+          >
+            Therapy Center
+          </Text>
         </HStack>
         <Box bg="#FFFFFF" borderRadius={10} p={'24px'}>
           <Grid>
-            <Text fontSize={20} mt={0}>
+            <Text fontSize="xl" fontFamily={'Graphik LCG'} fontWeight={'500'}>
               General info
             </Text>
             <HStack mb={'32px'}>
@@ -310,9 +341,8 @@ const goBack = () => {
             <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
               <GridItem>
                 <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  therapyCenter Name
+                  Therapy Center Name
                 </FormLabel>
-
                 <Input
                   {...register('name')}
                   id="name"
@@ -334,7 +364,6 @@ const goBack = () => {
                 <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
                   Email
                 </FormLabel>
-
                 <Input
                   {...register('email')}
                   id="email"
@@ -354,7 +383,7 @@ const goBack = () => {
               </GridItem>
               <GridItem>
                 <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  complete Address
+                  Complete Address
                 </FormLabel>
 
                 <Input
@@ -374,7 +403,7 @@ const goBack = () => {
 
               <GridItem>
                 <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  manager Name
+                  Manager's Name
                 </FormLabel>
 
                 <Input
@@ -393,7 +422,12 @@ const goBack = () => {
               </GridItem>
             </Grid>
 
-            <Text fontSize={20} mt={0}>
+            <Text
+              fontSize="xl"
+              my={'28px'}
+              fontFamily={'Graphik LCG'}
+              fontWeight={'500'}
+            >
               Specialty
             </Text>
 
@@ -454,24 +488,29 @@ const goBack = () => {
                   (like tags, for example, ADHD, Autism, etc.)
                 </FormLabel>
                 <Select
-                  {...register('specialty_ids')}
+                  {...register('specializationschema')}
                   closeMenuOnSelect={false}
                   components={animatedComponents}
                   isMulti
-                  value={specialistIds}
-                  options={specialties}
-                  id="specialty_ids"
-                  name="specialty_ids"
+                  id="specializationschema"
+                  name="specializationschema"
                   onChange={handleSpecializations}
+                  options={specialtiesList}
+                  value={selectedSpecialties}
                 />
-                {errors.specialty_ids && (
+                {errors.specializationschema && (
                   <Text color="red.500">
-                    {errors.specialty_ids.message as string}
+                    {errors.specializationschema.message as string}
                   </Text>
                 )}
               </GridItem>
             </Grid>
-            <Text fontSize={20} m={'32 0'}>
+            <Text
+              fontSize="xl"
+              my={'28px'}
+              fontFamily={'Graphik LCG'}
+              fontWeight={'500'}
+            >
               Official documents
             </Text>
 
@@ -518,7 +557,7 @@ const goBack = () => {
                 <>
                   <FormControl>
                     <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                      certification
+                      Certification
                     </FormLabel>
                     <Button
                       h="128px"
@@ -553,7 +592,12 @@ const goBack = () => {
                 </>
               </GridItem>
             </Grid>
-            <Text fontSize={20} m={'32 0'}>
+            <Text
+              fontSize="xl"
+              my={'28px'}
+              fontFamily={'Graphik LCG'}
+              fontWeight={'500'}
+            >
               Contact
             </Text>
             <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
@@ -647,7 +691,7 @@ const goBack = () => {
                   <Text color="red.500">
                     {errors.Linkedin.message as string}
                   </Text>
-                )}{' '}
+                )}
               </GridItem>
             </Grid>
             <Stack direction="row" spacing={4} align="center">

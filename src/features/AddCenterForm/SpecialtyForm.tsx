@@ -89,13 +89,6 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
   const handleSpecializations = (options: any) => {
     setValue('specializationschema', [...options]);
   };
-
-  const specialties = specialistslist.map((speciality) => ({
-    id: speciality.id,
-    label: speciality.name,
-    value: speciality.id,
-  }));
-
   const remainingSpecialties = specialistslist.filter(
     (specialty) =>
       !defaultSpecialties.some((selected) => selected.value === specialty.value)
