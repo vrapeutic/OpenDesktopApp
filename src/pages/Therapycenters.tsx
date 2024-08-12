@@ -43,6 +43,7 @@ const TherapyCenters: React.FC = () => {
   const [sliding, setSliding] = useState(1);
   const [formData, setFormData] = useState({});
   const [centersList, setCentersList] = useState<Center[]>([]);
+  const [includes, setIncludes] = useState([]);
   const [showTable, setShowTable] = useState(true);
 
   useEffect(() => {
@@ -57,11 +58,11 @@ const TherapyCenters: React.FC = () => {
   const getCenters = async () => {
     try {
       const response = await axios.get(
-        `${config.apiURL}/api/v1/doctors/home_centers`,
+        `${config.apiURL}/api/v1/doctors/home_centers?include=center_social_links,specialties`,
         { headers }
       );
       setCentersList(response.data.data);
-      console.log(response.data.data);
+      setIncludes(response.data.included);
     } catch (error) {
       console.error(error);
     }
@@ -212,7 +213,7 @@ const TherapyCenters: React.FC = () => {
 
   const handleCenterClick = (center: Center) => {
     console.log('Clicked Center Data:', center);
-    navigate('/ViewCenter', { state: center });
+    navigate('/ViewCenter', { state: { center: center, includes: includes } });
   };
 
   const renderTableOrForm = () => {

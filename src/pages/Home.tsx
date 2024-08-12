@@ -134,11 +134,14 @@ export default function Home() {
     (async () => {
       setLoading(true);
       const token = await (window as any).electronAPI.getPassword('token');
-      fetch(`${config.apiURL}/api/v1/doctors/home_centers`, {
-        method: 'Get',
-        redirect: 'follow',
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      fetch(
+        `${config.apiURL}/api/v1/doctors/home_centers?include=center_social_links,specialties`,
+        {
+          method: 'Get',
+          redirect: 'follow',
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
         .then((response) => response.json())
         .then((result) => {
           setLoading(false);
