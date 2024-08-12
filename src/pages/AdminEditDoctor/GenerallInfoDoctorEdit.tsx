@@ -6,7 +6,7 @@ import {
   FormLabel,
   Grid,
   GridItem,
-  HStack,
+
   Input,
   Text,
   useDisclosure,
@@ -20,7 +20,6 @@ import { useForm } from 'react-hook-form';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { Image } from '../../assets/icons/Image';
-import UploadDoctorImg from './UploadDoctorImg';
 import { TherapyFormProps } from '@renderer/features/AddCenterForm/therapyFormInterface';
 import { config } from '../../config';
 import { useAdminContext } from '@renderer/Context/AdminContext';
