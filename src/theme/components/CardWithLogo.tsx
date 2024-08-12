@@ -155,7 +155,7 @@ const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
       </GridItem>
       <GridItem colSpan={4}>
         <Text my={2}>
-          Specialties :{' '}
+          {Module?.Module?.attributes?.targeted_skills&& "Specialties :"}
           {Module?.Module?.attributes?.targeted_skills?.map((skill: any) => (
             <Tag key={skill.id} size="sm" colorScheme="gray" mr={1} my={1}>
               <TagLabel>{skill?.name}</TagLabel>

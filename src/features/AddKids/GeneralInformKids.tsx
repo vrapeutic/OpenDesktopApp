@@ -43,7 +43,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
   const toast = useToast();
-
+ 
   const handleChange = (e: any) => {
     let value = e.target.value;
     if (/^\d*$/.test(value)) {

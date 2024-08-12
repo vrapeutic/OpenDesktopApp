@@ -621,7 +621,6 @@ const DataTable = ({
         { headers }
       );
       console.log('response getHeadset', response);
-
       console.log(response.data.data);
       sendDataToParent(response.data.data);
     } catch (error) {

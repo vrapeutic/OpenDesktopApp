@@ -121,7 +121,7 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
                     <Td>
                       <Flex direction="row" gap={2}>
                         <Img
-                          src={doctor?.attributes?.photo?.url}
+                          src={doctor?.attributes?.photo_url}
                           alt={doctor?.attributes?.name}
                           boxSize="50px"
                           borderRadius="full"
