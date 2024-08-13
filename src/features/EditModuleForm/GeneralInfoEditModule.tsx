@@ -75,7 +75,7 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
   });
 
   const FormonSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log("Form Data after submission:", data); // Log the form data
+    console.log('Form Data after submission:', data); // Log the form data
     nextHandler(data); // Call the nextHandler function to navigate or perform other actions
   };
 
@@ -111,10 +111,12 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
 
   useEffect(() => {
     if (Module) {
+      console.log(
+        'type of verison without parse int',
+        typeof Module.attributes.version
+      );
 
-      console.log("type of verison without parse int", typeof Module.attributes.version)
-
-      console.log("type of verison", parseInt(Module.attributes.version))
+      console.log('type of verison', parseInt(Module.attributes.version));
 
       setValue('Name', Module.attributes.name);
       setValue('Technology', Module.attributes.technology);
@@ -135,7 +137,7 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
   };
 
   const nextHandler = (data: any) => {
-    console.log("Form Data in general info edit module:", data); 
+    console.log('Form Data in general info edit module:', data);
     navigate('/EditModule2', { state: { newdata: data, olddata: Module } });
   };
   return (
@@ -242,6 +244,7 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
               id="specializationschema"
               name="specializationschema"
               onChange={handleSpecializations}
+              value={specialties}
             />
             {errors.specializationschema && (
               <Text color="red.500">
@@ -266,23 +269,22 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
           >
             Next
           </Button>
-            <Button
-              onClick={backHandler}
-              bg="#F5F5F5"
-              borderRadius="0.75em"
-              w="13.375em"
-              h="3.375em"
-              mt="0em"
-              ml="1.5em"
-              mb="2em"
-              mr="auto"
-              color="#A0A0A0"
-              fontSize="1.125em"
-              fontWeight="700"
-            >
-              Back
-            </Button>
-     
+          <Button
+            onClick={backHandler}
+            bg="#F5F5F5"
+            borderRadius="0.75em"
+            w="13.375em"
+            h="3.375em"
+            mt="0em"
+            ml="1.5em"
+            mb="2em"
+            mr="auto"
+            color="#A0A0A0"
+            fontSize="1.125em"
+            fontWeight="700"
+          >
+            Back
+          </Button>
         </Flex>
       </Box>
     </>

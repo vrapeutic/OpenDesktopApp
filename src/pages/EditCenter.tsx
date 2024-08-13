@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Grid,
@@ -99,6 +100,15 @@ const EditCenter = () => {
     managerName: joi.string().allow('').max(30).label('managerName'),
     specialtyInformation: joi.string().allow(''),
     registrationNumber: joi.number().allow(null).label('Registration Number'),
+    logo: joi
+      .any()
+      .label('logo')
+      .custom((value, helpers) => {
+        if (value && value.name) {
+          return helpers.error('Invalid file type. Please upload a  photo.');
+        }
+        return value;
+      }),
   });
   const {
     register,
@@ -110,24 +120,37 @@ const EditCenter = () => {
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onChange',
-    defaultValues: {
-      name: centerData?.attributes?.name ?? '',
-      email: centerData?.attributes?.email ?? '',
-      phone_number: centerData?.attributes?.phone_number ?? null,
-      website: centerData?.attributes?.website ?? '',
-      tax_id: centerData?.attributes?.tax_id ?? null,
-      specializationschema: centerData?.relationships?.specialties?.data ?? [],
-      certificate: centerData?.attributes?.certificate ?? null,
-      Linkedin: matchingLinks[1] ?? '',
-      socialMedia: matchingLinks[0] ?? '',
-      completeAddress: '',
-      managerName: '',
-      specialtyInformation: '',
-      registrationNumber: centerData?.attributes?.registration_number ?? '',
-    },
   });
 
   const animatedComponents = makeAnimated();
+
+  useEffect(() => {
+    // Set the initial values for the form fields using centerData
+    if (centerData) {
+      setValue('name', centerData.attributes.name ?? '');
+      setValue('email', centerData.attributes.email ?? '');
+      setValue('phone_number', centerData.attributes.phone_number ?? null);
+      setValue('website', centerData.attributes.website ?? '');
+      setValue('tax_id', centerData.attributes.tax_id ?? null);
+      setValue('completeAddress', centerData.attributes.completeAddress ?? '');
+      setValue('managerName', centerData.attributes.managerName ?? '');
+      setValue(
+        'specialtyInformation',
+        centerData.attributes.specialtyInformation ?? ''
+      );
+      setValue(
+        'registrationNumber',
+        centerData.attributes.registration_number ?? ''
+      );
+      setValue('socialMedia', matchingLinks[0] ?? '');
+      setValue('Linkedin', matchingLinks[1] ?? '');
+
+      // If there's a logo, set the image preview
+      if (centerData.attributes.logo?.url) {
+        setImagePreview(centerData.attributes.logo.url);
+      }
+    }
+  }, [centerData, setValue, matchingLinks]);
 
   const getSpecialists = async () => {
     try {
@@ -165,9 +188,13 @@ const EditCenter = () => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
-    setLogo(file);
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
+    setLogo(file);
+    if (!logo) {
+      setValue('logo', null);
+      setError('logo', { message: 'Please upload a logo.' });
+    }
   };
   const handleSpecializations = (options: any) => {
     setValue('specializationschema', [...options]);
@@ -286,443 +313,435 @@ const EditCenter = () => {
           </Text>
         </HStack>
         <Box bg="#FFFFFF" borderRadius={10} p={'24px'}>
-          <Grid>
-            <Text fontSize="xl" fontFamily={'Graphik LCG'} fontWeight={'500'}>
-              General info
-            </Text>
-            <HStack mb={'32px'}>
-              <Box
-                width={197}
-                height={197}
-                alignItems={'center'}
-                display={'flex'}
-              >
-                <img src={imagePreview} alt="brand_logo" />
-              </Box>
+          <Text fontSize="xl" fontFamily={'Graphik LCG'} fontWeight={'500'}>
+            General info
+          </Text>
 
-              <Button
-                style={{
-                  width: '153px',
-                  height: '38px',
-                  color: '#FFF',
-                  border: 'none',
-                  borderRadius: '8px',
-                  backgroundColor: '#4AA6CA',
-                  cursor: 'pointer',
-                  position: 'relative',
-                }}
-              >
-                <label
-                  htmlFor="logo"
-                  style={{
-                    width: '153px',
-                    height: '38px',
-                    cursor: 'pointer',
-                    position: 'absolute',
-                    alignItems: 'center',
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
-                >
-                  Change logo
-                  <Input
-                    type="file"
-                    accept="image/png,image/jpeg"
-                    name="logo"
-                    id="logo"
-                    onChange={(e) => handleImageChange(e)}
-                    style={{ display: 'none' }}
-                    hidden
-                  />
-                </label>
-              </Button>
-            </HStack>
-
-            <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
-              <GridItem>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  Therapy Center Name
-                </FormLabel>
-                <Input
-                  {...register('name')}
-                  id="name"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-                {errors.name && (
-                  <Text color="red.500">{errors.name.message as string}</Text>
-                )}
-              </GridItem>
-              <GridItem>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  Email
-                </FormLabel>
-                <Input
-                  {...register('email')}
-                  id="email"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-                {errors.email && (
-                  <Text color="red.500">{errors.email.message as string}</Text>
-                )}
-              </GridItem>
-              <GridItem>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  Complete Address
-                </FormLabel>
-
-                <Input
-                  {...register('completeAddress')}
-                  id="completeAddress"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-              </GridItem>
-
-              <GridItem>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  Manager's Name
-                </FormLabel>
-
-                <Input
-                  {...register('managerName')}
-                  id="managerName"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-              </GridItem>
-            </Grid>
-
-            <Text
-              fontSize="xl"
-              my={'28px'}
-              fontFamily={'Graphik LCG'}
-              fontWeight={'500'}
-            >
-              Specialty
-            </Text>
-
-            <Grid>
-              <GridItem>
-                <FormLabel
-                  display="inline"
-                  m="0em"
-                  letterSpacing="0.256px"
-                  color="#15134B"
-                >
-                  Specialty information
-                </FormLabel>
-                <FormLabel
-                  pl="0.5em"
-                  display="inline"
-                  m="0em"
-                  fontSize="0.75em"
-                  letterSpacing="0.192px"
-                  color="#8D8D8D"
-                >
-                  (description)
-                </FormLabel>
-                <Input
-                  {...register('specialtyInformation')}
-                  id="SpecialtyInformation"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'78px'}
-                  multiple
-                />
-              </GridItem>
-            </Grid>
-            <Grid templateColumns="repeat(2, 1fr)">
-              <GridItem>
-                <FormLabel
-                  display="inline"
-                  m="0em"
-                  letterSpacing="0.256px"
-                  color="#15134B"
-                >
-                  Choose specializations
-                </FormLabel>
-                <FormLabel
-                  pl="0.5em"
-                  display="inline"
-                  m="0em"
-                  fontSize="0.75em"
-                  letterSpacing="0.192px"
-                  color="#8D8D8D"
-                >
-                  (like tags, for example, ADHD, Autism, etc.)
-                </FormLabel>
-                <Select
-                  {...register('specializationschema')}
-                  closeMenuOnSelect={false}
-                  components={animatedComponents}
-                  isMulti
-                  id="specializationschema"
-                  name="specializationschema"
-                  onChange={handleSpecializations}
-                  options={specialtiesList}
-                  value={selectedSpecialties}
-                />
-                {errors.specializationschema && (
-                  <Text color="red.500">
-                    {errors.specializationschema.message as string}
-                  </Text>
-                )}
-              </GridItem>
-            </Grid>
-            <Text
-              fontSize="xl"
-              my={'28px'}
-              fontFamily={'Graphik LCG'}
-              fontWeight={'500'}
-            >
-              Official documents
-            </Text>
-
-            <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
-              <GridItem>
-                <FormLabel color="#15134B">Registration Number</FormLabel>
-
-                <Input
-                  {...register('registrationNumber')}
-                  id="registration_number"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-              </GridItem>
-              <GridItem>
-                <FormLabel color="#15134B">Tax ID</FormLabel>
-                <Input
-                  {...register('tax_id')}
-                  id="tax_id"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-                {errors.tax_id && (
-                  <Text color="red.500">{errors.tax_id.message as string}</Text>
-                )}
-              </GridItem>
-            </Grid>
-            <Grid>
-              <GridItem rowSpan={2}>
-                <>
-                  <FormControl>
-                    <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                      Certification
-                    </FormLabel>
-                    <Button
-                      h="128px"
-                      w="174px"
-                      border="2px solid #E8E8E8"
-                      borderRadius="8px"
-                      bg="#FFFFFF"
-                    >
-                      <label>
-                        <Image />
-                        <Input
-                          {...register('certificate')}
-                          id="certificate"
-                          type="file"
-                          accept="application/pdf" // Update this line to accept PDF files
-                          onChange={(e) => handleCertificateChange(e)}
-                          style={{ display: 'none' }}
-                        />
-                      </label>
-                    </Button>
-                  </FormControl>
-                  {selectedFile ? (
-                    <Text mt="1em">Selected File: {selectedFile.name}</Text>
-                  ) : (
-                    <Text mt="1em">You uploaded before: {fileName}</Text>
-                  )}
-                  {errors.certificate && (
-                    <Text color="red.500">
-                      {errors.certificate.message as string}
-                    </Text>
-                  )}
-                </>
-              </GridItem>
-            </Grid>
-            <Text
-              fontSize="xl"
-              my={'28px'}
-              fontFamily={'Graphik LCG'}
-              fontWeight={'500'}
-            >
-              Contact
-            </Text>
-            <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
-              <GridItem>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  Phone number 1
-                </FormLabel>
-                <Input
-                  {...register('phone_number')}
-                  id="phone_number"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-                {errors.phone_number && (
-                  <Text color="red.500">
-                    {errors.phone_number.message as string}
-                  </Text>
-                )}
-              </GridItem>
-              <GridItem>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  Social media
-                </FormLabel>
-                <Input
-                  {...register('socialMedia')}
-                  id="socialMedia"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-                {errors.socialMedia && (
-                  <Text color="red.500">
-                    {errors.socialMedia.message as string}
-                  </Text>
-                )}{' '}
-              </GridItem>
-              <GridItem>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  Website
-                </FormLabel>
-                <Input
-                  {...register('website')}
-                  id="website"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-                {errors.website && (
-                  <Text color="red.500">
-                    {errors.website.message as string}
-                  </Text>
-                )}{' '}
-              </GridItem>
-              <GridItem>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  Linkedin
-                </FormLabel>
-                <Input
-                  {...register('Linkedin')}
-                  id="Linkedin"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  _focus={{ border: '1px solid #4965CA' }}
-                  border="1px solid #E8E8E8"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                  width={'100%'}
-                  height={'38px'}
-                />
-                {errors.Linkedin && (
-                  <Text color="red.500">
-                    {errors.Linkedin.message as string}
-                  </Text>
-                )}
-              </GridItem>
-            </Grid>
-            <Stack direction="row" spacing={4} align="center">
-              <Button
-                w={273}
-                h={38}
-                color="#FFF"
-                border="none"
+          <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
+            <GridItem>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Therapy Center Name
+              </FormLabel>
+              <Input
+                {...register('name')}
+                id="name"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
                 borderRadius="8px"
-                backgroundColor="#00DEA3"
-                variant="solid"
-                cursor="pointer"
-                type="submit"
-              >
-                Save change
-              </Button>
-              <Button
-                w={126}
-                h={38}
-                border="1px solid #DD6969"
+                width={'100%'}
+                height={'38px'}
+              />
+              {errors.name && (
+                <Text color="red.500">{errors.name.message as string}</Text>
+              )}
+            </GridItem>
+            <GridItem>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Email
+              </FormLabel>
+              <Input
+                {...register('email')}
+                id="email"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
                 borderRadius="8px"
-                backgroundColor="#FFF"
-                cursor="pointer"
-                color="#DD6969"
-                variant="outline"
-                onClick={goBack}
-              >
-                Discard
-              </Button>
-            </Stack>
+                width={'100%'}
+                height={'38px'}
+              />
+              {errors.email && (
+                <Text color="red.500">{errors.email.message as string}</Text>
+              )}
+            </GridItem>
+            <GridItem>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Complete Address
+              </FormLabel>
+
+              <Input
+                {...register('completeAddress')}
+                id="completeAddress"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+                width={'100%'}
+                height={'38px'}
+              />
+            </GridItem>
+
+            <GridItem>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Manager's Name
+              </FormLabel>
+
+              <Input
+                {...register('managerName')}
+                id="managerName"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+                width={'100%'}
+                height={'38px'}
+              />
+            </GridItem>
           </Grid>
+
+          <Text
+            fontSize="xl"
+            my={'28px'}
+            fontFamily={'Graphik LCG'}
+            fontWeight={'500'}
+          >
+            Specialty
+          </Text>
+
+          <Grid>
+            <GridItem>
+              <FormLabel
+                display="inline"
+                m="0em"
+                letterSpacing="0.256px"
+                color="#15134B"
+              >
+                Specialty information
+              </FormLabel>
+              <FormLabel
+                pl="0.5em"
+                display="inline"
+                m="0em"
+                fontSize="0.75em"
+                letterSpacing="0.192px"
+                color="#8D8D8D"
+              >
+                (description)
+              </FormLabel>
+              <Input
+                {...register('specialtyInformation')}
+                id="SpecialtyInformation"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+                width={'100%'}
+                height={'78px'}
+                multiple
+              />
+            </GridItem>
+          </Grid>
+          <Grid templateColumns="repeat(2, 1fr)">
+            <GridItem>
+              <FormLabel
+                display="inline"
+                m="0em"
+                letterSpacing="0.256px"
+                color="#15134B"
+              >
+                Choose specializations
+              </FormLabel>
+              <FormLabel
+                pl="0.5em"
+                display="inline"
+                m="0em"
+                fontSize="0.75em"
+                letterSpacing="0.192px"
+                color="#8D8D8D"
+              >
+                (like tags, for example, ADHD, Autism, etc.)
+              </FormLabel>
+              <Select
+                {...register('specializationschema')}
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                isMulti
+                id="specializationschema"
+                name="specializationschema"
+                onChange={handleSpecializations}
+                options={specialtiesList}
+                value={selectedSpecialties}
+              />
+              {errors.specializationschema && (
+                <Text color="red.500">
+                  {errors.specializationschema.message as string}
+                </Text>
+              )}
+            </GridItem>
+          </Grid>
+          <Text
+            fontSize="xl"
+            my={'28px'}
+            fontFamily={'Graphik LCG'}
+            fontWeight={'500'}
+          >
+            Official documents
+          </Text>
+
+          <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
+            <GridItem>
+              <FormLabel color="#15134B">Registration Number</FormLabel>
+
+              <Input
+                {...register('registrationNumber')}
+                id="registration_number"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+                width={'100%'}
+                height={'38px'}
+              />
+            </GridItem>
+            <GridItem>
+              <FormLabel color="#15134B">Tax ID</FormLabel>
+              <Input
+                {...register('tax_id')}
+                id="tax_id"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+                width={'100%'}
+                height={'38px'}
+              />
+              {errors.tax_id && (
+                <Text color="red.500">{errors.tax_id.message as string}</Text>
+              )}
+            </GridItem>
+          </Grid>
+          <Grid>
+            <GridItem rowSpan={2}>
+              <>
+                <FormControl>
+                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                    Certification
+                  </FormLabel>
+                  <Button
+                    h="128px"
+                    w="174px"
+                    border="2px solid #E8E8E8"
+                    borderRadius="8px"
+                    bg="#FFFFFF"
+                  >
+                    <label>
+                      <Image />
+                      <Input
+                        {...register('certificate')}
+                        id="certificate"
+                        type="file"
+                        accept="application/pdf" // Update this line to accept PDF files
+                        onChange={(e) => handleCertificateChange(e)}
+                        style={{ display: 'none' }}
+                      />
+                    </label>
+                  </Button>
+                </FormControl>
+                {selectedFile ? (
+                  <Text mt="1em">Selected File: {selectedFile.name}</Text>
+                ) : (
+                  <Text mt="1em">You uploaded before: {fileName}</Text>
+                )}
+                {errors.certificate && (
+                  <Text color="red.500">
+                    {errors.certificate.message as string}
+                  </Text>
+                )}
+              </>
+            </GridItem>
+          </Grid>
+          <Text
+            fontSize="xl"
+            my={'28px'}
+            fontFamily={'Graphik LCG'}
+            fontWeight={'500'}
+          >
+            Contact
+          </Text>
+          <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
+            <GridItem>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Phone number 1
+              </FormLabel>
+              <Input
+                {...register('phone_number')}
+                id="phone_number"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+                width={'100%'}
+                height={'38px'}
+              />
+              {errors.phone_number && (
+                <Text color="red.500">
+                  {errors.phone_number.message as string}
+                </Text>
+              )}
+            </GridItem>
+            <GridItem>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Social media
+              </FormLabel>
+              <Input
+                {...register('socialMedia')}
+                id="socialMedia"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+                width={'100%'}
+                height={'38px'}
+              />
+              {errors.socialMedia && (
+                <Text color="red.500">
+                  {errors.socialMedia.message as string}
+                </Text>
+              )}{' '}
+            </GridItem>
+            <GridItem>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Website
+              </FormLabel>
+              <Input
+                {...register('website')}
+                id="website"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+                width={'100%'}
+                height={'38px'}
+              />
+              {errors.website && (
+                <Text color="red.500">{errors.website.message as string}</Text>
+              )}{' '}
+            </GridItem>
+            <GridItem>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                Linkedin
+              </FormLabel>
+              <Input
+                {...register('Linkedin')}
+                id="Linkedin"
+                _hover={{ border: '1px solid #4965CA' }}
+                _focus={{ border: '1px solid #4965CA' }}
+                border="1px solid #E8E8E8"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+                width={'100%'}
+                height={'38px'}
+              />
+              {errors.Linkedin && (
+                <Text color="red.500">{errors.Linkedin.message as string}</Text>
+              )}
+            </GridItem>
+            <GridItem rowSpan={2} mb="5">
+              <>
+                <FormControl>
+                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                    Upload Photo
+                  </FormLabel>
+                  <Button
+                    h="128px"
+                    w="174px"
+                    border="2px solid #E8E8E8"
+                    borderRadius="8px"
+                    bg="#FFFFFF"
+                    position={'relative'}
+                  >
+                    <label>
+                      <img
+                        src={imagePreview}
+                        alt="brand_logo"
+                        style={{ height: '124px', objectFit: 'cover' }}
+                      />
+
+                      <Input
+                        type="file"
+                        accept="image/png,image/jpeg"
+                        name="logo"
+                        id="logo"
+                        {...register('logo')}
+                        onChange={(e) => handleImageChange(e)}
+                        style={{ display: 'none' }}
+                        hidden
+                      />
+                    </label>
+                  </Button>
+                </FormControl>
+
+                {errors.logo && (
+                  <Text color="red.500">{errors.logo.message as string}</Text>
+                )}
+              </>
+            </GridItem>
+          </Grid>
+          <Flex flexDirection="row-reverse">
+            <Button
+              type="submit"
+              bg="#4AA6CA"
+              borderRadius="0.75em"
+              w="13.375em"
+              h="3.375em"
+              mt="0em"
+              mr="1.5em"
+              mb="2em"
+              color="#FFFFFF"
+              fontSize="1.125em"
+              fontWeight="700"
+            >
+              Submit
+            </Button>
+            <Button
+              onClick={goBack}
+              bg="#F5F5F5"
+              borderRadius="0.75em"
+              w="13.375em"
+              h="3.375em"
+              mt="0em"
+              ml="1.5em"
+              mb="2em"
+              mr="auto"
+              color="#A0A0A0"
+              fontSize="1.125em"
+              fontWeight="700"
+            >
+              Back
+            </Button>
+          </Flex>
         </Box>
       </Box>
 
