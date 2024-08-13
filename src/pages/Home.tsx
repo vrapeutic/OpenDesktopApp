@@ -49,8 +49,11 @@ export default function Home() {
   useEffect(() => {
     const fetchReportDir = async () => {
       try {
-        const dir = await (window as any).electron.getReportDir();
-        setReportDir(dir);
+        const dirUrl = await (window as any).electron.getReportDir();
+        // Replace backslashes with forward slashes
+        const fixedDirUrl = dirUrl.replace(/\\/g, '/');
+        console.log(fixedDirUrl, 'fixedDirUrl');
+        setReportDir(fixedDirUrl);
       } catch (error) {
         console.error('Error fetching report directory:', error);
       }
@@ -60,25 +63,32 @@ export default function Home() {
   }, []);
 
   console.log(reportDir, 'reportDir');
+
   const handleListFiles = async () => {
-    const result = await (window as any).electron.listFiles(reportDir);
-    if (result.success) {
-      setFiles(result.files);
-      console.log(result.files);
-    } else {
-      console.error('Error listing files:', result.error);
+    try {
+      const files = await (window as any).electron.listFiles(reportDir);
+      setFiles(files);
+      console.log(files);
+      // Call readFiles function after getting the list of files
+      await readFiles(files);
+    } catch (error) {
+      console.error('Error listing files:', error);
+    }
+  };
+  console.log(files, 'files');
+  const readFiles = async (files: string[]) => {
+    for (const file of files) {
+      await handleReadFile(reportDir + '/' + file);
     }
   };
 
-  const handleReadFile = async () => {
-    const result = await (window as any).electron.readFile(
-      'C:/Users/Issra Ismaiel/Downloads/sample_data_complex_session_2.csv'
-    );
-    if (result.success) {
-      setFileContent(result.content);
-      console.log(result.content);
+  const handleReadFile = async (filePath: string) => {
+    try {
+      const content = await (window as any).electron.readFile(filePath);
+      setFileContent(content);
+      console.log(`Content of ${filePath}:`, content);
 
-      const parsedData = Papa.parse(result.content, {
+      const parsedData = Papa.parse(content, {
         skipEmptyLines: true,
       }).data;
       console.log(parsedData);
@@ -110,15 +120,16 @@ export default function Home() {
         const sum = sumColumn(parsedData, module, columnIndex);
         console.log(`${module} Total: ${sum}`);
       });
-    } else {
-      console.error('Error reading file:', result.error);
+    } catch (error) {
+      console.error('Error reading file:', error);
     }
   };
 
   useEffect(() => {
-    handleListFiles();
-    handleReadFile();
-  }, []);
+    if (reportDir) {
+      handleListFiles();
+    }
+  }, [reportDir]);
 
   const handleClick = (center: any) => {
     console.log(center?.attributes?.name);

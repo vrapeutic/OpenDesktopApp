@@ -31,7 +31,6 @@ import CongratulationWithEditCenter from '../theme/components/CongratulationWith
 const EditCenter = () => {
   const location = useLocation();
   const { centerData, includes } = location.state;
-  console.log('includes', includes);
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
   const [specialistslist, setspecialistslist] = useState([]);
   const [specialistIds, setspecialistIds] = useState([]);
@@ -50,10 +49,8 @@ const EditCenter = () => {
   } = useDisclosure();
 
   const centerSocialLinks = includes.filter((item: any) => {
-    console.log('Filtering for social links:', item);
     return item.type === 'center_social_link';
   });
-  console.log('Center social links:', centerSocialLinks);
 
   const matchingLinks = centerData?.relationships?.center_social_links?.data
     ?.map((link: any) => {
@@ -62,7 +59,6 @@ const EditCenter = () => {
       });
 
       if (matchingValue) {
-        console.log('Matching Pair:', { link, matchingValue });
         return matchingValue.attributes?.link;
       }
 
@@ -260,7 +256,6 @@ const EditCenter = () => {
     selectedSpecialties.forEach((specialty: { id: string | Blob }) =>
       formData.append('specialty_ids[]', specialty.id)
     );
-    console.log(formData);
 
     try {
       await EditFormData(formData);
