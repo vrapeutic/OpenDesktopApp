@@ -97,11 +97,21 @@ app.on('activate', () => {
   }
 });
 
+ipcMain.handle('get-report-dir', () => {
+  const homeDir = os.homedir();
+  const dirUrl = nodePath.join(homeDir, REPORT_FILE_SAVE_PATH);
+  if (!fs.existsSync(dirUrl)) {
+    fs.mkdirSync(dirUrl, { recursive: true });
+  }
+  return dirUrl;
+});
+
 ipcMain.handle('list-files', async (event, directoryPath) => {
   return new Promise((resolve, reject) => {
     fs.readdir(directoryPath, (err, data) => {
       if (err) {
         reject(err);
+        console.log(err);
       } else {
         resolve(data);
       }
@@ -114,21 +124,12 @@ ipcMain.handle('read-file', async (event, filePath) => {
     fs.readFile(filePath, 'utf-8', (err, data) => {
       if (err) {
         reject(err);
+        console.log(err);
       } else {
         resolve(data);
       }
     });
   });
-});
-
-ipcMain.handle('get-report-dir', () => {
-  const homeDir = os.homedir();
-  const dirUrl = nodePath.join(homeDir, REPORT_FILE_SAVE_PATH);
-  console.log(`report dir: ${dirUrl} from main`);
-  if (!fs.existsSync(dirUrl)) {
-    fs.mkdirSync(dirUrl, { recursive: true });
-  }
-  return dirUrl;
 });
 
 // In this file you can include the rest of your app's specific main process

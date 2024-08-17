@@ -17,10 +17,10 @@ const ViewModule = () => {
   return (
     <>
       <HeaderWithButton
-        leftText="therapeutic module"
+        leftText="Therapeutic module"
         rightText="Edit Module"
-        onButtonClick={() => navigate('/Editmodule', { state: Module })}
-      />{' '}
+        onButtonClick={() => navigate('/EditModule', { state: Module })}
+      />
       <CardWithLogo Module={Module} />
       {/* <CardWithLogo centerData={centerData} />
       <TabsViewCenter centerData={centerData} /> */}

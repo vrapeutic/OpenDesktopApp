@@ -20,8 +20,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
 });
 
 contextBridge.exposeInMainWorld('electron', {
-  listFiles: (directoryPath: any) =>
-    ipcRenderer.invoke('list-files', directoryPath),
-  readFile: (filePath: any) => ipcRenderer.invoke('read-file', filePath),
   getReportDir: () => ipcRenderer.invoke('get-report-dir'),
+  listFiles: (directoryPath: string) =>
+    ipcRenderer.invoke('list-files', directoryPath),
+  readFile: (filePath: string) => ipcRenderer.invoke('read-file', filePath),
 });
