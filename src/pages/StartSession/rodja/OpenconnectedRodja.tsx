@@ -47,6 +47,7 @@ export default function OpenconnectedRodja(props: any) {
       // props.onClose();
       // props.onclosemodules();
       // navigate('/');
+      props.closeAllModalsAndToast()
     } catch (error) {
       // console.log(error.response);
       toast({
@@ -109,6 +110,7 @@ export default function OpenconnectedRodja(props: any) {
       headsetKey
     );
     props.onClose()
+    props.closeAllModalsAndToast()
     props.onCloseSelectEnvrodja()
     props.oncloseselectlevel()
     props.onCloseSelectJewel()

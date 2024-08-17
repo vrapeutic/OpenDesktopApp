@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -38,6 +38,7 @@ const SelectDistractors = (props: any) => {
   const [selectedDistractor, setselectedDistractor] = useState<number | null>(
     null
   );
+  const toastIdRef:any = useRef();
   const {
     dispatchSocketMessage,
     checkIfServiceExists,
@@ -80,15 +81,41 @@ const SelectDistractors = (props: any) => {
     // props.onclosemodules();
     // props.onCloseBooks();
     // onOpenConnected();
-    toast({
+ 
+    toastIdRef.current = toast({
       title: 'Success',
-      description: `You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
-      module name is ${module} and session id is ${sessionId}`,
+      description: (
+        <Box>
+          {`You assigned level ${updatedFormData[0]} and book ${props.formData[1]} and distractor  ${selectedDistractor} 
+      module name is ${module} and session id is ${sessionId}`}
+          <Button
+           color={"white"}
+            width={3}
+            height={5}
+            onClick={() => {
+              if (toastIdRef.current) {
+               
+                toast.close(toastIdRef.current);
+              }
+            }}
+          position={"absolute"}
+     
+          top={3}
+          right={3}
+        
+          >
+        x
+          </Button>
+        </Box>
+      ),
       status: 'success',
-      duration: 5000,
-      position: 'top-right',
+      duration: null,
+      position: 'bottom-left',
+      onCloseComplete: () => {
+        console.log('Toast has been removed.');
+        // Additional logic for when the toast is removed
+      },
     });
-
     const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     if (appIsConnectedToInternet && existingDevice) {
@@ -147,6 +174,14 @@ const SelectDistractors = (props: any) => {
     setselectedDistractor(distractor);
     setValue('selectDistractor', distractor);
   };
+
+
+  const closeAllModalsAndToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  
+  }
   return (
     <>
       <Modal
@@ -257,6 +292,8 @@ const SelectDistractors = (props: any) => {
           onCloseSelectBooksviblio={props.onCloseSelectBooksviblio}
           onCloseSelectDistractors={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
+          closeAllModalsAndToast={closeAllModalsAndToast}
+          closeAllModals={closeAllModalsAndToast}
         />
       )}
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -59,11 +59,9 @@ const SelectDistractorsRodja = (props: any) => {
   } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-  const [selectedDistractor, setselectedDistractor] = useState<number | null>(
-    null
-  );
+  const [selectedDistractor, setselectedDistractor] = useState<number | null>(null);
   const toast = useToast();
-
+  const toastIdRef:any = useRef();
   const schema = joi.object({
     selectDistractor: joi.number().required(),
   });
@@ -109,14 +107,40 @@ const SelectDistractorsRodja = (props: any) => {
       navigate('/home');
       props.onClose();
       onOpenConnected();
-      toast({
+      toastIdRef.current = toast({
         title: 'Success',
-        description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
-       distractor  ${selectedDistractor} 
-      module name is ${module} and session id is ${sessionId}`,
+        description: (
+          <Box>
+            {`You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
+         distractor  ${selectedDistractor} 
+        module name is ${module} and session id is ${sessionId}`}
+            <Button
+             color={"white"}
+              width={3}
+              height={5}
+              onClick={() => {
+                if (toastIdRef.current) {
+                 
+                  toast.close(toastIdRef.current);
+                }
+              }}
+            position={"absolute"}
+       
+            top={3}
+            right={3}
+          
+            >
+          x
+            </Button>
+          </Box>
+        ),
         status: 'success',
-        duration: 5000,
-        position: 'top-right',
+        duration: null,
+        position: 'bottom-left',
+        onCloseComplete: () => {
+          console.log('Toast has been removed.');
+          // Additional logic for when the toast is removed
+        },
       });
       console.log(
         `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
@@ -171,7 +195,12 @@ const SelectDistractorsRodja = (props: any) => {
       props.onClose();
     }
   }, [socketErrorState]);
-
+  const closeAllModalsAndToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  
+  }
   return (
     <>
       <Modal
@@ -283,6 +312,8 @@ const SelectDistractorsRodja = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
           onCloseSelectJewel={props.onCloseSelectJewel}
           onCloseSelectDistractors={props.onClose}
+          closeAllModalsAndToast={closeAllModalsAndToast}
+          closeAllModals={closeAllModalsAndToast}
         />
       )}
       {/* {onOpenConnected && (

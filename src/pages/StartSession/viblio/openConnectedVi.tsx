@@ -93,7 +93,7 @@ export default function OpenConnectedVi(props: any) {
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
-
+    props.closeAllModalsAndToast()
 
     const api = axios.put(
         `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
@@ -109,6 +109,7 @@ export default function OpenConnectedVi(props: any) {
       headsetKey
     );
     props.onClose()
+    props.closeAllModalsAndToast()
     
     props.onCloseSelectBooksviblio()
     props.oncloseselectlevel()
