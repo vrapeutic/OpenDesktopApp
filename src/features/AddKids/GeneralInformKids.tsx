@@ -70,18 +70,21 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
       .string()
       .email({ tlds: { allow: false } })
       .required(),
-    Age: joi.number().min(6).required(),
+    Age: joi.number().min(6).max(15).required(),
     diagnoses: joi.array().min(1).required().label('diagnoses'),
   });
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     setValue,
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
+    reValidateMode: 'onChange',
+    defaultValues: formData,
+
   });
 
   const FormonSubmit = (data: {
@@ -351,7 +354,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
       <Flex flexDirection="row-reverse" my={15}>
         <Button
           type="submit"
-          bg="#4AA6CA"
+          bg={isValid ? "#4AA6CA" : "#D3D3D3"}
           borderRadius="0.75em"
           w="13.375em"
           h="3.375em"
@@ -361,7 +364,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
-          isDisabled={isLoading}
+          isDisabled={isLoading || !isValid}
         >
           {isLoading ? <Spinner size="md" /> : 'Submit'}
         </Button>
