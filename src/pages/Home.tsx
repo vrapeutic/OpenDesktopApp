@@ -31,6 +31,113 @@ import { Link as ReachLink } from 'react-router-dom';
 import { RedArrow } from '@renderer/assets/icons/RedArrow';
 import Papa from 'papaparse';
 
+const moduleNames = ['Archeeko', 'Viblio', 'GardenDo']; // Replace with your actual module names
+type ModuleData = {
+  moduleName: string;
+  totalTimeSpent: number;
+  formattedTimeSpent: string;
+  distractors: string[];
+};
+
+// Function to convert "HH:MM" time string to total minutes
+const parseDateTime = (dateTimeString: string): Date => {
+  const [datePart, timePart] = dateTimeString.split(' ');
+  const [day, month, year] = datePart.split('/').map(Number);
+  const [hours, minutes] = timePart.split(':').map(Number);
+  return new Date(year, month - 1, day, hours, minutes);
+};
+
+// Function to calculate time difference in minutes
+const calculateTimeDifference = (start: Date, end: Date): number => {
+  return Math.round((end.getTime() - start.getTime()) / (1000 * 60));
+};
+
+// Function to format time spent
+const formatTimeSpent = (totalMinutes: number): string => {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  let result = '';
+
+  if (hours > 0) {
+    result += `${hours} hour${hours > 1 ? 's' : ''}`;
+  }
+
+  if (minutes > 0) {
+    if (hours > 0) {
+      result += ' and ';
+    }
+    result += `${minutes} minute${minutes > 1 ? 's' : ''}`;
+  }
+
+  return result || '0 minutes';
+};
+
+const processCSVData = (parsedData: string[][]): ModuleData[] => {
+  const modules: ModuleData[] = [];
+  let currentModule: ModuleData | null = null;
+  let moduleStartTime: Date | null = null;
+  let moduleEndTime: Date | null = null;
+
+  parsedData.forEach((row) => {
+    const dateTimeString = row[0].trim();
+
+    if (moduleNames.includes(row[0].trim())) {
+      if (currentModule) {
+        currentModule.totalTimeSpent =
+          moduleStartTime && moduleEndTime
+            ? calculateTimeDifference(moduleStartTime, moduleEndTime)
+            : 0;
+        currentModule.formattedTimeSpent = formatTimeSpent(
+          currentModule.totalTimeSpent
+        );
+        modules.push(currentModule);
+      }
+      currentModule = {
+        moduleName: row[0].trim(),
+        totalTimeSpent: 0,
+        formattedTimeSpent: '',
+        distractors: [],
+      };
+      moduleStartTime = null;
+      moduleEndTime = null;
+    } else if (
+      currentModule &&
+      row[0].trim().toLowerCase() !== 'target starting time' &&
+      row[0].trim() !== ''
+    ) {
+      const currentDateTime = parseDateTime(dateTimeString);
+      if (!moduleStartTime) {
+        moduleStartTime = currentDateTime;
+      }
+      moduleEndTime = currentDateTime;
+
+      const distractorName = row[3].trim(); // Assume distractor name is in the third column
+      if (
+        distractorName &&
+        !currentModule.distractors.includes(distractorName)
+      ) {
+        currentModule.distractors.push(distractorName);
+      }
+    }
+  });
+
+  if (currentModule) {
+    currentModule.totalTimeSpent =
+      moduleStartTime && moduleEndTime
+        ? calculateTimeDifference(moduleStartTime, moduleEndTime)
+        : 0;
+    currentModule.formattedTimeSpent = formatTimeSpent(
+      currentModule.totalTimeSpent
+    );
+    modules.push(currentModule);
+  }
+
+  return modules;
+};
+
+// Example usage
+
 export default function Home() {
   const [centers, setCenters] = useState([]);
   const [centerName, setCenterName] = useState('Select Centers');
@@ -40,11 +147,10 @@ export default function Home() {
   const [Loading, setLoading] = useState(false);
   const [arrow, setArrow] = useState(false);
   const selectedCenterContext = useContext(dataContext);
-  const [directoryPath, setDirectoryPath] = useState('');
   const [files, setFiles] = useState([]);
-  const [selectedFile, setSelectedFile] = useState('');
   const [fileContent, setFileContent] = useState('');
   const [reportDir, setReportDir] = useState('');
+  const [modules, setModules] = useState<ModuleData[]>([]);
 
   useEffect(() => {
     const fetchReportDir = async () => {
@@ -62,8 +168,6 @@ export default function Home() {
     fetchReportDir();
   }, []);
 
-  console.log(reportDir, 'reportDir');
-
   const handleListFiles = async () => {
     try {
       const files = await (window as any).electron.listFiles(reportDir);
@@ -75,10 +179,11 @@ export default function Home() {
       console.error('Error listing files:', error);
     }
   };
-  console.log(files, 'files');
   const readFiles = async (files: string[]) => {
     for (const file of files) {
-      await handleReadFile(reportDir + '/' + file);
+      await handleReadFile(
+        'C:/Users/Issra Ismaiel/Downloads/sample_data_complex_session_2.csv'
+      );
     }
   };
 
@@ -88,38 +193,14 @@ export default function Home() {
       setFileContent(content);
       console.log(`Content of ${filePath}:`, content);
 
-      const parsedData = Papa.parse(content, {
+      const parsedCSVData = Papa.parse<string[]>(content, {
         skipEmptyLines: true,
       }).data;
-      console.log(parsedData);
-
-      function sumColumn(data: any[], module: string, columnIndex: number) {
-        let sum = 0;
-        let foundModule = false;
-
-        for (let i = 0; i < data.length; i++) {
-          if (data[i][0] === module) {
-            foundModule = true;
-            continue;
-          }
-          if (foundModule && data[i][0] === '') {
-            break;
-          }
-          if (foundModule && !isNaN(parseFloat(data[i][columnIndex]))) {
-            sum += parseFloat(data[i][columnIndex]);
-          }
-        }
-
-        return sum;
-      }
-
-      const modules = ['Archeeko', 'Viblio', 'GardenDo'];
-      const columnIndex = 1; // Index for 'Interruption Durations' based on provided data
-
-      modules.forEach((module) => {
-        const sum = sumColumn(parsedData, module, columnIndex);
-        console.log(`${module} Total: ${sum}`);
-      });
+      console.log('Parsed CSV data:', parsedCSVData);
+      // Processing the parsed CSV data to extract the needed information
+      const moduleData = processCSVData(parsedCSVData);
+      console.log('Processed CSV data:', moduleData);
+      setModules(moduleData);
     } catch (error) {
       console.error('Error reading file:', error);
     }
