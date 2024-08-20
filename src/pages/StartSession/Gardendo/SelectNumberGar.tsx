@@ -201,7 +201,7 @@ const SelectNumberGar = (props: any) => {
               <ModalCloseButton marginLeft="100px" />
             </Box> */}
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Number of Arrows/Shots
+            Choose Number of Pots
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
