@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import joi from 'joi';
 import {
   Button,
@@ -43,7 +43,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
   const toast = useToast();
- 
+
   const handleChange = (e: any) => {
     let value = e.target.value;
     if (/^\d*$/.test(value)) {
@@ -54,15 +54,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files[0];
-    if (file) {
-      setLogo(file);
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
-      setImagePreviewError(false);
-    }
-  };
+
 
   const schema = joi.object({
     Name: joi.string().min(3).max(30).required().label('Name'),
@@ -72,11 +64,24 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
       .required(),
     Age: joi.number().min(6).max(15).required(),
     diagnoses: joi.array().min(1).required().label('diagnoses'),
+    file:joi.any().required().label('file'),
   });
-
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files[0];
+    if (file) {
+      setLogo(file);
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      setImagePreviewError(false);
+      setValue('file', file);
+                    trigger('file'); // Trigger validation for the 'diagnoses' field
+    }
+  };
   const {
     register,
     handleSubmit,
+    control,
+    trigger,
     formState: { errors, isValid },
     setValue,
   } = useForm({
@@ -84,7 +89,6 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
     mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues: formData,
-
   });
 
   const FormonSubmit = (data: {
@@ -296,16 +300,24 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             Diagnoses
           </FormLabel>
           <Box mt="0.75em" mb=".3em">
-            <Select
-              {...register('diagnoses')}
-              closeMenuOnSelect={false}
-              components={animatedComponents}
-              isMulti
-              options={diagnosesList}
-              id="diagnoses"
+            <Controller
               name="diagnoses"
-              onChange={handleSpecializations}
-              styles={customStyles}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  options={diagnosesList}
+                  styles={customStyles}
+                  onChange={(selectedOptions) => {
+                    field.onChange(selectedOptions);
+                    setValue('diagnoses', selectedOptions);
+                    trigger('diagnoses'); // Trigger validation for the 'diagnoses' field
+                  }}
+                />
+              )}
             />
           </Box>
           {errors.diagnoses && (
@@ -332,18 +344,39 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
                 <>
                   <label>
                     <Image />
-                    <Input
+                    <Controller
+              name="file"
+              control={control}
+              render={({ field }) => (
+                
+                <Input
+                {...field}
+                type="file"
+                accept="image/png,image/jpeg"
+             
+                onChange={handleImageChange}
+                style={{ display: 'none' }}
+                hidden
+                id="file"
+                
+              />
+              )}
+            />
+                    {/* <Input
                       type="file"
                       accept="image/png,image/jpeg"
                       name="image"
                       onChange={handleImageChange}
                       style={{ display: 'none' }}
                       hidden
-                    />
+                    /> */}
                   </label>
                 </>
               )}
             </Button>
+            {errors.file && (
+            <Text color="red.500">{errors.file.message as string}</Text>
+          )}
             {imagePreviewError && (
               <Text color="red.500">"Image" is required</Text>
             )}
@@ -354,7 +387,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
       <Flex flexDirection="row-reverse" my={15}>
         <Button
           type="submit"
-          bg={isValid ? "#4AA6CA" : "#D3D3D3"}
+          bg={isValid ? '#4AA6CA' : '#D3D3D3'}
           borderRadius="0.75em"
           w="13.375em"
           h="3.375em"
