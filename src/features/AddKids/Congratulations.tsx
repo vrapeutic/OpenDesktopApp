@@ -89,7 +89,7 @@ export default function Congratulations(props: any) {
             >
               <Link
                 as={ReachLink}
-                to={'/Kids'}
+                to={'/Home'}
                 _hover={{
                   textDecoration: 'none',
                 }}

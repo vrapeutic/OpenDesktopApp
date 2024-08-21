@@ -325,7 +325,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
           )}
         </GridItem>
 
-        <GridItem>
+        {/* <GridItem>
           <FormControl>
             <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
               Upload Image
@@ -362,14 +362,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
               />
               )}
             />
-                    {/* <Input
-                      type="file"
-                      accept="image/png,image/jpeg"
-                      name="image"
-                      onChange={handleImageChange}
-                      style={{ display: 'none' }}
-                      hidden
-                    /> */}
+                   
                   </label>
                 </>
               )}
@@ -379,6 +372,61 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
           )}
             {imagePreviewError && (
               <Text color="red.500">"Image" is required</Text>
+            )}
+          </FormControl>
+        </GridItem> */}
+        <GridItem mb="5">
+          <FormLabel
+            display="inline"
+            m="0em"
+            letterSpacing="0.256px"
+            color="#15134B"
+          >
+            Upload a photo
+          </FormLabel>
+          <FormControl id="file" isInvalid={!!errors.file}>
+            <Input
+              type="file"
+              border="none"
+              accept="image/*"
+              onChange={handleImageChange}
+              display="none"
+              id="file-upload"
+            />
+            <Box
+              border="2px dashed #4965CA"
+              cursor="pointer"
+              borderRadius="8px"
+              _hover={{
+                bg: 'rgba(57, 97, 251, 0.1)',
+              }}
+              width={"70%"}
+              p="1em"
+              onClick={() => document.getElementById('file-upload')?.click()}
+            >
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  style={{
+                    width: '100%',
+                    height: 150,
+                    borderRadius: '8px',
+                    objectFit: 'contain',
+                  }}
+                />
+              ) : (
+                <Flex align="center" justify="center">
+                  <Image />
+                  <Text ml="2">Drag & Drop here or click to upload</Text>
+                </Flex>
+              )}
+            </Box>
+            {errors.file && (
+              <Text color="red.500">{errors.file.message as string}</Text>
+            )}
+            {imagePreviewError && (
+              <Text color="red.500">Please upload an image.</Text>
             )}
           </FormControl>
         </GridItem>
@@ -421,6 +469,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
           </Button>
         )}
       </Flex>
+      
       {onOpen && <Congratulations isOpen={isOpen} onClose={onClose} />}
     </Box>
   );
