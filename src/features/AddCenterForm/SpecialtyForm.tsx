@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import joi from 'joi';
 import {
   Button,
@@ -18,6 +18,7 @@ import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { TherapyFormProps } from './therapyFormInterface';
+
 const SpecialtyForm: React.FC<TherapyFormProps> = ({
   onSubmit,
   nextHandler,
@@ -38,9 +39,10 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
   });
 
   const {
+    control,
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     setValue,
   } = useForm({
     resolver: joiResolver(schema),
@@ -86,13 +88,12 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
     setDefaultSpecialties(defaultSpecialties);
     setValue('specializationschema', defaultSpecialties);
   };
-  const handleSpecializations = (options: any) => {
-    setValue('specializationschema', [...options]);
-  };
+
   const remainingSpecialties = specialistslist.filter(
     (specialty) =>
       !defaultSpecialties.some((selected) => selected.value === specialty.value)
   );
+
   return (
     <Box
       bg="#FFFFFF"
@@ -142,37 +143,43 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData.specialtyInformation}
           />
           {errors.specialtyInformation && (
-            <Text color="red.500">
+            <Text color="red.500" mb={2} fontSize={16}>
               {errors.specialtyInformation.message as string}
             </Text>
           )}
         </GridItem>
 
         <GridItem colSpan={2}>
-          <Select
-            {...register('specializationschema')}
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            isMulti
-            options={remainingSpecialties}
-            id="specializationschema"
+          <Controller
             name="specializationschema"
-            onChange={handleSpecializations}
-            defaultValue={formData?.specializationschema}
-            styles={{
-              control: (baseStyles, state) => ({
-                ...baseStyles,
-                marginTop: '0.75em',
-                marginBottom: '1em',
-                borderRadius: '8px',
-                borderColor: '#4965CA',
-                border: '2px solid #E8E8E8',
-                boxShadow: '0px 0px 4px 0px rgba(57, 97, 251, 0.30)',
-              }),
-            }}
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                isMulti
+                options={remainingSpecialties}
+                id="specializationschema"
+                name="specializationschema"
+                onChange={(options) => field.onChange(options)}
+                defaultValue={defaultSpecialties}
+                styles={{
+                  control: (baseStyles) => ({
+                    ...baseStyles,
+                    marginTop: '0.75em',
+                    marginBottom: '1em',
+                    borderRadius: '8px',
+                    borderColor: '#4965CA',
+                    border: '2px solid #E8E8E8',
+                    boxShadow: '0px 0px 4px 0px rgba(57, 97, 251, 0.30)',
+                  }),
+                }}
+              />
+            )}
           />
           {errors.specializationschema && (
-            <Text color="red.500">
+            <Text color="red.500" mb={2} fontSize={16}>
               {errors.specializationschema.message as string}
             </Text>
           )}
@@ -182,7 +189,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
       <Flex flexDirection="row-reverse">
         <Button
           type="submit"
-          bg="#4AA6CA"
+          bg={isValid ? '#4AA6CA' : '#D3D3D3'}
           borderRadius="0.75em"
           w="13.375em"
           h="3.375em"
@@ -192,6 +199,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
+          isDisabled={!isValid}
         >
           Next
         </Button>
@@ -218,4 +226,5 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
     </Box>
   );
 };
+
 export default SpecialtyForm;
