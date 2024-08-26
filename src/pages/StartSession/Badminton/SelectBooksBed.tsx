@@ -22,12 +22,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
-import OpenConnectedVi from './openConnectedVi';
+
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import SelectDistractors from './SelectDistractors';
+import OpenConnectedBed from './OpenConnectedbed';
 const SelectBooksBed = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
@@ -302,7 +303,7 @@ const SelectBooksBed = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenConnectedVi
+        <OpenConnectedBed
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
           onCloseSelectBooksBed={props.onClose}
@@ -314,7 +315,7 @@ const SelectBooksBed = (props: any) => {
         />
       )}
       {/* {onOpenConnected && (
-         <OpenConnectedVi
+         <OpenConnectedBed
          isOpen={isOpenConnected}
          onClose={onCloseConnected}
          onCloseSelectBooksBed={props.onClose}

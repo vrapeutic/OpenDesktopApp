@@ -31,6 +31,7 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { END_SESSION_MESSAGE } from '@main/constants';
 import SelectLevelGar from './Gardendo/SelectLevelGar';
+import SelectLevelBed from './Badminton/selectLevelBed';
 
 export default function SelectingModule(props: any) {
   const { popupFunctions, addFunction } = usePopupsHandler();
@@ -91,7 +92,11 @@ export default function SelectingModule(props: any) {
   const schema = Joi.object().keys({
     selectedModule: Joi.string().required().label('module Name'),
   });
-
+  const {
+    isOpen: isOpenSelectlevelBed,
+    onOpen: onOpenSelectlevelBed,
+    onClose: onCloseSelectlevelBed,
+  } = useDisclosure();
   //new Code
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -131,6 +136,8 @@ export default function SelectingModule(props: any) {
         case 'GardenDo':
           console.log('GardenDo', name);
           return onOpenSelectlevelGar();
+          case 'Badminton':
+          return onOpenSelectlevelBed();
         default:
           toast({
             title: 'error',
@@ -390,6 +397,13 @@ export default function SelectingModule(props: any) {
         <SelectLevelGar
           isOpen={isOpenSelectlevelGar}
           onClose={onCloseSelectlevelGar}
+          onclosemodules={props.onClose}
+        />
+      )}
+       {onOpenSelectlevelBed && (
+        <SelectLevelBed
+          isOpen={isOpenSelectlevelBed}
+          onClose={onCloseSelectlevelBed}
           onclosemodules={props.onClose}
         />
       )}
