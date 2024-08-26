@@ -25,6 +25,8 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
   nextHandler,
   backHandler,
   sliding,
+  
+  formData
 }) => {
   const schema = joi.object({
     Name: joi.string().min(3).max(30).required().label('Name'),
@@ -41,6 +43,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
+  
   });
 
   const [specialistslist, setspecialistslist] = useState([]);
@@ -96,6 +99,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
               mt="0.75em"
               mb="1em"
               borderRadius="8px"
+              
             />
             {errors.Name && (
               <Text color="red.500">{errors.Name.message as string}</Text>
