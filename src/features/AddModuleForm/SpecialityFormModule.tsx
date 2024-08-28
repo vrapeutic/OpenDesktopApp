@@ -148,7 +148,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       setImagePreview(previewUrl);
    
       setValue('file', file);
-                    trigger('file'); // Trigger validation for the 'diagnoses' field
+      trigger('file'); // Trigger validation for the 'diagnoses' field
     }
   };
 

@@ -29,6 +29,7 @@ import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 import { dataContext } from '@renderer/shared/Provider';
 import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import VrModal from './VrModal';
 
 interface Center {
   id: number;
@@ -47,6 +48,7 @@ interface ModelKeyValues {
 export default function Therapycentersadmin() {
   const toast = useToast();
   const selectedCenterContext = useContext(dataContext);
+
   const {
     isOpen: isOpenVR,
     onOpen: onOpenVR,
@@ -63,10 +65,7 @@ export default function Therapycentersadmin() {
     onClose: onCloseEdit,
   } = useDisclosure();
 
-  const [values, setValues] = useState({
-    model: '',
-    key: '',
-  });
+ 
   const [id, setId] = useState('');
   const [errors, setErrors] = useState({
     model: null,
@@ -79,37 +78,11 @@ export default function Therapycentersadmin() {
   const { otp } = useAdminContext();
   const [showEdit, setShowEdit] = useState(true);
   const selectedCenter = useContext(dataContext);
-  const schema = Joi.object().keys({
-    model: Joi.string().min(3).max(30).required(),
 
-    key: Joi.string().min(3).max(30).required(),
-  });
-
-  const handleChange = (event: any) => {
-    const { name, value } = event.target;
-    setValues({ ...values, [name]: value });
-  };
-  const nextHandler = () => {
+const nextHandler = () => {
     console.log('jjjjj');
   };
-
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    const { error } = schema.validate(values, { abortEarly: false });
-    console.log(error);
-    if (error) {
-      const validationErrors: any = {};
-      error.details.forEach((detail) => {
-        validationErrors[detail.path[0]] = detail.message;
-      });
-      setErrors(validationErrors);
-    } else {
-      setErrors({ model: null, key: null });
-      console.log(values);
-      addVr(values);
-      console.log('hhhhhhhhhh');
-    }
-  };
+;
 
   useEffect(() => {
     getCenters();
@@ -154,21 +127,7 @@ export default function Therapycentersadmin() {
     });
   };
 
-  const addVr = async (body: any) => {
-    const dataSend: any = { headset: body };
-    try {
-      const response = await axios.post(
-        `${config.apiURL}/api/v1/admins/assign_center_headset/${id}`,
-        dataSend,
-        { headers }
-      );
-      console.log(response);
-      handleSuccess();
-    } catch (error) {
-      handleError(error);
-      console.error(error);
-    }
-  };
+
   const openVr = (id: string) => {
     console.log(id);
     setId(id);
@@ -256,6 +215,7 @@ export default function Therapycentersadmin() {
     }
   };
 
+
   return (
     <>
       <HeaderSpaceBetween
@@ -303,84 +263,7 @@ export default function Therapycentersadmin() {
         sendDataToParent={receiveDataFromChild}
       />
       {onOpenVR && (
-        <Modal
-          isOpen={isOpenVR}
-          onClose={onCloseVR}
-          closeOnOverlayClick={false}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            {/* <ModalHeader>VR Headset Model</ModalHeader> */}
-            <form onSubmit={handleSubmit}>
-              <ModalBody>
-                <Text fontSize="16px" color="black" my="4">
-                  VR Headset Model
-                </Text>
-                <Input
-                  type="text"
-                  name="model"
-                  onChange={handleChange}
-                  value={values.model}
-                  fontFamily="Graphik LCG"
-                />
-                <Text fontSize="16px" color="red" fontFamily="Graphik LCG">
-                  {errors.model}
-                </Text>
-                <Text
-                  fontSize="16px"
-                  color="black"
-                  my="4"
-                  fontFamily="Graphik LCG"
-                >
-                  Device ID
-                </Text>
-                <Input
-                  type="text"
-                  name="key"
-                  onChange={handleChange}
-                  value={values.key}
-                />
-                <Text fontSize="16px" color="red" fontFamily="Graphik LCG">
-                  {errors.key}
-                </Text>
-              </ModalBody>
-
-              <ModalFooter>
-                <Button
-                  type="button"
-                  w="110px"
-                  h="40px"
-                  padding="10px"
-                  margin="5px"
-                  bg="#F5B50E"
-                  borderRadius="8px"
-                  fontSize="14px"
-                  boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-                  color={'white'}
-                  onClick={() => onCloseVR()}
-                  fontFamily="Graphik LCG"
-                >
-                  Cancelddd
-                </Button>
-                <Button
-                  type="submit"
-                  h="40px"
-                  w="110px"
-                  padding="10px"
-                  margin="5px"
-                  bg="#F5B50E"
-                  borderRadius="8px"
-                  fontSize="14px"
-                  boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-                  color={'white'}
-                  fontFamily="Graphik LCG"
-                >
-                  Add
-                </Button>
-              </ModalFooter>
-            </form>
-          </ModalContent>
-        </Modal>
+       <VrModal id={id} onOpenVR={()=>onOpenVR()}  onCloseVR={()=>onCloseVR()} isOpenVR={isOpenVR}/>
       )}
       {onOpenModal && (
         <Modal
@@ -466,10 +349,18 @@ export default function Therapycentersadmin() {
                 <Flex alignItems={'center'} justifyContent={'center'}>
                   {showEdit ? (
                     <>
-                      <Text mx={3}  fontWeight={500}>modal:</Text>
-                      <Text mx={3} width={"20%"}>{x.attributes.model}</Text>
-                      <Text mx={3} fontWeight={500}>Key:</Text>
-                      <Text mx={3} width={"20%"}>{x.attributes.key}</Text>
+                      <Text mx={3} fontWeight={500}>
+                        modal:
+                      </Text>
+                      <Text mx={3} width={'20%'}>
+                        {x.attributes.model}
+                      </Text>
+                      <Text mx={3} fontWeight={500}>
+                        Key:
+                      </Text>
+                      <Text mx={3} width={'20%'}>
+                        {x.attributes.key}
+                      </Text>
 
                       <Button
                         type="button"
@@ -521,7 +412,7 @@ export default function Therapycentersadmin() {
                         onChange={(e) => handleChangeKey(e, x.id)}
                         value={keyValues[x.id] || ''}
                       />
-                       <Button
+                      <Button
                         type="button"
                         padding="10px"
                         margin="5px"
@@ -549,7 +440,6 @@ export default function Therapycentersadmin() {
                       >
                         <CheckIcon />
                       </Button>
-
                     </>
                   )}
                   <Button
