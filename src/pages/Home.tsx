@@ -26,7 +26,7 @@ import VRsessionsCard from '../shared/VRsessions/VRsessionsCard';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { config } from '../config';
 import StatistcsCards from '../theme/components/StatistcsCards';
-import { dataContext } from '@renderer/shared/Provider';
+
 import { Link as ReachLink } from 'react-router-dom';
 import { RedArrow } from '@renderer/assets/icons/RedArrow';
 import Papa from 'papaparse';
@@ -143,14 +143,15 @@ export default function Home() {
   const [centerName, setCenterName] = useState('Select Centers');
   const [isLoading, setIsLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  let selectedCenter = useContext(dataContext);
+  // let selectedCenter = useContext(dataContext);
   const [Loading, setLoading] = useState(false);
   const [arrow, setArrow] = useState(false);
-  const selectedCenterContext = useContext(dataContext);
+  // const selectedCenterContext = useContext(dataContext);
   const [files, setFiles] = useState([]);
   const [fileContent, setFileContent] = useState('');
   const [reportDir, setReportDir] = useState('');
   const [modules, setModules] = useState<ModuleData[]>([]);
+  const selected:any= localStorage.getItem("selectedCenter")
 
   useEffect(() => {
     const fetchReportDir = async () => {
@@ -216,7 +217,8 @@ export default function Home() {
     console.log(center?.attributes?.name);
     setCenterName(center?.attributes?.name);
     setIsLoading(true);
-    selectedCenter = Object.assign(selectedCenter, center);
+    console.log(center)
+    localStorage.setItem("selectedCenter",center.attributes.name )
     setRefreshKey((oldKey) => oldKey + 1);
     setArrow(false);
   };
@@ -243,14 +245,15 @@ export default function Home() {
     })();
   }, []);
   console.log(
+
     'centers length',
     centers.length,
-    selectedCenterContext.id,
+    localStorage.getItem("selectedCenter"),
     centers
   );
-
   useEffect(() => {
-    if (Object.keys(selectedCenterContext).length === 0) {
+     
+    if (!selected) {
       onOpen();
       setArrow(true);
     }
@@ -357,14 +360,14 @@ export default function Home() {
                   borderRadius="8px"
                   color="#00DEA3"
                 >
-                  {selectedCenterContext.id
-                    ? selectedCenterContext.attributes.name
+                  {selected
+                    ? selected
                     : centerName}
                 </MenuButton>
                 <MenuList>
                   {centers?.map((center) => (
                     <MenuItem
-                      key={center.id}
+                      key={center?.id}
                       onClick={() => handleClick(center)}
                     >
                       {center.attributes.name}
@@ -375,7 +378,7 @@ export default function Home() {
             </Flex>
           </Flex>
 
-          {selectedCenterContext.id && (
+          {selected?.id && (
             <>
               <Flex
                 width="90%"

@@ -82,7 +82,7 @@ export default function Therapycentersadmin() {
 const nextHandler = () => {
     console.log('jjjjj');
   };
-;
+
 
   useEffect(() => {
     getCenters();
