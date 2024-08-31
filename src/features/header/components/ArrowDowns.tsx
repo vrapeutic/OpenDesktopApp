@@ -20,13 +20,17 @@ import { Users } from '@renderer/assets/icons/Users';
 import { useNavigate } from 'react-router-dom';
 import { clear } from '@renderer/cache';
 
+
 const ArrowDowns = () => {
+
   const navigate = useNavigate();
   const logout = () => {
     clearApiToken();
     clear();
+    localStorage.clear();
     (window as any).electronAPI.deletePassword('token');
     navigate('/login');
+
   };
   return (
     <>

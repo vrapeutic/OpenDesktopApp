@@ -25,6 +25,9 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
   nextHandler,
   backHandler,
   sliding,
+  
+formData
+ 
 }) => {
   const schema = joi.object({
     Name: joi.string().min(3).max(30).required().label('Name'),
@@ -34,6 +37,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
     // Otp: joi.string().required(),
     specializationschema: joi.array().required().label('specializationschema'),
   });
+  console.log(formData)
   const {
     register,
     handleSubmit,
@@ -43,6 +47,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
+    defaultValues:formData
   });
 
   const FormonSubmit = (data: {

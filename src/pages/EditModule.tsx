@@ -23,7 +23,7 @@ import axios from 'axios';
 import { config } from '../config';
 import joi from 'joi';
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import makeAnimated from 'react-select/animated';
 import CongratulationsModuleAdmin from '@renderer/features/AddModuleForm/CongratulationsModuleAdmin';
 
@@ -92,7 +92,8 @@ const EditModule = () => {
     handleSubmit,
     setValue,
     setError,
-    formState: { errors },
+    control,
+    formState: { errors, isValid },
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -342,27 +343,38 @@ const EditModule = () => {
               >
                 Skills
               </FormLabel>
-              <Select
-                {...register('targetSkills')}
-                closeMenuOnSelect={false}
-                components={animatedComponents}
-                isMulti
-                options={skillsOptions}
-                value={selectedSkills}
-                id="targetSkills"
+
+              <Controller
                 name="targetSkills"
-                onChange={handleTargetedSkills}
-                styles={{
-                  control: (baseStyles, state) => ({
-                    ...baseStyles,
-                    marginTop: '0.75em',
-                    marginBottom: '1em',
-                    borderRadius: '8px',
-                    borderColor: '#4965CA',
-                    border: '2px solid #E8E8E8',
-                    boxShadow: '0px 0px 4px 0px rgba(57, 97, 251, 0.30)',
-                  }),
-                }}
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    {...register('targetSkills')}
+                    closeMenuOnSelect={false}
+                    components={animatedComponents}
+                    isMulti
+                    options={skillsOptions}
+                    value={selectedSkills}
+                    id="targetSkills"
+                    name="targetSkills"
+                    onChange={(options) => {
+                      field.onChange(options);
+                      handleTargetedSkills(options);
+                    }}
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        marginTop: '0.75em',
+                        marginBottom: '1em',
+                        borderRadius: '8px',
+                        borderColor: '#4965CA',
+                        border: '2px solid #E8E8E8',
+                        boxShadow: '0px 0px 4px 0px rgba(57, 97, 251, 0.30)',
+                      }),
+                    }}
+                  />
+                )}
               />
               {errors.targetSkills && (
                 <Text color="red.500">
@@ -508,7 +520,7 @@ const EditModule = () => {
           <Flex flexDirection="row-reverse">
             <Button
               type="submit"
-              bg="#4AA6CA"
+              bg={isValid ? '#4AA6CA' : '#D3D3D3'}
               borderRadius="0.75em"
               w="13.375em"
               h="3.375em"
@@ -518,6 +530,7 @@ const EditModule = () => {
               color="#FFFFFF"
               fontSize="1.125em"
               fontWeight="700"
+              disabled={isValid}
             >
               Submit
             </Button>

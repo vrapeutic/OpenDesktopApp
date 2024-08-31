@@ -66,8 +66,9 @@ const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
       mx={18}
       my={5}
       background="#FFFFFF"
+      borderRadius={"10px"}
     >
-      <GridItem colSpan={4} p={4}>
+      <GridItem colSpan={4} >
         <Stack
           spacing={{ base: 0, md: 4 }}
           direction={{ base: 'column', md: 'row' }}
@@ -112,7 +113,7 @@ const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
         </Stack>
       </GridItem>
 
-      <GridItem colSpan={3}>
+      <GridItem colSpan={3} py={4}>
         <Text>Contact us</Text>
         <Text>Email: {centerData?.attributes?.email}</Text>
         <Text>Cal : {centerData?.attributes?.phone_number}</Text>
@@ -138,7 +139,7 @@ const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
           </Flex>
         )}
       </GridItem>
-      <GridItem colSpan={4}>
+      <GridItem colSpan={4}  py={4}>
         <Text my={2}>
           Age Range: {Module?.Module?.attributes?.min_age} -{' '}
           {Module?.Module?.attributes?.max_age} years
@@ -153,7 +154,7 @@ const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
           Package_name : {Module?.Module?.attributes?.package_name}
         </Text>
       </GridItem>
-      <GridItem colSpan={4}>
+      <GridItem colSpan={4} px={4}>
         <Text my={2}>
           {Module?.Module?.attributes?.targeted_skills&& "Specialties :"}
           {Module?.Module?.attributes?.targeted_skills?.map((skill: any) => (

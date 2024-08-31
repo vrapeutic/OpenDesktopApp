@@ -124,7 +124,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
     toast({
       title: 'Error',
       description: error.response.data.error,
-      status: 'success',
+      status: 'error',
       duration: 5000,
       position: 'top-right',
     });
