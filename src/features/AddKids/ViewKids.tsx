@@ -15,10 +15,10 @@ const ViewKids = () => {
   const [data, setData] = useState([]);
 
   const [date, setDate] = useState('');
+
   useEffect(() => {
-   
     (async () => {
-      // gitDocctor()
+      getDoctor();
       // gitSessions()
       const token = await (window as any).electronAPI.getPassword('token');
 
@@ -35,58 +35,56 @@ const ViewKids = () => {
           if (result.data) {
             setData(result.included);
             transformDate(result.data.attributes.created_at);
-            console.log("result", result);
+            console.log('result', result);
           }
         })
         .catch((error) => console.log('error', error));
     })();
   }, [kidsData]);
 
-
-
-  // const gitDocctor = async () => {
-  //   // doctors/center_child_sessions?center_id=52&child_id=26
-  //   const token = await (window as any).electronAPI.getPassword('token');
-  //   fetch(
-  //     `${config.apiURL}/api/v1/doctors/center_child_doctors?center_id=${selectedCenter.id}&child_id=${kidsData.id}`,
-  //     {
-  //       method: 'GET',
-  //       redirect: 'follow',
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     }
-  //   )
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       if (result.data) {
-  //         // setDoctor(result.included);
-  //         // transformDate(result.data.attributes.created_at);
-  //         console.log("result", result);
-  //       }
-  //     })
-  //     .catch((error) => console.log('error', error));
-  // };
-  // const gitSessions = async () => {
-  //   // doctors/center_child_sessions?center_id=52&child_id=26
-  //   const token = await (window as any).electronAPI.getPassword('token');
-  //   fetch(
-  //     `${config.apiURL}/api/v1/doctors/center_child_sessions?center_id=${selectedCenter.id}&child_id=${kidsData.id}`,
-  //     {
-  //       method: 'GET',
-  //       redirect: 'follow',
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     }
-  //   )
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       if (result.data) {
-  //         setSessions(result);
-  //         // transformDate(result.data.attributes.created_at);
-  //         console.log("results", result);
-  //       }
-  //     })
-  //     .catch((error) => console.log('error', error));
-  // };
-  const transformDate = (x:any) => {
+  const getDoctor = async () => {
+    // doctors/center_child_sessions?center_id=52&child_id=26
+    const token = await (window as any).electronAPI.getPassword('token');
+    fetch(
+      `${config.apiURL}/api/v1/doctors/center_child_doctors?center_id=${selectedCenter.id}&child_id=${kidsData.id}`,
+      {
+        method: 'GET',
+        redirect: 'follow',
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.data) {
+          // setDoctor(result.included);
+          // transformDate(result.data.attributes.created_at);
+          console.log('result', result);
+        }
+      })
+      .catch((error) => console.log('error', error));
+  };
+  const getSessions = async () => {
+    // doctors/center_child_sessions?center_id=52&child_id=26
+    const token = await (window as any).electronAPI.getPassword('token');
+    fetch(
+      `${config.apiURL}/api/v1/doctors/center_child_sessions?center_id=${selectedCenter.id}&child_id=${kidsData.id}`,
+      {
+        method: 'GET',
+        redirect: 'follow',
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.data) {
+          // setSessions(result);
+          // transformDate(result.data.attributes.created_at);
+          console.log('results', result);
+        }
+      })
+      .catch((error) => console.log('error', error));
+  };
+  const transformDate = (x: any) => {
     const transformedDate = new Date(x); // Transform the date once when the component mounts
     const months = [
       'Jan',
@@ -122,9 +120,8 @@ const ViewKids = () => {
         email={kidsData.attributes.email}
         date={date}
         diagnosis={data}
-        
       />
-      <TabsKids id={kidsData.id} />
+      <TabsKids id={kidsData.id} kidData={kidsData} diagnosis={data} />
       {/* <CSVReader/> */}
     </Box>
   );
