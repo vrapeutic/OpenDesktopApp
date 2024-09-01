@@ -7,4 +7,4 @@ type myCenter = {
   };
 };
 
-export const dataContext = createContext<myCenter>({});
+export const dataContext = createContext<any>({});

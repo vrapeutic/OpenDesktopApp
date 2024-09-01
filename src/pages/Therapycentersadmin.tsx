@@ -47,7 +47,9 @@ interface ModelKeyValues {
 }
 export default function Therapycentersadmin() {
   const toast = useToast();
-  const selectedCenterContext = useContext(dataContext);
+  const retrievedString = localStorage.getItem('selectedCenter');
+  const selectedCenterContext:any = JSON.parse(retrievedString);
+
 
   const {
     isOpen: isOpenVR,

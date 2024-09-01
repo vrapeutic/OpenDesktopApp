@@ -31,6 +31,9 @@ import { Link as ReachLink } from 'react-router-dom';
 import { RedArrow } from '@renderer/assets/icons/RedArrow';
 import Papa from 'papaparse';
 import { useCSVData } from '@renderer/Context/CSVDataContext';
+import { dataContext } from '@renderer/shared/Provider';
+
+
 
 // Example usage
 
@@ -39,16 +42,15 @@ export default function Home() {
   const [centerName, setCenterName] = useState('Select Centers');
   const [isLoading, setIsLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  // let selectedCenter = useContext(dataContext);
+  let selectedCenter = useContext(dataContext);
   const [Loading, setLoading] = useState(false);
   const [arrow, setArrow] = useState(false);
-  // const selectedCenterContext = useContext(dataContext);
+  const selectedCenterContext = useContext(dataContext);
   const { setModulesForHome, processCSVDataForHome, modulesForHome } =
     useCSVData();
   const [files, setFiles] = useState([]);
   const [reportDir, setReportDir] = useState('');
   // const [modules, setModules] = useState<ModuleData[]>([]);
-  const selected: any = localStorage.getItem('selectedCenter');
 
   useEffect(() => {
     const fetchReportDir = async () => {
@@ -113,7 +115,7 @@ export default function Home() {
     setCenterName(center?.attributes?.name);
     setIsLoading(true);
     console.log(center);
-    localStorage.setItem('selectedCenter', center.attributes.name);
+    selectedCenter = Object.assign(selectedCenter, center);
     setRefreshKey((oldKey) => oldKey + 1);
     setArrow(false);
   };
@@ -142,11 +144,11 @@ export default function Home() {
   console.log(
     'centers length',
     centers.length,
-    localStorage.getItem('selectedCenter'),
+    selectedCenterContext,
     centers
   );
   useEffect(() => {
-    if (!selected) {
+if (Object.keys(selectedCenterContext).length === 0) {
       onOpen();
       setArrow(true);
     }
@@ -253,7 +255,7 @@ export default function Home() {
                   borderRadius="8px"
                   color="#00DEA3"
                 >
-                  {selected ? selected : centerName}
+                  {selectedCenterContext.id ? selectedCenterContext.attributes.name : centerName}
                 </MenuButton>
                 <MenuList>
                   {centers?.map((center) => (
@@ -269,7 +271,7 @@ export default function Home() {
             </Flex>
           </Flex>
 
-          {selected?.id && (
+          {selectedCenterContext?.id && (
             <>
               <Flex
                 width="90%"

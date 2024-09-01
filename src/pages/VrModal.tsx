@@ -17,13 +17,13 @@ const VrModal = ({ id, isOpenVR, onOpenVR, onCloseVR }:any) => {
         key: Joi.string().min(3).max(30).required(),
     });
 
-    const validateField = ({name, value}:any) => {
+    const validateField = (name: string, value: string): string | undefined => {
         const fieldSchema = schema.extract(name);
         const { error } = fieldSchema.validate(value);
         return error ? error.message : null;
     };
 
-    const handleChange = (event:any) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setValues({ ...values, [name]: value });
 
