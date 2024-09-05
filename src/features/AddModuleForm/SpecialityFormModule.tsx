@@ -1,4 +1,4 @@
-import { ChangeEvent,  useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Image } from '../../assets/icons/Image';
@@ -26,7 +26,6 @@ import { useAdminContext } from '@renderer/Context/AdminContext';
 
 const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   onSubmit,
-  
   backHandler,
   sliding,
   formData,
@@ -37,96 +36,79 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       .number()
       .required()
       .greater(joi.ref('From'))
-      .message('"To" must be greater than "From"')
-      .label('To'),
-      packagename: joi.string().required(),
-
-      
-    certification: joi.required().custom((value, helpers) => {
-      if (value) {
-        const ext = value.name.split('.').pop().toLowerCase();
-        const allowedImageExtensions = ['png', 'jpg', 'jpeg', 'gif'];
-
-        if (allowedImageExtensions.includes(ext)) {
-          return value;
-        } else {
-          return helpers.error(
-            'Invalid file type. Please upload an image file.'
-          );
-        }
-      }
-      return value;
-    }),
+      .message('"To" must be greater than "From"'),
+    packagename: joi.string().required(),
+    file: joi.any().required(),
   });
 
+  const [imagePreview, setImagePreview] = useState('');
+  const [logo, setLogo] = useState<File>();
   const {
     register,
     handleSubmit,
     setError,
     clearErrors,
     setValue,
-    formState: { errors },
+    control,
+    trigger,
+    formState: { errors, isValid },
   } = useForm({
     resolver: joiResolver(schema),
-    mode: 'all',
-  });
-  const { isOpen, onOpen, onClose } = useDisclosure();
+    mode: 'onTouched',
 
-  const [selectedFile, setSelectedFile] = useState<File>();
+  });
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
   const { otp } = useAdminContext();
 
-  const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files[0];
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    const allowedImageExtensions = ['png', 'jpg', 'jpeg', 'gif'];
+  const handleCertificateChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    onChange: any
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      const allowedImageExtensions = ['png', 'jpg', 'jpeg', 'gif'];
 
-    if (allowedImageExtensions.includes(ext)) {
-      setSelectedFile(file);
-      setValue('certification', file);
-      clearErrors('certification');
-    } else {
-      setError('certification', { message: 'Please upload an image file.' });
+      if (allowedImageExtensions.includes(ext)) {
+        onChange(file);
+        clearErrors('file');
+      } else {
+        setError('file', { message: 'Please upload an image file.' });
+      }
     }
   };
 
-  const FormonSubmit = (data:object) => {
+  const FormonSubmit = (data: any) => {
     onSubmit(data);
     SendDataToApi(data);
     setLoading(true);
-    console.log('Updated FormData in SpecialtyFormModule:', formData);
   };
 
-  const createFormData = (data:any) => {
-    console.log('form data in create form data', formData);
+  const createFormData = (data: any) => {
     const formDataTobesent = new FormData();
-
     formDataTobesent.append('name', formData.Name);
     formDataTobesent.append('version', formData.Version);
-
     formDataTobesent.append('technology', formData.Technology);
-
     formData.specializationschema.forEach((specialty: { id: string | Blob }) =>
       formDataTobesent.append('targeted_skill_ids[]', specialty.id)
     );
-    formDataTobesent.append('min_age', data.From) ;
+    formDataTobesent.append('min_age', data.From);
     formDataTobesent.append('max_age', data.To);
-    formDataTobesent.append('image', data.certification);
+    formDataTobesent.append('image', data.file);
     formDataTobesent.append('package_name', data.packagename);
-
     return formDataTobesent;
   };
-  const SendDataToApi = async (data:object) => {
-    const formDatasent = createFormData(data);
 
+  const SendDataToApi = async (data: any) => {
+    const formDatasent = createFormData(data);
     try {
       await postFormData(formDatasent);
-      console.log("test")
       onOpen();
     } catch (error) {
-      console.log("error in request",error)
       handleError(error);
     } finally {
       setLoading(false);
@@ -137,19 +119,12 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
     const headers = {
       otp: `${otp}`,
     };
-
-    
     return axios.post(
-
-
-      
       `${config.apiURL}/api/v1/software_modules`,
       formDatasent,
       { headers }
     );
   };
- 
-
 
   const handleError = (error: any) => {
     toast({
@@ -162,9 +137,19 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   };
 
   const handleCloseModal = () => {
-    console.log('handle close modal');
     onClose();
     navigate('/');
+  };
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files[0];
+    if (file) {
+      setLogo(file);
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+   
+      setValue('file', file);
+      trigger('file'); // Trigger validation for the 'diagnoses' field
+    }
   };
 
   return (
@@ -177,190 +162,141 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
         onSubmit={handleSubmit(FormonSubmit)}
       >
         <ProgressBarAddModule index={1} />
-
         <Grid
           m="2.625em 1.5em 0em 1.5em"
           templateColumns="repeat(2, 1fr)"
           gap="0em 1.5625em"
         >
           <GridItem>
-            <FormLabel
-              display="inline"
-              mb="1em"
-              letterSpacing="0.256px"
-              color="#15134B"
-            >
-              Age Range
-            </FormLabel>
+            <FormLabel>Age Range</FormLabel>
+          </GridItem>
+          <GridItem></GridItem>
+          <GridItem>
             <Grid gap={2} templateColumns="repeat(2, 1fr)">
               <GridItem>
-                <FormLabel
-                  display="inline"
-                  m="0em"
-                  letterSpacing="0.256px"
-                  color="#15134B"
-                  fontSize={12}
-                >
-                  From
-                </FormLabel>
-
-                <Input
-                  {...register('From')}
-                  id="From"
-                  borderColor="#4965CA"
-                  border="2px solid #E8E8E8"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                />
+                <FormLabel>From</FormLabel>
+                <Input {...register('From')} id="From"  />
                 {errors.From && (
-                  <Text color="red.500">{errors.From.message as string}</Text>
+                  <Text color="red.500" mb={2} fontSize={16}>{errors.From.message as string}</Text>
                 )}
               </GridItem>
               <GridItem>
-                <FormLabel
-                  display="inline"
-                  m="0em"
-                  letterSpacing="0.256px"
-                  color="#15134B"
-                  fontSize={12}
-                >
-                  To
-                </FormLabel>
-
-                <Input
-                  {...register('To')}
-                  id="To"
-                  borderColor="#4965CA"
-                  border="2px solid #E8E8E8"
-                  _hover={{ border: '1px solid #4965CA' }}
-                  boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-                  type="text"
-                  mt="0.75em"
-                  mb="1em"
-                  borderRadius="8px"
-                />
+                <FormLabel>To</FormLabel>
+                <Input {...register('To')} id="To" />
                 {errors.To && (
-                  <Text color="red.500">{errors.To.message as string}</Text>
+                  <Text color="red.500" mb={2} fontSize={16}>{errors.To.message as string}</Text>
                 )}
               </GridItem>
             </Grid>
-
-            <GridItem>
-            <FormLabel
-              display="inline"
-              m="0em"
-              letterSpacing="0.256px"
-              color="#15134B"
-            >
-              package name
-            </FormLabel>
-
-            <Input
-              {...register('packagename')}
-              id="packagename"
-              borderColor="#4965CA"
-              border="2px solid #E8E8E8"
-              _hover={{ border: '1px solid #4965CA' }}
-              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-              type="text"
-              mt="0.75em"
-              mb="1em"
-              borderRadius="8px"
-            />
+          </GridItem>
+          <GridItem>
+            {/* Package Name */}
+            <FormLabel>Package Name</FormLabel>
+            <Input {...register('packagename')} id="packagename" />
             {errors.packagename && (
-              <Text color="red.500">{errors.packagename.message as string}</Text>
+              <Text color="red.500" mb={2} fontSize={16}>
+                {errors.packagename.message as string}
+              </Text>
             )}
           </GridItem>
-          </GridItem>
-
-          <GridItem rowSpan={2}>
-            <>
-              <FormControl>
-                <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                  Profile image
-                </FormLabel>
-                <Button
-                  h="128px"
-                  w="174px"
-                  border="2px solid #E8E8E8"
-                  borderRadius="8px"
-                  bg="#FFFFFF"
-                >
-                  <label>
-                    <Image />
-                    <Input
-                      {...register('certification')}
-                      id="certification"
-                      type="file"
-                      accept="application/pdf" // Update this line to accept PDF files
-                      onChange={(e) => handleCertificateChange(e)}
-                      style={{ display: 'none' }}
-                    />
-                  </label>
-                </Button>
-              </FormControl>
-              {selectedFile && (
-                <Text mt="1em">Selected File: {selectedFile.name}</Text>
+       
+          <GridItem my="5">
+          <FormLabel
+            display="inline"
+            m="0em"
+            letterSpacing="0.256px"
+            color="#15134B"
+          >
+            Upload a photo
+          </FormLabel>
+          <FormControl id="file" isInvalid={!!errors.file}>
+            <Input
+              type="file"
+              border="none"
+              accept="image/*"
+              onChange={handleImageChange}
+              display="none"
+              id="file-upload"
+            />
+            <Box
+              border="2px dashed #4965CA"
+              cursor="pointer"
+              borderRadius="8px"
+              _hover={{
+                bg: 'rgba(57, 97, 251, 0.1)',
+              }}
+              width={"70%"}
+              p="1em"
+              onClick={() => document.getElementById('file-upload')?.click()}
+            >
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  style={{
+                    width: '100%',
+                    height: 150,
+                    borderRadius: '8px',
+                    objectFit: 'contain',
+                  }}
+                />
+              ) : (
+                <Flex align="center" justify="center">
+                  <Image />
+                  <Text ml="2">Drag & Drop here or click to upload</Text>
+                </Flex>
               )}
-              {errors.certification && (
-                <Text color="red.500">
-                  {errors.certification.message as string}
-                </Text>
-              )}
-            </>
-          </GridItem>
+            </Box>
+            {errors.file && (
+              <Text color="red.500">{errors.file.message as string}</Text>
+            )}
+            {/* {imagePreviewError && (
+              <Text color="red.500">Please upload an image.</Text>
+            )} */}
+          </FormControl>
+        </GridItem>
         </Grid>
 
-        <Flex flexDirection="row-reverse">
+        <Flex flexDirection="row-reverse" m={3}>
           <Button
             type="submit"
-            bg="#4AA6CA"
+            bg={isValid ? '#4AA6CA' : '#D3D3D3'}
             borderRadius="0.75em"
             w="13.375em"
             h="3.375em"
-            mt="0em"
-            mr="1.5em"
-            mb="2em"
             color="#FFFFFF"
             fontSize="1.125em"
             fontWeight="700"
+            isDisabled={!isValid}
           >
             {loading ? 'Uploading Your Data' : 'Submit'}
           </Button>
-
-          {sliding === 1 ? null : (
+          {sliding !== 1 && (
             <Button
               onClick={backHandler}
               bg="#F5F5F5"
               borderRadius="0.75em"
               w="13.375em"
               h="3.375em"
-              mt="0em"
-              ml="1.5em"
-              mb="2em"
-              mr="auto"
               color="#A0A0A0"
               fontSize="1.125em"
               fontWeight="700"
+              mr="auto"
             >
               Back
             </Button>
           )}
         </Flex>
       </Box>
-
-      {onOpen && (
+      {isOpen && (
         <CongratulationsModuleAdmin
           isOpen={isOpen}
           onClose={handleCloseModal}
-          text={"Your Module has been created successfully"}
+          text="Your Module has been created successfully"
         />
       )}
     </>
   );
 };
+
 export default SpecialtyFormModule;

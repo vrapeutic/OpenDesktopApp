@@ -29,21 +29,18 @@ import { config } from '../config';
 export default function Specialists() {
   const selectedCenter = useContext(dataContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [email, setEmail] = useState({
-    email: '',
-  });
+  const [email, setEmail] = useState('');
   const [doctors, setDoctors] = useState([]);
   const [errors, setErrors] = useState({
     email: null,
   });
+  const [isValid, setIsValid] = useState(false);
 
   const schema = Joi.object().keys({
     email: Joi.string().email({
       minDomainSegments: 2,
-      tlds: {
-        allow: false,
-      },
-    }),
+      tlds: { allow: false },
+    }).required(),
   });
 
   useEffect(() => {
@@ -52,7 +49,7 @@ export default function Specialists() {
       fetch(
         `${config.apiURL}/api/v1/doctors/home_doctors?center_id=${selectedCenter.id}`,
         {
-          method: 'Get',
+          method: 'GET',
           redirect: 'follow',
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -64,12 +61,26 @@ export default function Specialists() {
         })
         .catch((error) => console.log('error', error));
     })();
-  }, []);
+  }, [selectedCenter.id]);
 
-  const handleSubmit = async (event: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    
+    // Validate input on every change
+    const { error } = schema.validate({ email: e.target.value }, { abortEarly: false });
+    setIsValid(!error);
+    if (error) {
+      setErrors({
+        email: error.details[0].message,
+      });
+    } else {
+      setErrors({ email: null });
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { error } = schema.validate(email, { abortEarly: false });
-    console.log(error);
+    const { error } = schema.validate({ email }, { abortEarly: false });
 
     if (error) {
       const validationErrors: any = {};
@@ -77,12 +88,14 @@ export default function Specialists() {
         validationErrors[detail.path[0]] = detail.message;
       });
       setErrors(validationErrors);
-      console.log(validationErrors);
+      setIsValid(false);
     } else {
-      console.log('form is valid');
+      setErrors({ email: null });
+      setIsValid(true);
+      
       const token = await (window as any).electronAPI.getPassword('token');
       const data = new FormData();
-      data.append('email', email.email);
+      data.append('email', email);
       fetch(`${config.apiURL}/api/v1/centers/3/invite_doctor`, {
         method: 'POST',
         body: data,
@@ -100,14 +113,14 @@ export default function Specialists() {
   };
 
   return (
-    <>
+    <Box mx={18}>
       <HeaderSpaceBetween
         Title="Specialists"
         ButtonText="Add Specialist"
         onClickFunction={onOpen}
       />
 
-      <Table variant="simple" background="#FFFFFF" mx={5}>
+      <Table variant="simple" background="#FFFFFF" >
         <Thead>
           <Tr>
             <Th>Name</Th>
@@ -172,14 +185,22 @@ export default function Specialists() {
                 <Input
                   type="email"
                   name="email"
-                  onChange={(e) => setEmail({ email: e.target.value })}
+                  onChange={handleInputChange}
+                  value={email}
+                  isInvalid={!!errors.email}
                 />
+                {errors.email && (
+                  <Text fontSize="sm" color="red.500" mt={2}>
+                    {errors.email}
+                  </Text>
+                )}
               </ModalBody>
-              <Text fontSize="16px" color="red" ml="30px">
-                {errors.email}
-              </Text>
               <ModalFooter>
-                <Button type="submit" color="#FFFFFF" bgColor="#00DEA3">
+                <Button
+                  type="submit"
+                  colorScheme="teal"
+                  isDisabled={!isValid}
+                >
                   Invite
                 </Button>
               </ModalFooter>
@@ -187,6 +208,6 @@ export default function Specialists() {
           </ModalContent>
         </Modal>
       )}
-    </>
+    </Box>
   );
 }

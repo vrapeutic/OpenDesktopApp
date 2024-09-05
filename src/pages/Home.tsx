@@ -26,10 +26,14 @@ import VRsessionsCard from '../shared/VRsessions/VRsessionsCard';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { config } from '../config';
 import StatistcsCards from '../theme/components/StatistcsCards';
-import { dataContext } from '@renderer/shared/Provider';
+
 import { Link as ReachLink } from 'react-router-dom';
 import { RedArrow } from '@renderer/assets/icons/RedArrow';
 import Papa from 'papaparse';
+import { useCSVData } from '@renderer/Context/CSVDataContext';
+import { dataContext } from '@renderer/shared/Provider';
+
+// Example usage
 
 export default function Home() {
   const [centers, setCenters] = useState([]);
@@ -40,17 +44,19 @@ export default function Home() {
   const [Loading, setLoading] = useState(false);
   const [arrow, setArrow] = useState(false);
   const selectedCenterContext = useContext(dataContext);
-  const [directoryPath, setDirectoryPath] = useState('');
+  const { setModulesForHome, processCSVDataForHome, modulesForHome } =
+    useCSVData();
   const [files, setFiles] = useState([]);
-  const [selectedFile, setSelectedFile] = useState('');
-  const [fileContent, setFileContent] = useState('');
   const [reportDir, setReportDir] = useState('');
+  const { isOpen: isOpen, onOpen: onOpen, onClose: onClose } = useDisclosure();
 
   useEffect(() => {
     const fetchReportDir = async () => {
       try {
-        const dir = await (window as any).electron.getReportDir();
-        setReportDir(dir);
+        const dirUrl = await (window as any).electron.getReportDir();
+        // Replace backslashes with forward slashes
+        const fixedDirUrl = dirUrl.replace(/\\/g, '/');
+        setReportDir(fixedDirUrl);
       } catch (error) {
         console.error('Error fetching report directory:', error);
       }
@@ -59,76 +65,51 @@ export default function Home() {
     fetchReportDir();
   }, []);
 
-  console.log(reportDir, 'reportDir');
   const handleListFiles = async () => {
-    const result = await (window as any).electron.listFiles(reportDir);
-    if (result.success) {
-      setFiles(result.files);
-      console.log(result.files);
-    } else {
-      console.error('Error listing files:', result.error);
+    try {
+      const files = await (window as any).electron.listFiles(reportDir);
+      setFiles(files);
+      await readFiles(files);
+    } catch (error) {
+      console.error('Error listing files:', error);
+    }
+  };
+  const readFiles = async (files: string[]) => {
+    for (const file of files) {
+      await handleReadFile(
+        'C:/Users/Issra Ismaiel/Downloads/sample_data_complex_session_2.csv'
+      );
     }
   };
 
-  const handleReadFile = async () => {
-    const result = await (window as any).electron.readFile(
-      'C:/Users/Issra Ismaiel/Downloads/sample_data_complex_session_2.csv'
-    );
-    if (result.success) {
-      setFileContent(result.content);
-      console.log(result.content);
+  const handleReadFile = async (filePath: string) => {
+    try {
+      const content = await (window as any).electron.readFile(filePath);
 
-      const parsedData = Papa.parse(result.content, {
+      const parsedCSVData = Papa.parse<string[]>(content, {
         skipEmptyLines: true,
       }).data;
-      console.log(parsedData);
 
-      function sumColumn(data: any[], module: string, columnIndex: number) {
-        let sum = 0;
-        let foundModule = false;
-
-        for (let i = 0; i < data.length; i++) {
-          if (data[i][0] === module) {
-            foundModule = true;
-            continue;
-          }
-          if (foundModule && data[i][0] === '') {
-            break;
-          }
-          if (foundModule && !isNaN(parseFloat(data[i][columnIndex]))) {
-            sum += parseFloat(data[i][columnIndex]);
-          }
-        }
-
-        return sum;
-      }
-
-      const modules = ['Archeeko', 'Viblio', 'GardenDo'];
-      const columnIndex = 1; // Index for 'Interruption Durations' based on provided data
-
-      modules.forEach((module) => {
-        const sum = sumColumn(parsedData, module, columnIndex);
-        console.log(`${module} Total: ${sum}`);
-      });
-    } else {
-      console.error('Error reading file:', result.error);
+      const moduleData = processCSVDataForHome(parsedCSVData);
+      setModulesForHome(moduleData);
+    } catch (error) {
+      console.error('Error reading file:', error);
     }
   };
 
   useEffect(() => {
-    handleListFiles();
-    handleReadFile();
-  }, []);
+    if (reportDir) {
+      handleListFiles();
+    }
+  }, [reportDir]);
 
   const handleClick = (center: any) => {
-    console.log(center?.attributes?.name);
     setCenterName(center?.attributes?.name);
     setIsLoading(true);
     selectedCenter = Object.assign(selectedCenter, center);
     setRefreshKey((oldKey) => oldKey + 1);
     setArrow(false);
   };
-  const { isOpen: isOpen, onOpen: onOpen, onClose: onClose } = useDisclosure();
 
   useEffect(() => {
     (async () => {
@@ -150,13 +131,7 @@ export default function Home() {
         .catch((error) => console.log('error', error));
     })();
   }, []);
-  console.log(
-    'centers length',
-    centers.length,
-    selectedCenterContext.id,
-    centers
-  );
-
+  console.log('centers length', centers.length, selectedCenterContext, centers);
   useEffect(() => {
     if (Object.keys(selectedCenterContext).length === 0) {
       onOpen();
@@ -272,7 +247,7 @@ export default function Home() {
                 <MenuList>
                   {centers?.map((center) => (
                     <MenuItem
-                      key={center.id}
+                      key={center?.id}
                       onClick={() => handleClick(center)}
                     >
                       {center.attributes.name}
@@ -283,7 +258,7 @@ export default function Home() {
             </Flex>
           </Flex>
 
-          {selectedCenterContext.id && (
+          {selectedCenterContext?.id && (
             <>
               <Flex
                 width="90%"

@@ -42,6 +42,10 @@ export default function CongratulationsModuleAdmin(props: any) {
               backgroundColor="#3DB39E"
               margin="20px 140px"
               borderRadius="50%"
+              display="flex"
+              alignContent={"center"}
+              justifyContent={"center"}
+                
             >
               <CheckIcon
                 color="#F2F1EF"

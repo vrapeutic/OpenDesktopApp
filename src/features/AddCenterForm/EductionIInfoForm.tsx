@@ -10,7 +10,7 @@ import {
   Input,
   Text,
 } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Progressbar from '../../theme/components/ProgressBarAddCenter';
@@ -27,54 +27,51 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
   const schema = joi.object({
     registrationNumber: joi.number().required().label('Registration Number'),
     taxID: joi.number().required().label('Tax ID'),
-    certification: joi.required().custom((value, helpers) => {
-      if (value) {
-        const ext = value.name.split('.').pop().toLowerCase();
-        if (ext === 'pdf') {
+    certification: joi
+      .any()
+      .custom((value, helpers) => {
+        if (value) {
+          const ext = value.name.split('.').pop().toLowerCase();
+          if (ext !== 'pdf') {
+            return helpers.error('Invalid file type. Please upload a PDF file.');
+          }
           return value;
-        } else {
-          return helpers.error('Invalid file type. Please upload a PDF file.');
         }
-      }
-      return value;
-    }),
+        return helpers.error('File is required.');
+      })
+      .required(),
   });
 
   const {
-    register,
+    control,
     handleSubmit,
     setError,
     clearErrors,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'all',
   });
 
   const [selectedFile, setSelectedFile] = useState<File>();
+
   const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files[0];
-    const ext = file.name.split('.').pop();
-    if (ext == 'pdf') {
+    const file = event.target.files?.[0];
+    if (file) {
       setSelectedFile(file);
       setValue('certification', file);
       clearErrors('certification');
-    } else {
-      setError('certification', { message: 'Please upload a PDF file.' });
     }
   };
 
-  const FormonSubmit = (data: { certification: File }) => {
+  const FormonSubmit = (data: { registrationNumber: number; taxID: number; certification: File }) => {
     if (!selectedFile) {
       setError('certification', {
         type: 'manual',
         message: 'Please upload a PDF file.',
       });
     } else {
-      clearErrors('certification');
-      data.certification = selectedFile;
-
       onSubmit(data);
       nextHandler();
     }
@@ -100,7 +97,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
             Registration Number
           </FormLabel>
           <Input
-            {...register('registrationNumber')}
+            {...control.register('registrationNumber')}
             id="registrationNumber"
             borderColor="#4965CA"
             border="2px solid #E8E8E8"
@@ -112,53 +109,63 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData.registrationNumber}
           />
           {errors.registrationNumber && (
-            <Text color="red.500">
+            <Text color="red.500" mb={2} fontSize={16}>
               {errors.registrationNumber.message as string}
             </Text>
           )}
         </GridItem>
+        
         <GridItem rowSpan={2}>
-          <>
-            <FormControl>
-              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                Certification
-              </FormLabel>
-              <Button
-                h="128px"
-                w="174px"
-                border="2px solid #E8E8E8"
-                borderRadius="8px"
-                bg="#FFFFFF"
-              >
-                <label>
-                  <Image />
-                  <Input
-                    {...register('certification')}
-                    id="certification"
-                    type="file"
-                    accept="application/pdf" // Update this line to accept PDF files
-                    onChange={(e) => handleCertificateChange(e)}
-                    style={{ display: 'none' }}
-                  />
-                </label>
-              </Button>
-            </FormControl>
-            {selectedFile && (
-              <Text mt="1em">Selected File: {selectedFile.name}</Text>
-            )}
-            {errors.certification && (
-              <Text color="red.500">
-                {errors.certification.message as string}
-              </Text>
-            )}
-          </>
+          <FormControl>
+            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+              Certification
+            </FormLabel>
+            <Controller
+              name="certification"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Button
+                    h="128px"
+                    w="174px"
+                    border="2px solid #E8E8E8"
+                    borderRadius="8px"
+                    bg="#FFFFFF"
+                  >
+                    <label>
+                      <Image />
+                      <Input
+                        id="certification"
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) => {
+                          handleCertificateChange(e);
+                          field.onChange(e.target.files?.[0]);
+                        }}
+                        style={{ display: 'none' }}
+                      />
+                    </label>
+                  </Button>
+                  {selectedFile && (
+                    <Text mt="1em">Selected File: {selectedFile.name}</Text>
+                  )}
+                  {errors.certification && (
+                    <Text color="red.500" mb={2} fontSize={16}>
+                      {errors.certification.message as string}
+                    </Text>
+                  )}
+                </>
+              )}
+            />
+          </FormControl>
         </GridItem>
+
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
             Tax ID
           </FormLabel>
           <Input
-            {...register('taxID')}
+            {...control.register('taxID')}
             id="taxID"
             borderColor="#4965CA"
             border="2px solid #E8E8E8"
@@ -170,7 +177,9 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData.taxID}
           />
           {errors.taxID && (
-            <Text color="red.500">{errors.taxID.message as string}</Text>
+            <Text color="red.500" mb={2} fontSize={16}>
+              {errors.taxID.message as string}
+            </Text>
           )}
         </GridItem>
       </Grid>
@@ -178,7 +187,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
       <Flex flexDirection="row-reverse">
         <Button
           type="submit"
-          bg="#4AA6CA"
+          bg={isValid ? '#4AA6CA' : '#D3D3D3'}
           borderRadius="0.75em"
           w="13.375em"
           h="3.375em"
@@ -188,6 +197,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
+          isDisabled={!isValid}
         >
           Next
         </Button>
@@ -214,4 +224,5 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
     </Box>
   );
 };
+
 export default EductionIInfoForm;

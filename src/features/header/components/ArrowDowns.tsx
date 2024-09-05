@@ -19,12 +19,20 @@ import { Setting } from '@renderer/assets/icons/Setting';
 import { Users } from '@renderer/assets/icons/Users';
 import { useNavigate } from 'react-router-dom';
 import { clear } from '@renderer/cache';
+import { dataContext } from '@renderer/shared/Provider';
+import { useContext } from 'react';
+import { any } from 'joi';
 
 const ArrowDowns = () => {
+  let selectedCenter = useContext(dataContext);
   const navigate = useNavigate();
-  const logout = () => {
+  const logout = async () => {
     clearApiToken();
     clear();
+    localStorage.clear();
+    selectedCenter=  Object.keys(selectedCenter).forEach((key:any) => delete selectedCenter[key])
+    console .log(selectedCenter);
+    
     (window as any).electronAPI.deletePassword('token');
     navigate('/login');
   };

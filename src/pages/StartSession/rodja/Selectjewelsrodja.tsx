@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -32,6 +32,7 @@ const SelectjewelRodja = (props: any) => {
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
 
   const toast = useToast();
+  const toastIdRef:any = useRef();
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
   const {
@@ -85,16 +86,40 @@ const SelectjewelRodja = (props: any) => {
       onOpenConnected();
       // console.log("session id",sessionId)
 
-      toast({
+      toastIdRef.current = toast({
         title: 'Success',
-        description: `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
-         module name is ${module} and session id is ${sessionId}`,
+        description: (
+          <Box>
+            {`You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
+      //    module name is ${module} and session id is ${sessionId}`}
+            <Button
+             color={"white"}
+              width={3}
+              height={5}
+              onClick={() => {
+                if (toastIdRef.current) {
+                 
+                  toast.close(toastIdRef.current);
+                }
+              }}
+            position={"absolute"}
+       
+            top={3}
+            right={3}
+          
+            >
+          x
+            </Button>
+          </Box>
+        ),
         status: 'success',
-
-        duration: 5000,
-        position: 'top-right',
+        duration: null,
+        position: 'bottom-left',
+        onCloseComplete: () => {
+          console.log('Toast has been removed.');
+          // Additional logic for when the toast is removed
+        },
       });
-
       const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
       if (appIsConnectedToInternet && existingDevice) {
@@ -159,7 +184,12 @@ const SelectjewelRodja = (props: any) => {
     setNotFound(false);
     closeSelectingAModule();
   };
-
+  const closeAllModalsAndToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  
+  }
   return (
     <>
       <Modal
@@ -289,6 +319,8 @@ const SelectjewelRodja = (props: any) => {
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
           onCloseSelectDistractors={props.onClose}
+          closeAllModalsAndToast={closeAllModalsAndToast}
+          closeAllModals={closeAllModalsAndToast}
         />
       )}
       {/* {onOpenConnected && (

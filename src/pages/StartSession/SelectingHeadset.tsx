@@ -27,6 +27,7 @@ import useSocketManager from '../../Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { END_SESSION_MESSAGE } from '@main/constants';
 import { ErrorPopup } from './ErrorPopup';
+
 interface ErrorsModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -289,7 +290,7 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
 
   const toast = useToast();
   const [errorMessages, setErrorMessages] = useState('');
-
+  const navigate = useNavigate();
   const schema = Joi.object({
     headset: Joi.string().required().messages({
       'string.empty': 'You must select a headset',

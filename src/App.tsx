@@ -25,6 +25,7 @@ import SpecialtyFormEditModule from './features/EditModuleForm/SpecialityFormEdi
 import ViewCenterAdmin from './pages/ViewCenterAdmin';
 import EnterEmail from './features/auth/components/forgetPassword/EnterEmail';
 import ResetPassword from './features/auth/components/forgetPassword/ResetPassword';
+import EditModule from './pages/EditModule';
 
 function App() {
   const { adminBoolean } = useAdminContext();
@@ -60,9 +61,8 @@ function App() {
 
           <Route path="setting" element={<Setting />} />
           <Route path="Assigntocenter" element={<Assigntocenter />} />
-          <Route path="Editmodule" element={<GeneralInfoEditModule />} />
 
-          <Route path="Editmodule2" element={<SpecialtyFormEditModule />} />
+          <Route path="EditModule" element={<EditModule />} />
 
           <Route path="editcenter" element={<EditCenter />} />
           <Route path="ViewCenter" element={<ViewCenter />} />

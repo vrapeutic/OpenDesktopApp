@@ -147,7 +147,10 @@ const TherapyCenters: React.FC = () => {
             </Heading>
           </Box>
         ) : (
-          <Table variant="simple" background="#FFFFFF">
+          <Box mx={18}>
+
+          
+          <Table variant="simple" background="#FFFFFF" >
             <Thead>
               <Tr>
                 <Th> Name</Th>
@@ -204,6 +207,7 @@ const TherapyCenters: React.FC = () => {
               ))}
             </Tbody>
           </Table>
+          </Box>
         )}
       </>
     );

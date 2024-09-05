@@ -18,11 +18,11 @@ import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import { END_SESSION_MESSAGE } from '@main/constants'
 import axios from 'axios';
 import { config } from '@renderer/config';
-import { useNavigate } from 'react-router-dom';
+
 import SelectEvaluation from '../Evaluation';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 
-export default function OpenConnectedVi(props: any) {
+export default function OpenConnectedBed(props: any) {
   const { dispatchSocketMessage } = useSocketManager();
   const { startSession, sessionId , headsetKey } = useStartSessionContext();
   const toast = useToast();
@@ -111,7 +111,7 @@ export default function OpenConnectedVi(props: any) {
     props.onClose()
     props.closeAllModalsAndToast()
     
-    props.onCloseSelectBooksviblio()
+    props.onCloseSelectBooksBed()
     props.oncloseselectlevel()
     props.onCloseSelectDistractors()
    

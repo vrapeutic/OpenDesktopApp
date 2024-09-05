@@ -11,8 +11,9 @@ import {
   FormErrorMessage,
   useToast,
   useDisclosure,
+  Box,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -25,8 +26,9 @@ import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 const SelectDistractorsGard = (props: any) => {
-  const navigate = useNavigate();
   const toast = useToast();
+  const navigate = useNavigate();
+
   const { module, sessionId, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
@@ -38,6 +40,7 @@ const SelectDistractorsGard = (props: any) => {
   const [selectedDistractors, setSelectedDistractors] = useState<number | null>(
     null
   );
+  const toastIdRef:any = useRef();
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
   const {
@@ -76,15 +79,40 @@ const SelectDistractorsGard = (props: any) => {
 
     navigate('/Therapycenters');
     props.onClose();
-
-    toast({
+    toastIdRef.current = toast({
       title: 'Success',
-      description: `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
-         distractor  ${selectedDistractors} 
-        module name is ${module} and session id is ${sessionId}`,
+      description: (
+        <Box>
+          {`You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
+         distractor ${selectedDistractors} 
+        module name is ${module} and session id is ${sessionId}`}
+          <Button
+           color={"white"}
+            width={3}
+            height={5}
+            onClick={() => {
+              if (toastIdRef.current) {
+               
+                toast.close(toastIdRef.current);
+              }
+            }}
+          position={"absolute"}
+     
+          top={3}
+          right={3}
+        
+          >
+        x
+          </Button>
+        </Box>
+      ),
       status: 'success',
-      duration: 5000,
-      position: 'top-right',
+      duration: null,
+      position: 'bottom-left',
+      onCloseComplete: () => {
+        console.log('Toast has been removed.');
+        // Additional logic for when the toast is removed
+      },
     });
 
     const existingDevice = await checkIfServiceExists(headsetKey);
@@ -150,6 +178,12 @@ const SelectDistractorsGard = (props: any) => {
     setValue('selectDistractors', distractors);
   };
 
+  const closeAllModalsAndToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  
+  };
   return (
     <>
       <Modal
@@ -258,6 +292,8 @@ const SelectDistractorsGard = (props: any) => {
           SelectDistractors={props.onClose}
           onCloseSelectNumber={props.onCloseSelectNumber}
           oncloseselectlevel={props.oncloseselectlevel}
+          closeAllModalsAndToast={closeAllModalsAndToast}
+          closeAllModals={closeAllModalsAndToast}
         />
       )}
       {/* {onOpenConnected && (

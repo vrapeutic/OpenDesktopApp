@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import joi from 'joi';
 import {
   Button,
@@ -18,6 +18,7 @@ import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { TherapyFormProps } from './therapyFormInterface';
+
 const SpecialtyForm: React.FC<TherapyFormProps> = ({
   onSubmit,
   nextHandler,
@@ -29,19 +30,21 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
   const [specialistslist, setspecialistslist] = useState([]);
 
   const schema = joi.object({
-    specialtyInformation: joi.string().required().label('SpecialtyInformation'),
+    specialtyInformation: joi.string().required().label('Specialty Information'),
     specializationschema: joi
       .array()
       .min(1)
       .required()
-      .label('specializationschema'),
+      .label('Specialization Schema'),
   });
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     setValue,
+    trigger,
+    control,
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -86,13 +89,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
     setDefaultSpecialties(defaultSpecialties);
     setValue('specializationschema', defaultSpecialties);
   };
-  const handleSpecializations = (options: any) => {
-    setValue('specializationschema', [...options]);
-  };
-  const remainingSpecialties = specialistslist.filter(
-    (specialty) =>
-      !defaultSpecialties.some((selected) => selected.value === specialty.value)
-  );
+
   return (
     <Box
       bg="#FFFFFF"
@@ -115,7 +112,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Specialty information
+            Specialty Information
           </FormLabel>
           <FormLabel
             pl="0.5em"
@@ -131,10 +128,10 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
             {...register('specialtyInformation')}
             id="specialtyInformation"
             h="5.5em"
-            borderColor="#4965CA"
-            border="2px solid #E8E8E8"
-            _hover={{ border: '1px solid #4965CA' }}
-            boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+            borderColor={errors.specialtyInformation ? "red.500" : "#4965CA"}
+            border={errors.specialtyInformation ? "2px solid red" : "2px solid #E8E8E8"}
+            _hover={{ border: errors.specialtyInformation ? '1px solid red' : '1px solid #4965CA' }}
+            boxShadow={errors.specialtyInformation ? "none" : "0px 0px 4px 0px rgba(57, 97, 251, 0.30)"}
             type="text"
             mt="0.75em"
             mb="1em"
@@ -149,27 +146,36 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
         </GridItem>
 
         <GridItem colSpan={2}>
-          <Select
-            {...register('specializationschema')}
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            isMulti
-            options={remainingSpecialties}
-            id="specializationschema"
+          <Controller   
             name="specializationschema"
-            onChange={handleSpecializations}
-            defaultValue={formData?.specializationschema}
-            styles={{
-              control: (baseStyles, state) => ({
-                ...baseStyles,
-                marginTop: '0.75em',
-                marginBottom: '1em',
-                borderRadius: '8px',
-                borderColor: '#4965CA',
-                border: '2px solid #E8E8E8',
-                boxShadow: '0px 0px 4px 0px rgba(57, 97, 251, 0.30)',
-              }),
-            }}
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                isMulti
+                options={specialistslist}
+                id="specializationschema"
+                defaultValue={formData?.specializationschema}
+                onChange={(selectedOptions) => {
+                  field.onChange(selectedOptions);
+                  setValue('specializationschema', selectedOptions);
+                  trigger('specializationschema'); // Trigger validation for the field
+                }}
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    marginTop: '0.75em',
+                    marginBottom: '1em',
+                    borderRadius: '8px',
+                    borderColor: errors.specializationschema ? "red.500" : "#4965CA",
+                    border: errors.specializationschema ? "2px solid red" : "2px solid #E8E8E8",
+                    boxShadow: errors.specializationschema ? "none" : "0px 0px 4px 0px rgba(57, 97, 251, 0.30)",
+                  }),
+                }}
+              />
+            )}
           />
           {errors.specializationschema && (
             <Text color="red.500">
@@ -179,10 +185,10 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
         </GridItem>
       </Grid>
 
-      <Flex flexDirection="row-reverse">
+      <Flex flexDirection="row-reverse" my={4}>
         <Button
           type="submit"
-          bg="#4AA6CA"
+          bg={isValid ? '#4AA6CA' : '#D3D3D3'}
           borderRadius="0.75em"
           w="13.375em"
           h="3.375em"
@@ -192,6 +198,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
+          isDisabled={!isValid}
         >
           Next
         </Button>
@@ -218,4 +225,5 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
     </Box>
   );
 };
+
 export default SpecialtyForm;

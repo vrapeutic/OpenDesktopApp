@@ -8,16 +8,20 @@ import {
   Stepper,
   Flex,
   Text,
+  Box,
 } from '@chakra-ui/react';
 import { ArrowDown } from '../../assets/icons/ArrowDown';
+import { Info } from '@renderer/assets/icons/Info';
+import { Star } from '@renderer/assets/icons/Star';
 
 const ProgressBarAddModule = (props: any) => {
   const steps = [
-    { title: 'General info', icon: <ArrowDown /> },
-    { title: 'Specialty', icon: <ArrowDown /> },
+    { title: 'General info', icon: <Info />  },
+    { title: 'Specialty', icon: <Star /> },
     //   { title: "Education info", icon: <ArrowDown /> },
     //   { title: 'Contact', icon: <ArrowDown /> },
   ];
+ 
 
   const activeStatus = {
     backgroundColor: '#00DEA3',
@@ -29,9 +33,9 @@ const ProgressBarAddModule = (props: any) => {
   };
 
   const title = {
-    marginTop: '35px',
-    marginLeft: '30px',
+    marginTop: '25px',
     width: '120px',
+    textAlign: 'center',
   };
 
   const inCompleteStatus = {
@@ -41,42 +45,39 @@ const ProgressBarAddModule = (props: any) => {
   const inCompleteTitle = {
     width: '150px',
     marginTop: '20px',
-    marginLeft: '80px',
     color: '#A0A0A0',
+    textAlign: 'center',
   };
+
 
   return (
     <>
-      <Stepper
+       <Stepper
         index={props.index}
         position="relative"
-        top="27px"
-        left="50%"
-        transform="translateX(-50%)"
-        w={{ base: '90vw', md: '756px' }}
-        h="132px"
+        my="15px"
+        mx={50}
+        h="101px"
         colorScheme="whatsapp"
-        overflowX="hidden"
-        paddingLeft={'50px'}
       >
         {steps.map((step, index) => (
           <Step key={index}>
             <Flex direction="column" justifyContent="center">
               <StepIndicator
                 top="32px"
-                left={`calc(${index} * (100% / ${steps.length}))`}
-                transform="translateX(-50%)"
-                w={{ base: '30%', md: '62px' }}
+                left="206px"
+                w="62px"
                 h="62px"
                 margin="5px"
               >
                 <StepStatus
                   complete={
-                    <Flex
-                      flexDirection="column"
+                    <Box
+                      flexDirection="row"
                       alignItems="center"
-                      pt="22px"
+                      pt="32px"
                       color="#00DEA3"
+                      textAlign="center"
                     >
                       <StepIcon
                         bgColor="#00DEA3"
@@ -85,22 +86,24 @@ const ProgressBarAddModule = (props: any) => {
                         borderRadius="50%"
                         color="#FFFFFF"
                       />
-                      <StepTitle>{step.title}</StepTitle>
-                    </Flex>
+                      <StepTitle style={{ width: '100px' }}>
+                        {step.title}
+                      </StepTitle>
+                    </Box>
                   }
                   incomplete={
                     <Flex
                       flexDirection="column"
                       alignItems="center"
-                      style={{ marginTop: '45px' }}
+                      style={inCompleteStatus}
                     >
                       {step.icon}{' '}
                       <StepTitle
                         style={{
                           width: '150px',
                           marginTop: '20px',
-                          marginLeft: '80px',
                           color: '#A0A0A0',
+                          textAlign: 'center',
                         }}
                       >
                         {step.title}
@@ -111,21 +114,14 @@ const ProgressBarAddModule = (props: any) => {
                     <Flex
                       flexDirection="column"
                       alignItems="center"
-                      style={{
-                        backgroundColor: '#00DEA3',
-                        height: '62px',
-                        width: '62px',
-                        borderRadius: '50%',
-                        paddingTop: '22%',
-                        color: '#00DEA3',
-                      }}
+                      style={activeStatus}
                     >
                       {step.icon}{' '}
                       <StepTitle
                         style={{
-                          marginTop: '35px',
-                          marginLeft: '30px',
+                          marginTop: '25px',
                           width: '120px',
+                          textAlign: 'center',
                         }}
                       >
                         {step.title}
@@ -134,8 +130,19 @@ const ProgressBarAddModule = (props: any) => {
                   }
                 />
               </StepIndicator>
+
+              <Text
+                position="absolute"
+                marginTop="100px"
+                h="18px"
+                w="109px"
+                fontFamily="Graphik LCG"
+                fontWeight="400"
+                fontSize="18px"
+                lineHeight="18px"
+              ></Text>
             </Flex>
-            {index !== steps.length - 1 && <StepSeparator />}
+            <StepSeparator />
           </Step>
         ))}
       </Stepper>

@@ -45,7 +45,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors ,isValid},
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -93,7 +93,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.phoneNumber}
           />
           {errors.phoneNumber && (
-            <Text color="red.500">{errors.phoneNumber.message as string}</Text>
+            <Text color="red.500"  mb={2} fontSize={16}>{errors.phoneNumber.message as string}</Text>
           )}
         </GridItem>
         <GridItem>
@@ -115,7 +115,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.socialMedia}
           />
           {errors.socialMedia && (
-            <Text color="red.500">{errors.socialMedia.message as string}</Text>
+            <Text color="red.500"  mb={2} fontSize={16}>{errors.socialMedia.message as string}</Text>
           )}{' '}
         </GridItem>
         <GridItem>
@@ -136,7 +136,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.Website}
           />
           {errors.Website && (
-            <Text color="red.500">{errors.Website.message as string}</Text>
+            <Text color="red.500"  mb={2} fontSize={16}>{errors.Website.message as string}</Text>
           )}{' '}
         </GridItem>
         <GridItem>
@@ -158,14 +158,14 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.Linkedin}
           />
           {errors.Linkedin && (
-            <Text color="red.500">{errors.Linkedin.message as string}</Text>
+            <Text color="red.500"  mb={2} fontSize={16}>{errors.Linkedin.message as string}</Text>
           )}{' '}
         </GridItem>
       </Grid>
       <Flex flexDirection="row-reverse">
         <Button
           type="submit"
-          bg="#4AA6CA"
+          bg={isValid ? '#4AA6CA' : '#D3D3D3'}
           borderRadius="0.75em"
           w="13.375em"
           h="3.375em"
@@ -175,6 +175,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
+          isDisabled={!isValid}
         >
           Next
         </Button>

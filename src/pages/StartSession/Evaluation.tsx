@@ -60,17 +60,16 @@ export default function SelectEvaluation(props: any) {
     console.log('Evaluation:', data.Evaluation);
     console.log('Notes:', data.Notes);
 
-    evaluation();
+    evaluation(data);
   };
 
-  const evaluation = async () => {
+  const evaluation = async (data: any) => {
     const token = await (window as any).electronAPI.getPassword('token'); // Replace 'your_token_here' with your actual token
 
-    const data = {
-      evaluation: 'good',
-      note: 'Hellouu World!',
+    const formData = {
+      evaluation: data.Evaluation,
+      note: data.Notes,
     };
-
     const configD = {
       method: 'put', // Method should be in lowercase
       url: `${config.apiURL}/api/v1/sessions/${sessionId}/add_evaluation`,
@@ -78,7 +77,7 @@ export default function SelectEvaluation(props: any) {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      data: data,
+      data: formData,
     };
 
     axios(configD)
@@ -97,7 +96,6 @@ export default function SelectEvaluation(props: any) {
         toast({
           title: 'error',
           description: `${error.response.data.error}`,
-
           status: 'error',
           duration: 5000,
           position: 'top-right',
@@ -108,8 +106,12 @@ export default function SelectEvaluation(props: any) {
 
   return (
     <Box>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}  closeOnOverlayClick={false}
-        closeOnEsc={false}>
+      <Modal
+        isOpen={props.isOpen}
+        onClose={props.onClose}
+        closeOnOverlayClick={false}
+        closeOnEsc={false}
+      >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
@@ -124,11 +126,11 @@ export default function SelectEvaluation(props: any) {
                 placeholder="Select Evaluation"
                 size="sm"
               >
-                <option value="1">Poor</option>
-                <option value="2">Average</option>
-                <option value="3">Good</option>
-                <option value="4">Very Good</option>
-                <option value="5">Excellent</option>
+                <option value="poor">Poor</option>
+                <option value="average">Average</option>
+                <option value="good">Good</option>
+                <option value="very_good">Very Good</option>
+                <option value="excellent">Excellent</option>
               </Select>
             </GridItem>
             {errors.Evaluation && (

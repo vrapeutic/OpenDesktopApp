@@ -1,4 +1,4 @@
-import { ChangeEvent,  useEffect,  useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -25,22 +25,26 @@ import { useAdminContext } from '@renderer/Context/AdminContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CongratulationsModuleAdmin from '../AddModuleForm/CongratulationsModuleAdmin';
 
-
 interface LocationState<T = undefined> {
   formData?: T;
   newdata?: any;
-  olddata?:any;
-  onSubmit?:any
+  olddata?: any;
+  onSubmit?: any;
 }
 
 const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
-
   const location = useLocation();
   const newdata = (location.state as LocationState)?.newdata;
-  const olddata= (location.state as LocationState)?.olddata;
+  const olddata = (location.state as LocationState)?.olddata;
 
-  console.log("form data from location form data from location new data", newdata);
-  console.log("form data from location form data from location olddata", olddata);
+  console.log(
+    'form data from location form data from location new data',
+    newdata
+  );
+  console.log(
+    'form data from location form data from location olddata',
+    olddata
+  );
 
   const schema = joi.object({
     From: joi.number().required(),
@@ -50,14 +54,11 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
       .greater(joi.ref('From'))
       .message('"To" must be greater than "From"')
       .label('To'),
-      packagename: joi.string().required(),
-
-      
+    packagename: joi.string().required(),
     certification: joi.required().custom((value, helpers) => {
       if (value) {
         const ext = value.name.split('.').pop().toLowerCase();
         const allowedImageExtensions = ['png', 'jpg', 'jpeg', 'gif'];
-
         if (allowedImageExtensions.includes(ext)) {
           return value;
         } else {
@@ -103,38 +104,40 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
     }
   };
 
-  const FormonSubmit = (data:object) => {
+  const FormonSubmit = (data: object) => {
     SendDataToApi(data);
     setLoading(true);
     console.log('Updated FormData in SpecialtyFormModule:', data);
   };
 
-  const createFormData = (data:any) => {
+  const createFormData = (data: any) => {
     const formDataTobesent = new FormData();
-
     formDataTobesent.append('software_module[name]', newdata.Name);
     formDataTobesent.append('software_module[version]', newdata.Version);
-
     formDataTobesent.append('software_module[technology]', newdata.Technology);
-
     newdata.specializationschema.forEach((specialty: { id: string | Blob }) =>
-      formDataTobesent.append('software_module[targeted_skill_ids][]', specialty.id)
+      formDataTobesent.append(
+        'software_module[targeted_skill_ids][]',
+        specialty.id
+      )
     );
-    formDataTobesent.append('software_module[min_age]', data.From) ;
+    formDataTobesent.append('software_module[min_age]', data.From);
     formDataTobesent.append('software_module[max_age]', data.To);
-   {selectedFile&&formDataTobesent.append('software_module[image]', selectedFile);}  
+    {
+      selectedFile &&
+        formDataTobesent.append('software_module[image]', selectedFile);
+    }
     formDataTobesent.append('software_module[package_name]', data.packagename);
 
     return formDataTobesent;
   };
-  const SendDataToApi = async (data:object) => {
+  const SendDataToApi = async (data: object) => {
     const formDatasent = createFormData(data);
-
     try {
       await postFormData(formDatasent);
       onOpen();
     } catch (error) {
-      console.log("error in request",error)
+      console.log('error in request', error);
       handleError(error);
     } finally {
       setLoading(false);
@@ -152,7 +155,6 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
       { headers }
     );
   };
-
 
   const handleError = (error: any) => {
     toast({
@@ -178,7 +180,7 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
     if (olddata) {
       setValue('From', olddata.attributes.min_age);
       setValue('To', olddata.attributes.max_age);
-      setValue('packagename',olddata.attributes.package_name);
+      setValue('packagename', olddata.attributes.package_name);
       // setValue(
       //   'specializationschema',
       //   Module.attributes.targeted_skills.map((skill) => ({
@@ -272,31 +274,33 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
             </Grid>
 
             <GridItem>
-            <FormLabel
-              display="inline"
-              m="0em"
-              letterSpacing="0.256px"
-              color="#15134B"
-            >
-              package name
-            </FormLabel>
+              <FormLabel
+                display="inline"
+                m="0em"
+                letterSpacing="0.256px"
+                color="#15134B"
+              >
+                package name
+              </FormLabel>
 
-            <Input
-              {...register('packagename')}
-              id="packagename"
-              borderColor="#4965CA"
-              border="2px solid #E8E8E8"
-              _hover={{ border: '1px solid #4965CA' }}
-              boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
-              type="text"
-              mt="0.75em"
-              mb="1em"
-              borderRadius="8px"
-            />
-            {errors.packagename && (
-              <Text color="red.500">{errors.packagename.message as string}</Text>
-            )}
-          </GridItem>
+              <Input
+                {...register('packagename')}
+                id="packagename"
+                borderColor="#4965CA"
+                border="2px solid #E8E8E8"
+                _hover={{ border: '1px solid #4965CA' }}
+                boxShadow="0px 0px 4px 0px rgba(57, 97, 251, 0.30)"
+                type="text"
+                mt="0.75em"
+                mb="1em"
+                borderRadius="8px"
+              />
+              {errors.packagename && (
+                <Text color="red.500">
+                  {errors.packagename.message as string}
+                </Text>
+              )}
+            </GridItem>
           </GridItem>
 
           <GridItem rowSpan={2}>
@@ -353,23 +357,22 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
             {loading ? 'Uploading Your Data' : 'Submit'}
           </Button>
 
-            <Button
-              onClick={backHandler}
-              bg="#F5F5F5"
-              borderRadius="0.75em"
-              w="13.375em"
-              h="3.375em"
-              mt="0em"
-              ml="1.5em"
-              mb="2em"
-              mr="auto"
-              color="#A0A0A0"
-              fontSize="1.125em"
-              fontWeight="700"
-            >
-              Back
-            </Button>
-       
+          <Button
+            onClick={backHandler}
+            bg="#F5F5F5"
+            borderRadius="0.75em"
+            w="13.375em"
+            h="3.375em"
+            mt="0em"
+            ml="1.5em"
+            mb="2em"
+            mr="auto"
+            color="#A0A0A0"
+            fontSize="1.125em"
+            fontWeight="700"
+          >
+            Back
+          </Button>
         </Flex>
       </Box>
 
@@ -377,7 +380,7 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
         <CongratulationsModuleAdmin
           isOpen={isOpen}
           onClose={handleCloseModal}
-          text={"Your Module has been edited successfully"}
+          text={'Your Module has been edited successfully'}
         />
       )}
     </>

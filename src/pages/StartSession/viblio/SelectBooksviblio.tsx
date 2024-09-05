@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -49,7 +49,7 @@ const SelectBooksViblio = (props: any) => {
   } = useSocketManager();
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
-
+  const toastIdRef:any = useRef();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
   const { socketError } = useSocketManager();
@@ -81,15 +81,43 @@ const SelectBooksViblio = (props: any) => {
     } else {
       navigate('/home');
 
-      toast({
+      toastIdRef.current = toast({
         title: 'Success',
-        description: `You assigned level ${updatedFormData[0]} , book ${selectedBook} ,
-         module name is ${module} and session id is ${sessionId}`,
+        description: (
+          <Box>
+            {`You assigned level ${updatedFormData[0]} , book ${selectedBook} ,
+         module name is ${module} and session id is ${sessionId}`}
+            <Button
+             color={"white"}
+              width={3}
+              height={5}
+              onClick={() => {
+                if (toastIdRef.current) {
+                 
+                  toast.close(toastIdRef.current);
+                }
+              }}
+            position={"absolute"}
+       
+            top={3}
+            right={3}
+          
+            >
+          x
+            </Button>
+          </Box>
+        ),
         status: 'success',
-
-        duration: 5000,
-        position: 'top-right',
+        duration: null,
+        position: 'bottom-left',
+        onCloseComplete: () => {
+          console.log('Toast has been removed.');
+          // Additional logic for when the toast is removed
+        },
       });
+
+
+
 
       const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection();
@@ -149,6 +177,13 @@ const SelectBooksViblio = (props: any) => {
     setselectedBook(book);
     setValue('selectBook', book);
   };
+
+  const closeAllModalsAndToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  
+  }
   return (
     <>
       <Modal
@@ -273,6 +308,8 @@ const SelectBooksViblio = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
           onCloseSelectDistractors={props.onClose}
+          closeAllModalsAndToast={closeAllModalsAndToast}
+          closeAllModals={closeAllModalsAndToast}
         />
       )}
       {/* {onOpenConnected && (

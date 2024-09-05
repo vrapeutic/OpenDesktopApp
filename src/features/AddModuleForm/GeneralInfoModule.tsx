@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import joi from 'joi';
 import {
   Button,
@@ -9,11 +9,11 @@ import {
   GridItem,
   Input,
   Flex,
-  Select as SelectChakra
+  Select as SelectChakra,
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { TherapyFormProps } from '../AddCenterForm/therapyFormInterface';
- import Select from 'react-select';
+import Select from 'react-select';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { config } from '../../config';
@@ -25,6 +25,9 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
   nextHandler,
   backHandler,
   sliding,
+  
+formData
+ 
 }) => {
   const schema = joi.object({
     Name: joi.string().min(3).max(30).required().label('Name'),
@@ -34,14 +37,17 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
     // Otp: joi.string().required(),
     specializationschema: joi.array().required().label('specializationschema'),
   });
+  console.log(formData)
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    control,
+    formState: { errors, isValid },
     setValue,
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
+    defaultValues:formData
   });
 
   const FormonSubmit = (data: {
@@ -85,8 +91,6 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
     value: speciality.id,
   }));
 
-
- 
   return (
     <>
       <Box
@@ -135,31 +139,6 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
               letterSpacing="0.256px"
               color="#15134B"
             >
-              Technology
-            </FormLabel>
-
-            <SelectChakra
-         
-            {...register('Technology')}
-            id="Technology"
-            name="Technology"
-          >
-            <option value='virtual_reality'>virtual reality</option>
-            <option value='two_dimensional'>two dimensional</option>
-          </SelectChakra>
-          {errors.Technology && (
-            <Text color="red.500">{errors.Technology.message as string}</Text>
-          )}
-       
-          </GridItem>
-
-          <GridItem>
-            <FormLabel
-              display="inline"
-              m="0em"
-              letterSpacing="0.256px"
-              color="#15134B"
-            >
               Version
             </FormLabel>
 
@@ -179,7 +158,29 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
               <Text color="red.500">{errors.Version.message as string}</Text>
             )}
           </GridItem>
+          <GridItem my={4}>
+            <FormLabel
+              display="inline"
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
+              mb={4}
+            >
+              Technology
+            </FormLabel>
 
+            <SelectChakra
+              {...register('Technology')}
+              id="Technology"
+              name="Technology"
+            >
+              <option value="virtual_reality">virtual reality</option>
+              <option value="two_dimensional">two dimensional</option>
+            </SelectChakra>
+            {errors.Technology && (
+              <Text color="red.500">{errors.Technology.message as string}</Text>
+            )}
+          </GridItem>
 
           {/* <GridItem>
             <FormLabel
@@ -208,27 +209,33 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
             )}
           </GridItem> */}
 
-
-          <GridItem>
+          <GridItem my={4}>
             <FormLabel
               display="inline"
               m="0em"
               letterSpacing="0.256px"
               color="#15134B"
+              mb={4}
             >
               Skills
             </FormLabel>
-
-            <Select
-              {...register('specializationschema')}
-              closeMenuOnSelect={false}
-              components={animatedComponents}
-              isMulti
-              options={specialties}
-              id="specializationschema"
+            <Controller
               name="specializationschema"
-              onChange={handleSpecializations}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  options={specialties}
+                  id="specializationschema"
+                  name="specializationschema"
+                  onChange={handleSpecializations}
+                />
+              )}
             />
+
             {errors.specializationschema && (
               <Text color="red.500">
                 {errors.specializationschema.message as string}
@@ -239,7 +246,7 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
         <Flex flexDirection="row-reverse">
           <Button
             type="submit"
-            bg="#4AA6CA"
+            bg={isValid ? '#4AA6CA' : '#D3D3D3'}
             borderRadius="0.75em"
             w="13.375em"
             h="3.375em"

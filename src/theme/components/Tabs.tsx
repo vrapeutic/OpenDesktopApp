@@ -116,12 +116,12 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
                 </Tr>
               </Thead>
               <Tbody>
-                {Doctorslist?.map((doctor) => (
+                {Doctorslist?.map((doctor:any) => (
                   <Tr key={doctor.id}>
                     <Td>
                       <Flex direction="row" gap={2}>
                         <Img
-                          src={doctor?.attributes?.photo?.url}
+                          src={doctor?.attributes?.photo_url}
                           alt={doctor?.attributes?.name}
                           boxSize="50px"
                           borderRadius="full"

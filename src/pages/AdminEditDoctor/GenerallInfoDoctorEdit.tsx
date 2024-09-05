@@ -6,9 +6,11 @@ import {
   FormLabel,
   Grid,
   GridItem,
+
   Input,
   Text,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
 import axios from 'axios';
@@ -18,9 +20,10 @@ import { useForm } from 'react-hook-form';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { Image } from '../../assets/icons/Image';
-import UploadDoctorImg from './UploadDoctorImg';
 import { TherapyFormProps } from '@renderer/features/AddCenterForm/therapyFormInterface';
 import { config } from '../../config';
+import { useAdminContext } from '@renderer/Context/AdminContext';
+import CongratulationEdit from './CongratulationEdit';
 
 const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
   onSubmit,
@@ -37,8 +40,12 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
   const [university, setUniversity] = useState('');
   const [selectedFile, setSelectedFile] = useState<File>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const url = datachild?.attributes?.certificate_url;
-
+  const [imagePreview, setImagePreview] = useState(
+    datachild?.attributes?.photo_url
+  );
+  const [logo, setLogo] = useState<File>();
   const schema = joi.object({
     name: joi.string().min(3).max(30).required().label('Name'),
     degree: joi.string().required().label('Degree'),
@@ -55,6 +62,15 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
               'Invalid file type. Please upload a PDF file.'
             );
           }
+        }
+        return value;
+      }),
+    logo: joi
+      .any()
+      .label('logo')
+      .custom((value, helpers) => {
+        if (value && value.name) {
+          return helpers.error('Invalid file type. Please upload a  photo.');
         }
         return value;
       }),
@@ -132,8 +148,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
   }) => {
     const updatedFormData = { ...data, certification: selectedFile || url };
     onSubmit(updatedFormData);
-    console.log(updatedFormData);
-    onOpen();
+    SendDataToApi(updatedFormData);
   };
 
   const handleCertificateChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -152,6 +167,82 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     }
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files[0];
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+    setLogo(file);
+
+    if (!logo) {
+      setValue('logo', null);
+      setError('logo', { message: 'Please upload a logo.' });
+    }
+  };
+
+
+  const { otp } = useAdminContext();
+  const postFormData = async (formData: FormData) => {
+    try {
+      const headers = { otp: otp };
+      const response = await axios.put(
+        `${config.apiURL}/api/v1/admins/edit_doctor?doctor_id=${datachild.id}`,
+        formData,
+        { headers }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        'Error in postFormData:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
+
+  const handleError = (error: any) => {
+    onClose();
+    const errorMessage = error.response?.data?.error || 'Unknown Error';
+    toast({
+      title: 'Error',
+      description: errorMessage,
+      status: 'error',
+      duration: 5000,
+      position: 'top-right',
+    });
+    console.error('API Error:', error);
+  };
+  const SendDataToApi = async (data:any) => {
+    console.log('data in SendDataToApi:', data);
+    const formData= createFormEdit(data);
+
+    try {
+      await postFormData(data);
+      handleSuccess();
+      console.log(formData);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  
+  const handleSuccess = () => {
+   
+    onOpen();
+  };
+  const createFormEdit = async (data:any) => {
+    const doctorFormData = new FormData();
+    console.log(data.name,data.specialities)
+    doctorFormData.append('name', data.name);
+    doctorFormData.append('degree', data.degree);
+    doctorFormData.append('university', data.university);
+    doctorFormData.append('certification', data.certification);
+    if (logo) {
+      doctorFormData.append('photo', logo);
+    }
+    data.specialities.forEach((speciality: { id: string | Blob }) =>
+      doctorFormData.append('specialty_ids[]', speciality.id)
+    );
+    return doctorFormData;
+  };
   const customStyles = {
     control: (provided: any) => ({
       ...provided,
@@ -325,7 +416,95 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
             )}
           </>
         </GridItem>
+        <GridItem rowSpan={2} mb="5">
+          <>
+            <FormControl>
+              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                upload photo
+              </FormLabel>
+              <Button
+                h="128px"
+                w="174px"
+                border="2px solid #E8E8E8"
+                borderRadius="8px"
+                bg="#FFFFFF"
+                position={'relative'}
+              >
+                <label>
+                  <img
+                    src={imagePreview}
+                    alt="brand_logo"
+                    style={{ height: '124px', objectFit: 'cover' }}
+                  />
+
+                  <Input
+                    type="file"
+                    accept="image/png,image/jpeg"
+                    name="logo"
+                    id="logo"
+                    {...register('logo')}
+                    onChange={(e) => handleImageChange(e)}
+                    style={{ display: 'none' }}
+                    hidden
+                  />
+                </label>
+              </Button>
+            </FormControl>
+
+            {errors.logo && (
+              <Text color="red.500">{errors.logo.message as string}</Text>
+            )}
+          </>
+        </GridItem>
+        {/* <HStack mb={'32px'}>
+              <Box
+                width={197}
+                height={197}
+                alignItems={'center'}
+                display={'flex'}
+              >
+                <img src={imagePreview} alt="brand_logo" />
+              </Box>
+
+              <Button
+                style={{
+                  width: '153px',
+                  height: '38px',
+                  color: '#FFF',
+                  border: 'none',
+                  borderRadius: '8px',
+                  backgroundColor: '#4AA6CA',
+                  cursor: 'pointer',
+                  position: 'relative',
+                }}
+              >
+                <label
+                  htmlFor="logo"
+                  style={{
+                    width: '153px',
+                    height: '38px',
+                    cursor: 'pointer',
+                    position: 'absolute',
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Change logo
+                  <Input
+                    type="file"
+                    accept="image/png,image/jpeg"
+                    name="logo"
+                    id="logo"
+                    onChange={(e) => handleImageChange(e)}
+                    style={{ display: 'none' }}
+                    hidden
+                  />
+                </label>
+              </Button>
+            </HStack> */}
       </Grid>
+
       <Flex flexDirection="row-reverse">
         <Button
           type="submit"
@@ -340,7 +519,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
           fontSize="1.125em"
           fontWeight="700"
         >
-          Next
+          Submit
         </Button>
 
         {sliding === 1 ? null : (
@@ -363,15 +542,12 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
         )}
       </Flex>
       {onOpen && (
-        <UploadDoctorImg
-          isOpen={isOpen}
-          onClose={onClose}
-          onSubmit={onSubmit}
-          formData={formData}
-          datachild={datachild.attributes.photo_url}
-          id={datachild.id}
-          email={datachild.attributes.email}
-        />
+           
+            <CongratulationEdit
+              isOpen={isOpen}
+              onClose={onClose}
+            />
+         
       )}
     </Box>
   );

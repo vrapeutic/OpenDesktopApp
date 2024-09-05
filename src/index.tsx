@@ -12,6 +12,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AdminProvider } from './Context/AdminContext';
 import { StartSessionProvider } from './Context/StartSesstionContext';
 import { PopupsHandlerProvider } from './Context/PopupsHandlerContext';
+import { CSVProvider } from './Context/CSVDataContext';
 
 const queryClient = new QueryClient();
 
@@ -25,12 +26,14 @@ root.render(
       <QueryClientProvider client={queryClient}>
         <StartSessionProvider>
           <AdminProvider>
-            <Fonts />
-            <PopupsHandlerProvider>
-              <SocketManagerProvider>
-                <App />
-              </SocketManagerProvider>
-            </PopupsHandlerProvider>
+            <CSVProvider>
+              <Fonts />
+              <PopupsHandlerProvider>
+                <SocketManagerProvider>
+                  <App />
+                </SocketManagerProvider>
+              </PopupsHandlerProvider>
+            </CSVProvider>
           </AdminProvider>
         </StartSessionProvider>
       </QueryClientProvider>

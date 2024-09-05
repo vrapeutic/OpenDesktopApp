@@ -20,48 +20,38 @@ import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import Openconnected from '../openconnected';
-import OpenconnectedRodja from './OpenconnectedRodja';
+
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
-import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { ErrorPopup } from '../ErrorPopup';
+import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import OpenConnectedBed from './OpenConnectedbed';
 
-const useSocketErrorHandler = () => {
-  const [socketErrorState, setSocketErrorState] = useState(null);
-  const { socketError } = useSocketManager();
-
-  useEffect(() => {
-    if (socketError) {
-      console.log('Socket error detected:', socketError); // Logging for debugging
-      setSocketErrorState(socketError);
-    }
-  }, [socketError]);
-
-  return { socketErrorState, setSocketErrorState };
-};
-
-const SelectDistractorsRodja = (props: any) => {
+const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
-  const { module, sessionId, headsetKey } = useStartSessionContext();
+  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
-  const [notFound, setNotFound] = useState(false);
-  const [errorMEssage, setErrorMEssage] = useState(null);
-  const { socketErrorState, setSocketErrorState } = useSocketErrorHandler();
+  const [selectedDistractor, setselectedDistractor] = useState<number | null>(
+    null
+  );
+  const toastIdRef:any = useRef();
   const {
     dispatchSocketMessage,
     checkIfServiceExists,
     checkAppNetWorkConnection,
   } = useSocketManager();
+  const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMEssage] = useState(null);
+
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-  const [selectedDistractor, setselectedDistractor] = useState<number | null>(null);
+  const { socketError } = useSocketManager();
   const toast = useToast();
-  const toastIdRef:any = useRef();
+
   const schema = joi.object({
     selectDistractor: joi.number().required(),
   });
@@ -77,98 +67,82 @@ const SelectDistractorsRodja = (props: any) => {
   });
 
   const handleFormSubmit = async (data: any) => {
+    const updatedFormData = [
+      props.formData[0],
+      props.formData[1],
+      data.selectDistractor,
+      ...props.formData.slice(3),
+    ];
+    props.setFormData(updatedFormData);
+
+    navigate('/home');
+    // props.onClose();
+    // props.oncloseselectlevel();
+    // props.onclosemodules();
+    // props.onCloseBooks();
+    // onOpenConnected();
+ 
+    toastIdRef.current = toast({
+      title: 'Success',
+      description: (
+        <Box>
+          {`You assigned level ${updatedFormData[0]} and Attention Duration ${props.formData[1]} and distractor  ${selectedDistractor} 
+      module name is ${module} and session id is ${sessionId}`}
+          <Button
+           color={"white"}
+            width={3}
+            height={5}
+            onClick={() => {
+              if (toastIdRef.current) {
+               
+                toast.close(toastIdRef.current);
+              }
+            }}
+          position={"absolute"}
+     
+          top={3}
+          right={3}
+        
+          >
+        x
+          </Button>
+        </Box>
+      ),
+      status: 'success',
+      duration: null,
+      position: 'bottom-left',
+      onCloseComplete: () => {
+        console.log('Toast has been removed.');
+        // Additional logic for when the toast is removed
+      },
+    });
     const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     if (appIsConnectedToInternet && existingDevice) {
-      // if (appIsConnectedToInternet) {
-
-      const updatedFormData = [
-        props.formData[0],
-        props.formData[1],
-        props.selectBook,
-        data.selectDistractor,
-        ...props.formData.slice(4),
-      ];
-
-      console.log('all subimtted data in distractor', updatedFormData);
-      props.setFormData(updatedFormData);
-      console.log('updatedFormData', updatedFormData);
+      console.log(updatedFormData);
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: module,
         deviceId: headsetKey,
       };
+
       dispatchSocketMessage(
         START_APP_MESSAGE,
         socketMessage,
         headsetKey,
         updatedFormData
       );
-      navigate('/home');
-      props.onClose();
       onOpenConnected();
-      toastIdRef.current = toast({
-        title: 'Success',
-        description: (
-          <Box>
-            {`You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
-         distractor  ${selectedDistractor} 
-        module name is ${module} and session id is ${sessionId}`}
-            <Button
-             color={"white"}
-              width={3}
-              height={5}
-              onClick={() => {
-                if (toastIdRef.current) {
-                 
-                  toast.close(toastIdRef.current);
-                }
-              }}
-            position={"absolute"}
-       
-            top={3}
-            right={3}
-          
-            >
-          x
-            </Button>
-          </Box>
-        ),
-        status: 'success',
-        duration: null,
-        position: 'bottom-left',
-        onCloseComplete: () => {
-          console.log('Toast has been removed.');
-          // Additional logic for when the toast is removed
-        },
-      });
-      console.log(
-        `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
-         distractor  ${selectedDistractor} 
-        module name is ${module} and session id is ${sessionId}`
-      );
-      console.log('Array of menu choices', updatedFormData);
     } else {
-      console.log(headsetKey);
+      console.log(headsetid);
       console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
         ? 'You are not connected to the internet'
         : 'No headset found';
 
-      console.log(errorMessage);
       setErrorMEssage(errorMessage);
-      setSocketErrorState(socketErrorState);
       setNotFound(true);
     }
-  };
-
-  const handleBackToSelectBook = () => {
-    props.onClose();
-  };
-
-  const handleButtonClick = (distractor: number) => {
-    setselectedDistractor(distractor);
-    setValue('selectDistractor', distractor);
   };
 
   const cancelSession = () => {
@@ -188,13 +162,20 @@ const SelectDistractorsRodja = (props: any) => {
     closeSelectingAModule();
   };
 
-  useEffect(() => {
-    if (socketErrorState) {
-      console.log('Socket Error:', socketErrorState);
-      setNotFound(true);
-      props.onClose();
-    }
-  }, [socketErrorState]);
+  if (socketError) {
+    return null;
+  }
+
+  const handleBackToSelectBook = () => {
+    props.onClose();
+  };
+
+  const handleButtonClick = (distractor: number) => {
+    setselectedDistractor(distractor);
+    setValue('selectDistractor', distractor);
+  };
+
+
   const closeAllModalsAndToast = () => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
@@ -274,7 +255,7 @@ const SelectDistractorsRodja = (props: any) => {
               onClick={handleBackToSelectBook}
               mx={2}
             >
-              Back to Select Jewel
+              Back to Select Book
             </Button>
             <Button
               w="180px"
@@ -296,39 +277,38 @@ const SelectDistractorsRodja = (props: any) => {
 
       {notFound ? (
         <ErrorPopup
-          isOpen={notFound || !!socketErrorState}
+          isOpen={notFound}
           onClose={closeErrorModal}
           closeSelectingAHeadset={closeSelectingAHeadset}
           onCancelSession={cancelSession}
           onSelectAnotherHeadset={selectAnotherHeadset}
-          errorMessages={errorMEssage || socketErrorState}
+          errorMessages={errorMEssage}
         />
       ) : (
-        <OpenconnectedRodja
+        <OpenConnectedBed
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
-          onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
-          oncloseselectlevel={props.oncloseselectlevel}
-          onCloseSelectJewel={props.onCloseSelectJewel}
+          onCloseSelectBooksBed={props.onCloseSelectBooksBed}
           onCloseSelectDistractors={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />
       )}
-      {/* {onOpenConnected && (
-        <OpenconnectedRodja
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
-          onclosemodules={props.onclosemodules}
-          onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
-          oncloseselectlevel={props.oncloseselectlevel}
-          onCloseSelectJewel={props.onCloseSelectJewel}
-          onCloseSelectDistractors={props.onClose}
-        />
+
+      {/* 
+        {onOpenConnected && (
+         <OpenConnectedVi
+         isOpen={isOpenConnected}
+         onClose={onCloseConnected}
+         onclosemodules={props.onclosemodules}
+         onCloseSelectBooksBed={props.onCloseSelectBooksBed}
+         onCloseSelectDistractors={props.onClose}
+       />
       )} */}
     </>
   );
 };
 
-export default SelectDistractorsRodja;
+export default SelectDistractors;
