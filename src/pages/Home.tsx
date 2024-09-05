@@ -33,8 +33,6 @@ import Papa from 'papaparse';
 import { useCSVData } from '@renderer/Context/CSVDataContext';
 import { dataContext } from '@renderer/shared/Provider';
 
-
-
 // Example usage
 
 export default function Home() {
@@ -50,7 +48,7 @@ export default function Home() {
     useCSVData();
   const [files, setFiles] = useState([]);
   const [reportDir, setReportDir] = useState('');
-  // const [modules, setModules] = useState<ModuleData[]>([]);
+  const { isOpen: isOpen, onOpen: onOpen, onClose: onClose } = useDisclosure();
 
   useEffect(() => {
     const fetchReportDir = async () => {
@@ -58,7 +56,6 @@ export default function Home() {
         const dirUrl = await (window as any).electron.getReportDir();
         // Replace backslashes with forward slashes
         const fixedDirUrl = dirUrl.replace(/\\/g, '/');
-        console.log(fixedDirUrl, 'fixedDirUrl');
         setReportDir(fixedDirUrl);
       } catch (error) {
         console.error('Error fetching report directory:', error);
@@ -72,7 +69,6 @@ export default function Home() {
     try {
       const files = await (window as any).electron.listFiles(reportDir);
       setFiles(files);
-      console.log(files);
       await readFiles(files);
     } catch (error) {
       console.error('Error listing files:', error);
@@ -89,7 +85,6 @@ export default function Home() {
   const handleReadFile = async (filePath: string) => {
     try {
       const content = await (window as any).electron.readFile(filePath);
-      console.log(`Content of ${filePath}:`, content);
 
       const parsedCSVData = Papa.parse<string[]>(content, {
         skipEmptyLines: true,
@@ -102,8 +97,6 @@ export default function Home() {
     }
   };
 
-  console.log(modulesForHome, 'modules');
-
   useEffect(() => {
     if (reportDir) {
       handleListFiles();
@@ -111,15 +104,12 @@ export default function Home() {
   }, [reportDir]);
 
   const handleClick = (center: any) => {
-    console.log(center?.attributes?.name);
     setCenterName(center?.attributes?.name);
     setIsLoading(true);
-    console.log(center);
     selectedCenter = Object.assign(selectedCenter, center);
     setRefreshKey((oldKey) => oldKey + 1);
     setArrow(false);
   };
-  const { isOpen: isOpen, onOpen: onOpen, onClose: onClose } = useDisclosure();
 
   useEffect(() => {
     (async () => {
@@ -141,14 +131,9 @@ export default function Home() {
         .catch((error) => console.log('error', error));
     })();
   }, []);
-  console.log(
-    'centers length',
-    centers.length,
-    selectedCenterContext,
-    centers
-  );
+  console.log('centers length', centers.length, selectedCenterContext, centers);
   useEffect(() => {
-if (Object.keys(selectedCenterContext).length === 0) {
+    if (Object.keys(selectedCenterContext).length === 0) {
       onOpen();
       setArrow(true);
     }
@@ -255,7 +240,9 @@ if (Object.keys(selectedCenterContext).length === 0) {
                   borderRadius="8px"
                   color="#00DEA3"
                 >
-                  {selectedCenterContext.id ? selectedCenterContext.attributes.name : centerName}
+                  {selectedCenterContext.id
+                    ? selectedCenterContext.attributes.name
+                    : centerName}
                 </MenuButton>
                 <MenuList>
                   {centers?.map((center) => (

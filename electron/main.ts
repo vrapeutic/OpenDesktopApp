@@ -137,18 +137,19 @@ ipcMain.handle('read-file', async (event, filePath) => {
     });
   });
 });
-ipcMain.handle('download-file', async (event, filePath) => {
+
+ipcMain.handle('download-file', async (event: Event, filePath: string) => {
   const win = BrowserWindow.getFocusedWindow();
   try {
-    // Check if file exists
+    // Check if the file exists
     if (fs.existsSync(filePath)) {
-      // Open a save dialog to select where to save the file
+      // Show save dialog
       const saveDialogResult = await dialog.showSaveDialog(win, {
-        defaultPath: path.basename(filePath),
+        defaultPath: path.basename(filePath), // Suggest the original file name
       });
 
-      // If user selects a save location, copy the file
       if (!saveDialogResult.canceled && saveDialogResult.filePath) {
+        // Copy the file to the selected location
         fs.copyFileSync(filePath, saveDialogResult.filePath);
         return { success: true, path: saveDialogResult.filePath };
       } else {
@@ -157,7 +158,7 @@ ipcMain.handle('download-file', async (event, filePath) => {
     } else {
       return { success: false, error: 'File does not exist' };
     }
-  } catch (error) {
+  } catch (error: any) {
     return { success: false, error: error.message };
   }
 });
