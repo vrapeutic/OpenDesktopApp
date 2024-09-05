@@ -1,5 +1,11 @@
 require('dotenv').config();
-import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  IpcMainInvokeEvent,
+} from 'electron';
 import * as path from 'path';
 import * as nodePath from 'node:path';
 
@@ -131,6 +137,29 @@ ipcMain.handle('read-file', async (event, filePath) => {
     });
   });
 });
+ipcMain.handle('download-file', async (event, filePath) => {
+  const win = BrowserWindow.getFocusedWindow();
+  try {
+    // Check if file exists
+    if (fs.existsSync(filePath)) {
+      // Open a save dialog to select where to save the file
+      const saveDialogResult = await dialog.showSaveDialog(win, {
+        defaultPath: path.basename(filePath),
+      });
 
+      // If user selects a save location, copy the file
+      if (!saveDialogResult.canceled && saveDialogResult.filePath) {
+        fs.copyFileSync(filePath, saveDialogResult.filePath);
+        return { success: true, path: saveDialogResult.filePath };
+      } else {
+        return { success: false, error: 'Save dialog was canceled' };
+      }
+    } else {
+      return { success: false, error: 'File does not exist' };
+    }
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

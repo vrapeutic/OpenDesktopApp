@@ -70,7 +70,6 @@ export default function SelectEvaluation(props: any) {
       evaluation: data.Evaluation,
       note: data.Notes,
     };
-
     const configD = {
       method: 'put', // Method should be in lowercase
       url: `${config.apiURL}/api/v1/sessions/${sessionId}/add_evaluation`,
@@ -127,11 +126,11 @@ export default function SelectEvaluation(props: any) {
                 placeholder="Select Evaluation"
                 size="sm"
               >
-                <option value="1">Poor</option>
-                <option value="2">Average</option>
-                <option value="3">Good</option>
-                <option value="4">Very Good</option>
-                <option value="5">Excellent</option>
+                <option value="poor">Poor</option>
+                <option value="average">Average</option>
+                <option value="good">Good</option>
+                <option value="very_good">Very Good</option>
+                <option value="excellent">Excellent</option>
               </Select>
             </GridItem>
             {errors.Evaluation && (
