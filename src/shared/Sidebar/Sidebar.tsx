@@ -144,7 +144,6 @@ export default function Sidebar() {
     //   ),
     //   path: '/kidsAdmin',
     // },
-
   ];
 
   const CloseCongratulationsModal = () => {
@@ -161,13 +160,13 @@ export default function Sidebar() {
   return (
     <Flex
       pos="sticky"
-      h="inherit"
       background="#FFFFFF"
       boxShadow="0px 3px 8px rgba(0, 0, 0, 0.08)"
       borderRadius="0px 20px 20px 0px;"
       flexDir="column"
       justifyContent="space-between"
       paddingX={5}
+      height={'inherit'}
     >
       <VStack>
         <Box ml="24px">

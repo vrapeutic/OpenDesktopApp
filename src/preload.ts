@@ -24,4 +24,6 @@ contextBridge.exposeInMainWorld('electron', {
   listFiles: (directoryPath: string) =>
     ipcRenderer.invoke('list-files', directoryPath),
   readFile: (filePath: string) => ipcRenderer.invoke('read-file', filePath),
+  downloadFile: (filePath: string) =>
+    ipcRenderer.invoke('download-file', filePath),
 });

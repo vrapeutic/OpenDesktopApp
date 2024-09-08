@@ -6,6 +6,7 @@ import {
   GridItem,
   Image,
   Text,
+  Spinner,
   useDisclosure,
 } from '@chakra-ui/react';
 import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
@@ -39,6 +40,7 @@ export default function Kids() {
   const [showTable, setShowTable] = useState(true);
   const [included, setIncluded] = useState([]);
   const [error, setError] = useState<string | null>(null); // State for error handling
+  const [loading, setLoading] = useState(false);
 
   const selectedCenter = useContext(dataContext);
 
@@ -48,30 +50,23 @@ export default function Kids() {
     onClose: onDeleteCongratulations,
   } = useDisclosure();
 
-  // const handleCloseModal = () => {
-  //   onDeleteCongratulations();
-  //   setShowTable(true);
-  //   console.log('handle succcess');
-  // };
   const renderFormStep = () => {
     switch (sliding) {
       case 2:
         return (
-          <>
-            <GeneralInfoFormKids
-              onSubmit={handleFormSubmit}
-              nextHandler={nextHandler}
-              backHandler={backHandler}
-              sliding={sliding}
-              formData={formData}
-            />
-          </>
+          <GeneralInfoFormKids
+            onSubmit={handleFormSubmit}
+            nextHandler={nextHandler}
+            backHandler={backHandler}
+            sliding={sliding}
+            formData={formData}
+          />
         );
-
       default:
         return null;
     }
   };
+
   const nextHandler = () => {
     if (sliding < totalSteps) {
       setSliding(sliding + 1);
@@ -89,19 +84,20 @@ export default function Kids() {
       }
     }
   };
+
   const handleFormSubmit = (data: any) => {
     setFormData({ ...formData, ...data });
-
     return { ...formData, ...data };
   };
+
   useEffect(() => {
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
-
+      setLoading(true);
       fetch(
         `${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids?include=diagnoses,sessions`,
         {
-          method: 'Get',
+          method: 'GET',
           redirect: 'follow',
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -117,13 +113,16 @@ export default function Kids() {
           if (result.data) {
             setKidsList(result.data);
             setIncluded(result.included);
+            setLoading(false);
           } else {
             setError('Failed to fetch kids data');
+            setLoading(false);
           }
         })
         .catch((error) => {
           console.log('error', error);
           setError(error.message);
+          setLoading(false);
         });
     })();
   }, [selectedCenter.id]);
@@ -139,7 +138,11 @@ export default function Kids() {
           />
 
           {selectedCenter.id ? (
-            error ? (
+            loading ? (
+              <Flex justifyContent="center" alignItems="center" height="100vh">
+                <Spinner size="xl" />
+              </Flex>
+            ) : error ? (
               <Flex justifyContent="center">
                 <Text
                   fontSize="14px"
@@ -269,7 +272,7 @@ const TableData: React.FC<TableData> = ({
   };
 
   const x: any[] = all.relationships.diagnoses.data;
-  console.log(all.relationships.sessions.data.length);
+
   const filterByReference = ({
     included,
     x,
@@ -335,9 +338,7 @@ const TableData: React.FC<TableData> = ({
       <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
         <Box display={'flex'} alignItems={'center'}>
           <Image
-            // boxShadow="base"
             rounded="md"
-            // boxSize="80px"
             objectFit="cover"
             src={all.attributes.photo_url ? all.attributes.photo_url : img}
             alt="VR"
@@ -378,34 +379,33 @@ const TableData: React.FC<TableData> = ({
         justifyContent={'center'}
       >
         <Box>
-          {result.map((x: any) => {
-            return (
-              <Box
-                background={'#F3F3F3'}
-                minWidth="100px"
-                w={'205px'}
-                height={'42px'}
-                borderRadius={'10px'}
-                display={'flex'}
-                justifyContent={'center'}
-                alignItems={'center'}
-                mb={3}
+          {result.map((x: any) => (
+            <Box
+              key={x.id} // Added unique key here
+              background={'#F3F3F3'}
+              minWidth="100px"
+              w={'205px'}
+              height={'42px'}
+              borderRadius={'10px'}
+              display={'flex'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              mb={3}
+            >
+              <Text
+                fontSize="13"
+                textAlign={'center'}
+                px="5"
+                fontWeight={'500'}
+                fontFamily="Graphik LCG"
+                color={'#558888'}
+                lineHeight={'16px'}
+                letterSpacing={'1.6%'}
               >
-                <Text
-                  fontSize="13"
-                  textAlign={'center'}
-                  px="5"
-                  fontWeight={'500'}
-                  fontFamily="Graphik LCG"
-                  color={'#558888'}
-                  lineHeight={'16px'}
-                  letterSpacing={'1.6%'}
-                >
-                  {x.attributes.name}
-                </Text>
-              </Box>
-            );
-          })}
+                {x.attributes.name}
+              </Text>
+            </Box>
+          ))}
         </Box>
       </GridItem>
       <GridItem colSpan={1}>

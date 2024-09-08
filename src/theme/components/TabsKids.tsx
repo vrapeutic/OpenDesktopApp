@@ -26,6 +26,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import img from '../../assets/images/Person3.png';
 import { getMe } from '../../cache';
 import { config } from '../../config';
+import { ipcRenderer } from 'electron/renderer';
+import { assert } from 'console';
 
 interface Child {
   id: number;
@@ -48,8 +50,12 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
   const [selectedSessionDate, setSelectedSessionDate] = useState('');
   const [selectedSessionEvaluation, setSelectedSessionEvaluation] =
     useState('');
+  const [selectedSessionNotes, setSelectedSessionNotes] = useState('');
   const [files, setFiles] = useState<string[]>([]);
   const [reportDir, setReportDir] = useState('');
+  const [noDataAvailable, setNoDataAvailable] = useState(false);
+  const [noFileAvailable, setNoFileAvailable] = useState(false);
+  const [selectedSessionID, setSelectedSessionID] = useState('');
   const selectedCenter = useContext(dataContext);
   const [includedD, setIncludedD] = useState([]);
   const { modulesForReport, setModulesForReport, processCSVDataForReport } =
@@ -130,21 +136,6 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
     }
   };
 
-  const readFiles = async (
-    filesWithIDs: { sessionID: string; filePath: string }[]
-  ) => {
-    console.log('Files to read:', filesWithIDs);
-    for (const { sessionID, filePath } of filesWithIDs) {
-      console.log(
-        'Reading file for sessionID:',
-        sessionID,
-        'at path:',
-        filePath
-      );
-      await handleReadFile(`${reportDir}/${filePath}.csv`);
-    }
-  };
-
   const handleReadFile = async (filePath: string) => {
     console.log('handleReadFile', filePath);
     try {
@@ -159,12 +150,11 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
       console.log('Processed CSV data:', moduleData);
       setModulesForReport(moduleData);
     } catch (error) {
-      console.error('Error reading file:', error);
+      console.log('Error reading file:', error);
     }
   };
 
   const handleOpenSession = async (session: any) => {
-    // Format the session creation date
     const date = new Date(session.attributes.created_at).toLocaleString('en', {
       weekday: 'long',
       year: 'numeric',
@@ -178,19 +168,42 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
 
     setSelectedSessionDate(date);
     setSelectedSessionEvaluation(session.attributes.evaluation);
-
-    // Add ".csv" extension to the session ID and match it with files
+    setSelectedSessionNotes(session.attributes.notes);
+    setSelectedSessionID(session.id); // Save the session ID
     const sessionFileName = `${session.id}.csv`;
-    console.log('Looking for file:', sessionFileName);
 
     if (files.includes(session.id.toString())) {
-      console.log('Found file for session:', sessionFileName);
+      setNoDataAvailable(false); // Data available
+      setNoFileAvailable(false);
       await handleReadFile(`${reportDir}/${sessionFileName}`);
     } else {
-      console.error('File not found for session ID:', session.id);
+      setNoDataAvailable(true); // No data available
+      setNoFileAvailable(true);
+      setModulesForReport([]); // Set an empty array to show "No data available"
     }
 
     onOpen();
+  };
+
+  const handleExportCSV = async () => {
+    if (selectedSessionID) {
+      const filePath = `${reportDir}/${selectedSessionID}.csv`;
+      // Trigger the download in the main process
+      const result = await (window as any).electron.downloadFile(filePath);
+      if (result.success) {
+        console.log('File downloaded successfully:', result.path);
+      } else {
+        console.error('Error downloading file:', result.error);
+      }
+    }
+  };
+
+  const calculateTotalDuration = (modules: any[]) => {
+    const totalMinutes = modules.reduce((total, module) => {
+      return total + (module.timeSpent || 0);
+    }, 0);
+
+    return `${totalMinutes} minutes`;
   };
 
   return (
@@ -215,9 +228,18 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                   <GridItem>
                     <Box borderWidth="1px" borderRadius="lg" p={4} h="100%">
                       <Text fontSize="xl" fontWeight="bold">
-                        Specialist
+                        Specialist Details
                       </Text>
-                      {/* Add content here */}
+                      {doctorsList.length === 0 ? (
+                        <Text>No Data Available</Text>
+                      ) : (
+                        doctorsList.map((doctor, index) => (
+                          <Text key={index}>
+                            {doctor.attributes.name} -{' '}
+                            {doctor.attributes.specialty}
+                          </Text>
+                        ))
+                      )}
                     </Box>
                   </GridItem>
 
@@ -229,7 +251,12 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                       </Text>
                       {/* Add content here */}
                       <Text mt={2}>Date: {selectedSessionDate}</Text>
-                      <Text>Duration: 1 hour</Text>
+                      <Text>
+                        Duration:{' '}
+                        {modulesForReport.length > 0
+                          ? calculateTotalDuration(modulesForReport)
+                          : 'No data available'}
+                      </Text>
                     </Box>
                   </GridItem>
 
@@ -240,7 +267,11 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                         Session Evaluation
                       </Text>
                       {/* Add content here */}
-                      <Text mt={2}>{selectedSessionEvaluation}</Text>
+                      <Text mt={2}>
+                        {selectedSessionEvaluation
+                          ? selectedSessionEvaluation
+                          : 'No data available'}
+                      </Text>
                     </Box>
                   </GridItem>
                 </Grid>
@@ -251,7 +282,7 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                   <GridItem>
                     <Box borderWidth="1px" borderRadius="lg" p={4}>
                       <Text fontSize="xl" fontWeight="bold">
-                        Kid
+                        Kid Details
                       </Text>
                       <Box display={'flex'} gap={5}>
                         <Image
@@ -268,18 +299,15 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                           h="52px"
                         />
                         <Box>
-                          <Text mt={2} fontWeight="bold">
+                          <Text mt={2} fontWeight="bold" fontSize={'lg'}>
                             {kidData?.attributes?.name}
                           </Text>
                           <Text color="gray.500">
-                            {diagnosis.map(
-                              (diagnosis: any, diagnosisIndex: number) => (
-                                <Text key={diagnosisIndex} display="inline">
-                                  {diagnosisIndex > 0 && ', '}
-                                  {diagnosis.attributes.name}
-                                </Text>
+                            {diagnosis
+                              .map(
+                                (diagnosis: any) => diagnosis.attributes.name
                               )
-                            )}
+                              .join(', ')}
                           </Text>
                         </Box>
                       </Box>
@@ -292,32 +320,38 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                       <Text fontSize="xl" fontWeight="bold" mb={4}>
                         Modules
                       </Text>
-                      {modulesForReport.map((module, index) => (
-                        <Box
-                          key={index}
-                          borderWidth="1px"
-                          borderRadius="lg"
-                          p={4}
-                          mb={4}
-                        >
-                          <Text fontSize="lg" fontWeight="bold">
-                            {module.moduleName}
-                          </Text>
-                          <Text>
-                            Distractors: {''}
-                            {module.distractors.map(
-                              (distractor, distractorIndex) => (
-                                <Text key={distractorIndex} display="inline">
-                                  {distractorIndex > 0 && ', '}
-                                  {distractor}
-                                </Text>
+                      {noDataAvailable ? (
+                        <Text>No Data Available</Text>
+                      ) : (
+                        modulesForReport.map((module, index) => (
+                          <Box
+                            key={index}
+                            borderWidth="1px"
+                            borderRadius="lg"
+                            p={4}
+                            mb={4}
+                          >
+                            <Text fontSize="lg" fontWeight="bold">
+                              {module.moduleName}
+                            </Text>
+                            {module.distractors.length > 0 ? (
+                              module.distractors.map(
+                                (distractor, distractorIndex) => (
+                                  <Text key={distractorIndex}>
+                                    Distractors: {distractorIndex > 0 && ', '}
+                                    {distractor}
+                                  </Text>
+                                )
                               )
+                            ) : (
+                              <Text>Distractors: No Distractors recorded</Text>
                             )}
-                          </Text>
-                          <Text>Level: {module.level}</Text>
-                          <Text>Duration: {module.formattedTimeSpent}</Text>
-                        </Box>
-                      ))}
+
+                            <Text>Level: {module.level}</Text>
+                            <Text>Duration: {module.formattedTimeSpent}</Text>
+                          </Box>
+                        ))
+                      )}
                     </Box>
                   </GridItem>
                 </Grid>
@@ -330,7 +364,11 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                       <Text fontSize="xl" fontWeight="bold">
                         Session Notes
                       </Text>
-                      {/* Add content here */}
+                      <Text>
+                        {selectedSessionNotes
+                          ? selectedSessionNotes
+                          : 'No data available'}
+                      </Text>
                     </Box>
                   </GridItem>
 
@@ -343,6 +381,8 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                       textColor={'white'}
                       fontSize="1.125em"
                       fontWeight="700"
+                      onClick={handleExportCSV}
+                      isDisabled={noFileAvailable}
                     >
                       Export CSV
                     </Button>
@@ -361,39 +401,45 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
 
         <TabPanels>
           <TabPanel>
-            <Grid
-              py="2"
-              my="3"
-              borderRadius="10px"
-              backgroundColor="#FFFFFF"
-              templateColumns="repeat(4, 1fr)"
-              alignItems="center"
-              color="#787486"
-              fontSize="14px"
-              fontFamily="Graphik LCG"
-              fontWeight="500"
-              lineHeight="24px"
-            >
-              <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
-                Name
-              </GridItem>
-              <GridItem colSpan={1} textAlign={'center'}>
-                Speciality
-              </GridItem>
-              <GridItem colSpan={1} textAlign={'center'}>
-                Sessions
-              </GridItem>
+            {doctorsList.length > 0 ? (
+              <>
+                <Grid
+                  py="2"
+                  my="3"
+                  borderRadius="10px"
+                  backgroundColor="#FFFFFF"
+                  templateColumns="repeat(4, 1fr)"
+                  alignItems="center"
+                  color="#787486"
+                  fontSize="14px"
+                  fontFamily="Graphik LCG"
+                  fontWeight="500"
+                  lineHeight="24px"
+                >
+                  <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
+                    Name
+                  </GridItem>
+                  <GridItem colSpan={1} textAlign={'center'}>
+                    Speciality
+                  </GridItem>
+                  <GridItem colSpan={1} textAlign={'center'}>
+                    Sessions
+                  </GridItem>
 
-              <GridItem colSpan={1} textAlign={'center'}>
-                Last activity
-              </GridItem>
-            </Grid>
+                  <GridItem colSpan={1} textAlign={'center'}>
+                    Last activity
+                  </GridItem>
+                </Grid>
 
-            <TableData
-              showDoctor={showDoctor}
-              doctorsList={doctorsList}
-              includedD={includedD}
-            />
+                <TableData
+                  showDoctor={showDoctor}
+                  doctorsList={doctorsList}
+                  includedD={includedD}
+                />
+              </>
+            ) : (
+              <Text>No data available</Text>
+            )}
           </TabPanel>
 
           <TabPanel>
