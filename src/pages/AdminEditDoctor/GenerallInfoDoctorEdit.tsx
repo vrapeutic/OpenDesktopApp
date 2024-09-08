@@ -16,7 +16,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import axios from 'axios';
 import joi from 'joi';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { Image } from '../../assets/icons/Image';
@@ -50,7 +50,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     name: joi.string().min(3).max(30).required().label('Name'),
     degree: joi.string().required().label('Degree'),
     university: joi.string().required().label('University'),
-    specialities: joi.array().required().label('specialities'),
+    specialities: joi.array().min(1).required().label('specialities'),
     certification: joi
       .any()
       .label('Certification')
@@ -79,10 +79,13 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors,isValid },
     setValue,
     clearErrors,
     setError,
+    control,
+ trigger,
+
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -103,8 +106,10 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
 
       const x: any[] = datachild.relationships.specialties.data;
       const filteredArray = specialistsList.filter((item: any) => {
+        
         return x.some((elem) => elem.id === String(item.id));
       });
+      console.log(filteredArray)
       const mappedSpecialties = filteredArray.map((y: any) => ({
         id: y.id,
         label: y.name,
@@ -137,6 +142,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     setValue('specialities', options);
     setSelectedSpecialities(options);
     setSpecialistIds(options.map((opt: any) => opt.id));
+    trigger('specialities')
   };
 
   const FormonSubmit = (data: {
@@ -333,7 +339,41 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
             Specialities
           </FormLabel>
           <Box mt="0.75em" mb=".3em">
-            <Select
+{/* 
+          <Controller
+              name="diagnoses"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  options={diagnosesList}
+                  styles={customStyles}
+                  onChange={(selectedOptions) => {
+                    field.onChange(selectedOptions);
+                    setValue('diagnoses', selectedOptions);
+                    trigger('diagnoses'); // Trigger validation for the 'diagnoses' field
+                  }}
+                />
+              )}/> */}
+               <Controller
+               name="specialities"
+               control={control}
+               render={({ field }) => (
+                 <Select
+                   {...field}
+                   closeMenuOnSelect={false}
+                   components={animatedComponents}
+                   isMulti
+                   options={specialitiesOptions}
+                   styles={customStyles}
+                   value={selectedSpecialities}
+                   onChange={handleSpecializations}
+                 />
+                )}/>
+            {/* <Select
               {...register('specialities')}
               closeMenuOnSelect={false}
               components={animatedComponents}
@@ -344,7 +384,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
               onChange={handleSpecializations}
               styles={customStyles}
               value={selectedSpecialities}
-            />
+            /> */}
           </Box>
 
           {errors.specialities && (
@@ -508,7 +548,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
       <Flex flexDirection="row-reverse">
         <Button
           type="submit"
-          bg="#4AA6CA"
+          bg={isValid ? '#4AA6CA' : '#D3D3D3'}
           borderRadius="0.75em"
           w="13.375em"
           h="3.375em"
@@ -518,6 +558,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
+          isDisabled={!isValid}
         >
           Submit
         </Button>
