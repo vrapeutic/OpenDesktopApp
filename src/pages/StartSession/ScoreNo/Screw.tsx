@@ -79,12 +79,51 @@ import OpenconnectedScore from './OpenconnectedScore';
   
       navigate('/home');
       props.onClose();
+
+      let direction;
+
+      switch (updatedFormData[0]) {
+        case 1:
+          direction = 'right';
+          break;
+        case 2:
+          direction = 'center';
+          break;
+        case 3:
+          direction = 'left';
+          break;
+        default:
+          direction = 'unknown'; // Handle unexpected values
+          break;
+      }
+
+      let ball 
+      switch (props.selectedNumber) {
+        case 1:
+          ball = ' 0.7';
+          break;
+        case 2:
+          ball = '1';
+          break;
+        case 3:
+          ball = '1.5';
+          break;
+        default:
+          ball = 'unknown'; // Handle unexpected values
+          break;
+      }
+       let srcew 
+       if(selectedDistractors===1){
+        srcew="Yes"
+       }else{
+        srcew="Not"
+       }
       toastIdRef.current = toast({
         title: 'Success',
         description: (
           <Box>
-            {`You select  Kick direction ${updatedFormData[0]} , Number of Kicks ${props.formData[1]} , Ball Speed ${props.selectedNumber},
-         Screw ${selectedDistractors} 
+            {`You select  Kick direction ${direction} , Number of Kicks ${props.formData[1]} , Ball Speed ${ball},
+         Screw ${srcew} ,
         module name is ${module} and session id is ${sessionId}`}
             <Button
                 color={"white"}
@@ -143,7 +182,7 @@ import OpenconnectedScore from './OpenconnectedScore';
         setErrorMEssage(errorMessage);
         setNotFound(true);
       }
-      console.log(
+      console.log(updatedFormData,
         `You select  Kick direction ${updatedFormData[0]} , Number of Kicks ${props.formData[1]} , Ball Speed ${props.selectedNumber},
          Screw ${selectedDistractors} 
         module name is ${module} and session id is ${sessionId}`

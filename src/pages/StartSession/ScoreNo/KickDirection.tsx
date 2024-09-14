@@ -56,6 +56,7 @@ import NumberOfKicks from './NumberOfKicks';
     const handleButtonClick = (level: number) => {
       setSelectedLevel(level);
       setValue('selectLevel', level);
+      console.log(level)
     };
   
     return (
@@ -158,6 +159,7 @@ import NumberOfKicks from './NumberOfKicks';
             setFormData={setFormData}
             oncloseselectlevel={props.onClose}
             onclosemodules={props.onclosemodules}
+           
           />
         )}
   

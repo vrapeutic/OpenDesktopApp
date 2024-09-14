@@ -144,7 +144,7 @@ export default function SelectingModule(props: any) {
         case 'Badminton':
           return onOpenSelectlevelBed();
           case 'ScoreNo':
-            console.log('Rodja', name);
+            console.log('ScoreNo', name);
             return onKickDirection();
           
         default:

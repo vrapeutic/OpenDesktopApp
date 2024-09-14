@@ -17,9 +17,9 @@ import {
   import { useForm } from 'react-hook-form';
   import joi from 'joi';
   import { joiResolver } from '@hookform/resolvers/joi';
-  import SelectDistractors from './SelectDistractors';
+
   import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
-  import OpenconnectedArcheeko from './OpenconnectedArcheeko';
+
   import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
   import { useNavigate } from 'react-router-dom';
   import useSocketManager from '@renderer/Context/SocketManagerProvider';
@@ -78,93 +78,85 @@ import Screw from './Screw';
       props.setFormData(updatedFormData);
   
       console.log('updated form data in number', updatedFormData);
-      if (props.formData[0] === 2 || props.formData[0] === 3) {
-        onOpenSelectDistractors();
-      } else {
-        navigate('/Therapycenters');
+      onOpenSelectDistractors();
+    //   if (props.formData[0] === 2 || props.formData[0] === 3) {
+    //     onOpenSelectDistractors();
+    //   } else {
+    //     navigate('/Therapycenters');
   
-        console.log('session id', sessionId);
+    //     console.log('session id', sessionId);
   
-        // toast({
-        //   title: 'Success',
-        //   description: `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, Number ${selectedNumber} ,
-        //    module name is ${module} and session id is ${sessionId}`,
-        //   status: 'success',
-        //   duration: 3000,
-        //   position: 'bottom-left',
-         
-        // });
        
   
-        toastIdRef.current = toast({
-          title: 'Success',
-          description: (
-            <Box>
-              {`You assigned level ${updatedFormData[0]}, environment ${props.formData[1]}, Number ${props.selectedNumber}, module name is ${module} and session id is ${sessionId}`}
-              <Button
-               color={"white"}
-                width={3}
-                height={5}
-                onClick={() => {
-                  if (toastIdRef.current) {
+    //     toastIdRef.current = toast({
+    //       title: 'Success',
+    //       description: (
+    //         <Box>
+    //           {`You assigned level ${updatedFormData[0]}, environment ${props.formData[1]}, Number ${props.selectedNumber}, module name is ${module} and session id is ${sessionId}`}
+    //           <Button
+    //            color={"white"}
+    //             width={3}
+    //             height={5}
+    //             onClick={() => {
+    //               if (toastIdRef.current) {
                    
-                    toast.close(toastIdRef.current);
-                  }
-                }}
-              position={"absolute"}
+    //                 toast.close(toastIdRef.current);
+    //               }
+    //             }}
+    //           position={"absolute"}
          
-              top={3}
-              right={3}
+    //           top={3}
+    //           right={3}
             
-              >
-            x
-              </Button>
-            </Box>
-          ),
-          status: 'success',
-          duration: null,
-          position: 'bottom-left',
-          onCloseComplete: () => {
-            console.log('Toast has been removed.');
-            // Additional logic for when the toast is removed
-          },
-        });
-        const existingDevice = await checkIfServiceExists(headsetKey);
-        const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-        if (appIsConnectedToInternet && existingDevice) {
-          // if (appIsConnectedToInternet ) {
-          console.log(updatedFormData);
-          const socketMessage = {
-            sessionId,
-            [MODULE_PACKAGE_KEY]: module,
-            deviceId: headsetKey,
-          };
+    //           >
+    //         x
+    //           </Button>
+    //         </Box>
+    //       ),
+    //       status: 'success',
+    //       duration: null,
+    //       position: 'bottom-left',
+    //       onCloseComplete: () => {
+    //         console.log('Toast has been removed.');
+    //         // Additional logic for when the toast is removed
+    //       },
+    //     });
+    //     const existingDevice = await checkIfServiceExists(headsetKey);
+    //     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+    //     if (appIsConnectedToInternet && existingDevice) {
+    //       // if (appIsConnectedToInternet ) {
+    //       console.log(updatedFormData);
+    //       const socketMessage = {
+    //         sessionId,
+    //         [MODULE_PACKAGE_KEY]: module,
+    //         deviceId: headsetKey,
+    //       };
   
-          dispatchSocketMessage(
-            START_APP_MESSAGE,
-            socketMessage,
-            headsetKey,
-            updatedFormData
-          );
-          onOpenConnected();
-        } else {
-          console.log(headsetKey);
-          console.log(existingDevice);
-          const errorMessage = !appIsConnectedToInternet
-            ? 'You are not connected to the internet'
-            : 'No headset found';
+    //       dispatchSocketMessage(
+    //         START_APP_MESSAGE,
+    //         socketMessage,
+    //         headsetKey,
+    //         updatedFormData
+    //       );
+    //       onOpenConnected();
+    //     } else {
+    //       console.log(headsetKey);
+    //       console.log(existingDevice);
+    //       const errorMessage = !appIsConnectedToInternet
+    //         ? 'You are not connected to the internet'
+    //         : 'No headset found';
   
-          console.log(errorMessage);
-          setErrorMEssage(errorMessage);
-          setNotFound(true);
-        }
+    //       console.log(errorMessage);
+    //       setErrorMEssage(errorMessage);
+    //       setNotFound(true);
+    //     }
   
-        console.log(
-          `You select Kick direction ${updatedFormData[0]} ,Number of Kicks ${props.formData[1]},  Ball Speed ${selectedNumber} ,
-           module name is ${module} and session id is ${sessionId}`
-        );
-        console.log('Array of menu choices', updatedFormData);
-      }
+    //     console.log(
+    //       `You select Kick direction ${updatedFormData[0]} ,Number of Kicks ${props.formData[1]},  Ball Speed ${selectedNumber} ,
+    //        module name is ${module} and session id is ${sessionId}`
+    //     );
+    //     console.log('Array of menu choices', updatedFormData);
+    //   }
     };
   
     const handleButtonClick = (number: number) => {
@@ -289,7 +281,7 @@ import Screw from './Screw';
                 fontSize="15px"
                 onClick={handleSubmit(handleFormSubmit)}
               >
-                {props.level != 1 ? 'Next' : 'Play'}
+                 Next
               </Button>
             </ModalFooter>
           </ModalContent>
