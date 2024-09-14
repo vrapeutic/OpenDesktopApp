@@ -32,6 +32,7 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { END_SESSION_MESSAGE } from '@main/constants';
 import SelectLevelGar from './Gardendo/SelectLevelGar';
 import SelectLevelBed from './Badminton/selectLevelBed';
+import KickDirection from './ScoreNo/KickDirection';
 
 export default function SelectingModule(props: any) {
   const { popupFunctions, addFunction } = usePopupsHandler();
@@ -88,7 +89,11 @@ export default function SelectingModule(props: any) {
   const [errors, setErrors] = useState({
     selectedModule: null,
   });
-
+  const {
+    isOpen: isKickDirection ,
+    onOpen: onKickDirection,
+    onClose: onCloseKickDirection,
+  } = useDisclosure();
   const schema = Joi.object().keys({
     selectedModule: Joi.string().required().label('module Name'),
   });
@@ -136,8 +141,12 @@ export default function SelectingModule(props: any) {
         case 'GardenDo':
           console.log('GardenDo', name);
           return onOpenSelectlevelGar();
-          case 'Badminton':
+        case 'Badminton':
           return onOpenSelectlevelBed();
+          case 'ScoreNo':
+            console.log('Rodja', name);
+            return onKickDirection();
+          
         default:
           toast({
             title: 'error',
@@ -255,8 +264,12 @@ export default function SelectingModule(props: any) {
 
   return (
     <Box>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}  closeOnOverlayClick={false}
-        closeOnEsc={false}>
+      <Modal
+        isOpen={props.isOpen}
+        onClose={props.onClose}
+        closeOnOverlayClick={false}
+        closeOnEsc={false}
+      >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -400,13 +413,19 @@ export default function SelectingModule(props: any) {
           onclosemodules={props.onClose}
         />
       )}
-       {onOpenSelectlevelBed && (
+      {onOpenSelectlevelBed && (
         <SelectLevelBed
           isOpen={isOpenSelectlevelBed}
           onClose={onCloseSelectlevelBed}
           onclosemodules={props.onClose}
         />
       )}
+       {onKickDirection && (
+        <KickDirection
+          isOpen={isKickDirection}
+          onClose={onCloseKickDirection}
+          onclosemodules={props.onClose}
+        />)}
     </Box>
   );
 }

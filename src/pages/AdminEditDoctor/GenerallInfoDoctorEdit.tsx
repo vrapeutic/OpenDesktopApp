@@ -6,7 +6,6 @@ import {
   FormLabel,
   Grid,
   GridItem,
-
   Input,
   Text,
   useDisclosure,
@@ -79,13 +78,12 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors,isValid },
+    formState: { errors, isValid },
     setValue,
     clearErrors,
     setError,
     control,
- trigger,
-
+    trigger,
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -106,10 +104,9 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
 
       const x: any[] = datachild.relationships.specialties.data;
       const filteredArray = specialistsList.filter((item: any) => {
-        
         return x.some((elem) => elem.id === String(item.id));
       });
-      console.log(filteredArray)
+      console.log(filteredArray);
       const mappedSpecialties = filteredArray.map((y: any) => ({
         id: y.id,
         label: y.name,
@@ -137,12 +134,14 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     label: speciality.name,
     value: speciality.id,
   }));
+  console.log(specialitiesOptions);
 
   const handleSpecializations = (options: any) => {
     setValue('specialities', options);
+
     setSelectedSpecialities(options);
     setSpecialistIds(options.map((opt: any) => opt.id));
-    trigger('specialities')
+    trigger('specialities');
   };
 
   const FormonSubmit = (data: {
@@ -185,7 +184,6 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     }
   };
 
-
   const { otp } = useAdminContext();
   const postFormData = async (formData: FormData) => {
     try {
@@ -217,10 +215,9 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     });
     console.error('API Error:', error);
   };
-  const SendDataToApi = async (data:any) => {
+  const SendDataToApi = async (data: any) => {
     console.log('data in SendDataToApi:', data);
-    const formData= createFormEdit(data);
-
+    const formData = createFormEdit(data);
     try {
       await postFormData(data);
       handleSuccess();
@@ -229,24 +226,32 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
       handleError(error);
     }
   };
-  
+
   const handleSuccess = () => {
-   
     onOpen();
   };
-  const createFormEdit = async (data:any) => {
+  const createFormEdit = async (data: any) => {
     const doctorFormData = new FormData();
-    console.log(data.name,data.specialities)
+    console.log("test", data.specialities);
     doctorFormData.append('name', data.name);
     doctorFormData.append('degree', data.degree);
     doctorFormData.append('university', data.university);
-    doctorFormData.append('certification', data.certification);
+    // Append certification
+    if (data.certification) {
+      doctorFormData.append('certification', data.certification);
+    }
+
+    // Append logo
     if (logo) {
       doctorFormData.append('photo', logo);
     }
-    data.specialities.forEach((speciality: { id: string | Blob }) =>
-      doctorFormData.append('specialty_ids[]', speciality.id)
-    );
+
+    // Append specialities IDs
+    data.specialities.forEach((speciality: { id: string }) => {
+      console.log('Appending:', speciality.id);
+      doctorFormData.append('specialty_ids[]', speciality.id);
+    });
+
     return doctorFormData;
   };
   const customStyles = {
@@ -339,7 +344,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
             Specialities
           </FormLabel>
           <Box mt="0.75em" mb=".3em">
-{/* 
+            {/* 
           <Controller
               name="diagnoses"
               control={control}
@@ -358,21 +363,22 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
                   }}
                 />
               )}/> */}
-               <Controller
-               name="specialities"
-               control={control}
-               render={({ field }) => (
-                 <Select
-                   {...field}
-                   closeMenuOnSelect={false}
-                   components={animatedComponents}
-                   isMulti
-                   options={specialitiesOptions}
-                   styles={customStyles}
-                   value={selectedSpecialities}
-                   onChange={handleSpecializations}
-                 />
-                )}/>
+            <Controller
+              name="specialities"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  options={specialitiesOptions}
+                  styles={customStyles}
+                  value={selectedSpecialities}
+                  onChange={handleSpecializations}
+                />
+              )}
+            />
             {/* <Select
               {...register('specialities')}
               closeMenuOnSelect={false}
@@ -582,14 +588,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
           </Button>
         )}
       </Flex>
-      {onOpen && (
-           
-            <CongratulationEdit
-              isOpen={isOpen}
-              onClose={onClose}
-            />
-         
-      )}
+      {onOpen && <CongratulationEdit isOpen={isOpen} onClose={onClose} />}
     </Box>
   );
 };
