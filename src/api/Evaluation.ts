@@ -10,7 +10,7 @@ const getEvaluation = async (id: number) => {
   };
   try {
     const response = await axios.get(
-      `${config.apiURL}/api/v1/centers/${id}/sessions/evaluations`,
+      `${config.apiURL}/api/v1/centers/${id}/sessions/evaluations?include=software_modules,doctors`,
       { headers }
     );
     return response.data;

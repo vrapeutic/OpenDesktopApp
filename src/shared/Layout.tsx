@@ -32,7 +32,7 @@ export default function Layout() {
   return (
     <Flex height="inherit">
       {menuOpen ? <Sidebar /> : <Sideclose />}
-      <Flex height="inherit" flexGrow="1" flexDir="column" bg="#F5F5F5">
+      <Flex minH={'100vh'} flexGrow="1" flexDir="column" bg="#F5F5F5">
         <Header sideToggle={MenuHandler} />
         <Outlet />
       </Flex>
