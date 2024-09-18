@@ -19,6 +19,7 @@ import {
   import { joiResolver } from '@hookform/resolvers/joi';
 import BallSpeed from './BallSpeed';
 
+
   const NumberOfKicks = (props: any) => {
     const [formData, setFormData] = useState<any[]>([]);
     const {
@@ -53,8 +54,9 @@ import BallSpeed from './BallSpeed';
       console.log(data.selectEnvironment);
       const updatedFormData = [
         props.formData[0],
+        props.formData[1],
         data.selectEnvironment,
-        ...props.formData.slice(2),
+        ...props.formData.slice(3),
       ];
   
       props.setFormData(updatedFormData);

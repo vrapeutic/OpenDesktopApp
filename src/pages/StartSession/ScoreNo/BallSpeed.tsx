@@ -28,20 +28,11 @@ import {
 import Screw from './Screw';
   const BallSpeed = (props: any) => {
     const toast = useToast();
-    const { module, sessionId, headsetKey } = useStartSessionContext();
-    const {
-      isOpen: isOpenConnected,
-      onOpen: onOpenConnected,
-      onClose: onCloseConnected,
-    } = useDisclosure();
+ 
     const navigate = useNavigate();
     const [notFound, setNotFound] = useState(false);
-    const [errorMEssage, setErrorMEssage] = useState(null);
-    const {
-      dispatchSocketMessage,
-      checkIfServiceExists,
-      checkAppNetWorkConnection,
-    } = useSocketManager();
+ 
+   
     const { popupFunctions } = usePopupsHandler();
     const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
     const { socketError } = useSocketManager();
@@ -72,6 +63,7 @@ import Screw from './Screw';
       updatedFormData = [
         props.formData[0],
         props.formData[1],
+        props.formData[2],
         data.selectNumber,
         ...props.formData.slice(3),
       ];

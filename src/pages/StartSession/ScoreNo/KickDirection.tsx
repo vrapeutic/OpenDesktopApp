@@ -17,6 +17,7 @@ import {
   import { useForm } from 'react-hook-form';
   import { joiResolver } from '@hookform/resolvers/joi';
 import NumberOfKicks from './NumberOfKicks';
+import NumberOfPlay from './NumberOfPlay';
   
   const KickDirection = (props: any) => {
     const {
@@ -24,7 +25,13 @@ import NumberOfKicks from './NumberOfKicks';
       onOpen: onOpenSelectEnvironment,
       onClose: onCloseSelectEnvironment,
     } = useDisclosure();
-  
+     const {
+      isOpen: isNumberOfPlay,
+      onOpen: onNumberOfPlay,
+      onClose: onCloseNumberOfPlay,
+    } = useDisclosure();
+    
+    
     const [formData, setFormData] = useState<any[]>([
       -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000,
     ]);
@@ -45,12 +52,24 @@ import NumberOfKicks from './NumberOfKicks';
     });
   
     const handleFormSubmit = (data: any) => {
-      setFormData([data.selectLevel, ...formData.slice(1)]);
-      console.log('Form Data Submitted in level Arc: ', [
-        data.selectLevel,
-        ...formData.slice(1),
-      ]);
-      onOpenSelectEnvironment();
+    //   setFormData([data.selectLevel, ...formData.slice(1)]);
+      if(selectedLevel !== 2){
+        const newFormData:any = [data.selectLevel, 1, ...formData.slice(2)];
+    
+        setFormData(newFormData);
+        console.log(newFormData);
+        onOpenSelectEnvironment();
+
+      }else{
+        setFormData([data.selectLevel, ...formData.slice(1)]);
+        console.log('Form Data Submitted in level Arc: ', [
+            data.selectLevel,
+            ...formData.slice(1),
+          ]);
+          onNumberOfPlay()
+      }
+      
+      
     };
   
     const handleButtonClick = (level: number) => {
@@ -155,6 +174,17 @@ import NumberOfKicks from './NumberOfKicks';
           <NumberOfKicks
             isOpen={isOpenSelectEnvironment}
             onClose={onCloseSelectEnvironment}
+            formData={formData}
+            setFormData={setFormData}
+            oncloseselectlevel={props.onClose}
+            onclosemodules={props.onclosemodules}
+           
+          />
+        )}
+        {onNumberOfPlay && (
+          <NumberOfPlay
+            isOpen={isNumberOfPlay}
+            onClose={onCloseNumberOfPlay}
             formData={formData}
             setFormData={setFormData}
             oncloseselectlevel={props.onClose}
