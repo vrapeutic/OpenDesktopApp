@@ -1,54 +1,64 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
-  Center,
   Flex,
   Heading,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Text,
-  Link,
-  Spinner,
   Modal,
-  ModalOverlay,
-  ModalHeader,
   ModalBody,
   ModalContent,
-  ModalCloseButton,
   ModalFooter,
+  ModalOverlay,
+  Spinner,
+  Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import VRminutesCard from '../shared/VRminutetsPerMonth/VRminutesCard';
-import VRsessionsCard from '../shared/VRsessions/VRsessionsCard';
-import { ChevronDownIcon } from '@chakra-ui/icons';
-import { config } from '../config';
-import StatistcsCards from '../theme/components/StatistcsCards';
-
-import { Link as ReachLink } from 'react-router-dom';
+import { CiFilter } from 'react-icons/ci';
 import { RedArrow } from '@renderer/assets/icons/RedArrow';
-import Papa from 'papaparse';
 import { useCSVData } from '@renderer/Context/CSVDataContext';
 import { dataContext } from '@renderer/shared/Provider';
+import Papa from 'papaparse';
+import { useContext, useEffect, useState } from 'react';
+import { Link as ReachLink } from 'react-router-dom';
+import { useGetCenter, useGetCentersData } from '../api';
+import Statists from './Statists';
+import { FaFilter } from 'react-icons/fa';
+export interface ModuleData {
+  moduleName: string;
+  totalTimeSpent: number;
+  formattedTimeSpent: string;
+  distractors: string[];
+  level: number;
+}
 
-// Example usage
-
+export interface FileData {
+  fileName: string;
+  modules: ModuleData[];
+}
 export default function Home() {
+  let selectedCenter = useContext(dataContext);
   const [centers, setCenters] = useState([]);
   const [centerName, setCenterName] = useState('Select Centers');
   const [isLoading, setIsLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  let selectedCenter = useContext(dataContext);
-  const [Loading, setLoading] = useState(false);
   const [arrow, setArrow] = useState(false);
   const selectedCenterContext = useContext(dataContext);
-  const { setModulesForHome, processCSVDataForHome, modulesForHome } =
-    useCSVData();
+  const { setModulesForHome, processCSVDataForHome } = useCSVData();
   const [files, setFiles] = useState([]);
   const [reportDir, setReportDir] = useState('');
   const { isOpen: isOpen, onOpen: onOpen, onClose: onClose } = useDisclosure();
+  const [sessionIds, setSessionIds] = useState<string[]>([]);
+  const [fileDataArray, setFileDataArray] = useState<FileData[]>([]);
+  const [availableMonths, setAvailableMonths] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState('');
+
+  const { data, isLoading: centersLoading } = useGetCentersData();
+  const mutation = useGetCenter();
 
   useEffect(() => {
     const fetchReportDir = async () => {
@@ -58,80 +68,52 @@ export default function Home() {
         const fixedDirUrl = dirUrl.replace(/\\/g, '/');
         setReportDir(fixedDirUrl);
       } catch (error) {
-        console.error('Error fetching report directory:', error);
+        console.log('Error fetching report directory:', error);
       }
     };
 
     fetchReportDir();
   }, []);
 
-  const handleListFiles = async () => {
-    try {
-      const files = await (window as any).electron.listFiles(reportDir);
-      setFiles(files);
-      await readFiles(files);
-    } catch (error) {
-      console.error('Error listing files:', error);
-    }
-  };
-  const readFiles = async (files: string[]) => {
-    for (const file of files) {
-      await handleReadFile(
-        'C:/Users/Issra Ismaiel/Downloads/sample_data_complex_session_2.csv'
-      );
-    }
-  };
-
-  const handleReadFile = async (filePath: string) => {
-    try {
-      const content = await (window as any).electron.readFile(filePath);
-
-      const parsedCSVData = Papa.parse<string[]>(content, {
-        skipEmptyLines: true,
-      }).data;
-
-      const moduleData = processCSVDataForHome(parsedCSVData);
-      setModulesForHome(moduleData);
-    } catch (error) {
-      console.error('Error reading file:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (reportDir) {
-      handleListFiles();
-    }
-  }, [reportDir]);
-
   const handleClick = (center: any) => {
     setCenterName(center?.attributes?.name);
     setIsLoading(true);
     selectedCenter = Object.assign(selectedCenter, center);
+    // getCenter();
+    mutation.mutate(selectedCenter?.id, {
+      onSuccess: (data: any) => {
+        if (data) {
+          setIsLoading(false);
+          const sessionIdsFromApi = data.map((session: any) => session.id);
+          const sessionDates = data.map(
+            (session: any) => session.attributes.created_at
+          );
+          console.log(sessionDates, 'sessionDates');
+          setSessionIds(sessionIdsFromApi);
+          const uniqueMonths = new Set();
+
+          sessionDates.forEach((session: any) => {
+            const date = new Date(session);
+            const month = date.toLocaleString('en', { month: 'long' });
+            uniqueMonths.add(month);
+          });
+
+          // Convert the Set to an array
+          const monthsArray = Array.from(uniqueMonths);
+          setAvailableMonths(monthsArray);
+        }
+      },
+    });
     setRefreshKey((oldKey) => oldKey + 1);
     setArrow(false);
   };
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const token = await (window as any).electronAPI.getPassword('token');
-      fetch(
-        `${config.apiURL}/api/v1/doctors/home_centers?include=center_social_links,specialties`,
-        {
-          method: 'Get',
-          redirect: 'follow',
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          setLoading(false);
-          setCenters(result.data);
-        })
-        .catch((error) => console.log('error', error));
-    })();
-  }, []);
-  console.log('centers length', centers.length, selectedCenterContext, centers);
+    if (data) {
+      setCenters(data);
+    }
+  }, [data]);
+
   useEffect(() => {
     if (Object.keys(selectedCenterContext).length === 0) {
       onOpen();
@@ -139,9 +121,74 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (sessionIds.length > 0 && reportDir) {
+      handleListFiles(); // This now runs after session IDs are fetched
+    }
+  }, [sessionIds, reportDir]);
+
+  const handleListFiles = async () => {
+    try {
+      const files = await (window as any).electron.listFiles(reportDir);
+      setFiles(files);
+      console.log('Files: from list ', files);
+      const fileDataArray = await readFiles(files);
+      setFileDataArray(fileDataArray);
+    } catch (error) {
+      console.log('Error listing files:', error);
+    }
+  };
+
+  const readFiles = async (files: string[]): Promise<FileData[]> => {
+    const fileDataArray: FileData[] = [];
+    let filesRead = 0;
+
+    for (const file of files) {
+      const sessionIDFromFile = file.replace('.csv', '');
+      if (sessionIds.includes(sessionIDFromFile)) {
+        const fileData = await handleReadFile(`${reportDir}/${file}`);
+        if (fileData) {
+          fileDataArray.push({
+            fileName: file,
+            modules: fileData,
+          });
+          filesRead++;
+        }
+      } else {
+        console.log(
+          'Session ID not found in sessionIds state:',
+          sessionIDFromFile
+        );
+      }
+    }
+
+    if (filesRead === 0) {
+      console.log('No matching files found for session IDs.');
+    } else {
+      console.log(`${filesRead} files were processed.`);
+    }
+
+    return fileDataArray;
+  };
+
+  const handleReadFile = async (
+    filePath: string
+  ): Promise<ModuleData[] | null> => {
+    try {
+      const content = await (window as any).electron.readFile(filePath);
+      const parsedCSVData = Papa.parse<string[]>(content, {
+        skipEmptyLines: true,
+      }).data;
+      return processCSVDataForHome(parsedCSVData);
+    } catch (error) {
+      console.log('Error reading file:', error);
+      return null;
+    }
+  };
+
   return (
     <>
-      {Loading ? (
+      {centersLoading ? (
         <Box textAlign="center" py={10} px={6}>
           <Spinner />
         </Box>
@@ -224,12 +271,38 @@ export default function Home() {
             >
               Home
             </Text>
-            <Flex alignItems={'center'}>
+            <Flex alignItems={'center'} gap={2}>
               {arrow && (
                 <Box mx={10}>
                   <RedArrow />
                 </Box>
               )}
+              {/* {selectedCenter && (
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rightIcon={<ChevronDownIcon />}
+                    bgColor="#FFFFFF"
+                    border="2px solid #00DEA3"
+                    borderRadius="8px"
+                    color="#00DEA3"
+                  >
+                    <Flex gap={1}>
+                      <FaFilter fill="#00DEA3" /> {selectedMonth}
+                    </Flex>
+                  </MenuButton>
+                  <MenuList>
+                    {availableMonths.map((month) => (
+                      <MenuItem
+                        key={month}
+                        onClick={() => setSelectedMonth(month)}
+                      >
+                        {month}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Menu>
+              )} */}
 
               <Menu>
                 <MenuButton
@@ -260,18 +333,23 @@ export default function Home() {
 
           {selectedCenterContext?.id && (
             <>
-              <Flex
-                width="90%"
-                justifyContent="space-between"
-                padding="20px"
+              <Box
+                // width="90%"
+                // justifyContent="space-between"
+                padding="10px"
                 marginBottom="20px"
-                flexWrap="wrap"
+                // flexWrap="wrap"
               >
-                <VRminutesCard loading={isLoading} refreshKey={refreshKey} />
-                <VRsessionsCard loading={isLoading} refreshKey={refreshKey} />
-              </Flex>
+                {/* <VRminutesCard loading={isLoading} refreshKey={refreshKey} />
+                <VRsessionsCard loading={isLoading} refreshKey={refreshKey} /> */}
+                <Statists
+                  loading={isLoading || centersLoading}
+                  refreshKey={refreshKey}
+                  fileDataArray={fileDataArray}
+                />
+              </Box>
 
-              <StatistcsCards refreshKey={refreshKey} />
+              {/* <StatistcsCards refreshKey={refreshKey} /> */}
             </>
           )}
         </>
