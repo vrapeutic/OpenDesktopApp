@@ -217,7 +217,7 @@ import Screw from './Screw';
                     fontSize="1.2rem"
                     {...register('selectNumber')}
                   >
-                    0.7
+                    1
                   </Button>
                   <Button
                     onClick={() => handleButtonClick(2)}
@@ -227,7 +227,7 @@ import Screw from './Screw';
                     fontSize="1.2rem"
                     {...register('selectNumber')}
                   >
-                     1
+                     1,
                   </Button>
                   <Button
                     onClick={() => handleButtonClick(3)}
@@ -237,7 +237,7 @@ import Screw from './Screw';
                     fontSize="1.2rem"
                     {...register('selectNumber')}
                   >
-                    1.5
+                    2
                   </Button>
                 </Stack>
   
