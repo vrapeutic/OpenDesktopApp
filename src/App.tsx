@@ -1,6 +1,6 @@
 import { Routes, Route, MemoryRouter, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import Home from './pages/Home';
+import Home from './pages/home/components/Home';
 import Kids from './pages/Kids';
 import Theraputicmodules from './pages/Theraputicmodules';
 import Therapycenters from './pages/Therapycenters';

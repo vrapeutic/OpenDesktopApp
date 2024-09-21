@@ -11,13 +11,11 @@ import { dataContext } from '../Provider';
 
 interface ChartData {
   name: string;
-  uv: number;
+  uv: string;
   fill: string;
 }
 
 export default function RadialChart(props: { refreshKey: number }) {
-  
-
   const center = useContext(dataContext);
   const [radialChart, setRadialChart] = useState<ChartData[]>([]);
 
@@ -45,7 +43,7 @@ export default function RadialChart(props: { refreshKey: number }) {
         const formattedData = Object.entries(result).map(
           ([name, percentage]: [string, number], index) => ({
             name,
-            uv: percentage,
+            uv: percentage.toFixed(2),
             fill: colors[`name${index + 1}`], // Assign static color based on name
           })
         );
