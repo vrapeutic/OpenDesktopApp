@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import joi from 'joi';
 import {
   Button,
@@ -10,7 +10,6 @@ import {
   Input,
   Flex,
   useDisclosure,
-  FormControl,
   useToast,
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -20,7 +19,6 @@ import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import axios from 'axios';
-import UploadKidImg from '@renderer/features/AddKids/UploadKidImg';
 import { TherapyFormProps } from '@renderer/features/AddCenterForm/therapyFormInterface';
 import { useAdminContext } from '@renderer/Context/AdminContext';
 import { getMe } from '@renderer/cache';
@@ -48,7 +46,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
   const schema = joi.object({
     Name: joi.string().min(3).max(30).required().label('Name'),
     Age: joi.required(),
-    diagnoses: joi.array().required().label('diagnoses'),
+    diagnoses: joi.array().min(1).required().label('diagnoses'),
     logo: joi
     .any()
     .label('logo')
@@ -62,10 +60,11 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     setValue,
     setError,
-  } = useForm({
+
+  control, trigger} = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
   });
@@ -144,6 +143,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     console.log(options);
     setValue('diagnoses', [...options]);
     setSelectedDiagnoses([...options]);
+    trigger('diagnoses');
   };
 
   const customStyles = {
@@ -312,7 +312,26 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
             Diagnoses
           </FormLabel>
           <Box mt="0.75em" mb=".3em">
-            <Select
+          <Controller
+              name="diagnoses"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  options={diagnosesList}
+                  id="diagnoses"
+                  name="diagnoses"
+                  onChange={handleSpecializations}
+                  styles={customStyles}
+                  value={selectedDiagnoses}
+                 
+                />
+              )}
+            />
+            {/* <Select
               {...register('diagnoses')}
               closeMenuOnSelect={false}
               components={animatedComponents}
@@ -323,7 +342,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
               onChange={handleSpecializations}
               styles={customStyles}
               value={selectedDiagnoses}
-            />
+            /> */}
           </Box>
 
           {errors.diagnoses && (
@@ -372,9 +391,9 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
       </Grid>
 
       <Flex flexDirection="row-reverse">
-        <Button
+      <Button
           type="submit"
-          bg="#4AA6CA"
+          bg={isValid ? '#4AA6CA' : '#D3D3D3'}
           borderRadius="0.75em"
           w="13.375em"
           h="3.375em"
@@ -384,6 +403,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
+          isDisabled={!isValid}
         >
           Submit
         </Button>
