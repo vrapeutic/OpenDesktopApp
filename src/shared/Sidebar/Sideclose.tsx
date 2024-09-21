@@ -19,6 +19,7 @@ export default function Sideclose() {
   const active = {
     color: '#00DEA3',
     fontWeight: '600',
+    
   };
   const Sidebar = {
     background: '#00DEA3',
@@ -26,6 +27,7 @@ export default function Sideclose() {
     height: '33px',
     left: 0,
     marginTop: '-7px',
+ 
   };
   console.log(location.pathname);
 

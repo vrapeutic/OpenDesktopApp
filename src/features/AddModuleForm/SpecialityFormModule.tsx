@@ -49,7 +49,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
     setError,
     clearErrors,
     setValue,
-    control,
+
     trigger,
     formState: { errors, isValid },
   } = useForm({
