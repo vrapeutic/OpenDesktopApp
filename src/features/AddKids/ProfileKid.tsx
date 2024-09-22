@@ -62,7 +62,7 @@ const ProfileKid: React.FC<ProfileKid> = ({
 
       <GridItem colSpan={3} my={5}>
         <Text
-          style={{ fontFamily: 'Inter', fontSize: '14px', fontWeight: '500' }}
+          style={{ fontFamily: 'Graphik LCG', fontSize: '14px', fontWeight: '500' }}
         >
           Personal info
         </Text>

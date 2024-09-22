@@ -169,7 +169,7 @@ export default function Sidebar() {
       height={'inherit'}
     >
       <VStack>
-        <Box ml="24px">
+        <Box >
           <Flex paddingY="27px">
             <Image src={VRapeutic} />
           </Flex>

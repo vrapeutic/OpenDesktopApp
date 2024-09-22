@@ -230,30 +230,36 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
   const handleSuccess = () => {
     onOpen();
   };
-  const createFormEdit = async (data: any) => {
+  const createFormEdit = (data: any) => {
     const doctorFormData = new FormData();
-    console.log("test", data.specialities);
+  
     doctorFormData.append('name', data.name);
     doctorFormData.append('degree', data.degree);
     doctorFormData.append('university', data.university);
-    // Append certification
+  
+    // Append certification (if available)
     if (data.certification) {
       doctorFormData.append('certification', data.certification);
     }
-
-    // Append logo
+  
+    // Append logo (if available)
     if (logo) {
       doctorFormData.append('photo', logo);
     }
-
-    // Append specialities IDs
-    data.specialities.forEach((speciality: { id: string }) => {
-      console.log('Appending:', speciality.id);
-      doctorFormData.append('specialty_ids[]', speciality.id);
-    });
-
+  
+    // Append specialty IDs (only the 'id' from each speciality)
+    if (data.specialities && data.specialities.length > 0) {
+      data.specialities.forEach((speciality: { id: string }) => {
+        console.log('Appending specialty id:', speciality.id);
+        doctorFormData.append('specialty_ids[]', speciality.id); // Append only the ID
+      });
+    } else {
+      console.error('No specialties provided');
+    }
+  
     return doctorFormData;
   };
+  
   const customStyles = {
     control: (provided: any) => ({
       ...provided,

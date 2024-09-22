@@ -35,7 +35,7 @@ export default function HeaderWithButton({
         bg="#4AA6CA"
         borderRadius="8px"
         fontSize="14px"
-        fontFamily="Roboto"
+        fontFamily="Graphik LCG"
         onClick={onButtonClick}
         boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
       >

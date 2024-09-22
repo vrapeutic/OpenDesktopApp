@@ -103,7 +103,7 @@ export default function ValidateOtp(props: any) {
               bg="#00DEA3"
               borderRadius="12px"
               color="#FFFFFF"
-              fontFamily="Roboto"
+              fontFamily="Graphik LCG"
               fontWeight="700"
               fontSize="18px"
             >

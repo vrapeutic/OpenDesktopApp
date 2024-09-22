@@ -100,7 +100,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
         <Heading
           pt="69px"
           letterSpacing="-0.01em"
-          fontFamily="inherit"
+          fontFamily="Graphik LCG"
           fontWeight="600"
           fontSize="2rem"
           color="#222631"

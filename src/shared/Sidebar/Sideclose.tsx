@@ -199,7 +199,7 @@ export default function Sideclose() {
             borderRadius="8px"
             fontSize="25px"
             fontWeight="600"
-            fontFamily="Roboto"
+            fontFamily="Graphik LCG"
             boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
           >
             <Link

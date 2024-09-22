@@ -12,7 +12,7 @@ const LoginNavigation = () => {
         maxW="435px"
       >
         <Link
-          fontFamily="Manrope"
+          fontFamily="Graphik LCG"
           lineHeight="1.2"
           color="#FFFFFF"
           fontWeight="600"
@@ -21,7 +21,7 @@ const LoginNavigation = () => {
           Features
         </Link>
         <Link
-          fontFamily="Manrope"
+          fontFamily="Graphik LCG"
           color="#FFFFFF"
           fontWeight="600"
           href="https://site.vrpeutic.ca/#about"
@@ -29,7 +29,7 @@ const LoginNavigation = () => {
           About us
         </Link>
         <Link
-          fontFamily="Manrope"
+          fontFamily="Graphik LCG"
           color="#FFFFFF"
           fontWeight="600"
           href="http://yuram.tech/blog/"
@@ -38,7 +38,7 @@ const LoginNavigation = () => {
         </Link>
         <Button
           as="a"
-          fontFamily="Manrope"
+          fontFamily="Graphik LCG"
           bg="#FFFFFF"
           color="#15134B"
           fontWeight="800"

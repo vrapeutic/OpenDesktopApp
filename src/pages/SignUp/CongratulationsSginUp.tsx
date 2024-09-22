@@ -92,7 +92,7 @@ export default function CongratulationsSginUp(props: any) {
                 borderRadius="12px"
                 bg="#00DEA3"
                 color="#FFFFFF"
-                fontFamily="Roboto"
+                fontFamily="Graphik LCG"
                 fontWeight="700"
                 fontSize="18px"
                 lineHeight="21.09px"

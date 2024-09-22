@@ -38,7 +38,7 @@ const Header = ({ sideToggle }: any) => {
           <InputLeftElement pointerEvents="none" children={<SeatchNormal />} />
           <Input
             type="text"
-            fontFamily="Inter"
+            fontFamily="Graphik LCG"
             fontWeight="500"
             fontSize="0.875rem"
             placeholder="Search for anything..."

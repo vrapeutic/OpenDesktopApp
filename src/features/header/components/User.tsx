@@ -15,7 +15,7 @@ const User = (props: any) => {
         <Flex direction="column">
           <Text
             width="max-content"
-            fontFamily="Inter"
+            fontFamily="Graphik LCG"
             fontSize="1rem"
             color="#0D062D"
           >
