@@ -10,7 +10,7 @@ import {
 import { useGetEvaluation } from '@renderer/api/Evaluation';
 import { useCSVData } from '@renderer/Context/CSVDataContext';
 import { dataContext } from '@renderer/shared/Provider';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -40,27 +40,72 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
   const { data: doctorData, isLoading } = useGetDoctorsData(
     selectedCenterContext?.id
   );
-  const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton']; // Replace with your actual module names
+  const [calculatedStats, setCalculatedStats] = useState({
+    totalVRDuration: 0,
+    longestVRSession: 0,
+    uniqueModules: 0,
+    averageModulesPerSession: 0,
+    averageLevelsPerSession: 0,
+    maxSessions: 0,
+  });
+  const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton'];
 
-  const totalVRDuration = modulesForHome.reduce(
-    (acc, curr) => acc + curr.totalTimeSpent,
-    0
-  );
-  const longestVRSession = modulesForHome.reduce(
-    (acc, curr) => Math.max(acc, curr.totalTimeSpent),
-    0
-  );
-  const moduleCounts = modulesForHome.map((item) => item.moduleName);
-  const uniqueModules = [...new Set(moduleCounts)]?.length;
-  const averageModulesPerSession = moduleCounts?.length / uniqueModules;
-  const averageLevelsPerSession =
-    modulesForHome.reduce((acc, curr) => acc + curr.level, 0) /
-    modulesForHome?.length;
-  console.log(modulesForHome, 'modulesForHome');
-  console.log(averageLevelsPerSession);
-  const maxSessions = Math.max(
-    ...modulesForHome.map((module) => module.totalTimeSpent)
-  );
+  useEffect(() => {
+    if (fileDataArray && fileDataArray.length > 0) {
+      const allModules = fileDataArray.flatMap((file: any) => file.modules);
+
+      const totalVRDuration = allModules.reduce(
+        (acc: any, curr: any) => acc + curr.totalTimeSpent,
+        0
+      );
+
+      const longestVRSession = allModules.reduce(
+        (acc: any, curr: any) => Math.max(acc, curr.totalTimeSpent),
+        0
+      );
+
+      const moduleCounts = allModules.map((item: any) => item.moduleName);
+      const uniqueModules = [...new Set(moduleCounts)].length;
+      const averageModulesPerSession =
+        moduleCounts.length / fileDataArray.length;
+      console.log('averageModulesPerSession', averageModulesPerSession);
+      console.log('uniqueModules', uniqueModules);
+      const averageLevelsPerSession =
+        allModules.reduce((acc: any, curr: any) => acc + curr.level, 0) /
+        allModules.length;
+
+      const maxSessions = Math.max(
+        ...allModules.map((module: any) => module.totalTimeSpent)
+      );
+
+      setCalculatedStats({
+        totalVRDuration,
+        longestVRSession,
+        uniqueModules,
+        averageModulesPerSession,
+        averageLevelsPerSession,
+        maxSessions,
+      });
+
+      console.log('Calculated stats:', {
+        totalVRDuration,
+        longestVRSession,
+        uniqueModules,
+        averageModulesPerSession,
+        averageLevelsPerSession,
+        maxSessions,
+      });
+    } else {
+      setCalculatedStats({
+        totalVRDuration: 0,
+        longestVRSession: 0,
+        uniqueModules: 0,
+        averageModulesPerSession: 0,
+        averageLevelsPerSession: 0,
+        maxSessions: 0,
+      });
+    }
+  }, [fileDataArray]);
 
   const getModuleCountsPerFile = (
     filesData: FileData[]
@@ -147,29 +192,38 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
       transformDoctorData();
       handleProcessFile(fileDataArray);
     }
-  }, [doctorData, fileDataArray]);
+  }, [doctorData, fileDataArray, selectedCenterContext.id]);
+
+  const moduleExistence = useMemo(() => {
+    if (!fileDataArray || fileDataArray.length === 0) {
+      return Object.fromEntries(moduleNames.map((name) => [name, false]));
+    }
+
+    return moduleNames.reduce(
+      (acc, name) => {
+        acc[name] = fileDataArray.some((file: any) =>
+          file.modules.some((m: any) => m.moduleName === name)
+        );
+        return acc;
+      },
+      {} as Record<string, boolean>
+    );
+  }, [fileDataArray, moduleNames]);
+
+  // For debugging
+  useEffect(() => {
+    console.log('Module existence:', moduleExistence);
+  }, [moduleExistence]);
 
   const PieDescription = () => (
-    <div
-      style={{ display: 'flex', justifyContent: 'space-evenly', padding: 10 }}
-    >
+    <Box display={'flex'} justifyContent={'space-evenly'} padding={2}>
       {pieData.map((entry, index) => (
-        <div
-          key={index}
-          style={{ marginRight: 10, display: 'flex', alignItems: 'center' }}
-        >
-          <div
-            style={{
-              width: 10,
-              height: 10,
-              backgroundColor: entry.color,
-              marginRight: 5,
-            }}
-          ></div>
-          <span>{entry.name}</span>
-        </div>
+        <Box display={'flex'} alignItems={'center'} key={index}>
+          <Box borderRadius={4} mr={1} w={5} h={5} bg={entry.color} />
+          <span style={{ whiteSpace: 'nowrap' }}>{entry.name}</span>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 
   const isEmptyData =
@@ -209,7 +263,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
             >
               <Text fontSize="l">Total VR Duration/Month</Text>
               <Text fontSize="xl" fontWeight="bold">
-                {totalVRDuration} Minutes
+                {calculatedStats.totalVRDuration} Minutes
               </Text>
             </Box>
             <Box
@@ -225,7 +279,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
             >
               <Text fontSize="l">Longest VR Session/Month</Text>
               <Text fontSize="xl" fontWeight="bold">
-                {longestVRSession} Minutes
+                {calculatedStats.longestVRSession} Minutes
               </Text>
             </Box>
             <Box
@@ -241,7 +295,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
             >
               <Text fontSize={'large'}>Average Number of Modules/Session</Text>
               <Text fontSize="xl" fontWeight="bold">
-                {averageModulesPerSession} Module
+                {calculatedStats.averageModulesPerSession} Module
               </Text>
             </Box>
             <Box
@@ -257,7 +311,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
             >
               <Text fontSize="l">Average Number of Levels/Session</Text>
               <Text fontSize="xl" fontWeight="bold">
-                {averageLevelsPerSession} Level
+                {calculatedStats.averageLevelsPerSession} Level
               </Text>
             </Box>
             <Box
@@ -280,23 +334,13 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                 justifyContent={'space-between'}
                 alignItems={'center'}
               >
-                {modulesForHome.length > 0 ? (
+                {fileDataArray?.length > 0 ? (
                   <>
                     <Tag
                       size="lg"
-                      variant={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'Viblio'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'solid'
-                          : 'outline'
-                      }
+                      variant={moduleExistence['Viblio'] ? 'solid' : 'outline'}
                       colorScheme={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'Viblio'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'primary'
-                          : 'gray'
+                        moduleExistence['Viblio'] ? 'primary' : 'gray'
                       }
                     >
                       Viblio
@@ -304,18 +348,10 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                     <Tag
                       size="lg"
                       variant={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'Archeeko'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'solid'
-                          : 'outline'
+                        moduleExistence['Archeeko'] ? 'solid' : 'outline'
                       }
                       colorScheme={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'Archeeko'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'primary'
-                          : 'gray'
+                        moduleExistence['Archeeko'] ? 'primary' : 'gray'
                       }
                     >
                       Archeeko
@@ -325,18 +361,10 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                     <Tag
                       size="lg"
                       variant={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'GardenDo'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'solid'
-                          : 'outline'
+                        moduleExistence['GardenDo'] ? 'solid' : 'outline'
                       }
                       colorScheme={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'GardenDo'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'primary'
-                          : 'gray'
+                        moduleExistence['GardenDo'] ? 'primary' : 'gray'
                       }
                     >
                       GardenDo
@@ -346,18 +374,10 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                     <Tag
                       size="lg"
                       variant={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'Badminton'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'solid'
-                          : 'outline'
+                        moduleExistence['Badminton'] ? 'solid' : 'outline'
                       }
                       colorScheme={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'Badminton'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'primary'
-                          : 'gray'
+                        moduleExistence['Badminton'] ? 'primary' : 'gray'
                       }
                     >
                       Badminton
@@ -366,19 +386,9 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                     {/* Rodja */}
                     <Tag
                       size="lg"
-                      variant={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'Rodja'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'solid'
-                          : 'outline'
-                      }
+                      variant={moduleExistence['Rodja'] ? 'solid' : 'outline'}
                       colorScheme={
-                        modulesForHome.find(
-                          (module) => module.moduleName === 'Rodja'
-                        )?.totalTimeSpent === maxSessions
-                          ? 'primary'
-                          : 'gray'
+                        moduleExistence['Rodja'] ? 'primary' : 'gray'
                       }
                     >
                       Rodja
@@ -403,7 +413,11 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
               Monthly Distribution of Sessions Evaluation
             </Text>
             {pieData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="70%">
+              <ResponsiveContainer
+                width="100%"
+                height="70%"
+                style={{ marginBottom: '1rem', marginTop: '1rem' }}
+              >
                 <PieChart>
                   <Tooltip />
                   <Pie
@@ -445,7 +459,11 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
             <Text fontSize="xl">Modules' Usage Distribution</Text>
 
             {moduleData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer
+                width="100%"
+                height="100%"
+                style={{ marginBottom: '1rem', marginTop: '1rem' }}
+              >
                 <BarChart data={moduleData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
@@ -475,7 +493,11 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
           <Box bg={'white'} borderWidth="1px" borderRadius="lg" p={4} h="400px">
             <Text fontSize="xl">Top "N" Performers This Month</Text>
             {doctors.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer
+                width="100%"
+                height="100%"
+                style={{ marginBottom: '1rem', marginTop: '1rem' }}
+              >
                 <BarChart data={doctors}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis

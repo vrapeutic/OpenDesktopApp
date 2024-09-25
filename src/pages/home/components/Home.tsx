@@ -39,6 +39,7 @@ export interface ModuleData {
 export interface FileData {
   fileName: string;
   modules: ModuleData[];
+  date?: string;
 }
 export default function Home() {
   let selectedCenter = useContext(dataContext);
@@ -48,7 +49,7 @@ export default function Home() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [arrow, setArrow] = useState(false);
   const selectedCenterContext = useContext(dataContext);
-  const { setModulesForHome, processCSVDataForHome } = useCSVData();
+  const { processCSVDataForHome } = useCSVData();
   const [files, setFiles] = useState([]);
   const [reportDir, setReportDir] = useState('');
   const { isOpen: isOpen, onOpen: onOpen, onClose: onClose } = useDisclosure();
@@ -56,6 +57,8 @@ export default function Home() {
   const [fileDataArray, setFileDataArray] = useState<FileData[]>([]);
   const [availableMonths, setAvailableMonths] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
+  const [sessionDates, setSessionDates] = useState<string[]>([]);
+  const [sessionData, setSessionData] = useState<{ [key: string]: string }>({});
 
   const { data, isLoading: centersLoading } = useGetCentersData();
   const mutation = useGetCenter();
@@ -75,39 +78,6 @@ export default function Home() {
     fetchReportDir();
   }, []);
 
-  const handleClick = (center: any) => {
-    setCenterName(center?.attributes?.name);
-    setIsLoading(true);
-    selectedCenter = Object.assign(selectedCenter, center);
-    // getCenter();
-    mutation.mutate(selectedCenter?.id, {
-      onSuccess: (data: any) => {
-        if (data) {
-          setIsLoading(false);
-          const sessionIdsFromApi = data.map((session: any) => session.id);
-          const sessionDates = data.map(
-            (session: any) => session.attributes.created_at
-          );
-          console.log(sessionDates, 'sessionDates');
-          setSessionIds(sessionIdsFromApi);
-          const uniqueMonths = new Set();
-
-          sessionDates.forEach((session: any) => {
-            const date = new Date(session);
-            const month = date.toLocaleString('en', { month: 'long' });
-            uniqueMonths.add(month);
-          });
-
-          // Convert the Set to an array
-          const monthsArray = Array.from(uniqueMonths);
-          setAvailableMonths(monthsArray);
-        }
-      },
-    });
-    setRefreshKey((oldKey) => oldKey + 1);
-    setArrow(false);
-  };
-
   useEffect(() => {
     if (data) {
       setCenters(data);
@@ -120,6 +90,43 @@ export default function Home() {
       setArrow(true);
     }
   }, []);
+
+  const handleClick = (center: any) => {
+    setCenterName(center?.attributes?.name);
+    setIsLoading(true);
+    selectedCenter = Object.assign(selectedCenter, center);
+    mutation.mutate(center?.id, {
+      onSuccess: (data: any) => {
+        if (data) {
+          setIsLoading(false);
+          const sessionIdsFromApi = data.map((session: any) => session.id);
+          setSessionIds(sessionIdsFromApi);
+          const sessionData = data.reduce(
+            (acc: { [key: string]: string }, session: any) => {
+              acc[session.id] = session?.attributes?.created_at;
+              return acc;
+            },
+            {}
+          );
+          setSessionData(sessionData);
+
+          // Extract unique months from the session dates
+          const uniqueMonths = new Set<string>();
+          Object.values(sessionData).forEach((date: string) => {
+            const month = new Date(date).toLocaleString('en', {
+              month: 'long',
+            });
+            uniqueMonths.add(month);
+          });
+          setAvailableMonths(Array.from(uniqueMonths));
+        }
+      },
+    });
+    setRefreshKey((oldKey) => oldKey + 1);
+    setArrow(false);
+  };
+
+  console.log('sessionData:', sessionData);
 
   useEffect(() => {
     if (sessionIds.length > 0 && reportDir) {
@@ -185,6 +192,75 @@ export default function Home() {
       return null;
     }
   };
+
+  // const handleListFiles = async () => {
+  //   try {
+  //     const files = await (window as any).electron.listFiles(reportDir);
+  //     setFiles(files);
+  //     console.log('Files: from list ', files);
+  //     const fileDataArray = await readFiles(files);
+  //     console.log('File Data Array: ', fileDataArray);
+  //     setFileDataArray(fileDataArray);
+  //   } catch (error) {
+  //     console.log('Error listing files:', error);
+  //   }
+  // };
+
+  // const readFiles = async (files: string[]): Promise<FileData[]> => {
+  //   const fileDataArray: FileData[] = [];
+  //   let filesRead = 0;
+
+  //   for (const file of files) {
+  //     const sessionIDFromFile = file.replace('.csv', '');
+  //     if (sessionIDFromFile in sessionData) {
+  //       const sessionDate = new Date(sessionData[sessionIDFromFile]);
+  //       const sessionMonth = sessionDate.toLocaleString('en', {
+  //         month: 'long',
+  //       });
+
+  //       if (!selectedMonth || sessionMonth === selectedMonth) {
+  //         const fileData = await handleReadFile(`${reportDir}/${file}`);
+  //         if (fileData) {
+  //           fileDataArray.push({
+  //             fileName: file,
+  //             modules: fileData,
+  //             date: sessionData[sessionIDFromFile],
+  //           });
+  //           filesRead++;
+  //         }
+  //       }
+  //     } else {
+  //       console.log('Session ID not found in sessionData:', sessionIDFromFile);
+  //     }
+  //   }
+
+  //   if (filesRead === 0) {
+  //     console.log('No matching files found for session IDs or selected month.');
+  //   } else {
+  //     console.log(
+  //       `${filesRead} files were processed for ${
+  //         selectedMonth || 'all months'
+  //       }.`
+  //     );
+  //   }
+
+  //   return fileDataArray;
+  // };
+
+  // const handleReadFile = async (
+  //   filePath: string
+  // ): Promise<ModuleData[] | null> => {
+  //   try {
+  //     const content = await (window as any).electron.readFile(filePath);
+  //     const parsedCSVData = Papa.parse<string[]>(content, {
+  //       skipEmptyLines: true,
+  //     }).data;
+  //     return processCSVDataForHome(parsedCSVData);
+  //   } catch (error) {
+  //     console.log('Error reading file:', error);
+  //     return null;
+  //   }
+  // };
 
   return (
     <>
@@ -277,7 +353,7 @@ export default function Home() {
                   <RedArrow />
                 </Box>
               )}
-              {/* {selectedCenter && (
+              {/* {selectedCenter.id && (
                 <Menu>
                   <MenuButton
                     as={Button}
@@ -343,7 +419,7 @@ export default function Home() {
                 {/* <VRminutesCard loading={isLoading} refreshKey={refreshKey} />
                 <VRsessionsCard loading={isLoading} refreshKey={refreshKey} /> */}
                 <Statists
-                  loading={isLoading || centersLoading}
+                  loading={centersLoading}
                   refreshKey={refreshKey}
                   fileDataArray={fileDataArray}
                 />
