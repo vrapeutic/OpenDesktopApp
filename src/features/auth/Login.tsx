@@ -157,7 +157,8 @@ const Login = () => {
                     color="#4965CA"
                     m="0px"
                   >
-                    Email or mobile number
+                    {/* Email or mobile number */}
+                    Email
                   </FormLabel>
                   <InputGroup>
                     <Input
@@ -173,7 +174,7 @@ const Login = () => {
                       px="20px"
                       py="18px"
                       h="unset"
-                      placeholder="0123 456 7890"
+                      placeholder="Enter Email"
                     />
                     <InputRightElement h="100%" pr="11.33px" />
                   </InputGroup>

@@ -119,7 +119,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
               color="#4965CA"
               m="0px"
             >
-              Email or mobile number
+               Email
             </FormLabel>
             <InputGroup>
               <Input
@@ -135,7 +135,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                 px="20px"
                 py="18px"
                 h="unset"
-                placeholder="0123 456 7890"
+                placeholder="Enter Email"
               />
               <InputRightElement
                 h="100%"
