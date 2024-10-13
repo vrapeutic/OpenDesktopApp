@@ -226,6 +226,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
             color="#4F4F4F"
             fontWeight="500"
             textDecoration="underline"
+              href="https://myvrapeutic.com/privacy-policy/"
           >
             Terms & Conditions
           </Link>

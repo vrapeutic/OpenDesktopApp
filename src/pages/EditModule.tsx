@@ -92,6 +92,7 @@ const EditModule = () => {
     handleSubmit,
     setValue,
     setError,
+    trigger,
     control,
     formState: { errors, isValid },
   } = useForm({
@@ -99,14 +100,15 @@ const EditModule = () => {
     mode: 'onTouched',
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange  =async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
     const previewUrl = URL.createObjectURL(file);
-    setImagePreview(previewUrl);
-    setLogo(file);
-    if (!logo) {
-      setValue('logo', null);
-      setError('logo', { message: 'Please upload a logo.' });
+    await setImagePreview(previewUrl);
+    await setLogo(file);
+    trigger("logo")
+    if (!file) {
+      setValue('logo', file);
+      await setError('logo', { message: 'Please upload a logo.' });
     }
   };
 
@@ -479,7 +481,7 @@ const EditModule = () => {
             <GridItem rowSpan={2} mb="5">
               <>
                 <FormControl>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B"  cursor="pointer">
                     Upload Photo
                   </FormLabel>
                   <Button
@@ -489,8 +491,9 @@ const EditModule = () => {
                     borderRadius="8px"
                     bg="#FFFFFF"
                     position={'relative'}
+                    cursor={'auto'}
                   >
-                    <label>
+                    <label style={{ cursor:"pointer"}} >
                       <img
                         src={imagePreview}
                         alt="brand_logo"

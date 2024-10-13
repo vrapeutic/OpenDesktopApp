@@ -168,7 +168,7 @@ const UploadDoctorImg: React.FC<UploadKidImgProps> = (props) => {
                   />
                 ) : (
                   <>
-                    <label>
+                    <label style={{ cursor:"pointer"}}>
                       {props.datachild ? (
                         <img
                           src={props.datachild}
@@ -188,6 +188,7 @@ const UploadDoctorImg: React.FC<UploadKidImgProps> = (props) => {
                         onChange={(e) => handleImageChange(e)}
                         style={{ display: 'none' }}
                         hidden
+                     
                       />
                     </label>
                   </>

@@ -163,8 +163,8 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
     setLogo(file);
-
-    if (!logo) {
+    trigger("logo")
+    if (!file) {
       setValue('logo', null);
       setError('logo', { message: 'Please upload a logo.' });
     }
@@ -352,7 +352,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
 
         <GridItem mb="5">
           <>
-            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B" cursor={"pointer"}>
               upload photo
             </FormLabel>
             <Button
@@ -362,8 +362,9 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
               borderRadius="8px"
               bg="#FFFFFF"
               position={'relative'}
+              cursor={"auto"}
             >
-              <label>
+              <label style={{ cursor:"pointer"}}>
                 <img
                   src={imagePreview}
                   alt="brand_logo"

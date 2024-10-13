@@ -113,6 +113,7 @@ const EditCenter = () => {
     setValue,
     setError,
     clearErrors,
+    trigger
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onChange',
@@ -187,7 +188,8 @@ const EditCenter = () => {
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
     setLogo(file);
-    if (!logo) {
+    trigger('logo')
+    if (!file) {
       setValue('logo', null);
       setError('logo', { message: 'Please upload a logo.' });
     }
@@ -666,7 +668,7 @@ const EditCenter = () => {
             <GridItem rowSpan={2} mb="5">
               <>
                 <FormControl>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
+                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B" cursor="pointer">
                     Upload Photo
                   </FormLabel>
                   <Button
@@ -676,8 +678,9 @@ const EditCenter = () => {
                     borderRadius="8px"
                     bg="#FFFFFF"
                     position={'relative'}
+                    cursor={"auto"}
                   >
-                    <label>
+                    <label  >
                       <img
                         src={imagePreview}
                         alt="brand_logo"

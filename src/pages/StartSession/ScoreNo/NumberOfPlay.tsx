@@ -10,10 +10,10 @@ import {
   FormControl,
   FormErrorMessage,
   useDisclosure,
-  Select,
+
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import BallSpeed from './BallSpeed';

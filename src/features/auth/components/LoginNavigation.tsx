@@ -16,7 +16,7 @@ const LoginNavigation = () => {
           lineHeight="1.2"
           color="#FFFFFF"
           fontWeight="600"
-          href="https://site.vrpeutic.ca/#vr"
+          href="https://myvrapeutic.com/#vr"
         >
           Features
         </Link>
@@ -24,7 +24,7 @@ const LoginNavigation = () => {
           fontFamily="Graphik LCG"
           color="#FFFFFF"
           fontWeight="600"
-          href="https://site.vrpeutic.ca/#about"
+          href="https://myvrapeutic.com/#about"
         >
           About us
         </Link>
@@ -32,7 +32,7 @@ const LoginNavigation = () => {
           fontFamily="Graphik LCG"
           color="#FFFFFF"
           fontWeight="600"
-          href="http://yuram.tech/blog/"
+          href="http://facebook.com/myvrapeutic"
         >
           Blog
         </Link>
@@ -44,7 +44,7 @@ const LoginNavigation = () => {
           fontWeight="800"
           padding="12px 24px"
           border-radius="8px"
-          href="https://site.vrpeutic.ca/request-demo/"
+          href="https://myvrapeutic.com/request-demo/"
         >
           Get Started
         </Button>
