@@ -26,6 +26,7 @@ import ViewCenterAdmin from './pages/ViewCenterAdmin';
 import EnterEmail from './features/auth/components/forgetPassword/EnterEmail';
 import ResetPassword from './features/auth/components/forgetPassword/ResetPassword';
 import EditModule from './pages/EditModule';
+import AssignModule from './pages/Assigntocenter/AssignModule';
 
 function App() {
   const { adminBoolean } = useAdminContext();
@@ -61,7 +62,8 @@ function App() {
 
           <Route path="setting" element={<Setting />} />
           <Route path="Assigntocenter" element={<Assigntocenter />} />
-
+          <Route path="AssignModule" element={<AssignModule />} />
+          
           <Route path="EditModule" element={<EditModule />} />
 
           <Route path="editcenter" element={<EditCenter />} />

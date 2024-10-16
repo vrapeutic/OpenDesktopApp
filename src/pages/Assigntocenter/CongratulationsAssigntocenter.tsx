@@ -96,7 +96,7 @@ export default function CongratulationsAssignCenter(props: any) {
                   textDecoration: 'none',
                 }}
               >
-                Go to Modules
+                Go Back
               </Link>
             </Button>
             <Button
@@ -114,7 +114,7 @@ export default function CongratulationsAssignCenter(props: any) {
               textDecoration="none"
               onClick={props.onClose}
             >
-              Assign another center
+              Assign Another One
             </Button>
           </ModalFooter>
         </ModalContent>

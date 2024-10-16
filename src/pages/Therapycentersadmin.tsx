@@ -598,7 +598,10 @@ const DataTable = ({
                       color={'white'}
                       onClick={(e: any) => {
                         e.stopPropagation();
-                        onOpenModal();
+                        navigate('/AssignModule',{
+                          state: { Module: x },
+                        });
+                        
                       }}
                     >
                       Assign a module
