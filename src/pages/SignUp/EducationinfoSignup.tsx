@@ -145,7 +145,10 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   const postFormData = async (formDataSet: FormData) => {
     try {
       await axios.post(`${config.apiURL}/api/v1/doctors`, formDataSet);
+      handleSuccess()
     } catch (error) {
+        
+      handleError( error);
       console.error('Error in postFormData:', error);
     }
   };
@@ -157,9 +160,9 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
 
     try {
       await postFormData(formDataSet);
-      handleSuccess();
+     
     } catch (error) {
-      handleError(error);
+    console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -174,7 +177,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
     console.log('error', error);
     toast({
       title: 'Error',
-      description: error.response.data.error,
+      description: error.response.data|| error.response.data.error,
       status: 'error',
       duration: 5000,
       position: 'top-right',
