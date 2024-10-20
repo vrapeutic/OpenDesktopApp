@@ -109,8 +109,10 @@ export default function Kids() {
           }
           return response.json();
         })
+        
         .then((result) => {
           if (result.data) {
+            console.log('results', result.data);
             setKidsList(result.data);
             setIncluded(result.included);
             setLoading(false);
@@ -125,7 +127,7 @@ export default function Kids() {
           setLoading(false);
         });
     })();
-  }, [selectedCenter.id]);
+  }, [selectedCenter.id,sliding]);
 
   return (
     <>
@@ -135,6 +137,7 @@ export default function Kids() {
             Title="Kids"
             ButtonText={selectedCenter.id && 'Add New Kids'}
             onClickFunction={nextHandler}
+            backbutton={backHandler}
           />
 
           {selectedCenter.id ? (
@@ -282,16 +285,17 @@ const TableData: React.FC<TableData> = ({
   }) => {
     let res = [];
     res = included.filter((el: any) => {
+
       return x.find((element: any) => {
         return element.id === el.id;
       });
     });
-
+console.log(res,"res")
     return res;
   };
 
   const result = filterByReference({ included, x });
-
+console.log(result,"result")
   useEffect(() => {
     const transformedDate = new Date(all.attributes.created_at); // Transform the date once when the component mounts
 
@@ -379,7 +383,8 @@ const TableData: React.FC<TableData> = ({
         justifyContent={'center'}
       >
         <Box>
-          {result.map((x: any) => (
+          {result.map((x: any) =>  (
+            
             <Box
               key={x.id} // Added unique key here
               background={'#F3F3F3'}

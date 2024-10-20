@@ -470,7 +470,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
         )}
       </Flex>
       
-      {onOpen && <Congratulations isOpen={isOpen} onClose={onClose} />}
+      {onOpen && <Congratulations isOpen={isOpen} onClose={onClose}   backHandler={backHandler}/>}
     </Box>
   );
 };

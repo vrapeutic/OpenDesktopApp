@@ -73,7 +73,7 @@ export default function CongratulationsSginUp(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-              Your profile has been created successfully
+            The profile has been created successfully
             </Text>
           </ModalBody>
 

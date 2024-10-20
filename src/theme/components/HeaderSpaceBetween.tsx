@@ -5,6 +5,7 @@ interface SubscriptionsProps {
   Title: string;
   ButtonText?: string;
   onClickFunction: () => void;
+  backbutton?:() => void
 }
 
 function HeaderSpaceBetween({

@@ -67,7 +67,7 @@ export default function CongratulationEdit(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-              Your Profile has been edited successfully
+            The Profile has been edited successfully
             </Text>
           </ModalBody>
 
@@ -89,7 +89,7 @@ export default function CongratulationEdit(props: any) {
             >
               <Link
                 as={ReachLink}
-                to={'/'}
+                to={'/home'}
                 _hover={{
                   textDecoration: 'none',
                 }}

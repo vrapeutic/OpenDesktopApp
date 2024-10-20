@@ -15,6 +15,13 @@ import {
 import { Link as ReachLink } from 'react-router-dom';
 
 export default function Congratulations(props: any) {
+  const handleBtn=()=>{
+    
+  
+    props.onClose()
+   props.backHandler()
+  
+  }
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -85,18 +92,13 @@ export default function Congratulations(props: any) {
               fontSize="18px"
               lineHeight="21.09px"
               textDecoration="none"
-              onClick={props.onClose}
+              onClick={()=>{
+                handleBtn()
+              }}
             >
-              <Link
-                as={ReachLink}
-                to={'/Home'}
-                _hover={{
-                  textDecoration: 'none',
-                }}
-                fontFamily="Graphik LCG"
-              >
+              
                 Go to Home
-              </Link>
+              
             </Button>
           </ModalFooter>
         </ModalContent>
