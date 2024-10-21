@@ -165,6 +165,7 @@ const UploadDoctorImg: React.FC<UploadKidImgProps> = (props) => {
                     alt="Preview"
                     height="271px"
                     width="271px"
+                    style={{ cursor:"pointer"}}
                   />
                 ) : (
                   <>

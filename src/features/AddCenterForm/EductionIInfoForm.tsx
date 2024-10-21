@@ -131,8 +131,9 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
                     border="2px solid #E8E8E8"
                     borderRadius="8px"
                     bg="#FFFFFF"
+                    cursor={"auto"}
                   >
-                    <label>
+                    <label style={{ cursor:"pointer"}} >
                       <Image />
                       <Input
                         id="certification"

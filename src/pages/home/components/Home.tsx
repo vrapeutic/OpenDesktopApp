@@ -92,7 +92,9 @@ export default function Home() {
   }, []);
 
   const handleClick = (center: any) => {
+    console.log(center?.attributes?.name,center?.id)
     setCenterName(center?.attributes?.name);
+
     setIsLoading(true);
     selectedCenter = Object.assign(selectedCenter, center);
     mutation.mutate(center?.id, {

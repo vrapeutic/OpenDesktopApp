@@ -680,7 +680,7 @@ const EditCenter = () => {
                     position={'relative'}
                     cursor={"auto"}
                   >
-                    <label  >
+                    <label style={{ cursor:"pointer"}} >
                       <img
                         src={imagePreview}
                         alt="brand_logo"
