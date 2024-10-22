@@ -71,7 +71,7 @@ export default function OTP() {
         .then((response) => response.json())
         .then((data) => {
           console.log('GET request response:', data);
-          navigate('/home');
+          navigate('/');
         })
         .catch((error) => {
           console.error('GET request error:', error);
