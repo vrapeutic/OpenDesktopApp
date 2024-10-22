@@ -173,6 +173,7 @@ export default function Kids() {
                       fontFamily="Graphik LCG"
                       fontWeight="500"
                       lineHeight="24px"
+                      cursor={"pointer"}
                     >
                       <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
                         Name
@@ -216,6 +217,7 @@ export default function Kids() {
                     fontWeight="500"
                     fontFamily="Graphik LCG"
                     lineHeight="24px"
+                    cursor={"pointer"}
                   >
                     <GridItem
                       colSpan={5}
@@ -338,6 +340,7 @@ console.log(result,"result")
       fontFamily="Graphik LCG"
       lineHeight="24px"
       onClick={() => handleKids(all)}
+      cursor={"pointer"}
     >
       <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
         <Box display={'flex'} alignItems={'center'}>

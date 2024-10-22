@@ -116,8 +116,8 @@ const Theraputicmodules: React.FC = () => {
               />
             )}
             <Box mx={18}>
-              <Table variant="simple" background="#FFFFFF">
-                <Thead>
+              <Table variant="simple" background="#FFFFFF" cursor={"pointer"}>
+                <Thead cursor={"pointer"}>
                   <Tr>
                     <Th>Name</Th>
                     <Th>Assign</Th>

@@ -28,7 +28,7 @@ interface Doctor {
     name: string;
     degree: string;
     university: string;
-    photo: {
+    photo_url: {
       url: string;
     };
   };
@@ -104,11 +104,12 @@ const TabsViewCenterAdmin = ({
   };
 
   const handleDataDoctor = (x: any) => {
-    console.log(x);
+    console.log(x,"dataDoctor");
     dataDoctor(x);
 
     nextHandlerDoctor();
   };
+  console.log(childrenlist)
   return (
     <Tabs mx={18}>
       <TabList>
@@ -137,12 +138,12 @@ const TabsViewCenterAdmin = ({
                 </Tr>
               </Thead>
               <Tbody>
-                {Doctorslist?.map((doctor) => (
+                {Doctorslist?.map((doctor:any) => (
                   <Tr key={doctor.id}>
                     <Td>
                       <Flex direction="row" gap={2}>
                         <Img
-                          src={doctor?.attributes?.photo?.url}
+                          src={doctor?.attributes?.photo_url} 
                           alt={doctor?.attributes?.name}
                           boxSize="50px"
                           borderRadius="full"

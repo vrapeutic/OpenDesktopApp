@@ -239,6 +239,7 @@ const nextHandler = () => {
         fontFamily="Graphik LCG"
         fontWeight="500"
         lineHeight="24px"
+        cursor={"pointer"}
       >
         <GridItem colSpan={2} style={{ marginLeft: '15px' }}>
           Name
@@ -539,6 +540,7 @@ const DataTable = ({
             lineHeight="24px"
             key={x.id}
             onClick={() => handleCenterClick(x)}
+            cursor={"pointer"}
           >
             <GridItem
               colSpan={2}

@@ -58,7 +58,7 @@ const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
       (link: { link_type: string }) => link.link_type === 'twitter'
     );
   }
-
+console.log(Module?.Module)
   return (
     <Grid
       templateColumns="repeat(8, 1fr) repeat(2, 1fr) repeat(2, 1fr)"

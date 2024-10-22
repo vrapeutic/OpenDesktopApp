@@ -34,8 +34,10 @@ interface Center {
       url: string;
     };
     specialties: { id: number; name: string }[];
-    children_count: number;
+    children_number: number;
   };
+  relationships:{specialties: { id: number; name: string }[];}
+
 }
 
 const TherapyCenters: React.FC = () => {
@@ -138,6 +140,7 @@ const TherapyCenters: React.FC = () => {
   };
 
   const renderTable = () => {
+  console.log(centersList[0]?.relationships?.specialties    ,"testjhghegfhjgjhgfh")
     return (
       <>
         {centersList.length == 0 ? (
@@ -150,12 +153,12 @@ const TherapyCenters: React.FC = () => {
           <Box mx={18}>
 
           
-          <Table variant="simple" background="#FFFFFF" >
-            <Thead>
-              <Tr>
-                <Th> Name</Th>
-                <Th>Specialties</Th>
-                <Th>Kids</Th>
+          <Table variant="simple" background="#FFFFFF" cursor={"pointer"} >
+            <Thead  cursor={"pointer"}>
+              <Tr  cursor={"pointer"}>
+                <Th  cursor={"pointer"}> Name</Th>
+                <Th  cursor={"pointer"}>Specialties</Th>
+                <Th  cursor={"pointer"}>Kids</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -191,7 +194,7 @@ const TherapyCenters: React.FC = () => {
                     </Flex>
                   </Td>
                   <Td>
-                    {center?.attributes?.specialties?.map((specialty) => (
+                    {center?.relationships?.specialties?.data.map((specialty:any) => (
                       <Tag
                         key={specialty.id}
                         size="sm"
@@ -202,7 +205,7 @@ const TherapyCenters: React.FC = () => {
                       </Tag>
                     ))}
                   </Td>
-                  <Td>{center?.attributes?.children_count}</Td>
+                  <Td>{center?.attributes?.children_number}</Td>
                 </Tr>
               ))}
             </Tbody>
