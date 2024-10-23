@@ -139,7 +139,7 @@ console.log(Module?.Module)
           </Flex>
         )}
       </GridItem>
-      <GridItem colSpan={4}  py={4}>
+      {/* <GridItem colSpan={4}  py={4}>
         <Text my={2}>
           Age Range: {Module?.Module?.attributes?.min_age} -{' '}
           {Module?.Module?.attributes?.max_age} years
@@ -153,7 +153,7 @@ console.log(Module?.Module)
           {' '}
           Package_name : {Module?.Module?.attributes?.package_name}
         </Text>
-      </GridItem>
+      </GridItem> */}
       <GridItem colSpan={4} px={4}>
         <Text my={2}>
           {Module?.Module?.attributes?.targeted_skills&& "Specialties :"}

@@ -172,11 +172,11 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
-    setLogo(file);
+  await  setLogo(file);
     trigger('logo')
     if (!file) {
       setValue('logo', null);
@@ -193,8 +193,10 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
         formData,
         { headers }
       );
+      handleSuccess();
       return response.data;
     } catch (error) {
+      handleError(error);
       console.error(
         'Error in postFormData:',
         error.response?.data || error.message
@@ -219,8 +221,8 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     console.log('data in SendDataToApi:', data);
     const formData = createFormEdit(data);
     try {
-      await postFormData(data);
-      handleSuccess();
+      await postFormData(formData);
+     
       console.log(formData);
     } catch (error) {
       handleError(error);
@@ -244,9 +246,10 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
   
     // Append logo (if available)
     if (logo) {
+      console.log(logo)
       doctorFormData.append('photo', logo);
     }
-  
+   
     // Append specialty IDs (only the 'id' from each speciality)
     if (data.specialities && data.specialities.length > 0) {
       data.specialities.forEach((speciality: { id: string }) => {

@@ -140,7 +140,8 @@ const TherapyCenters: React.FC = () => {
   };
 
   const renderTable = () => {
-  console.log(centersList[0]?.relationships?.specialties    ,"testjhghegfhjgjhgfh")
+  console.log(centersList[0]?.attributes?.specialties
+    ,"testjhghegfhjgjhgfh")
     return (
       <>
         {centersList.length == 0 ? (
@@ -194,7 +195,7 @@ const TherapyCenters: React.FC = () => {
                     </Flex>
                   </Td>
                   <Td>
-                    {center?.relationships?.specialties?.data.map((specialty:any) => (
+                    {center?.attributes?.specialties?.map((specialty:any) => (
                       <Tag
                         key={specialty.id}
                         size="sm"
