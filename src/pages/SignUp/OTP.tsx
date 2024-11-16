@@ -14,7 +14,6 @@ import {
 import LoginNavigation from '../../features/auth/components/LoginNavigation';
 import BackgroundLogin from '../../assets/images/BackgroundLogin.png';
 import VRapeutic from '../../assets/images/VRapeutic.png';
-import { Spinner } from '../..//assets/icons/Spinner';
 import React, { useState } from 'react';
 import OTPInput from 'react-otp-input';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -127,7 +126,7 @@ export default function OTP() {
       )
         .then((response) => {
           if (response.ok && response.status >= 200 && response.status < 300) {
-            navigate('/home');
+            navigate('/home',{  state:location.state});
           } else {
             console.error(`Error: ${response.status} - ${response.statusText}`);
           }

@@ -95,7 +95,8 @@ export default function Kids() {
       const token = await (window as any).electronAPI.getPassword('token');
       setLoading(true);
       fetch(
-        `${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids?include=diagnoses,sessions`,
+        // `${config.apiURL}/api/v1/doctors/children?q[centers_id_eq]=${selectedCenter.id}?include=diagnoses,sessions`,
+                `${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids?include=diagnoses,sessions`,
         {
           method: 'GET',
           redirect: 'follow',
@@ -128,7 +129,7 @@ export default function Kids() {
         });
     })();
   }, [selectedCenter.id,sliding]);
-
+console.log("kises",kidsList)
   return (
     <>
       {showTable ? (

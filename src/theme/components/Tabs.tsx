@@ -17,10 +17,11 @@ import {
 import axios from 'axios';
 import { config } from '../../config';
 import { getMe } from '../../cache';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { MyContext } from '../ContextHelper';
 
 interface Doctor {
-  id: number;
+  id: number | null;
   attributes: {
     name: string;
     degree: string;
@@ -116,7 +117,7 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
                 </Tr>
               </Thead>
               <Tbody>
-                {Doctorslist?.map((doctor:any) => (
+                {Doctorslist?.map((doctor: any) => (
                   <Tr key={doctor.id}>
                     <Td>
                       <Flex direction="row" gap={2}>

@@ -13,6 +13,7 @@ import { AdminProvider } from './Context/AdminContext';
 import { StartSessionProvider } from './Context/StartSesstionContext';
 import { PopupsHandlerProvider } from './Context/PopupsHandlerContext';
 import { CSVProvider } from './Context/CSVDataContext';
+import { MyProvider } from './theme/ContextHelper';
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,10 @@ root.render(
               <Fonts />
               <PopupsHandlerProvider>
                 <SocketManagerProvider>
+                  <MyProvider>
                   <App />
+                  </MyProvider>
+                  
                 </SocketManagerProvider>
               </PopupsHandlerProvider>
             </CSVProvider>

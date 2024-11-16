@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { config } from '../config';
 import {
@@ -10,12 +10,9 @@ import {
   Td,
   Tag,
   TagLabel,
-  Img,
   Flex,
   Text,
   Box,
-  Button,
-  Grid,
   Heading,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +23,7 @@ import GeneralInfoForm from '../features/AddCenterForm/GeneralInfoForm';
 import SpecialtyForm from '../features/AddCenterForm/SpecialtyForm';
 import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
 
+
 interface Center {
   id: number;
   attributes: {
@@ -34,14 +32,16 @@ interface Center {
       url: string;
     };
     specialties: { id: number; name: string }[];
-    children_number: number;
+    children_count: number;
   };
   relationships:{specialties: { id: number; name: string }[];}
 
 }
 
 const TherapyCenters: React.FC = () => {
+ 
   const totalSteps = 5;
+
   const [sliding, setSliding] = useState(1);
   const [formData, setFormData] = useState({});
   const [centersList, setCentersList] = useState<Center[]>([]);
@@ -140,7 +140,7 @@ const TherapyCenters: React.FC = () => {
   };
 
   const renderTable = () => {
-  console.log(centersList[0]?.attributes?.specialties
+  console.log(centersList[0]
     ,"testjhghegfhjgjhgfh")
     return (
       <>
@@ -206,7 +206,7 @@ const TherapyCenters: React.FC = () => {
                       </Tag>
                     ))}
                   </Td>
-                  <Td>{center?.attributes?.children_number}</Td>
+                  <Td>{center?.attributes?.children_count}</Td>
                 </Tr>
               ))}
             </Tbody>

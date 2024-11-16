@@ -24,13 +24,14 @@ import { ArrowForwardIcon, CheckIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { useLoginMutation } from './hooks/useLoginMutation';
 import { useAdminContext } from '../../Context/AdminContext';
+import { MyContext } from '@renderer/theme/ContextHelper';
 const Login = () => {
   const [data, setData] = useState({ identifier: '', password: '' });
   const [error, setError] = useState({ identifier: null, password: null });
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLoginMutation();
   const navigate = useNavigate();
-
+  const { state, setState } = useContext(MyContext);
   const { setAdminBoolean } = useAdminContext();
 
   const onLoginSuccess = (response: any) => {
@@ -53,6 +54,11 @@ const Login = () => {
             admin: response.is_admin,
           },
         });
+      setState({
+           id: response.doctor.id,
+          email: response.doctor.attributes.email,
+          admin: response.is_admin });
+         
   };
 
   const identifierSchema = Joi.alternatives()

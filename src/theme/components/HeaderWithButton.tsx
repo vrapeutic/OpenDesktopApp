@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 interface HeaderWithButtonProps {
   leftText: string;
-  rightText: string;
-  onButtonClick: () => void;
+  rightText?: string;
+  onButtonClick?: () => void;
 }
 
 export default function HeaderWithButton({
@@ -25,7 +25,7 @@ export default function HeaderWithButton({
         <ArrowBackIcon onClick={goBack} />
         <Text  fontSize={"29px"}  fontWeight={"500"} whiteSpace={'nowrap'}>{leftText}</Text>
       </HStack>
-      <Button
+  { rightText&&<Button
         w="143px"
         h="40px"
         ml="24px"
@@ -40,7 +40,8 @@ export default function HeaderWithButton({
         boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
       >
         {rightText}
-      </Button>
+      </Button>}  
+   
     </Grid>
   );
 }

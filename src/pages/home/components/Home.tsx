@@ -24,10 +24,11 @@ import { useCSVData } from '@renderer/Context/CSVDataContext';
 import { dataContext } from '@renderer/shared/Provider';
 import Papa from 'papaparse';
 import { useContext, useEffect, useState } from 'react';
-import { Link as ReachLink } from 'react-router-dom';
+import { Link as ReachLink, useLocation } from 'react-router-dom';
 import { useGetCenter, useGetCentersData } from '../api';
 import Statists from './Statists';
 import { FaFilter } from 'react-icons/fa';
+
 export interface ModuleData {
   moduleName: string;
   totalTimeSpent: number;
@@ -56,13 +57,12 @@ export default function Home() {
   const [sessionIds, setSessionIds] = useState<string[]>([]);
   const [fileDataArray, setFileDataArray] = useState<FileData[]>([]);
   const [availableMonths, setAvailableMonths] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState('');
-  const [sessionDates, setSessionDates] = useState<string[]>([]);
+  const location = useLocation();
   const [sessionData, setSessionData] = useState<{ [key: string]: string }>({});
 
   const { data, isLoading: centersLoading } = useGetCentersData();
   const mutation = useGetCenter();
-
+console.log(location.state)
   useEffect(() => {
     const fetchReportDir = async () => {
       try {
