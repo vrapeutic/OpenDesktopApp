@@ -232,7 +232,7 @@ const nextHandler = () => {
         my="3"
         borderRadius="10px"
         backgroundColor="#FFFFFF"
-        templateColumns="repeat(4, 1fr)"
+        templateColumns="repeat(5, 1fr)"
         alignItems="center"
         color="#787486"
         fontSize="14px"
@@ -241,7 +241,7 @@ const nextHandler = () => {
         lineHeight="24px"
         cursor={"pointer"}
       >
-        <GridItem colSpan={2} style={{ marginLeft: '15px' }}>
+        <GridItem colSpan={3} style={{ marginLeft: '15px' }}>
           Name
         </GridItem>
         {/* <GridItem colSpan={1} textAlign={'center'}>
@@ -531,7 +531,7 @@ const DataTable = ({
             my="1"
             borderRadius="10px"
             backgroundColor="#FFFFFF"
-            templateColumns="repeat(4, 1fr)"
+            templateColumns="repeat(5, 1fr)"
             alignItems="center"
             color="#787486"
             fontSize="14px"
@@ -543,7 +543,7 @@ const DataTable = ({
             cursor={"pointer"}
           >
             <GridItem
-              colSpan={2}
+              colSpan={3}
               style={{ marginLeft: '15px' }}
               fontFamily="Graphik LCG"
             >
@@ -628,7 +628,7 @@ const DataTable = ({
                       Assign a headset
                     </Button>
                     <Button
-                      w="110px"
+                      w="150px"
                       h="40px"
                       padding="10px"
                       margin="5px"
@@ -644,8 +644,9 @@ const DataTable = ({
                         onOpenEdit();
                         getHeadset(x.id);
                       }}
-                    >
-                      Edit or Delete
+                    > 
+                      Edit or Delete headset
+
                     </Button>
                   </Box>
                 </Box>

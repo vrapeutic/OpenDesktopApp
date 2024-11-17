@@ -19,6 +19,7 @@ import {
   Thead,
   Tr,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { dataContext } from '@renderer/shared/Provider';
 import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
@@ -35,7 +36,7 @@ export default function Specialists() {
     email: null,
   });
   const [isValid, setIsValid] = useState(false);
-
+  const toast = useToast();
   const schema = Joi.object().keys({
     email: Joi.string().email({
       minDomainSegments: 2,
@@ -96,7 +97,7 @@ export default function Specialists() {
       const token = await (window as any).electronAPI.getPassword('token');
       const data = new FormData();
       data.append('email', email);
-      fetch(`${config.apiURL}/api/v1/centers/3/invite_doctor`, {
+      fetch(`${config.apiURL}/api/v1/centers/${selectedCenter.id}/invite_doctor`, {
         method: 'POST',
         body: data,
         redirect: 'follow',
@@ -104,9 +105,19 @@ export default function Specialists() {
       })
         .then((response) => response.text())
         .then((result) => {
+          toast({
+            title: 'success',
+            description: result,
+            status: 'success',
+            duration: 5000,
+            position: 'top-right',
+          });
           console.log(result);
         })
-        .catch((error) => console.log('error', error));
+        .catch((error) =>
+          
+          
+          console.log('error', error));
 
       onClose();
     }
