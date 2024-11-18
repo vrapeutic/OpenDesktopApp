@@ -10,7 +10,6 @@ import {
   Image,
   Input,
   Modal,
-  ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -20,8 +19,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import img from '../assets/images/vr.png';
-import Joi from 'joi';
+
 import axios from 'axios';
 
 import { useAdminContext } from '@renderer/Context/AdminContext';
