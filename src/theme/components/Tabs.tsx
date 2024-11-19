@@ -17,8 +17,8 @@ import {
 import axios from 'axios';
 import { config } from '../../config';
 import { getMe } from '../../cache';
-import { useContext, useEffect, useState } from 'react';
-import { MyContext } from '../ContextHelper';
+import {  useEffect, useState } from 'react';
+
 
 interface Doctor {
   id: number | null;

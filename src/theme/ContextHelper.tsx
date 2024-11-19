@@ -5,6 +5,7 @@ interface MyContextType {
     id: string | null; // Assuming id is a string; adjust as necessary
     email: string | null; // Assuming email is a string; adjust as necessary
     admin: boolean; // Assuming admin is a boolean
+    is_center_admin:boolean
 }
 
 // Define the provider props
@@ -24,6 +25,7 @@ export const MyProvider: React.FC<MyProviderProps> = ({ children }) => {
     id: null,
     email: null,
     admin: false,
+    is_center_admin:false
 
   });
 

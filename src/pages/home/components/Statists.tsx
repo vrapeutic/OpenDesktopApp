@@ -25,6 +25,7 @@ import {
 } from 'recharts';
 import { useGetDoctorsData } from '../api';
 import { FileData, ModuleData } from './Home';
+import { MyContext } from '@renderer/theme/ContextHelper';
 
 interface ModuleCountPerFile {
   name: string;
@@ -49,7 +50,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
     maxSessions: 0,
   });
   const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton'];
-
+  const { state, setState } = useContext(MyContext);
   useEffect(() => {
     if (fileDataArray && fileDataArray.length > 0) {
       const allModules = fileDataArray.flatMap((file: any) => file.modules);
@@ -141,6 +142,8 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
           item.id === doctor.attributes.doctor_id.toString()
         );
       });
+     
+      setState({is_center_admin:doctorDetails?.attributes?.is_center_admin})
       console.log(doctorDetails, 'doctorDetails');
       // Return an object with the doctor's name and session number
       return {
@@ -191,7 +194,11 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
     if (doctorData) {
       transformDoctorData();
       handleProcessFile(fileDataArray);
+    }else{
+      console.log("out")
+      setState({is_center_admin:false});
     }
+  
   }, [doctorData, fileDataArray, selectedCenterContext.id]);
 
   const moduleExistence = useMemo(() => {

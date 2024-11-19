@@ -15,6 +15,8 @@ import GeneralInfoFormKids from '@renderer/features/AddKids/GeneralInformKids';
 import { config } from '../config';
 import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';
+import { useAdminContext } from '@renderer/Context/AdminContext';
+import { MyContext } from '@renderer/theme/ContextHelper';
 
 interface Kids {
   id: number;
@@ -41,7 +43,9 @@ export default function Kids() {
   const [included, setIncluded] = useState([]);
   const [error, setError] = useState<string | null>(null); // State for error handling
   const [loading, setLoading] = useState(false);
-
+  const { setAdminBoolean } = useAdminContext();
+  const context = useContext(MyContext);
+console.log(context.state);
   const selectedCenter = useContext(dataContext);
 
   const {
@@ -90,12 +94,14 @@ export default function Kids() {
     return { ...formData, ...data };
   };
 
+
   useEffect(() => {
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
       setLoading(true);
       fetch(
-        // `${config.apiURL}/api/v1/doctors/children?q[centers_id_eq]=${selectedCenter.id}?include=diagnoses,sessions`,
+        ! context.state.is_center_admin ?
+         `${config.apiURL}/api/v1/doctors/children?q[centers_id_eq]=${selectedCenter.id}?include=diagnoses,sessions`:
                 `${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids?include=diagnoses,sessions`,
         {
           method: 'GET',
@@ -136,7 +142,7 @@ console.log("kises",kidsList)
         <>
           <HeaderSpaceBetween
             Title="Kids"
-            ButtonText={selectedCenter.id && 'Add New Kids'}
+            ButtonText={context.state.is_center_admin  && 'Add New Kids'}
             onClickFunction={nextHandler}
             backbutton={backHandler}
           />
@@ -293,12 +299,11 @@ const TableData: React.FC<TableData> = ({
         return element.id === el.id;
       });
     });
-console.log(res,"res")
     return res;
   };
 
   const result = filterByReference({ included, x });
-console.log(result,"result")
+
   useEffect(() => {
     const transformedDate = new Date(all.attributes.created_at); // Transform the date once when the component mounts
 

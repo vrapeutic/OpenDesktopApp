@@ -22,6 +22,7 @@ interface Doctor {
     id: string | null;
     email: string | null;
     admin: boolean;
+    is_center_admin: boolean;
   }
 const ViewCenter = () => {
   const token = getMe()?.token;
@@ -60,6 +61,7 @@ const ViewCenter = () => {
         id: user.id,
         email: user.email,
         admin: user.admin,
+        is_center_admin: user.is_center_admin
       };
     }
   }
@@ -97,9 +99,9 @@ const ViewCenter = () => {
     <>
  <HeaderWithButton
   leftText="Therapy Center"
-  rightText={filteredDoctors?.length>0 ? "Edit Center" : undefined}
+  rightText={context.state.is_center_admin ? "Edit Center" : undefined}
   onButtonClick={() =>
-    filteredDoctors?.length >0 && navigate('/editcenter', {
+    context.state.is_center_admin&& navigate('/editcenter', {
       state: { centerData: center, includes: includes },
     })
   }

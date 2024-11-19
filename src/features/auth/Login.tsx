@@ -38,13 +38,14 @@ const Login = () => {
     console.log('onLoginSuccess my function:', response);
 
     setAdminBoolean(response.is_admin);
-
+console.log( response.doctor.attributes.is_center_admin)
     response.is_admin
       ? navigate('/validateotp', {
           state: {
             id: null,
             email: null,
             admin: response.is_admin,
+            is_center_admin: response.doctor.attributes.is_center_admin
           },
         })
       : navigate('/validateotp', {
@@ -52,12 +53,14 @@ const Login = () => {
             id: response.doctor.id,
             email: response.doctor.attributes.email,
             admin: response.is_admin,
+            is_center_admin: response.doctor.attributes.is_center_admin
           },
         });
       setState({
            id: response.doctor.id,
           email: response.doctor.attributes.email,
-          admin: response.is_admin });
+          admin: response.is_admin ,
+          is_center_admin: response.doctor.attributes.is_center_admin});
          
   };
 
