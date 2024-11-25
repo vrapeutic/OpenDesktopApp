@@ -19,10 +19,10 @@ interface Doctor {
     };
   };}
   interface User {
-    id: string | null;
-    email: string | null;
-    admin: boolean;
-    is_center_admin: boolean;
+    id?: string | null;
+    email?: string | null;
+    admin?: boolean;
+    is_center_admin?: boolean;
   }
 const ViewCenter = () => {
   const token = getMe()?.token;

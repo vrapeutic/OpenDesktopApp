@@ -17,6 +17,7 @@ import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';
 import { useAdminContext } from '@renderer/Context/AdminContext';
 import { MyContext } from '@renderer/theme/ContextHelper';
+import axios from 'axios';
 
 interface Kids {
   id: number;
@@ -43,7 +44,6 @@ export default function Kids() {
   const [included, setIncluded] = useState([]);
   const [error, setError] = useState<string | null>(null); // State for error handling
   const [loading, setLoading] = useState(false);
-  const { setAdminBoolean } = useAdminContext();
   const context = useContext(MyContext);
 console.log(context.state);
   const selectedCenter = useContext(dataContext);
@@ -94,48 +94,43 @@ console.log(context.state);
     return { ...formData, ...data };
   };
 
+  console.log(context.state.is_center_admin,"AMDIN")
+
 
   useEffect(() => {
     (async () => {
-      const token = await (window as any).electronAPI.getPassword('token');
-      setLoading(true);
-      fetch(
-        ! context.state.is_center_admin ?
-         `${config.apiURL}/api/v1/doctors/children?q[centers_id_eq]=${selectedCenter.id}?include=diagnoses,sessions`:
-                `${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids?include=diagnoses,sessions`,
-        {
-          method: 'GET',
-          redirect: 'follow',
+      try {
+        const token = await (window as any).electronAPI.getPassword('token');
+        setLoading(true);
+  
+        // Construct the correct API URL based on context
+        const url = !context.state.is_center_admin
+          ? `${config.apiURL}/api/v1/doctors/children?q[centers_id_eq]=${selectedCenter.id}&include=diagnoses,sessions`
+          : `${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids?include=diagnoses,sessions`;
+  
+        // Make the request using axios
+        const response = await axios.get(url, {
           headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-        .then(async (response) => {
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText);
-          }
-          return response.json();
-        })
-        
-        .then((result) => {
-          if (result.data) {
-            console.log('results', result.data);
-            setKidsList(result.data);
-            setIncluded(result.included);
-            setLoading(false);
-          } else {
-            setError('Failed to fetch kids data');
-            setLoading(false);
-          }
-        })
-        .catch((error) => {
-          console.log('error', error);
-          setError(error.message);
-          setLoading(false);
         });
+  
+        // Check if data exists in the response
+        if (response.data && response.data.data) {
+          console.log('results', response.data.data);
+          setKidsList(response.data.data);
+          setIncluded(response.data.included);
+        } else {
+          setError('Failed to fetch kids data');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setError(error.response?.data?.message || error.message || 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
     })();
-  }, [selectedCenter.id,sliding]);
-console.log("kises",kidsList)
+  }, [selectedCenter.id, sliding]);
+  
+console.log("kises",kidsList[0],kidsList[1],included) 
   return (
     <>
       {showTable ? (
@@ -198,7 +193,9 @@ console.log("kises",kidsList)
                         Sessions
                       </GridItem>
                     </Grid>
-                    {kidsList.map((kid) => (
+                    {kidsList.map((kid) =>{
+                      console.log(kid,"kid test")
+                    return (
                       <TableData
                         key={kid.id}
                         all={kid}
@@ -206,9 +203,9 @@ console.log("kises",kidsList)
                         name={kid.attributes.name}
                         age={kid.attributes.age}
                         included={included}
-                        data={kid.relationships.diagnoses.data}
+                        data={kid?.relationships?.diagnoses?.data}
                       />
-                    ))}
+                    )})}
                   </>
                 ) : (
                   <Grid
@@ -267,7 +264,7 @@ interface TableData {
   id: any;
   all?: any;
   included?: any;
-  data: any;
+  data?: any;
 }
 const TableData: React.FC<TableData> = ({
   all,
@@ -280,10 +277,11 @@ const TableData: React.FC<TableData> = ({
   const [date, setDate] = useState('');
   const navigate = useNavigate();
   const handleKids = (Kids: any) => {
+    
     navigate('/ViewKids', { state: all });
   };
 
-  const x: any[] = all.relationships.diagnoses.data;
+  const x: any[] = all?.relationships?.diagnoses?.data;
 
   const filterByReference = ({
     included,
@@ -303,6 +301,7 @@ const TableData: React.FC<TableData> = ({
   };
 
   const result = filterByReference({ included, x });
+  const context = useContext(MyContext);
 
   useEffect(() => {
     const transformedDate = new Date(all.attributes.created_at); // Transform the date once when the component mounts
@@ -345,7 +344,7 @@ const TableData: React.FC<TableData> = ({
       fontWeight="500"
       fontFamily="Graphik LCG"
       lineHeight="24px"
-      onClick={() => handleKids(all)}
+      onClick={() =>{context.state.is_center_admin?handleKids(all):null}}
       cursor={"pointer"}
     >
       <GridItem colSpan={1} style={{ marginLeft: '15px' }}>

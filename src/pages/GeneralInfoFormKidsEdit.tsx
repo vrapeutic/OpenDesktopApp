@@ -29,7 +29,6 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
   // nextHandler,
   backHandler,
   sliding,
-  formData,
   datachild,
 }) => {
   const animatedComponents = makeAnimated();

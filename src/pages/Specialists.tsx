@@ -9,6 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Table,
   Tag,
   TagLabel,
@@ -26,25 +27,40 @@ import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
 import Joi from 'joi';
 import { useContext, useEffect, useState } from 'react';
 import { config } from '../config';
+import axios from 'axios';
+import { MyContext } from '@renderer/theme/ContextHelper';
 
 export default function Specialists() {
   const selectedCenter = useContext(dataContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenAssign,
+    onOpen: onOpenAssign,
+    onClose: onCloseAssign,
+  } = useDisclosure();
   const [email, setEmail] = useState('');
   const [doctors, setDoctors] = useState([]);
+  const[doctorId,setDoctorId] = useState("")
+  const [Kids, setKids] = useState([]);
   const [errors, setErrors] = useState({
     email: null,
   });
+  const [selectKids, setSelectedKids] = useState('');
   const [isValid, setIsValid] = useState(false);
   const toast = useToast();
+  const [errorsKids, setErrorsKids] = useState(false);
+  const { state } = useContext(MyContext);
   const schema = Joi.object().keys({
-    email: Joi.string().email({
-      minDomainSegments: 2,
-      tlds: { allow: false },
-    }).required(),
+    email: Joi.string()
+      .email({
+        minDomainSegments: 2,
+        tlds: { allow: false },
+      })
+      .required(),
   });
 
   useEffect(() => {
+    
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
       fetch(
@@ -64,11 +80,31 @@ export default function Specialists() {
     })();
   }, [selectedCenter.id]);
 
+  useEffect(() => {
+    (async () => {
+      const token = await (window as any).electronAPI.getPassword('token');
+      fetch(` ${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids`, {
+        method: 'GET',
+        redirect: 'follow',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result.data, 'Kids');
+          setKids(result.data);
+        })
+        .catch((error) => console.log('error', error));
+    })();
+  }, [selectedCenter.id]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    
+
     // Validate input on every change
-    const { error } = schema.validate({ email: e.target.value }, { abortEarly: false });
+    const { error } = schema.validate(
+      { email: e.target.value },
+      { abortEarly: false }
+    );
     setIsValid(!error);
     if (error) {
       setErrors({
@@ -93,16 +129,19 @@ export default function Specialists() {
     } else {
       setErrors({ email: null });
       setIsValid(true);
-      
+
       const token = await (window as any).electronAPI.getPassword('token');
       const data = new FormData();
       data.append('email', email);
-      fetch(`${config.apiURL}/api/v1/centers/${selectedCenter.id}/invite_doctor`, {
-        method: 'POST',
-        body: data,
-        redirect: 'follow',
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      fetch(
+        `${config.apiURL}/api/v1/centers/${selectedCenter.id}/invite_doctor`,
+        {
+          method: 'POST',
+          body: data,
+          redirect: 'follow',
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
         .then((response) => response.text())
         .then((result) => {
           toast({
@@ -114,24 +153,62 @@ export default function Specialists() {
           });
           console.log(result);
         })
-        .catch((error) =>
-          
-          
-          console.log('error', error));
+        .catch((error) => console.log('error', error));
 
       onClose();
     }
   };
+ 
+
+const handleAssignKid = async () => {
+  try {
+    const token = await (window as any).electronAPI.getPassword('token');
+    
+    const response = await axios.put(
+      `${config.apiURL}/api/v1/centers/${selectedCenter.id}/doctors/${doctorId}/assign_doctor_child?child_id=${selectKids}`,
+      {
+        doctor_id: state.id, // This is your request payload
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+    // If the response is successful
+    console.log(response.data);  // Log the response or handle it as needed
+    toast({
+      title: 'Success',
+      description: response.data?.message || 'Assignment successful',
+      status: 'success',
+      duration: 5000,
+      position: 'top-right',
+    });
+    onCloseAssign(); // Assuming this closes the assignment modal or component
+
+  } catch (error) {
+    console.error('Error:', error);
+    toast({
+      title: 'Error',
+      description: error?.response?.data?.message || 'An unexpected error occurred.',
+      status: 'error',
+      duration: 5000,
+      position: 'top-right',
+    });
+  }
+};
+
 
   return (
     <Box mx={18}>
       <HeaderSpaceBetween
         Title="Specialists"
-        ButtonText="Add Specialist"
+        ButtonText={state.is_center_admin?"Add Specialist":null}
         onClickFunction={onOpen}
       />
 
-      <Table variant="simple" background="#FFFFFF" >
+      <Table variant="simple" background="#FFFFFF">
         <Thead>
           <Tr>
             <Th>Name</Th>
@@ -140,6 +217,7 @@ export default function Specialists() {
             <Th>Joined in</Th>
             <Th>Therapy center</Th>
             <Th>Sessions</Th>
+            <Th>Kids</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -148,14 +226,16 @@ export default function Specialists() {
               <Td>
                 <Flex direction="row" gap={2}>
                   <Box
-                    width={197}
-                    height={197}
+                    width={70}
+                    height={70}
                     alignItems={'center'}
                     display={'flex'}
                   >
                     <img
                       src={doctor.attributes['photo_url']}
                       alt={doctor.attributes.name}
+                      width={70}
+                      height={70}
                     />
                   </Box>
 
@@ -181,6 +261,11 @@ export default function Specialists() {
               <Td>{doctor.attributes['join_date'].slice(0, 10)}</Td>
               <Td>{selectedCenter.attributes.name}</Td>
               <Td>{doctor.attributes['number_of_sessions']}</Td>
+              <Td>
+                <Button onClick={() => {
+                  setDoctorId(doctor.id)
+                  onOpenAssign()}}>Assign</Button>
+              </Td>
             </Tr>
           ))}
         </Tbody>
@@ -207,12 +292,62 @@ export default function Specialists() {
                 )}
               </ModalBody>
               <ModalFooter>
-                <Button
-                  type="submit"
-                  colorScheme="teal"
-                  isDisabled={!isValid}
-                >
+                <Button type="submit" colorScheme="teal" isDisabled={!isValid}>
                   Invite
+                </Button>
+              </ModalFooter>
+            </form>
+          </ModalContent>
+        </Modal>
+      )}
+      {onOpenAssign && (
+        <Modal
+          isOpen={isOpenAssign}
+          onClose={onCloseAssign}
+          closeOnOverlayClick={true}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Enter the doctor's email</ModalHeader>
+            <form>
+              <ModalBody>
+                <Select
+                  placeholder="Select Center"
+                  size="sm"
+                  onChange={(e) => {
+                    console.log('Selected kids:', e.target.value);
+                    setSelectedKids(e.target.value);
+                    setErrorsKids(true);
+                  }}
+                >
+                  {Kids.map((kid) => (
+                    <option value={kid.id} key={kid.id}>
+                      {kid?.attributes.name}
+                    </option>
+                  ))}
+                </Select>
+                {errorsKids && (
+                  <Text fontSize="sm" color="red.500" mt={2}>
+                    {errors.email}
+                  </Text>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  onClick={() => {
+                    if (!selectKids) {
+                      setErrorsKids(false);
+                      console.log(selectKids)
+                    } else {
+                      console.log(selectKids)
+                      setErrorsKids(true);
+                      handleAssignKid()
+                    }
+                  }}
+                  colorScheme="teal"
+                  isDisabled={!errorsKids}
+                >
+                  Assign
                 </Button>
               </ModalFooter>
             </form>

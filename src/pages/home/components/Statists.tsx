@@ -24,7 +24,7 @@ import {
   YAxis,
 } from 'recharts';
 import { useGetDoctorsData } from '../api';
-import { FileData, ModuleData } from './Home';
+import { FileData } from './Home';
 import { MyContext } from '@renderer/theme/ContextHelper';
 
 interface ModuleCountPerFile {
@@ -50,7 +50,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
     maxSessions: 0,
   });
   const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton'];
-  const { state, setState } = useContext(MyContext);
+  const { state, setState, } = useContext(MyContext);
   useEffect(() => {
     if (fileDataArray && fileDataArray.length > 0) {
       const allModules = fileDataArray.flatMap((file: any) => file.modules);
@@ -143,8 +143,8 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
         );
       });
      
-      setState({is_center_admin:doctorDetails?.attributes?.is_center_admin})
-      console.log(doctorDetails, 'doctorDetails');
+      setState({is_center_admin:doctorDetails?.attributes?.is_center_admin,id:doctorDetails?.id})
+      console.log(doctorDetails.id, 'doctorDetails');
       // Return an object with the doctor's name and session number
       return {
         name: doctorDetails
