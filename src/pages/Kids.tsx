@@ -102,7 +102,7 @@ console.log(context.state);
       try {
         const token = await (window as any).electronAPI.getPassword('token');
         setLoading(true);
-  
+  console.log(context.state.is_center_admin, "test satat ")
         // Construct the correct API URL based on context
         const url = !context.state.is_center_admin
           ? `${config.apiURL}/api/v1/doctors/children?q[centers_id_eq]=${selectedCenter.id}&include=diagnoses,sessions`

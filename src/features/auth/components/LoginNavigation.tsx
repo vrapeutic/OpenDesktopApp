@@ -25,6 +25,7 @@ const LoginNavigation = () => {
           color="#FFFFFF"
           fontWeight="600"
           href="https://myvrapeutic.com/#about"
+          
         >
           About us
         </Link>
