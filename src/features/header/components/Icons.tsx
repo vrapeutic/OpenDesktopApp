@@ -4,12 +4,15 @@ import { Frame } from '@renderer/assets/icons/Frame';
 import { Refresh } from '@renderer/assets/icons/Refresh';
 import Notifications from './Notifications';
 import MessageQuestions from './MessageQuestions';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FullScreen } from '@renderer/assets/icons/FullScreen';
+import axios from 'axios';
+import { config } from '@renderer/config';
+import { getMe } from '@renderer/cache';
+
 
 const Icons = (props: any) => {
   const [fullScreen, setFullScreen] = useState(true);
-
   const fullScreenHandler = () => {
     setFullScreen(!fullScreen);
   };

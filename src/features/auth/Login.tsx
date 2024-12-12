@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import VRapeutic from '../../assets/images/VRapeutic.png';
 import { EyeIcon } from '../../assets/icons/EyeIcon';
-import { ArrowForwardIcon, CheckIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { useLoginMutation } from './hooks/useLoginMutation';
 import { useAdminContext } from '../../Context/AdminContext';
@@ -38,14 +38,14 @@ const Login = () => {
     console.log('onLoginSuccess my function:', response);
 
     setAdminBoolean(response.is_admin);
-console.log( response.doctor.attributes.is_center_admin)
+console.log(response.is_admin)
     response.is_admin
       ? navigate('/validateotp', {
           state: {
             id: null,
             email: null,
             admin: response.is_admin,
-            is_center_admin: response.doctor.attributes.is_center_admin
+            is_center_admin: response?.doctor?.attributes?.is_center_admin
           },
         })
       : navigate('/validateotp', {

@@ -144,7 +144,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
       });
      
       setState({is_center_admin:doctorDetails?.attributes?.is_center_admin,id:doctorDetails?.id})
-      console.log(doctorDetails.id, 'doctorDetails');
+
       // Return an object with the doctor's name and session number
       return {
         name: doctorDetails
@@ -196,7 +196,11 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
       handleProcessFile(fileDataArray);
     }else{
       console.log("out")
-      setState({is_center_admin:false});
+      setState((prevState) => ({
+        ...prevState, 
+        is_center_ad: false, 
+      }));
+      // setState({is_center_admin:false});
     }
   
   }, [doctorData, fileDataArray, selectedCenterContext.id]);

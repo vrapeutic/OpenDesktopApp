@@ -40,7 +40,7 @@ export default function Specialists() {
   } = useDisclosure();
   const [email, setEmail] = useState('');
   const [doctors, setDoctors] = useState([]);
-  const[doctorId,setDoctorId] = useState("")
+  const [doctorId, setDoctorId] = useState('');
   const [Kids, setKids] = useState([]);
   const [errors, setErrors] = useState({
     email: null,
@@ -60,7 +60,6 @@ export default function Specialists() {
   });
 
   useEffect(() => {
-    
     (async () => {
       const token = await (window as any).electronAPI.getPassword('token');
       fetch(
@@ -133,78 +132,84 @@ export default function Specialists() {
       const token = await (window as any).electronAPI.getPassword('token');
       const data = new FormData();
       data.append('email', email);
-      fetch(
-        `${config.apiURL}/api/v1/centers/${selectedCenter.id}/invite_doctor`,
-        {
-          method: 'POST',
-          body: data,
-          redirect: 'follow',
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-        .then((response) => response.text())
-        .then((result) => {
+      axios
+        .post(
+          `${config.apiURL}/api/v1/centers/${selectedCenter.id}/invite_doctor`,
+          data, // Pass the body directly
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then((response) => {
+          const result = response.data; // Access the response data
           toast({
-            title: 'success',
-            description: result,
+            title: 'Success',
+            description: result.message || 'Invitation sent successfully.',
             status: 'success',
             duration: 5000,
             position: 'top-right',
           });
           console.log(result);
         })
-        .catch((error) => console.log('error', error));
-
+        .catch((error) => {
+          console.error('Error:', error);
+          toast({
+            title: 'Error',
+            description:
+              error.response?.data?.message || 'Something went wrong.',
+            status: 'error',
+            duration: 5000,
+            position: 'top-right',
+          });
+        });
       onClose();
     }
   };
- 
 
-const handleAssignKid = async () => {
-  try {
-    const token = await (window as any).electronAPI.getPassword('token');
-    
-    const response = await axios.put(
-      `${config.apiURL}/api/v1/centers/${selectedCenter.id}/doctors/${doctorId}/assign_doctor_child?child_id=${selectKids}`,
-      {
-        doctor_id: state.id, // This is your request payload
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+  const handleAssignKid = async () => {
+    try {
+      const token = await (window as any).electronAPI.getPassword('token');
+
+      const response = await axios.put(
+        `${config.apiURL}/api/v1/centers/${selectedCenter.id}/doctors/${doctorId}/assign_doctor_child?child_id=${selectKids}`,
+        {
+          doctor_id: state.id, // This is your request payload
         },
-      }
-    );
-    
-    // If the response is successful
-    console.log(response.data);  // Log the response or handle it as needed
-    toast({
-      title: 'Success',
-      description: response.data?.message || 'Assignment successful',
-      status: 'success',
-      duration: 5000,
-      position: 'top-right',
-    });
-    onCloseAssign(); // Assuming this closes the assignment modal or component
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  } catch (error) {
-    console.error('Error:', error);
-    toast({
-      title: 'Error',
-      description: error?.response?.data?.message || 'An unexpected error occurred.',
-      status: 'error',
-      duration: 5000,
-      position: 'top-right',
-    });
-  }
-};
-
+      // If the response is successful
+      console.log(response.data); // Log the response or handle it as needed
+      toast({
+        title: 'Success',
+        description: response.data?.message || 'Assignment successful',
+        status: 'success',
+        duration: 5000,
+        position: 'top-right',
+      });
+      onCloseAssign(); // Assuming this closes the assignment modal or component
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: 'Error',
+        description:
+          error?.response?.data?.message || 'An unexpected error occurred.',
+        status: 'error',
+        duration: 5000,
+        position: 'top-right',
+      });
+    }
+  };
 
   return (
     <Box mx={18}>
       <HeaderSpaceBetween
         Title="Specialists"
-        ButtonText={state.is_center_admin?"Add Specialist":null}
+        ButtonText={state.is_center_admin ? 'Add Specialist' : null}
         onClickFunction={onOpen}
       />
 
@@ -262,9 +267,14 @@ const handleAssignKid = async () => {
               <Td>{selectedCenter.attributes.name}</Td>
               <Td>{doctor.attributes['number_of_sessions']}</Td>
               <Td>
-                <Button onClick={() => {
-                  setDoctorId(doctor.id)
-                  onOpenAssign()}}>Assign</Button>
+                <Button
+                  onClick={() => {
+                    setDoctorId(doctor.id);
+                    onOpenAssign();
+                  }}
+                >
+                  Assign
+                </Button>
               </Td>
             </Tr>
           ))}
@@ -337,11 +347,11 @@ const handleAssignKid = async () => {
                   onClick={() => {
                     if (!selectKids) {
                       setErrorsKids(false);
-                      console.log(selectKids)
+                      console.log(selectKids);
                     } else {
-                      console.log(selectKids)
+                      console.log(selectKids);
                       setErrorsKids(true);
-                      handleAssignKid()
+                      handleAssignKid();
                     }
                   }}
                   colorScheme="teal"
