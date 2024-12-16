@@ -44,11 +44,12 @@ const Notifications = (props: any) => {
       setNotfication(response.data.data)
 
     } catch (error) { 
-      console.error(error);
+      console.log(error);
     }
   };
 
   useEffect(() => {
+    
     getNotification(); 
   }, []);
 
@@ -198,7 +199,7 @@ const Notifications = (props: any) => {
                               fontSize="0.75rem"
                               color="#838383"
                             >
-                              You have been invited by [Manager's Name] to join
+                              You have been invited by {item?.attributes?.invited_by_name} to join
                               the center named {item?.attributes?.center?.name}. You can
                               accept or reject the invitation by clicking on one
                               of the buttons below.

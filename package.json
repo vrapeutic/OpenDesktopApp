@@ -1,6 +1,6 @@
 {
   "name": "opendesktopapp",
-  "productName": "Yubreevi-Powered by VRapeutic",
+  "productName": "Yubreevi-Powered by VRapeutic for UNICEF",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
