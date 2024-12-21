@@ -135,7 +135,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
       formDataSet.append('specialty_ids[]', specialty.id)
     );
 
-    for (let pair of formDataSet.entries()) {
+    for (const pair of formDataSet.entries()) {
       console.log(pair[0] + ', ' + pair[1]);
     }
 
@@ -173,15 +173,15 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   };
 
   const handleError = (error: any) => {
-    onClose();
+
     console.log('error', error);
-    toast({
-      title: 'Error',
-      description: error.response.data|| error.response.data.error,
-      status: 'error',
-      duration: 5000,
-      position: 'top-right',
-    });
+    // toast({
+    //   title: 'Error',
+    //   description: error?.response?.data|| error?.response?.data?.error,
+    //   status: 'error',
+    //   duration: 5000,
+    //   position: 'top-right',
+    // });
   };
 
   return (

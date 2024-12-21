@@ -70,15 +70,15 @@ export default function Sideclose() {
       ),
       path: '/Therapycenters',
     },
-    {
-      link: 'Branches',
-      icon: (
-        <Branches
-          color={location.pathname === '/Branches' ? '#00DEA3' : '#333333'}
-        />
-      ),
-      path: '/Branches',
-    },
+    // {
+    //   link: 'Branches',
+    //   icon: (
+    //     <Branches
+    //       color={location.pathname === '/Branches' ? '#00DEA3' : '#333333'}
+    //     />
+    //   ),
+    //   path: '/Branches',
+    // },
     {
       link: 'Specialists',
       icon: (
@@ -88,17 +88,17 @@ export default function Sideclose() {
       ),
       path: '/Specialists',
     },
-    {
-      link: 'Assessment tools',
-      icon: (
-        <Assessmenttools
-          color={
-            location.pathname === '/Assessmenttools' ? '#00DEA3' : '#333333'
-          }
-        />
-      ),
-      path: '/Assessmenttools',
-    },
+    // {
+    //   link: 'Assessment tools',
+    //   icon: (
+    //     <Assessmenttools
+    //       color={
+    //         location.pathname === '/Assessmenttools' ? '#00DEA3' : '#333333'
+    //       }
+    //     />
+    //   ),
+    //   path: '/Assessmenttools',
+    // },
     {
       link: 'Subscriptions',
       icon: (
@@ -108,15 +108,15 @@ export default function Sideclose() {
       ),
       path: '/Subscriptions',
     },
-    {
-      link: 'General settings',
-      icon: (
-        <Setting
-          color={location.pathname === '/Setting' ? '#00DEA3' : '#333333'}
-        />
-      ),
-      path: '/Setting',
-    },
+    // {
+    //   link: 'General settings',
+    //   icon: (
+    //     <Setting
+    //       color={location.pathname === '/Setting' ? '#00DEA3' : '#333333'}
+    //     />
+    //   ),
+    //   path: '/Setting',
+    // },
   ];
 
   return (
@@ -169,7 +169,7 @@ export default function Sideclose() {
             me={{ base: '20px' }}
             position="relative"
           >
-            <Flex
+            {/* <Flex
               border="5px solid #F5F5F5"
               bg="#F5F5F5"
               borderRadius="50%"
@@ -185,7 +185,7 @@ export default function Sideclose() {
               transform="translate(-50%, 0%)"
             >
               <Lamp />
-            </Flex>
+            </Flex> */}
           </Flex>
 
           <Flex

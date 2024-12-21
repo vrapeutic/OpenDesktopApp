@@ -318,11 +318,11 @@ export default function Specialists() {
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Enter the doctor's email</ModalHeader>
+            <ModalHeader>Enter the Kid</ModalHeader>
             <form>
               <ModalBody>
                 <Select
-                  placeholder="Select Center"
+                  placeholder="Select kid"
                   size="sm"
                   onChange={(e) => {
                     console.log('Selected kids:', e.target.value);
@@ -330,7 +330,7 @@ export default function Specialists() {
                     setErrorsKids(true);
                   }}
                 >
-                  {Kids.map((kid) => (
+                  {Kids?.map((kid) => (
                     <option value={kid.id} key={kid.id}>
                       {kid?.attributes.name}
                     </option>

@@ -106,7 +106,7 @@ export default function SelectingCenter(props: any) {
                     placeholder="Select Child"
                     size="sm"
                   >
-                    {kids.map((kid) => (
+                    {kids?.map((kid) => (
                       <option value={kid.id} key={kid.id}>
                         {kid?.attributes.name}
                       </option>
