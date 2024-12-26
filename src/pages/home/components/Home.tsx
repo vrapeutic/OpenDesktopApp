@@ -46,7 +46,7 @@ export interface FileData {
 export default function Home() {
   let selectedCenter = useContext(dataContext);
   const [centers, setCenters] = useState([]);
-  const [centerName, setCenterName] = useState('Select Centers');
+  const [centerName, setCenterName] = useState(t("Select Centers"));
   const [isLoading, setIsLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [arrow, setArrow] = useState(false);
@@ -196,19 +196,12 @@ export default function Home() {
     }
   };
 
-  const { t, i18n } = useTranslation();
-  const switchLanguage = (lang: string) => {
-    i18n.changeLanguage(lang);
-  };
+  const { t } = useTranslation();
+
 
   return (
     <>
-      <div>
-        <h1>{t('centerName')}</h1>
-        <p>{t('description')}</p>
-        <button onClick={() => switchLanguage('en')}>English</button>
-        <button onClick={() => switchLanguage('vi')}>Vietnamese</button>
-      </div>
+     
       {centersLoading ? (
         <Box textAlign="center" py={10} px={6}>
           <Spinner />
