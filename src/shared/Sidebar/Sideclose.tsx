@@ -48,17 +48,17 @@ export default function Sideclose() {
       ),
       path: '/Kids',
     },
-    {
-      link: 'Theraputic Modules',
-      icon: (
-        <Theraputicmodules
-          color={
-            location.pathname === '/Theraputicmodules' ? '#00DEA3' : '#333333'
-          }
-        />
-      ),
-      path: '/Theraputicmodules',
-    },
+    // {
+    //   link: 'Theraputic Modules',
+    //   icon: (
+    //     <Theraputicmodules
+    //       color={
+    //         location.pathname === '/Theraputicmodules' ? '#00DEA3' : '#333333'
+    //       }
+    //     />
+    //   ),
+    //   path: '/Theraputicmodules',
+    // },
     {
       link: 'Therapy Centers',
       icon: (

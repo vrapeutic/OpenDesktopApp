@@ -10,6 +10,8 @@ import {
   HStack,
   Divider,
   Link,
+  Box,
+  Button,
 } from '@chakra-ui/react';
 import { clearApiToken } from '@renderer/api';
 import { ArrowDown } from '@renderer/assets/icons/ArrowDown';
@@ -22,6 +24,7 @@ import { clear } from '@renderer/cache';
 import { dataContext } from '@renderer/shared/Provider';
 import { useContext } from 'react';
 import { any } from 'joi';
+import { useTranslation } from 'react-i18next';
 
 const ArrowDowns = () => {
   let selectedCenter = useContext(dataContext);
@@ -36,6 +39,11 @@ const ArrowDowns = () => {
     (window as any).electronAPI.deletePassword('token');
     navigate('/login');
   };
+  
+    const { t,i18n } = useTranslation();
+    const switchLanguage = (lang) => {
+      i18n.changeLanguage(lang);
+    };
   return (
     <>
       <Popover
@@ -95,6 +103,16 @@ const ArrowDowns = () => {
                     Language
                   </Text>
                 </Flex>
+                <Box ml="51px"  >
+                  <Button bgColor={"transparent"}  m={0} p={0}  height={8}fontSize="0.875rem" fontWeight={"unset"}
+                    color="#595959" display={"block"} onClik={()=>switchLanguage("en")}>
+                    EN
+                  </Button >
+                  <Button  bgColor={"transparent"}  m={0}  p={0}  height={5}  fontWeight={"unset"} fontSize="0.875rem"
+                    color="#595959" display={"block"} onClik={()=>switchLanguage("vi")}>
+                    VI
+                  </Button>
+                </Box>
               </Flex>
             </>
           </PopoverBody>

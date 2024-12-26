@@ -28,6 +28,7 @@ import { Link as ReachLink, useLocation } from 'react-router-dom';
 import { useGetCenter, useGetCentersData } from '../api';
 import Statists from './Statists';
 import { FaFilter } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 export interface ModuleData {
   moduleName: string;
@@ -263,9 +264,22 @@ console.log(location.state)
   //     return null;
   //   }
   // };
+  
+
+
+  const { t,i18n } = useTranslation();
+  const switchLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+  };
 
   return (
     <>
+     <div>
+      <h1>{t('centerName')}</h1>
+      <p>{t('description')}</p>
+      <button onClick={() => switchLanguage('en')}>English</button>
+      <button onClick={() => switchLanguage('vi')}>Vietnamese</button>
+    </div>
       {centersLoading ? (
         <Box textAlign="center" py={10} px={6}>
           <Spinner />

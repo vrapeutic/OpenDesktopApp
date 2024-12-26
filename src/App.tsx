@@ -27,7 +27,7 @@ import EnterEmail from './features/auth/components/forgetPassword/EnterEmail';
 import ResetPassword from './features/auth/components/forgetPassword/ResetPassword';
 import EditModule from './pages/EditModule';
 import AssignModule from './pages/Assigntocenter/AssignModule';
-
+import './i18n';
 function App() {
   const { adminBoolean } = useAdminContext();
   useEffect(() => {

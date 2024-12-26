@@ -51,7 +51,7 @@
     "style-loader": "^3.0.0",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.0.0",
-    "typescript": "~4.5.4",
+    "typescript": "^5.7.2",
     "url-loader": "^4.1.1"
   },
   "dependencies": {
@@ -80,6 +80,9 @@
     "electron-winstaller": "^5.2.1",
     "express": "^4.19.2",
     "http": "^0.0.1-security",
+    "i18next": "^24.2.0",
+    "i18next-browser-languagedetector": "^8.0.2",
+    "i18next-http-backend": "^3.0.1",
     "joi": "^17.9.2",
     "mdns": "^2.7.2",
     "object-to-formdata": "^4.5.1",
@@ -89,6 +92,7 @@
     "react-datepicker": "^4.25.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.47.0",
+    "react-i18next": "^15.2.0",
     "react-icons": "^4.11.0",
     "react-otp-input": "^3.1.0",
     "react-router-dom": "^6.11.1",

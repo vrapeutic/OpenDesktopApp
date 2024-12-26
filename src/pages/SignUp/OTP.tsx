@@ -60,7 +60,7 @@ export default function OTP() {
     const handleGetRequest = () => {
       setContextOtp(otp);
       fetch(
-        'https://vrapeutic-unicef.eu-west-1.elasticbeanstalk.com/api/v1/admins/software_modules',
+        'VRapeutic-Api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/admins/software_modules',
         {
           headers: {
             otp: `${otp}`,
