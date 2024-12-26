@@ -16,12 +16,15 @@ import { Contact } from '../../assets/icons/Contact';
 import { Documents } from '../../assets/icons/Documents';
 import { Specialty } from '../../assets/icons/Specialty';
 import { Star } from '@renderer/assets/icons/Star';
+import { useTranslation } from 'react-i18next';
 
 export default function ProgressbarSignup(props: any) {
+  const { t } = useTranslation();
+
   const steps = [
-    { title: 'General info', icon: <Info /> },
-    { title: 'Specialty', icon: <Star /> },
-    { title: 'Education info', icon: <Documents /> },
+    { title: t('generalInfo'), icon: <Info /> },
+    { title: t('speciality'), icon: <Star /> },
+    { title: t('educationInfo'), icon: <Documents /> },
     // { title: 'Contact', icon: <Contact /> },
   ];
 
