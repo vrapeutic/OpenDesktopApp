@@ -380,10 +380,12 @@ export default function Home() {
 }
 
 export function NotFound() {
+  const { t, i18n } = useTranslation();
+
   return (
     <Box textAlign="center" py={10} px={6}>
       <Heading fontSize="2rem" mt={3} mb={2}>
-        You don't have center yet
+        {t('noCenter')}
       </Heading>
 
       <Link as={ReachLink} to={'/Therapycenters'}>
@@ -393,7 +395,7 @@ export function NotFound() {
           color="white"
           variant="solid"
         >
-          Go to Centers
+          {t('goToCenter')}
         </Button>
       </Link>
     </Box>
