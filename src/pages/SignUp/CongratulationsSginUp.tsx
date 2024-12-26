@@ -12,12 +12,12 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
 
 export default function CongratulationsSginUp(props: any) {
   const navigate = useNavigate();
-  console.log(props.kids);
+  const { t } = useTranslation();
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -32,7 +32,7 @@ export default function CongratulationsSginUp(props: any) {
               color="#00261C"
               textAlign="center"
             >
-              Congratulations
+              {t('congratulations')}
             </ModalHeader>
             <ModalCloseButton marginLeft="100px" />
           </Box>
@@ -63,7 +63,7 @@ export default function CongratulationsSginUp(props: any) {
               textAlign="center"
               color="#595959"
             >
-              Congratulations
+              {t('congratulations')}
             </Text>
 
             <Text
@@ -73,7 +73,7 @@ export default function CongratulationsSginUp(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-            The profile has been created successfully
+              {t('profileCreatedSuccessfully')}{' '}
             </Text>
           </ModalBody>
 
@@ -99,7 +99,7 @@ export default function CongratulationsSginUp(props: any) {
                 textDecoration="none"
                 onClick={props.onClose}
               >
-                Go to Login
+                {t('goLogin')}
               </Button>
             </Link>
           </ModalFooter>

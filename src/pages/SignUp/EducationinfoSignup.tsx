@@ -23,6 +23,7 @@ import axios from 'axios';
 import { config } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import CongratulationsSginUp from './CongratulationsSginUp';
+import { useTranslation } from 'react-i18next';
 
 const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   onSubmit,
@@ -39,6 +40,9 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const navigate = useNavigate();
   const toast = useToast();
+
+  const { t } = useTranslation();
+
   const schema = joi.object({
     Degree: joi.string().required().label('Degree'),
     University: joi.string().required().label('University'),
@@ -47,13 +51,13 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
       .custom((value, helpers) => {
         if (!value || !value.name) {
           return helpers.error('any.required', {
-            message: 'Please upload a certification file.',
+            message: t('pleaseUploadCertification'),
           });
         }
         const ext = value.name.split('.').pop().toLowerCase();
         if (ext !== 'pdf') {
           return helpers.error('any.invalid', {
-            message: 'Invalid file type. Please upload a PDF file.',
+            message: t('invalidFileType'),
           });
         }
 
@@ -95,7 +99,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
       setValue('certification', file);
       clearErrors('certification');
     } else {
-      setError('certification', { message: 'Please upload a PDF file.' });
+      setError('certification', { message: t('invalidFileType') });
     }
   };
 
@@ -109,7 +113,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
 
     if (!selectedFile) {
       setError('certification', {
-        message: 'Please upload a PDF file.',
+        message: t('invalidFileType'),
       });
     } else {
       clearErrors('certification');
@@ -145,10 +149,9 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   const postFormData = async (formDataSet: FormData) => {
     try {
       await axios.post(`${config.apiURL}/api/v1/doctors`, formDataSet);
-      handleSuccess()
+      handleSuccess();
     } catch (error) {
-        
-      handleError( error);
+      handleError(error);
       console.error('Error in postFormData:', error);
     }
   };
@@ -160,9 +163,8 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
 
     try {
       await postFormData(formDataSet);
-     
     } catch (error) {
-    console.log(error);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -173,7 +175,6 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   };
 
   const handleError = (error: any) => {
-
     console.log('error', error);
     // toast({
     //   title: 'Error',
@@ -201,7 +202,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
       >
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-            Degree
+            {t('degree')}
           </FormLabel>
           <Input
             {...register('Degree')}
@@ -222,7 +223,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
 
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-            University
+            {t('university')}
           </FormLabel>
           <Input
             {...register('University')}
@@ -243,7 +244,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
         <GridItem>
           <FormControl>
             <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-              Upload Image
+              {t('uploadPhoto')}
             </FormLabel>
             <Button
               h="128px"
@@ -272,7 +273,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
               )}
             </Button>
             {isFormSubmitted && imagePreviewError && (
-              <Text color="red.500">"Image" is required</Text>
+              <Text color="red.500">{t('imageRequired')}</Text>
             )}
           </FormControl>
         </GridItem>
@@ -280,7 +281,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
           <>
             <FormControl>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                certification
+                {t('certification')}
               </FormLabel>
               <Button
                 h="128px"
@@ -305,7 +306,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
             </FormControl>
             {selectedFile && (
               <Text mt="1em" width={'400px'}>
-                Selected File: {selectedFile.name}
+                {t('selectedFile')}: {selectedFile.name}
               </Text>
             )}
             {errors.certification && (
@@ -351,7 +352,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-            Back
+            {t('back')}
           </Button>
         )}
       </Flex>

@@ -12,9 +12,12 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { Link as ReachLink } from 'react-router-dom';
 
 export default function CongratulationWithEditCenter(props: any) {
+  const { t } = useTranslation();
+
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -28,9 +31,7 @@ export default function CongratulationWithEditCenter(props: any) {
               lineHeight="20px"
               color="#00261C"
               textAlign="center"
-            >
-              Congratulations
-            </ModalHeader>
+            ></ModalHeader>
             <ModalCloseButton marginLeft="100px" />
           </Box>
 
@@ -57,7 +58,7 @@ export default function CongratulationWithEditCenter(props: any) {
               textAlign="center"
               color="#595959"
             >
-              Congratulations
+              {t('congratulations')}
             </Text>
 
             <Text
@@ -67,7 +68,7 @@ export default function CongratulationWithEditCenter(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-              Your Center has been Edited successfully
+              {t('centerEditedSuccessfully')}
             </Text>
           </ModalBody>
 
@@ -94,7 +95,7 @@ export default function CongratulationWithEditCenter(props: any) {
                   textDecoration: 'none',
                 }}
               >
-                Go to Centers
+                {t('goToCenter')}
               </Link>
             </Button>
           </ModalFooter>

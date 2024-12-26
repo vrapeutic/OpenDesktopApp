@@ -22,7 +22,7 @@ import EductionIInfoForm from '../features/AddCenterForm/EductionIInfoForm';
 import GeneralInfoForm from '../features/AddCenterForm/GeneralInfoForm';
 import SpecialtyForm from '../features/AddCenterForm/SpecialtyForm';
 import HeaderSpaceBetween from '@renderer/theme/components/HeaderSpaceBetween';
-
+import { useTranslation } from 'react-i18next';
 
 interface Center {
   id: number;
@@ -34,12 +34,10 @@ interface Center {
     specialties: { id: number; name: string }[];
     children_count: number;
   };
-  relationships:{specialties: { id: number; name: string }[];}
-
+  relationships: { specialties: { id: number; name: string }[] };
 }
 
 const TherapyCenters: React.FC = () => {
- 
   const totalSteps = 5;
 
   const [sliding, setSliding] = useState(1);
@@ -47,6 +45,8 @@ const TherapyCenters: React.FC = () => {
   const [centersList, setCentersList] = useState<Center[]>([]);
   const [includes, setIncludes] = useState([]);
   const [showTable, setShowTable] = useState(true);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     getCenters();
@@ -140,77 +140,76 @@ const TherapyCenters: React.FC = () => {
   };
 
   const renderTable = () => {
-  console.log(centersList[0]
-    ,"testjhghegfhjgjhgfh")
+    console.log(centersList[0], 'testjhghegfhjgjhgfh');
     return (
       <>
         {centersList.length == 0 ? (
           <Box textAlign="center" py={10} px={6}>
             <Heading fontSize="2rem" mt={3} mb={2}>
-              You don't have Centers yet
+              {t(`don'tHaveCenter`)}.
             </Heading>
           </Box>
         ) : (
           <Box mx={18}>
-
-          
-          <Table variant="simple" background="#FFFFFF" cursor={"pointer"} >
-            <Thead  cursor={"pointer"}>
-              <Tr  cursor={"pointer"}>
-                <Th  cursor={"pointer"}> Name</Th>
-                <Th  cursor={"pointer"}>Specialties</Th>
-                <Th  cursor={"pointer"}>Kids</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {centersList?.map((center) => (
-                <Tr
-                  key={center.id}
-                  onClick={() => handleCenterClick(center)}
-                  cursor={'pointer'}
-                >
-                  <Td>
-                    <Flex direction="row" gap={2}>
-                      <Box
-                        width={197}
-                        height={197}
-                        alignItems={'center'}
-                        display={'flex'}
-                      >
-                        <img
-                          src={center?.attributes?.logo?.url}
-                          alt={center?.attributes?.name}
-                        />
-                      </Box>
-
-                      <Text
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        {center?.attributes?.name}
-                      </Text>
-                    </Flex>
-                  </Td>
-                  <Td>
-                    {center?.attributes?.specialties?.map((specialty:any) => (
-                      <Tag
-                        key={specialty.id}
-                        size="sm"
-                        colorScheme="gray"
-                        mr={1}
-                      >
-                        <TagLabel>{specialty?.name}</TagLabel>
-                      </Tag>
-                    ))}
-                  </Td>
-                  <Td>{center?.attributes?.children_count}</Td>
+            <Table variant="simple" background="#FFFFFF" cursor={'pointer'}>
+              <Thead cursor={'pointer'}>
+                <Tr cursor={'pointer'}>
+                  <Th cursor={'pointer'}>{t(`name`)} </Th>
+                  <Th cursor={'pointer'}>{t(`specialty`)}</Th>
+                  <Th cursor={'pointer'}>{t(`kids`)}</Th>
                 </Tr>
-              ))}
-            </Tbody>
-          </Table>
+              </Thead>
+              <Tbody>
+                {centersList?.map((center) => (
+                  <Tr
+                    key={center.id}
+                    onClick={() => handleCenterClick(center)}
+                    cursor={'pointer'}
+                  >
+                    <Td>
+                      <Flex direction="row" gap={2}>
+                        <Box
+                          width={197}
+                          height={197}
+                          alignItems={'center'}
+                          display={'flex'}
+                        >
+                          <img
+                            src={center?.attributes?.logo?.url}
+                            alt={center?.attributes?.name}
+                          />
+                        </Box>
+
+                        <Text
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          {center?.attributes?.name}
+                        </Text>
+                      </Flex>
+                    </Td>
+                    <Td>
+                      {center?.attributes?.specialties?.map(
+                        (specialty: any) => (
+                          <Tag
+                            key={specialty.id}
+                            size="sm"
+                            colorScheme="gray"
+                            mr={1}
+                          >
+                            <TagLabel>{specialty?.name}</TagLabel>
+                          </Tag>
+                        )
+                      )}
+                    </Td>
+                    <Td>{center?.attributes?.children_count}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
           </Box>
         )}
       </>
@@ -229,8 +228,8 @@ const TherapyCenters: React.FC = () => {
       return (
         <>
           <HeaderSpaceBetween
-            Title="Therapy Centers"
-            ButtonText="Add Therapy Center"
+            Title={t(`therapyCenters`)}
+            ButtonText={t(`add`) + ' ' + t(`center`)}
             onClickFunction={nextHandler}
           />
           {showTable && renderTable()}

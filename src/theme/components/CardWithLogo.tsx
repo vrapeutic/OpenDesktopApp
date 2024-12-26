@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { getMe } from '@renderer/cache';
+import { useTranslation } from 'react-i18next';
 interface CardWithLogoProps {
   centerData?: {
     attributes: {
@@ -45,8 +46,7 @@ interface CardWithLogoProps {
 }
 
 const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
-  console.log('CardWithLogo', centerData);
-  console.log('CardWithLogo', Module);
+  const { t } = useTranslation();
   const token = getMe()?.token;
   let facebookLink;
   let linkedinLink;
@@ -58,7 +58,7 @@ const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
       (link: { link_type: string }) => link.link_type === 'twitter'
     );
   }
-console.log(Module?.Module)
+  console.log(Module?.Module);
 
   return (
     <Grid
@@ -67,9 +67,9 @@ console.log(Module?.Module)
       mx={18}
       my={5}
       background="#FFFFFF"
-      borderRadius={"10px"}
+      borderRadius={'10px'}
     >
-      <GridItem colSpan={4} >
+      <GridItem colSpan={4}>
         <Stack
           spacing={{ base: 0, md: 4 }}
           direction={{ base: 'column', md: 'row' }}
@@ -115,8 +115,10 @@ console.log(Module?.Module)
       </GridItem>
 
       <GridItem colSpan={3} py={4}>
-        <Text>Contact us</Text>
-        <Text>Email: {centerData?.attributes?.email}</Text>
+        <Text>{t('contact')}</Text>
+        <Text>
+          {t('email')}: {centerData?.attributes?.email}
+        </Text>
         <Text>Cal : {centerData?.attributes?.phone_number}</Text>
         {token && (
           <Flex direction="row" gap={2}>
@@ -157,7 +159,7 @@ console.log(Module?.Module)
       </GridItem> */}
       <GridItem colSpan={4} px={4}>
         <Text my={2}>
-          {Module?.Module?.attributes?.targeted_skills&& "Specialties :"}
+          {Module?.Module?.attributes?.targeted_skills && 'Specialties :'}
           {Module?.Module?.attributes?.targeted_skills?.map((skill: any) => (
             <Tag key={skill.id} size="sm" colorScheme="gray" mr={1} my={1}>
               <TagLabel>{skill?.name}</TagLabel>

@@ -26,6 +26,7 @@ import SelectingCenter from '../../pages/StartSession/SelectingCenter';
 import { useAdminContext } from '../../Context/AdminContext';
 import Lostconnection from '@renderer/pages/StartSession/lostconnection';
 import { dataContext } from '../Provider';
+import { useTranslation } from 'react-i18next';
 
 export default function Sidebar() {
   const selectedCenterContext = useContext(dataContext);
@@ -40,6 +41,8 @@ export default function Sidebar() {
   const { adminBoolean } = useAdminContext();
   const navigate = useNavigate();
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     console.log('Admin Context Value:', adminBoolean);
   }, [adminBoolean]);
@@ -47,7 +50,6 @@ export default function Sidebar() {
   const active = {
     color: '#00DEA3',
     fontWeight: '600',
-   
   };
   const Sidebar = {
     background: '#00DEA3',
@@ -55,13 +57,12 @@ export default function Sidebar() {
     height: '33px',
     left: 0,
     marginTop: '-7px',
-  
   };
   console.log(location.pathname);
 
   const sideItemsDoctor = [
     {
-      link: 'Dashboard',
+      link: t('dashboard'),
       icon: (
         <Dashboard
           color={location.pathname === '/home' ? '#00DEA3' : '#333333'}
@@ -70,7 +71,7 @@ export default function Sidebar() {
       path: '/home',
     },
     {
-      link: 'Kids',
+      link: t('kids'),
       icon: (
         <Kids color={location.pathname === '/Kids' ? '#00DEA3' : '#333333'} />
       ),
@@ -78,7 +79,7 @@ export default function Sidebar() {
     },
 
     {
-      link: 'Therapy Centers',
+      link: t('therapyCenters'),
       icon: (
         <Therapycenters
           color={
@@ -90,7 +91,7 @@ export default function Sidebar() {
     },
 
     {
-      link: 'Specialists',
+      link: t('specialists'),
       icon: (
         <Specialists
           color={location.pathname === '/Specialists' ? '#00DEA3' : '#333333'}
@@ -100,7 +101,7 @@ export default function Sidebar() {
     },
 
     {
-      link: 'Subscriptions',
+      link: t('subscriptions'),
       icon: (
         <Subscriptions
           color={location.pathname === '/Subscriptions' ? '#00DEA3' : '#333333'}
@@ -169,7 +170,7 @@ export default function Sidebar() {
       height={'inherit'}
     >
       <VStack>
-        <Box >
+        <Box>
           <Flex paddingY="27px">
             <Image src={VRapeutic} />
           </Flex>
@@ -313,7 +314,7 @@ export default function Sidebar() {
               fontWeight="500"
               onClick={onOpen}
             >
-              Start a Session
+              {t('startSession')}
             </Button>
           )}
         </Box>

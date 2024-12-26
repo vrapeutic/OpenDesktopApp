@@ -12,12 +12,13 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
 
 export default function Congratulations(props: any) {
   const navigate = useNavigate();
-  console.log(props.kids)
+  const { t } = useTranslation();
+
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -32,7 +33,7 @@ export default function Congratulations(props: any) {
               color="#00261C"
               textAlign="center"
             >
-              Congratulations
+              {t('congratulations')}
             </ModalHeader>
             <ModalCloseButton marginLeft="100px" />
           </Box>
@@ -60,7 +61,7 @@ export default function Congratulations(props: any) {
               textAlign="center"
               color="#595959"
             >
-              Congratulations
+              {t('congratulations')}
             </Text>
 
             <Text
@@ -70,7 +71,7 @@ export default function Congratulations(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-              The profile has been created successfully
+              {t('profileCreatedSuccessfully')}{' '}
             </Text>
           </ModalBody>
 
@@ -90,32 +91,25 @@ export default function Congratulations(props: any) {
               textDecoration="none"
               onClick={props.onClose}
             >
-              
-              {
-
-
-             props.kids? 
-             <Link
-             _hover={{
-               textDecoration: 'none',
-             }}
-             onClick={() => navigate('/Kids')}
-           >
-            Check now
-           </Link>
-             
-            :
+              {props.kids ? (
                 <Link
-                _hover={{
-                  textDecoration: 'none',
-                }}
-                onClick={() => navigate('/home')}
-              >
-                Go to home
-              </Link>
-              
-            }
-              
+                  _hover={{
+                    textDecoration: 'none',
+                  }}
+                  onClick={() => navigate('/Kids')}
+                >
+                  {t('checkNow')}
+                </Link>
+              ) : (
+                <Link
+                  _hover={{
+                    textDecoration: 'none',
+                  }}
+                  onClick={() => navigate('/home')}
+                >
+                  {t('goHome')}
+                </Link>
+              )}
             </Button>
           </ModalFooter>
         </ModalContent>

@@ -17,8 +17,8 @@ import {
 import axios from 'axios';
 import { config } from '../../config';
 import { getMe } from '../../cache';
-import {  useEffect, useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Doctor {
   id: number | null;
@@ -48,6 +48,8 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
   };
   const [childrenlist, setchildrenlist] = useState<Child[] | undefined>();
   const [Doctorslist, setDoctorlist] = useState<Doctor[] | undefined>();
+
+  const { t } = useTranslation();
 
   const getChildren = async () => {
     try {
@@ -83,17 +85,17 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
   return (
     <Tabs>
       <TabList>
-        <Tab>Therapy info</Tab>
+        <Tab>{t('therapyInfo')}</Tab>
         <Tab>Recent Activities </Tab>
         <Tab>Subscriptions</Tab>
-        <Tab>Specialists</Tab>
-        <Tab>Kids</Tab>
+        <Tab>{t('Specialists')}</Tab>
+        <Tab>{t('kids')}</Tab>
         <Tab>Widgets</Tab>
       </TabList>
 
       <TabPanels>
         <TabPanel>
-          <p>Therapy info</p>
+          <p>{t('therapyInfo')}</p>
         </TabPanel>
         <TabPanel>
           <p>Recent Activities</p>
@@ -111,9 +113,9 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
             >
               <Thead>
                 <Tr>
-                  <Th> Name</Th>
-                  <Th>degree</Th>
-                  <Th>university</Th>
+                  <Th>{t('name')} </Th>
+                  <Th>{t('degree')}</Th>
+                  <Th>{t('university')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -148,7 +150,7 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
               </Tbody>
             </Table>
           ) : (
-            <Text>No Doctors in this center</Text>
+            <Text>{t('noDoctorsData')}</Text>
           )}
         </TabPanel>
         <TabPanel>
@@ -160,9 +162,9 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
             >
               <Thead>
                 <Tr>
-                  <Th> Name</Th>
-                  <Th>email</Th>
-                  <Th>age</Th>
+                  <Th>{t('name')}</Th>
+                  <Th>{t('email')}</Th>
+                  <Th>{t('age')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -178,7 +180,7 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
               </Tbody>
             </Table>
           ) : (
-            <Text>No Kids in this center</Text>
+            <Text>{t('noKidsAvailable')}</Text>
           )}
         </TabPanel>
         <TabPanel>

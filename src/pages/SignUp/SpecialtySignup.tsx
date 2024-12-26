@@ -17,6 +17,7 @@ import ProgressBarSignup from '../../theme/components/ProgressBarSignup';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { SignupFormProps } from './signupFormInterface';
+import { useTranslation } from 'react-i18next';
 
 const SpecialtySignup: React.FC<SignupFormProps> = ({
   onSubmit,
@@ -27,6 +28,8 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
 }) => {
   const [specialistslist, setspecialistslist] = useState([]);
   const [defaultSpecialties, setDefaultSpecialties] = useState([]);
+
+  const { t } = useTranslation();
 
   const schema = joi.object({
     specializationschema: joi
@@ -115,8 +118,7 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
             lineHeight="1rem"
             color="#15134B"
           >
-            Choose specializations (like tags, for example, Sensory Integration,
-            Physical Therapy, etc.)
+            {t('chooseSpecializationsWithExample')}
           </FormLabel>
           <Select
             components={animatedComponents}
@@ -156,7 +158,7 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
           fontSize="1.125em"
           fontWeight="700"
         >
-          Next
+          {t('next')}
         </Button>
 
         {sliding === 1 ? null : (
@@ -174,7 +176,7 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-            Back
+            {t('back')}
           </Button>
         )}
       </Flex>

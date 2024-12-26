@@ -29,6 +29,7 @@ import { useContext, useEffect, useState } from 'react';
 import { config } from '../config';
 import axios from 'axios';
 import { MyContext } from '@renderer/theme/ContextHelper';
+import { useTranslation } from 'react-i18next';
 
 export default function Specialists() {
   const selectedCenter = useContext(dataContext);
@@ -50,6 +51,9 @@ export default function Specialists() {
   const toast = useToast();
   const [errorsKids, setErrorsKids] = useState(false);
   const { state } = useContext(MyContext);
+
+  const { t } = useTranslation();
+
   const schema = Joi.object().keys({
     email: Joi.string()
       .email({
@@ -208,7 +212,7 @@ export default function Specialists() {
   return (
     <Box mx={18}>
       <HeaderSpaceBetween
-        Title="Specialists"
+        Title={t('specialists')}
         ButtonText={state.is_center_admin ? 'Add Specialist' : null}
         onClickFunction={onOpen}
       />
@@ -216,13 +220,13 @@ export default function Specialists() {
       <Table variant="simple" background="#FFFFFF">
         <Thead>
           <Tr>
-            <Th>Name</Th>
-            <Th>Speciality</Th>
-            <Th>Education</Th>
-            <Th>Joined in</Th>
-            <Th>Therapy center</Th>
-            <Th>Sessions</Th>
-            <Th>Kids</Th>
+            <Th>{t('name')}</Th>
+            <Th>{t('speciality')}</Th>
+            <Th>{t('education')}</Th>
+            <Th>{t('joinedIn')}</Th>
+            <Th>{t('therapyCenter')}</Th>
+            <Th>{t('sessions')}</Th>
+            <Th>{t('kids')}</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -273,7 +277,7 @@ export default function Specialists() {
                     onOpenAssign();
                   }}
                 >
-                  Assign
+                  {t('assign')}
                 </Button>
               </Td>
             </Tr>
@@ -303,7 +307,7 @@ export default function Specialists() {
               </ModalBody>
               <ModalFooter>
                 <Button type="submit" colorScheme="teal" isDisabled={!isValid}>
-                  Invite
+                  {t('invite')}
                 </Button>
               </ModalFooter>
             </form>
@@ -357,7 +361,7 @@ export default function Specialists() {
                   colorScheme="teal"
                   isDisabled={!errorsKids}
                 >
-                  Assign
+                  {t('assign')}
                 </Button>
               </ModalFooter>
             </form>

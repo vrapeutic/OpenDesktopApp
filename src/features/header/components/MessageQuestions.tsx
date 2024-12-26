@@ -19,9 +19,11 @@ import { MessageQuestion } from '@renderer/assets/icons/MessageQuestion';
 import { useState } from 'react';
 import QuestionsGirl from '../../../assets/images/QuestionsGirl.png';
 import NotificationUserTwo from '../../../assets/images/NotificationUserTwo.png';
+import { useTranslation } from 'react-i18next';
 
 const MessageQuestions = (props: any) => {
   const [isActive, setIsActive] = useState(false);
+  const { t } = useTranslation();
 
   const activateHandler = () => {
     if (isActive === true) {
@@ -71,7 +73,7 @@ const MessageQuestions = (props: any) => {
                   color="#5A5881"
                   textTransform="capitalize"
                 >
-                  How to use vR ?
+                  {t('howToUseVR')}
                 </Text>
                 <Text
                   pt="23px"
@@ -100,7 +102,7 @@ const MessageQuestions = (props: any) => {
               mt="37px"
               ml="20px"
             >
-              Skip
+              {t('skip')}
             </Button>
             {/* <Container zIndex="100" bg="#00DEA3" maxH="8px"></Container> */}
             <Button
@@ -113,7 +115,7 @@ const MessageQuestions = (props: any) => {
               mr="20px"
               mt="37px"
             >
-              Next
+              {t('next')}
             </Button>
           </Flex>
         </PopoverContent>

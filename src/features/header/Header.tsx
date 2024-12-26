@@ -11,9 +11,11 @@ import Icons from '@renderer/features/header/components/Icons';
 import User from '@renderer/features/header/components/User';
 import { useState } from 'react';
 import { IcMenuOpen } from '@renderer/assets/icons/IcMenuOpen';
+import { useTranslation } from 'react-i18next';
 
 const Header = ({ sideToggle }: any) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   const icMenuHandler = () => {
     setMenuOpen(!menuOpen);
@@ -41,7 +43,7 @@ const Header = ({ sideToggle }: any) => {
             fontFamily="Graphik LCG"
             fontWeight="500"
             fontSize="0.875rem"
-            placeholder="Search for anything..."
+            placeholder={t('searchForAnything')}
           />
         </InputGroup>
       </HStack>

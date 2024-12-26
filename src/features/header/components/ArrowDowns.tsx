@@ -22,28 +22,39 @@ import { Users } from '@renderer/assets/icons/Users';
 import { useNavigate } from 'react-router-dom';
 import { clear } from '@renderer/cache';
 import { dataContext } from '@renderer/shared/Provider';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { any } from 'joi';
 import { useTranslation } from 'react-i18next';
 
 const ArrowDowns = () => {
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(
+    localStorage.getItem('language') || 'en'
+  );
   let selectedCenter = useContext(dataContext);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const logout = async () => {
     clearApiToken();
     clear();
     localStorage.clear();
-    selectedCenter=  Object.keys(selectedCenter).forEach((key:any) => delete selectedCenter[key])
-    console .log(selectedCenter);
-    
+    selectedCenter = Object.keys(selectedCenter).forEach(
+      (key: any) => delete selectedCenter[key]
+    );
+    console.log(selectedCenter);
+
     (window as any).electronAPI.deletePassword('token');
     navigate('/login');
   };
-  
-    const { t,i18n } = useTranslation();
-    const switchLanguage = (lang) => {
-      i18n.changeLanguage(lang);
-    };
+
+  useEffect(() => {
+    i18n.changeLanguage(selectedLanguage);
+  }, [selectedLanguage, i18n]);
+
+  const switchLanguage = (lang: string) => {
+    // i18n.changeLanguage(lang);
+    setSelectedLanguage(lang);
+    localStorage.setItem('language', lang);
+  };
   return (
     <>
       <Popover
@@ -58,7 +69,7 @@ const ArrowDowns = () => {
         <PopoverContent w="min-content">
           <PopoverHeader pt="24px" pr="99px" pl="24px" pb="0" border="0">
             <Text fontSize="1rem" color="#00261C" letterSpacing="0.016em;">
-              Welcome!
+              {t('welcome')}
             </Text>
           </PopoverHeader>
           <PopoverBody p="0">
@@ -74,7 +85,7 @@ const ArrowDowns = () => {
                     color="#595959"
                     letterSpacing="0.016em"
                   >
-                    My Account
+                    {t('myAccount')}
                   </Text>
                 </Flex>
                 <Flex mt="25px" ml="25px">
@@ -87,7 +98,7 @@ const ArrowDowns = () => {
                     color="#595959"
                     letterSpacing="0.016em"
                   >
-                    Settings
+                    {t('settings')}
                   </Text>
                 </Flex>
                 <Flex mt="25px" ml="25px">
@@ -100,16 +111,34 @@ const ArrowDowns = () => {
                     color="#595959"
                     letterSpacing="0.016em"
                   >
-                    Language
+                    {t('language')}
                   </Text>
                 </Flex>
-                <Box ml="51px"  >
-                  <Button bgColor={"transparent"}  m={0} p={0}  height={8}fontSize="0.875rem" fontWeight={"unset"}
-                    color="#595959" display={"block"} onClik={()=>switchLanguage("en")}>
+                <Box ml="51px">
+                  <Button
+                    bgColor={'transparent'}
+                    m={0}
+                    p={0}
+                    height={8}
+                    fontSize="0.875rem"
+                    fontWeight={'unset'}
+                    color="#595959"
+                    display={'block'}
+                    onClick={() => switchLanguage('en')}
+                  >
                     EN
-                  </Button >
-                  <Button  bgColor={"transparent"}  m={0}  p={0}  height={5}  fontWeight={"unset"} fontSize="0.875rem"
-                    color="#595959" display={"block"} onClik={()=>switchLanguage("vi")}>
+                  </Button>
+                  <Button
+                    bgColor={'transparent'}
+                    m={0}
+                    p={0}
+                    height={5}
+                    fontWeight={'unset'}
+                    fontSize="0.875rem"
+                    color="#595959"
+                    display={'block'}
+                    onClick={() => switchLanguage('vi')}
+                  >
                     VI
                   </Button>
                 </Box>
@@ -129,7 +158,7 @@ const ArrowDowns = () => {
               _hover={{ textDecoration: 'none' }}
               onClick={logout}
             >
-              Log out
+              {t('logOut')}
             </Link>
           </Flex>
         </PopoverContent>

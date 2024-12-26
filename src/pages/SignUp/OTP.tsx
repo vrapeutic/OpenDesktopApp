@@ -22,6 +22,7 @@ import Congratulations from './Congratulations';
 import { setApiToken } from '../..//api';
 import { setMe } from '../..//cache';
 import { useAdminContext } from '@renderer/Context/AdminContext';
+import { useTranslation } from 'react-i18next';
 
 export default function OTP() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,6 +35,8 @@ export default function OTP() {
   );
   const navigate = useNavigate();
   const { setOtp: setContextOtp } = useAdminContext();
+
+  const { t } = useTranslation();
 
   const input = {
     width: '60px',
@@ -126,7 +129,7 @@ export default function OTP() {
       )
         .then((response) => {
           if (response.ok && response.status >= 200 && response.status < 300) {
-            navigate('/home',{  state:location.state});
+            navigate('/home', { state: location.state });
           } else {
             console.error(`Error: ${response.status} - ${response.statusText}`);
           }
@@ -192,7 +195,7 @@ export default function OTP() {
                 fontSize="2rem"
                 color="#222631"
               >
-                Verify Your Email
+                {t('verifyEmail')}
               </Heading>
 
               <Text
@@ -203,7 +206,7 @@ export default function OTP() {
                 fontWeight="400"
                 lineHeight="27.2px"
               >
-                We’ve sent a verification code to
+                {t('OTPSent')}
               </Text>
 
               <Text
@@ -224,7 +227,7 @@ export default function OTP() {
                 fontWeight="400"
                 lineHeight="27.2px"
               >
-                Please enter that code below to verify your account.
+                {t('pleaseEnterCode')}
               </Text>
 
               <Text
@@ -236,7 +239,7 @@ export default function OTP() {
                 lineHeight="27.2px"
                 mb="13px"
               >
-                Enter code
+                {t('enterCode')}
               </Text>
 
               <OTPInput
@@ -256,7 +259,7 @@ export default function OTP() {
                   fontWeight="500"
                   lineHeight="24px"
                 >
-                  Code is valid for 30 minutes
+                  {t('codeValidationPeriod')}
                 </Text>
 
                 {/* <Button
@@ -285,7 +288,7 @@ export default function OTP() {
                 lineHeight="24px"
                 onClick={resendOtp}
               >
-                Resend Code
+                {t('resendCode')}
               </Button>
             </Box>
           </Flex>

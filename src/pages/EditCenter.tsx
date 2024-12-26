@@ -27,6 +27,7 @@ import { serialize } from 'object-to-formdata';
 import { getMe } from '../cache';
 import { config } from '../config';
 import CongratulationWithEditCenter from '../theme/components/CongratulationWithEditCenter';
+import { useTranslation } from 'react-i18next';
 
 const EditCenter = () => {
   const location = useLocation();
@@ -47,6 +48,8 @@ const EditCenter = () => {
     onOpen: onOpenCongratulationsEditcenter,
     onClose: onDeleteCongratulationsEditcenter,
   } = useDisclosure();
+
+  const { t } = useTranslation();
 
   const centerSocialLinks = includes.filter((item: any) => {
     return item.type === 'center_social_link';
@@ -101,7 +104,7 @@ const EditCenter = () => {
       .label('logo')
       .custom((value, helpers) => {
         if (value && value.name) {
-          return helpers.error('Invalid file type. Please upload a  photo.');
+          return helpers.error(t('invalidFileType'));
         }
         return value;
       }),
@@ -113,7 +116,7 @@ const EditCenter = () => {
     setValue,
     setError,
     clearErrors,
-    trigger
+    trigger,
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onChange',
@@ -188,10 +191,10 @@ const EditCenter = () => {
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
     setLogo(file);
-    trigger('logo')
+    trigger('logo');
     if (!file) {
       setValue('logo', null);
-      setError('logo', { message: 'Please upload a logo.' });
+      setError('logo', { message: t('uploadLogo') });
     }
   };
   const handleSpecializations = (options: any) => {
@@ -209,7 +212,7 @@ const EditCenter = () => {
     } else {
       setValue('certificate', null);
       setSelectedFile(null);
-      setError('certificate', { message: 'Please upload a PDF file.' });
+      setError('certificate', { message: t('invalidFileType') });
     }
   };
 
@@ -306,18 +309,18 @@ const EditCenter = () => {
             lineHeight="29px"
             letterSpacing="-0.01em"
           >
-            Therapy Center
+            {t('therapyCenter')}
           </Text>
         </HStack>
         <Box bg="#FFFFFF" borderRadius={10} p={'24px'}>
           <Text fontSize="xl" fontFamily={'Graphik LCG'} fontWeight={'500'}>
-            General info
+            {t('generalInfo')}
           </Text>
 
           <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
             <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                Therapy Center Name
+                {t('therapyCenterName')}
               </FormLabel>
               <Input
                 {...register('name')}
@@ -338,7 +341,7 @@ const EditCenter = () => {
             </GridItem>
             <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                Email
+                {t('email')}
               </FormLabel>
               <Input
                 {...register('email')}
@@ -359,7 +362,7 @@ const EditCenter = () => {
             </GridItem>
             <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                Complete Address
+                {t('completeAddress')}
               </FormLabel>
 
               <Input
@@ -379,7 +382,7 @@ const EditCenter = () => {
 
             <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                Manager's Name
+                {t('managerName')}
               </FormLabel>
 
               <Input
@@ -404,7 +407,7 @@ const EditCenter = () => {
             fontFamily={'Graphik LCG'}
             fontWeight={'500'}
           >
-            Specialty
+            {t('specialty')}
           </Text>
 
           <Grid>
@@ -415,7 +418,7 @@ const EditCenter = () => {
                 letterSpacing="0.256px"
                 color="#15134B"
               >
-                Specialty information
+                {t('specialtyInfo')}
               </FormLabel>
               <FormLabel
                 pl="0.5em"
@@ -425,7 +428,7 @@ const EditCenter = () => {
                 letterSpacing="0.192px"
                 color="#8D8D8D"
               >
-                (description)
+                ({t('description')})
               </FormLabel>
               <Input
                 {...register('specialtyInformation')}
@@ -451,7 +454,7 @@ const EditCenter = () => {
                 letterSpacing="0.256px"
                 color="#15134B"
               >
-                Choose specializations
+                {t('chooseSpecializations')}
               </FormLabel>
               <FormLabel
                 pl="0.5em"
@@ -461,7 +464,7 @@ const EditCenter = () => {
                 letterSpacing="0.192px"
                 color="#8D8D8D"
               >
-                (like tags, for example, ADHD, Autism, etc.)
+                ({t('chooseSpecializationsWithExample')})
               </FormLabel>
               <Select
                 {...register('specializationschema')}
@@ -487,12 +490,12 @@ const EditCenter = () => {
             fontFamily={'Graphik LCG'}
             fontWeight={'500'}
           >
-            Official documents
+            {t('officialDocuments')}
           </Text>
 
           <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
             <GridItem>
-              <FormLabel color="#15134B">Registration Number</FormLabel>
+              <FormLabel color="#15134B">{t('registrationNumber')}</FormLabel>
 
               <Input
                 {...register('registrationNumber')}
@@ -509,7 +512,7 @@ const EditCenter = () => {
               />
             </GridItem>
             <GridItem>
-              <FormLabel color="#15134B">Tax ID</FormLabel>
+              <FormLabel color="#15134B">{t('taxID')}</FormLabel>
               <Input
                 {...register('tax_id')}
                 id="tax_id"
@@ -533,7 +536,7 @@ const EditCenter = () => {
               <>
                 <FormControl>
                   <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                    Certification
+                    {t('certification')}
                   </FormLabel>
                   <Button
                     h="128px"
@@ -556,7 +559,9 @@ const EditCenter = () => {
                   </Button>
                 </FormControl>
                 {selectedFile ? (
-                  <Text mt="1em">Selected File: {selectedFile.name}</Text>
+                  <Text mt="1em">
+                    {t('selectedFile')}: {selectedFile.name}
+                  </Text>
                 ) : (
                   <Text mt="1em">You uploaded before: {fileName}</Text>
                 )}
@@ -574,12 +579,12 @@ const EditCenter = () => {
             fontFamily={'Graphik LCG'}
             fontWeight={'500'}
           >
-            Contact
+            {t('contact')}
           </Text>
           <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
             <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                Phone number 1
+                {t('phone1')}
               </FormLabel>
               <Input
                 {...register('phone_number')}
@@ -602,7 +607,7 @@ const EditCenter = () => {
             </GridItem>
             <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                Social media
+                {t('socialMedia')}
               </FormLabel>
               <Input
                 {...register('socialMedia')}
@@ -625,7 +630,7 @@ const EditCenter = () => {
             </GridItem>
             <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                Website
+                {t('website')}
               </FormLabel>
               <Input
                 {...register('website')}
@@ -668,8 +673,13 @@ const EditCenter = () => {
             <GridItem rowSpan={2} mb="5">
               <>
                 <FormControl>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B" cursor="pointer">
-                    Upload Photo
+                  <FormLabel
+                    m="0em"
+                    letterSpacing="0.256px"
+                    color="#15134B"
+                    cursor="pointer"
+                  >
+                    {t('uploadPhoto')}
                   </FormLabel>
                   <Button
                     h="128px"
@@ -678,9 +688,9 @@ const EditCenter = () => {
                     borderRadius="8px"
                     bg="#FFFFFF"
                     position={'relative'}
-                    cursor={"auto"}
+                    cursor={'auto'}
                   >
-                    <label style={{ cursor:"pointer"}} >
+                    <label style={{ cursor: 'pointer' }}>
                       <img
                         src={imagePreview}
                         alt="brand_logo"
@@ -721,7 +731,7 @@ const EditCenter = () => {
               fontSize="1.125em"
               fontWeight="700"
             >
-              Submit
+              {t('submit')}
             </Button>
             <Button
               onClick={goBack}
@@ -737,7 +747,7 @@ const EditCenter = () => {
               fontSize="1.125em"
               fontWeight="700"
             >
-              Back
+              {t('back')}
             </Button>
           </Flex>
         </Box>

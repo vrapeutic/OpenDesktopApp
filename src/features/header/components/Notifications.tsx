@@ -22,13 +22,15 @@ import { config } from '@renderer/config';
 import axios from 'axios';
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Notifications = (props: any) => {
   const [isActive, setIsActive] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [notification,setNotfication]  = useState<any[]>([])
+  const [notification, setNotfication] = useState<any[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const token = getMe()?.token;
+  const { t } = useTranslation();
 
   const toast = useToast();
   const getNotification = async () => {
@@ -39,23 +41,20 @@ const Notifications = (props: any) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
-   console.log(response.data.data)
-      setNotfication(response.data.data)
 
-    } catch (error) { 
+      console.log(response.data.data);
+      setNotfication(response.data.data);
+    } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    
-    getNotification(); 
+    getNotification();
   }, []);
 
-
   const activateHandler = () => {
-    onOpen()
+    onOpen();
     if (isActive === true) {
       setIsActive(!isActive);
     } else {
@@ -66,9 +65,7 @@ const Notifications = (props: any) => {
   const updateStatus = async (id: any, type: any) => {
     setLoading(true);
     console.log(type, id);
-   
 
-    
     try {
       const response = await axios.put(
         `${config.apiURL}/api/v1/doctors/doctor_centers/${id}`,
@@ -80,7 +77,7 @@ const Notifications = (props: any) => {
           },
         }
       );
-      onClose()
+      onClose();
 
       toast({
         title: 'Success',
@@ -94,7 +91,8 @@ const Notifications = (props: any) => {
       console.error('Error updating status:', error);
       toast({
         title: 'Error',
-        description: error.response?.data?.message || 'Failed to update status.',
+        description:
+          error.response?.data?.message || 'Failed to update status.',
         status: 'error',
         duration: 5000,
         position: 'top-right',
@@ -129,7 +127,6 @@ const Notifications = (props: any) => {
         isLazy
         isOpen={isOpen}
         onClose={onClose}
-      
         placement="bottom-start"
       >
         <PopoverTrigger>
@@ -140,8 +137,7 @@ const Notifications = (props: any) => {
             aria-label={''}
           />
         </PopoverTrigger>
-        <PopoverContent  height={400}
-                        overflow={"auto"}>
+        <PopoverContent height={400} overflow={'auto'}>
           <PopoverHeader
             border="0"
             pl="24px"
@@ -149,96 +145,89 @@ const Notifications = (props: any) => {
             pt="16px"
             fontSize="0.875rem"
           >
-            Notification
+            {t('notification')}
           </PopoverHeader>
           <PopoverArrow />
 
           <PopoverBody p="0">
             {notification?.length > 0 ? (
               <>
-                {notification?.map(
-                  (item: any, index: number) => {
-                    return (
-                      <Flex
-                        bg="#E8F7FF"
-                        borderRadius="8px"
-                        ml="4px"
-                        mr="4px"
-                        mt="8px"
-                        key={index}
-                        flexDirection="column"
-                        mb={5}
-                       
-                      >
-                        <Flex alignItems={'center'}>
-                          <Image
-                            objectFit="cover"
-                            ml="12px"
-                            mb="20px"
-                            src={item?.attributes?.center?.logo?.url}
-                            alt="Ahmed Sharaby Image2"
-                            width={50}
-                            height={50}
-                            borderRadius={50}
-                            
-                          />
-                          <Flex flexDirection="column">
-                            <Text
-                              mt="10px"
-                              mx="11px"
-                              fontSize="0.875rem"
-                              color="#535353"
-                              textTransform="capitalize"
-                            >
-                             { item?.attributes?.center?.name}
-                            </Text>
-                            <Text
-                              mt="3px"
-                              mx="11px"
-                              mb="10px"
-                              fontSize="0.75rem"
-                              color="#838383"
-                            >
-                              You have been invited by {item?.attributes?.invited_by_name} to join
-                              the center named {item?.attributes?.center?.name}. You can
-                              accept or reject the invitation by clicking on one
-                              of the buttons below.
-                            </Text>
-                          </Flex>
-                        </Flex>
-                        <Flex
-                          alignItems={'center'}
-                          justifyContent={'space-evenly'}
-                          mt={1}
-                          pb={3}
-                        >
-                          <Box ml="12px" mb="20px"></Box>
-                          <Button
-                            width={100}
-                            height={30}
-                            color={'#fff'}
-                            onClick={() =>
-                              updateStatus(item?.id, 'approved')
-                            }
+                {notification?.map((item: any, index: number) => {
+                  return (
+                    <Flex
+                      bg="#E8F7FF"
+                      borderRadius="8px"
+                      ml="4px"
+                      mr="4px"
+                      mt="8px"
+                      key={index}
+                      flexDirection="column"
+                      mb={5}
+                    >
+                      <Flex alignItems={'center'}>
+                        <Image
+                          objectFit="cover"
+                          ml="12px"
+                          mb="20px"
+                          src={item?.attributes?.center?.logo?.url}
+                          alt="Ahmed Sharaby Image2"
+                          width={50}
+                          height={50}
+                          borderRadius={50}
+                        />
+                        <Flex flexDirection="column">
+                          <Text
+                            mt="10px"
+                            mx="11px"
+                            fontSize="0.875rem"
+                            color="#535353"
+                            textTransform="capitalize"
                           >
-                            Accept
-                          </Button>
-                          <Button
-                            width={100}
-                            height={30}
-                            color={'#fff'}
-                            bg="red"
-                            onClick={() =>
-                              updateStatus(item?.id, 'rejected')
-                            }
+                            {item?.attributes?.center?.name}
+                          </Text>
+                          <Text
+                            mt="3px"
+                            mx="11px"
+                            mb="10px"
+                            fontSize="0.75rem"
+                            color="#838383"
                           >
-                            Deny
-                          </Button>
+                            You have been invited by{' '}
+                            {item?.attributes?.invited_by_name} to join the
+                            center named {item?.attributes?.center?.name}. You
+                            can accept or reject the invitation by clicking on
+                            one of the buttons below.
+                          </Text>
                         </Flex>
                       </Flex>
-                    );
-                  }
-                )}
+                      <Flex
+                        alignItems={'center'}
+                        justifyContent={'space-evenly'}
+                        mt={1}
+                        pb={3}
+                      >
+                        <Box ml="12px" mb="20px"></Box>
+                        <Button
+                          width={100}
+                          height={30}
+                          color={'#fff'}
+                          onClick={() => updateStatus(item?.id, 'approved')}
+                        >
+                          Accept
+                        </Button>
+                        <Button
+                          width={100}
+                          height={30}
+                          color={'#fff'}
+                          bg="red"
+                          onClick={() => updateStatus(item?.id, 'rejected')}
+                        >
+                          Deny
+                        </Button>
+                      </Flex>
+                    </Flex>
+                  );
+                })}
 
                 {/* <Flex
                   bg="#FFFFFF"

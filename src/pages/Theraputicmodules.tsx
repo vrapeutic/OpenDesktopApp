@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { config } from '../config';
 import axios from 'axios';
 import { useAdminContext } from '../Context/AdminContext';
+import { useTranslation } from 'react-i18next';
 
 interface Center {
   id: number;
@@ -45,6 +46,7 @@ const Theraputicmodules: React.FC = () => {
   const [softwaremodules, setsoftwaremodules] = useState<Center[]>([]);
   const [selectedModuleId, setSelectedModuleId] = useState(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { otp } = useAdminContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -104,8 +106,8 @@ const Theraputicmodules: React.FC = () => {
         return (
           <>
             <HeaderSpaceBetween
-              Title={'Therapeutic modules'}
-              ButtonText={'Add New Module'}
+              Title={t('therapeuticModules')}
+              ButtonText={t('addNewModule')}
               onClickFunction={nextHandler}
             />
             {onOpen && (
@@ -116,13 +118,13 @@ const Theraputicmodules: React.FC = () => {
               />
             )}
             <Box mx={18}>
-              <Table variant="simple" background="#FFFFFF" cursor={"pointer"}>
-                <Thead cursor={"pointer"}>
+              <Table variant="simple" background="#FFFFFF" cursor={'pointer'}>
+                <Thead cursor={'pointer'}>
                   <Tr>
-                    <Th>Name</Th>
-                    <Th>Assign</Th>
-                    <Th>Specialties</Th>
-                    <Th>Technology</Th>
+                    <Th>{t('name')}</Th>
+                    <Th>{t('assign')}</Th>
+                    <Th>{t('speciality')}</Th>
+                    <Th>{t('technology')}</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -169,7 +171,7 @@ const Theraputicmodules: React.FC = () => {
                               });
                             }}
                           >
-                            Assign to center
+                            {t('assignToCenter')}
                           </Button>
                         </Td>
                         <Td

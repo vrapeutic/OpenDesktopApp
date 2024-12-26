@@ -14,12 +14,15 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { SignupFormProps } from './signupFormInterface';
 
 import ProgressBarSignup from '../../theme/components/ProgressBarSignup';
+import { useTranslation } from 'react-i18next';
 
 const GeneralInfoSignup: React.FC<SignupFormProps> = ({
   onSubmit,
   nextHandler,
   formData,
 }) => {
+  const { t } = useTranslation();
+
   const schema = Joi.object({
     Name: Joi.string()
 
@@ -75,7 +78,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
               letterSpacing="0.256px"
               color="#15134B"
             >
-              Name
+              {t('name')}
             </FormLabel>
 
             <Input
@@ -102,7 +105,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
               letterSpacing="0.256px"
               color="#15134B"
             >
-              Email
+              {t('email')}
             </FormLabel>
 
             <Input
@@ -130,7 +133,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
               letterSpacing="0.256px"
               color="#15134B"
             >
-              Password
+              {t('password')}
             </FormLabel>
 
             <Input
@@ -165,7 +168,7 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-            Next
+            {t('next')}
           </Button>
         </Flex>
       </Box>

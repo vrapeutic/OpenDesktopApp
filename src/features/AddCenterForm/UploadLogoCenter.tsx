@@ -22,6 +22,7 @@ import { getMe } from '../../cache';
 import { useNavigate } from 'react-router-dom';
 import Congratulations from './CongratulationsModal';
 import { TherapyFormProps } from './therapyFormInterface';
+import { useTranslation } from 'react-i18next';
 
 interface uploadLogoProps extends TherapyFormProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ interface uploadLogoProps extends TherapyFormProps {
 const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const {
     isOpen: isOpenCongratulations,
@@ -49,8 +51,6 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
     setImagePreview(previewUrl);
   };
 
-
-  
   const FormonSubmit = () => {
     SendDataToApi();
     setLoading(true);
@@ -108,11 +108,6 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
     }
   };
 
-
-
-
-
-  
   const handleSuccess = () => {
     props.onClose();
     onOpenCongratulations();
@@ -154,7 +149,9 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
                 lineHeight="20px"
                 color="#00261C"
                 textAlign="center"
-              >                Upload Logo
+              >
+                {' '}
+                Upload Logo
               </ModalHeader>
               <ModalCloseButton marginLeft="100px" />
             </Box>
@@ -243,7 +240,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
                 lineHeight="18px"
                 onClick={props.onClose}
               >
-                Skip
+                {t('skip')}
               </Button>
             </ModalFooter>
           </ModalContent>

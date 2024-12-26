@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAdminContext } from '@renderer/Context/AdminContext';
 import { MyContext } from '@renderer/theme/ContextHelper';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 interface Kids {
   id: number;
@@ -45,8 +46,8 @@ export default function Kids() {
   const [error, setError] = useState<string | null>(null); // State for error handling
   const [loading, setLoading] = useState(false);
   const context = useContext(MyContext);
-console.log(context.state);
   const selectedCenter = useContext(dataContext);
+  const { t } = useTranslation();
 
   const {
     isOpen: isOpenCongratulations,
@@ -94,8 +95,6 @@ console.log(context.state);
     return { ...formData, ...data };
   };
 
-
-
   useEffect(() => {
     (async () => {
       try {
@@ -106,12 +105,12 @@ console.log(context.state);
         const url = !context.state.is_center_admin
           ? `${config.apiURL}/api/v1/doctors/children?q[centers_id_eq]=${selectedCenter.id}&include=diagnoses,sessions`
           : `${config.apiURL}/api/v1/centers/${selectedCenter.id}/kids?include=diagnoses,sessions`;
-  
+
         // Make the request using axios
         const response = await axios.get(url, {
           headers: { Authorization: `Bearer ${token}` },
         });
-  
+
         // Check if data exists in the response
         if (response.data && response.data.data) {
           console.log('results', response.data.data);
@@ -122,21 +121,23 @@ console.log(context.state);
         }
       } catch (error) {
         console.error('Error:', error);
-        setError(error.response?.data?.message || error.message || 'An error occurred');
+        setError(
+          error.response?.data?.message || error.message || 'An error occurred'
+        );
       } finally {
         setLoading(false);
       }
     })();
   }, [selectedCenter.id, sliding]);
-  
-console.log("kises",kidsList[0],kidsList[1],included) 
+
+  console.log('kises', kidsList[0], kidsList[1], included);
   return (
     <>
       {showTable ? (
         <>
           <HeaderSpaceBetween
-            Title="Kids"
-            ButtonText={context.state.is_center_admin  && 'Add New Kids'}
+            Title={t('kids')}
+            ButtonText={context.state.is_center_admin && t('addNewKids')}
             onClickFunction={nextHandler}
             backbutton={backHandler}
           />
@@ -174,37 +175,38 @@ console.log("kises",kidsList[0],kidsList[1],included)
                       fontFamily="Graphik LCG"
                       fontWeight="500"
                       lineHeight="24px"
-                      cursor={"pointer"}
+                      cursor={'pointer'}
                     >
                       <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
-                        Name
+                        {t('name')}
                       </GridItem>
                       <GridItem colSpan={1} textAlign={'center'}>
-                        Age
+                        {t('age')}
                       </GridItem>
                       <GridItem colSpan={1} textAlign={'center'}>
-                        Diagnosis
+                        {t('diagnoses')}
                       </GridItem>
                       <GridItem colSpan={1} textAlign={'center'}>
-                        Join in
+                        {t('joinIn')}
                       </GridItem>
                       <GridItem colSpan={1} textAlign={'center'}>
-                        Sessions
+                        {t('sessions')}
                       </GridItem>
                     </Grid>
-                    {kidsList.map((kid) =>{
-                      console.log(kid,"kid test")
-                    return (
-                      <TableData
-                        key={kid.id}
-                        all={kid}
-                        id={kid.id}
-                        name={kid.attributes.name}
-                        age={kid.attributes.age}
-                        included={included}
-                        data={kid?.relationships?.diagnoses?.data}
-                      />
-                    )})}
+                    {kidsList.map((kid) => {
+                      console.log(kid, 'kid test');
+                      return (
+                        <TableData
+                          key={kid.id}
+                          all={kid}
+                          id={kid.id}
+                          name={kid.attributes.name}
+                          age={kid.attributes.age}
+                          included={included}
+                          data={kid?.relationships?.diagnoses?.data}
+                        />
+                      );
+                    })}
                   </>
                 ) : (
                   <Grid
@@ -220,7 +222,7 @@ console.log("kises",kidsList[0],kidsList[1],included)
                     fontWeight="500"
                     fontFamily="Graphik LCG"
                     lineHeight="24px"
-                    cursor={"pointer"}
+                    cursor={'pointer'}
                   >
                     <GridItem
                       colSpan={5}
@@ -233,7 +235,7 @@ console.log("kises",kidsList[0],kidsList[1],included)
                         fontWeight="500"
                         fontFamily="Graphik LCG"
                       >
-                        There are no Kids
+                        {t('noKids')}
                       </Text>
                     </GridItem>
                   </Grid>
@@ -243,7 +245,7 @@ console.log("kises",kidsList[0],kidsList[1],included)
           ) : (
             <Flex justifyContent="center">
               <Text fontSize="14px" fontWeight="500" fontFamily="Graphik LCG">
-                Please Select Center
+                {t('selectCenter')}
               </Text>
             </Flex>
           )}
@@ -275,8 +277,9 @@ const TableData: React.FC<TableData> = ({
 }) => {
   const [date, setDate] = useState('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const handleKids = (Kids: any) => {
-    
     navigate('/ViewKids', { state: all });
   };
 
@@ -291,7 +294,6 @@ const TableData: React.FC<TableData> = ({
   }) => {
     let res = [];
     res = included.filter((el: any) => {
-
       return x.find((element: any) => {
         return element.id === el.id;
       });
@@ -343,8 +345,10 @@ const TableData: React.FC<TableData> = ({
       fontWeight="500"
       fontFamily="Graphik LCG"
       lineHeight="24px"
-      onClick={() =>{context.state.is_center_admin?handleKids(all):null}}
-      cursor={"pointer"}
+      onClick={() => {
+        context.state.is_center_admin ? handleKids(all) : null;
+      }}
+      cursor={'pointer'}
     >
       <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
         <Box display={'flex'} alignItems={'center'}>
@@ -380,7 +384,7 @@ const TableData: React.FC<TableData> = ({
           lineHeight={'16px'}
           letterSpacing={'1.6%'}
         >
-          {age} Years
+          {age} {t('years')}
         </Text>
       </GridItem>
       <GridItem
@@ -390,8 +394,7 @@ const TableData: React.FC<TableData> = ({
         justifyContent={'center'}
       >
         <Box>
-          {result.map((x: any) =>  (
-            
+          {result.map((x: any) => (
             <Box
               key={x.id} // Added unique key here
               background={'#F3F3F3'}

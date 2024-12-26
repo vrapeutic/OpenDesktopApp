@@ -63,7 +63,7 @@ export default function Home() {
 
   const { data, isLoading: centersLoading } = useGetCentersData();
   const mutation = useGetCenter();
-console.log(location.state)
+  console.log(location.state);
   useEffect(() => {
     const fetchReportDir = async () => {
       try {
@@ -93,7 +93,7 @@ console.log(location.state)
   }, []);
 
   const handleClick = (center: any) => {
-    console.log(center?.attributes?.name,center?.id)
+    console.log(center?.attributes?.name, center?.id);
     setCenterName(center?.attributes?.name);
 
     setIsLoading(true);
@@ -196,90 +196,19 @@ console.log(location.state)
     }
   };
 
-  // const handleListFiles = async () => {
-  //   try {
-  //     const files = await (window as any).electron.listFiles(reportDir);
-  //     setFiles(files);
-  //     console.log('Files: from list ', files);
-  //     const fileDataArray = await readFiles(files);
-  //     console.log('File Data Array: ', fileDataArray);
-  //     setFileDataArray(fileDataArray);
-  //   } catch (error) {
-  //     console.log('Error listing files:', error);
-  //   }
-  // };
-
-  // const readFiles = async (files: string[]): Promise<FileData[]> => {
-  //   const fileDataArray: FileData[] = [];
-  //   let filesRead = 0;
-
-  //   for (const file of files) {
-  //     const sessionIDFromFile = file.replace('.csv', '');
-  //     if (sessionIDFromFile in sessionData) {
-  //       const sessionDate = new Date(sessionData[sessionIDFromFile]);
-  //       const sessionMonth = sessionDate.toLocaleString('en', {
-  //         month: 'long',
-  //       });
-
-  //       if (!selectedMonth || sessionMonth === selectedMonth) {
-  //         const fileData = await handleReadFile(`${reportDir}/${file}`);
-  //         if (fileData) {
-  //           fileDataArray.push({
-  //             fileName: file,
-  //             modules: fileData,
-  //             date: sessionData[sessionIDFromFile],
-  //           });
-  //           filesRead++;
-  //         }
-  //       }
-  //     } else {
-  //       console.log('Session ID not found in sessionData:', sessionIDFromFile);
-  //     }
-  //   }
-
-  //   if (filesRead === 0) {
-  //     console.log('No matching files found for session IDs or selected month.');
-  //   } else {
-  //     console.log(
-  //       `${filesRead} files were processed for ${
-  //         selectedMonth || 'all months'
-  //       }.`
-  //     );
-  //   }
-
-  //   return fileDataArray;
-  // };
-
-  // const handleReadFile = async (
-  //   filePath: string
-  // ): Promise<ModuleData[] | null> => {
-  //   try {
-  //     const content = await (window as any).electron.readFile(filePath);
-  //     const parsedCSVData = Papa.parse<string[]>(content, {
-  //       skipEmptyLines: true,
-  //     }).data;
-  //     return processCSVDataForHome(parsedCSVData);
-  //   } catch (error) {
-  //     console.log('Error reading file:', error);
-  //     return null;
-  //   }
-  // };
-  
-
-
-  const { t,i18n } = useTranslation();
-  const switchLanguage = (lang) => {
+  const { t, i18n } = useTranslation();
+  const switchLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
   };
 
   return (
     <>
-     <div>
-      <h1>{t('centerName')}</h1>
-      <p>{t('description')}</p>
-      <button onClick={() => switchLanguage('en')}>English</button>
-      <button onClick={() => switchLanguage('vi')}>Vietnamese</button>
-    </div>
+      <div>
+        <h1>{t('centerName')}</h1>
+        <p>{t('description')}</p>
+        <button onClick={() => switchLanguage('en')}>English</button>
+        <button onClick={() => switchLanguage('vi')}>Vietnamese</button>
+      </div>
       {centersLoading ? (
         <Box textAlign="center" py={10} px={6}>
           <Spinner />
@@ -302,8 +231,8 @@ console.log(location.state)
                     mt={5}
                   >
                     {centers.length > 0
-                      ? "It seems you haven't joined any center yet. Please create a center first, or ask a center administrator to send you an invitation."
-                      : 'Before you can proceed, please choose a center from the home page beside the red arrow.'}
+                      ? t('chooseCenter')
+                      : t('chooseCenterPrompt')}
                   </Text>
                 </ModalBody>
 
@@ -322,7 +251,7 @@ console.log(location.state)
                       textDecoration="none"
                       onClick={onClose}
                     >
-                      Cancel
+                      {t('buttonCancel')}
                     </Button>
                   )}
 
@@ -339,7 +268,7 @@ console.log(location.state)
                     textDecoration="none"
                     onClick={onClose}
                   >
-                    Let’s go choose a center
+                    {t(`let'sChooseCenter`)}
                   </Button>
                 </ModalFooter>
               </ModalContent>
@@ -361,7 +290,7 @@ console.log(location.state)
               lineHeight="29px"
               letterSpacing="-0.01em"
             >
-              Home
+              {t('home')}
             </Text>
             <Flex alignItems={'center'} gap={2}>
               {arrow && (

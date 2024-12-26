@@ -26,6 +26,7 @@ import {
 import { useGetDoctorsData } from '../api';
 import { FileData } from './Home';
 import { MyContext } from '@renderer/theme/ContextHelper';
+import { useTranslation } from 'react-i18next';
 
 interface ModuleCountPerFile {
   name: string;
@@ -49,8 +50,10 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
     averageLevelsPerSession: 0,
     maxSessions: 0,
   });
+
+  const { t } = useTranslation();
   const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton'];
-  const { state, setState, } = useContext(MyContext);
+  const { state, setState } = useContext(MyContext);
   useEffect(() => {
     if (fileDataArray && fileDataArray.length > 0) {
       const allModules = fileDataArray.flatMap((file: any) => file.modules);
@@ -142,8 +145,11 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
           item.id === doctor.attributes.doctor_id.toString()
         );
       });
-     
-      setState({is_center_admin:doctorDetails?.attributes?.is_center_admin,id:doctorDetails?.id})
+
+      setState({
+        is_center_admin: doctorDetails?.attributes?.is_center_admin,
+        id: doctorDetails?.id,
+      });
 
       // Return an object with the doctor's name and session number
       return {
@@ -194,15 +200,14 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
     if (doctorData) {
       transformDoctorData();
       handleProcessFile(fileDataArray);
-    }else{
-      console.log("out")
+    } else {
+      console.log('out');
       setState((prevState) => ({
-        ...prevState, 
-        is_center_ad: false, 
+        ...prevState,
+        is_center_ad: false,
       }));
       // setState({is_center_admin:false});
     }
-  
   }, [doctorData, fileDataArray, selectedCenterContext.id]);
 
   const moduleExistence = useMemo(() => {
@@ -221,11 +226,6 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
     );
   }, [fileDataArray, moduleNames]);
 
-  // For debugging
-  useEffect(() => {
-    console.log('Module existence:', moduleExistence);
-  }, [moduleExistence]);
-
   const PieDescription = () => (
     <Box display={'flex'} justifyContent={'space-evenly'} padding={2}>
       {pieData.map((entry, index) => (
@@ -243,7 +243,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
   if (isEmptyData) {
     return (
       <Box textAlign="center" py={6}>
-        <Text fontSize="lg">No data available for this month.</Text>
+        <Text fontSize="lg">{t('noDataAvailable')}</Text>
       </Box>
     );
   }
@@ -272,7 +272,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
               justifyContent={'center'}
               alignItems={'center'}
             >
-              <Text fontSize="l">Total VR Duration/Month</Text>
+              <Text fontSize="l">{t('totalVRDuration')}</Text>
               <Text fontSize="xl" fontWeight="bold">
                 {calculatedStats.totalVRDuration} Minutes
               </Text>
@@ -288,9 +288,9 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
               justifyContent={'center'}
               alignItems={'center'}
             >
-              <Text fontSize="l">Longest VR Session/Month</Text>
+              <Text fontSize="l">{t('longestVRSession')}</Text>
               <Text fontSize="xl" fontWeight="bold">
-                {calculatedStats.longestVRSession} Minutes
+                {calculatedStats.longestVRSession} {t('minute')}
               </Text>
             </Box>
             <Box
@@ -304,9 +304,9 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
               justifyContent={'center'}
               alignItems={'center'}
             >
-              <Text fontSize={'large'}>Average Number of Modules/Session</Text>
+              <Text fontSize={'large'}>{t('averageModulesPerSession')}</Text>
               <Text fontSize="xl" fontWeight="bold">
-                {calculatedStats.averageModulesPerSession} Module
+                {calculatedStats.averageModulesPerSession} {t('module')}
               </Text>
             </Box>
             <Box
@@ -320,9 +320,9 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
               justifyContent={'center'}
               alignItems={'center'}
             >
-              <Text fontSize="l">Average Number of Levels/Session</Text>
+              <Text fontSize="l">{t('averageLevelsPerSession')}</Text>
               <Text fontSize="xl" fontWeight="bold">
-                {calculatedStats.averageLevelsPerSession} Level
+                {calculatedStats.averageLevelsPerSession} {t('level')}
               </Text>
             </Box>
             <Box
@@ -337,7 +337,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
               alignItems={'center'}
             >
               <Text fontSize="xl" mb={2}>
-                Modules Used During This Month
+                {t('modulesUsedThisMonth')}
               </Text>
               <Stack
                 direction="row"
@@ -411,7 +411,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                     justifyContent={'center'}
                     alignItems={'center'}
                   >
-                    <Text>No modules used this month.</Text>
+                    <Text>{t('noModulesUsed')}</Text>
                   </Box>
                 )}
               </Stack>
@@ -420,9 +420,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
         </GridItem>
         <GridItem colSpan={[2, 1]} textAlign={'center'} height={'100%'}>
           <Box bg={'white'} borderWidth="1px" borderRadius="lg" p={4} h="100%">
-            <Text fontSize="xl">
-              Monthly Distribution of Sessions Evaluation
-            </Text>
+            <Text fontSize="xl">{t('monthlyDistribution')}</Text>
             {pieData.length > 0 ? (
               <ResponsiveContainer
                 width="100%"
@@ -452,7 +450,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                 justifyContent={'center'}
                 alignItems={'center'}
               >
-                <Text>No evaluation data available.</Text>
+                <Text>{t('noEvaluationData')}</Text>
               </Box>
             )}
             <PieDescription />
@@ -467,7 +465,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
             h="400px"
             mb={4}
           >
-            <Text fontSize="xl">Modules' Usage Distribution</Text>
+            <Text fontSize="xl">{t('modulesUsageDistribution')}</Text>
 
             {moduleData.length > 0 ? (
               <ResponsiveContainer
@@ -495,14 +493,14 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                 justifyContent={'center'}
                 alignItems={'center'}
               >
-                <Text>No modules data available.</Text>
+                <Text>{t('noModulesData')}</Text>
               </Box>
             )}
           </Box>
         </GridItem>
         <GridItem colSpan={[2, 1]} textAlign={'center'}>
           <Box bg={'white'} borderWidth="1px" borderRadius="lg" p={4} h="400px">
-            <Text fontSize="xl">Top "N" Performers This Month</Text>
+            <Text fontSize="xl">{t('topPerformers')}</Text>
             {doctors.length > 0 ? (
               <ResponsiveContainer
                 width="100%"
@@ -529,7 +527,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                 justifyContent={'center'}
                 alignItems={'center'}
               >
-                <Text>No doctors data available.</Text>
+                <Text>{t('noDoctorsData')}</Text>
               </Box>
             )}
           </Box>

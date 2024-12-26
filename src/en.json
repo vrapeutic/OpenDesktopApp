@@ -167,7 +167,7 @@
   "noKidsAvailable": "There are no Kids",
   "selectChild": "Select a child",
   "noEvaluationDataAvailable": "No evaluation data available.",
-  " startSession": " Start a session",
+  "startSession": " Start a session",
   "moduleSettings": "Show module settings",
   "selectHeadsetError": "You must select a headset",
   "connectionError": "You are not connected to the internet.",
@@ -284,6 +284,7 @@
   "drag&DropToUpload": "Drag & Drop here or click to upload",
   "moduleCreatedSuccessfully": "Your Module has been created successfully",
   "centerCreatedSuccessfully": "Your Center has been created successfully",
+  "centerEditedSuccessfully": "Your Center has been edited successfully",
   "checkKidNow": "You can check your Kid now",
   "personalInfo": "Personal info",
   "educationInfo": "Education info",
@@ -293,5 +294,12 @@
   "registrationNumber": "Registration Number",
   "taxID": "Tax ID",
   "completeAddress": "Complete Address",
-  "uploadTherapyLogo": "Please upload your Therapy Logo"
+  "uploadTherapyLogo": "Please upload your Therapy Logo",
+  "level": "Level",
+  "module": "Module",
+  "minute": "Minute",
+  "name": "Name",
+  "therapyInfo": "Therapy Info",
+  "education": "Education",
+  "speciality": "Speciality"
 }

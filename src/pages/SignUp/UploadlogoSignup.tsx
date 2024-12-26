@@ -20,6 +20,7 @@ import { config } from '../../config';
 import { getMe } from '../../cache';
 import { useNavigate } from 'react-router-dom';
 import { SignupFormProps } from './signupFormInterface';
+import { useTranslation } from 'react-i18next';
 
 interface uploadLogoProps extends SignupFormProps {
   isOpen: boolean;
@@ -33,6 +34,8 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
   const toast = useToast();
   const [imagePreview, setImagePreview] = useState('');
   const [logo, setLogo] = useState<File>();
+
+  const { t } = useTranslation();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
@@ -68,8 +71,6 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
   };
 
   const postFormData = (formData: FormData) => {
- 
-
     return axios.post(`${config.apiURL}/api/v1/doctors`, formData);
   };
 
@@ -86,9 +87,6 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
     }
   };
 
-
-  
-
   const handleSuccess = () => {
     props.onClose();
     navigate('/');
@@ -96,7 +94,7 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
 
   const handleError = (error: any) => {
     props.onClose();
-     console.log("errrrrror",error)
+    console.log('errrrrror', error);
     toast({
       title: 'Error',
       description: error.response.data.error,
@@ -126,7 +124,7 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
                 color="#00261C"
                 textAlign="center"
               >
-                Upload Profile picture
+                {t('uploadProfilePic')}
               </ModalHeader>
               <ModalCloseButton marginLeft="100px" />
             </Box>
@@ -177,7 +175,7 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
                 lineHeight="18px"
                 color="#595959"
               >
-                Please upload your Profile picture
+                {t('uploadProfilePic')}
               </Text>
             </ModalBody>
 
@@ -198,7 +196,7 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
                   type="submit"
                   onClick={FormonSubmit}
                 >
-                  {loading ? 'Uploading Your Data' : 'Upload'}
+                  {loading ? t('uploadingData') : t('Upload')}
                 </Button>
               </FormControl>
 
@@ -215,7 +213,7 @@ const UploadlogoSignup: React.FC<uploadLogoProps> = (props) => {
                 lineHeight="18px"
                 onClick={props.onClose}
               >
-                Skip
+                {t('skip')}
               </Button>
             </ModalFooter>
           </ModalContent>

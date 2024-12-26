@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import useSocketManager from '../../Context/SocketManagerProvider';
 import { END_SESSION_MESSAGE } from '@main/constants';
+import { useTranslation } from 'react-i18next';
 
 interface OpenConnectedProps {
   isOpen: boolean;
@@ -35,6 +36,8 @@ export default function Openconnected({
   const handlePlayAnotherModule = useCallback(() => {
     onClose();
   }, []);
+
+  const { t } = useTranslation();
 
   const handleEndSession = useCallback(() => {
     localStorage.removeItem('sessionID');
@@ -67,7 +70,7 @@ export default function Openconnected({
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset {headsetKey}
+              {t('connectedSuccessfully')} {headsetKey}!
             </ModalHeader>
 
             <ModalBody>
@@ -78,8 +81,7 @@ export default function Openconnected({
                 textAlign="center"
                 color="#595959"
               >
-                Session in progress. Please see the casting app to follow the
-                child’s performance.{' '}
+                {t('sessionInProgress')}
               </Text>
 
               <Text
@@ -89,7 +91,7 @@ export default function Openconnected({
                 textAlign="center"
                 color="#A8A8A8"
               >
-                Press on the button below to end the session.
+                {t('pressButtonToEnd')}{' '}
               </Text>
             </ModalBody>
 
@@ -106,7 +108,7 @@ export default function Openconnected({
                 marginRight="10px"
                 onClick={handleEndSession}
               >
-                End session
+                {t('endSession')}
               </Button>
               <Button
                 w="214px"
@@ -120,7 +122,7 @@ export default function Openconnected({
                 marginLeft="10px"
                 onClick={handlePlayAnotherModule}
               >
-                Play Another Module
+                {t('playAnotherModule')}
               </Button>
             </ModalFooter>
           </ModalContent>

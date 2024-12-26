@@ -167,7 +167,7 @@
   "noKidsAvailable": "Không có trẻ nào",
   "selectChild": "Chọn một trẻ",
   "noEvaluationDataAvailable": "Không có dữ liệu đánh giá",
-  " startSession": "“Bắt đầu phiên",
+  "startSession": "“Bắt đầu phiên",
   "moduleSettings": "Hiển thị cài đặt mô-đun",
   "selectHeadsetError": "Vui lòng chọn thiết bị",
   "connectionError": "Bạn chưa kết nối với Internet.",
@@ -284,6 +284,7 @@
   "drag&DropToUpload": "Kéo và thả vào đây hoặc nhấp để tải lên",
   "moduleCreatedSuccessfully": "Đã tạo Mô-đun thành công",
   "centerCreatedSuccessfully": "Đã tạo Trung tâm thành công",
+  "centerEditedSuccessfully": "Đã chỉnh sửa Trung tâm thành công",
   "checkKidNow": "Hiện tại, bạn đã có thể kiểm tra Trẻ",
   "personalInfo": "Thông tin cá nhân",
   "educationInfo": "Thông tin giáo dục”",
@@ -293,4 +294,12 @@
   "registrationNumber": "Số đăng ký",
   "taxID": "Mã số thuế”",
   "completeAddress": "Địa chỉ đầy đủ",
-  "uploadTherapyLogo": "Vui lòng tải lên Logo cho hoạt động trị liệu của bạn"}
+  "uploadTherapyLogo": "Vui lòng tải lên Logo cho hoạt động trị liệu của bạn",
+  "level": "Cấp độ",
+  "module": "Mô-đun",
+  "minute": "phút",
+  "name": "Tên",
+  "therapyInfo": "Thông tin trị liệu",
+  "education": "Giáo dục ",
+  "speciality": "Chuyên môn"
+}

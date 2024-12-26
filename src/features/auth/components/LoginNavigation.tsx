@@ -1,7 +1,10 @@
 import { Box, Button, Flex, Link, Image } from '@chakra-ui/react';
 import ImageLogin from '../../../assets/images/ImageLogin.png';
+import { useTranslation } from 'react-i18next';
 
 const LoginNavigation = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       <Flex
@@ -18,16 +21,15 @@ const LoginNavigation = () => {
           fontWeight="600"
           href="https://myvrapeutic.com/#vr"
         >
-          Features
+          {t('features')}
         </Link>
         <Link
           fontFamily="Graphik LCG"
           color="#FFFFFF"
           fontWeight="600"
           href="https://myvrapeutic.com/#about"
-          
         >
-          About us
+          {t('aboutUs')}
         </Link>
         <Link
           fontFamily="Graphik LCG"
@@ -35,7 +37,7 @@ const LoginNavigation = () => {
           fontWeight="600"
           href="http://facebook.com/myvrapeutic"
         >
-          Blog
+          {t('blog')}
         </Link>
         <Button
           as="a"
@@ -47,7 +49,7 @@ const LoginNavigation = () => {
           border-radius="8px"
           href="https://myvrapeutic.com/request-demo/"
         >
-          Get Started
+          {t('getStarted')}
         </Button>
       </Flex>
       <Box marginLeft="-55px">

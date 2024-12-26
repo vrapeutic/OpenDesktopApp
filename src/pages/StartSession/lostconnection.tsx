@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import Openconnected from './openconnected';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function Lostconnection(props: any) {
   const {
@@ -19,6 +20,8 @@ export default function Lostconnection(props: any) {
     onClose: onCloseConnected,
   } = useDisclosure();
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const OpenConnectedModal = () => {
     props.onClose();
@@ -41,7 +44,7 @@ export default function Lostconnection(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You have lost connection with [the VR headset ID]!
+              {t('lostConnectionHeadset')} [the VR headset ID]!
             </ModalHeader>
 
             <ModalFooter>
@@ -57,7 +60,7 @@ export default function Lostconnection(props: any) {
                 marginRight="10px"
                 onClick={props.onClose}
               >
-                Cancel session
+                {t('cancelSession')}
               </Button>
               <Button
                 w="214px"
@@ -71,7 +74,7 @@ export default function Lostconnection(props: any) {
                 marginLeft="10px"
                 onClick={OpenConnectedModal}
               >
-                Connect to headset again
+                {t('connectToHeadsetAgain')}
               </Button>
             </ModalFooter>
           </ModalContent>
