@@ -18,6 +18,7 @@ import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { TherapyFormProps } from './therapyFormInterface';
+import { useTranslation } from 'react-i18next';
 
 const SpecialtyForm: React.FC<TherapyFormProps> = ({
   onSubmit,
@@ -29,12 +30,25 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
   const [defaultSpecialties, setDefaultSpecialties] = useState([]);
   const [specialistslist, setspecialistslist] = useState([]);
 
+  const { t } = useTranslation();
+
   const schema = joi.object({
-    specialtyInformation: joi.string().required().label('Specialty Information'),
+    specialtyInformation: joi
+      .string()
+      .required()
+      .messages({
+        'string.empty': t('specialtyInfoRequired'),
+        'any.required': t('specialtyInfoRequired'),
+      })
+      .label('Specialty Information'),
     specializationschema: joi
       .array()
       .min(1)
       .required()
+      .messages({
+        'string.empty': t('specialtyInfoRequired'),
+        'any.required': t('specialtyInfoRequired'),
+      })
       .label('Specialization Schema'),
   });
 
@@ -112,7 +126,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Specialty Information
+            {t('specialtyInfo')}
           </FormLabel>
           <FormLabel
             pl="0.5em"
@@ -122,16 +136,28 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.192px"
             color="#8D8D8D"
           >
-            (description)
+            ({t('description')})
           </FormLabel>
           <Input
             {...register('specialtyInformation')}
             id="specialtyInformation"
             h="5.5em"
-            borderColor={errors.specialtyInformation ? "red.500" : "#4965CA"}
-            border={errors.specialtyInformation ? "2px solid red" : "2px solid #E8E8E8"}
-            _hover={{ border: errors.specialtyInformation ? '1px solid red' : '1px solid #4965CA' }}
-            boxShadow={errors.specialtyInformation ? "none" : "0px 0px 4px 0px rgba(57, 97, 251, 0.30)"}
+            borderColor={errors.specialtyInformation ? 'red.500' : '#4965CA'}
+            border={
+              errors.specialtyInformation
+                ? '2px solid red'
+                : '2px solid #E8E8E8'
+            }
+            _hover={{
+              border: errors.specialtyInformation
+                ? '1px solid red'
+                : '1px solid #4965CA',
+            }}
+            boxShadow={
+              errors.specialtyInformation
+                ? 'none'
+                : '0px 0px 4px 0px rgba(57, 97, 251, 0.30)'
+            }
             type="text"
             mt="0.75em"
             mb="1em"
@@ -146,7 +172,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
         </GridItem>
 
         <GridItem colSpan={2}>
-          <Controller   
+          <Controller
             name="specializationschema"
             control={control}
             render={({ field }) => (
@@ -169,9 +195,15 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
                     marginTop: '0.75em',
                     marginBottom: '1em',
                     borderRadius: '8px',
-                    borderColor: errors.specializationschema ? "red.500" : "#4965CA",
-                    border: errors.specializationschema ? "2px solid red" : "2px solid #E8E8E8",
-                    boxShadow: errors.specializationschema ? "none" : "0px 0px 4px 0px rgba(57, 97, 251, 0.30)",
+                    borderColor: errors.specializationschema
+                      ? 'red.500'
+                      : '#4965CA',
+                    border: errors.specializationschema
+                      ? '2px solid red'
+                      : '2px solid #E8E8E8',
+                    boxShadow: errors.specializationschema
+                      ? 'none'
+                      : '0px 0px 4px 0px rgba(57, 97, 251, 0.30)',
                   }),
                 }}
               />
@@ -200,7 +232,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
           fontWeight="700"
           isDisabled={!isValid}
         >
-          Next
+          {t('next')}
         </Button>
 
         {sliding === 1 ? null : (
@@ -218,7 +250,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-            Back
+            {t('back')}
           </Button>
         )}
       </Flex>

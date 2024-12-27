@@ -167,24 +167,32 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
     if (data) {
       const formattedData = [
         {
-          name: 'Unevaluated',
+          name: t('unevaluated'),
           value: data.total_unevaluated,
           color: '#718096',
         },
-        { name: 'Poor', value: data.total_poor_evaluation, color: '#155f82' },
         {
-          name: 'Average',
+          name: t('poor'),
+          value: data.total_poor_evaluation,
+          color: '#155f82',
+        },
+        {
+          name: t('average'),
           value: data.total_average_evaluation,
           color: '#e97132',
         },
-        { name: 'Good', value: data.total_good_evaluation, color: '#196b23' },
         {
-          name: 'Very Good',
+          name: t('good'),
+          value: data.total_good_evaluation,
+          color: '#196b23',
+        },
+        {
+          name: t('veryGood'),
           value: data.total_very_good_evaluation,
           color: '#0e9fd6',
         },
         {
-          name: 'Excellent',
+          name: t('excellent'),
           value: data.total_excellent_evaluation,
           color: '#a02b93',
         },
@@ -274,7 +282,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
             >
               <Text fontSize="l">{t('totalVRDuration')}</Text>
               <Text fontSize="xl" fontWeight="bold">
-                {calculatedStats.totalVRDuration} Minutes
+                {calculatedStats.totalVRDuration} {t('minute')}
               </Text>
             </Box>
             <Box

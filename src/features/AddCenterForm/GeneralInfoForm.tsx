@@ -13,6 +13,7 @@ import {
 import { joiResolver } from '@hookform/resolvers/joi';
 import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import { TherapyFormProps } from './therapyFormInterface';
+import { useTranslation } from 'react-i18next';
 const GeneralInfoForm: React.FC<TherapyFormProps> = ({
   onSubmit,
   nextHandler,
@@ -20,24 +21,49 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
   sliding,
   formData,
 }) => {
+  const { t } = useTranslation();
+
   const schema = joi.object({
     therapyCenterName: joi
       .string()
       .min(3)
       .max(30)
       .required()
+      .messages({
+        'string.empty': t('therapyCenterNameRequired'),
+        'any.required': t('therapyCenterNameRequired'),
+      })
       .label('therapyCenterName'),
-    completeAddress: joi.string().required(),
+    completeAddress: joi
+      .string()
+      .required()
+      .messages({
+        'string.empty': t('completeAddressRequired'),
+        'any.required': t('completeAddressRequired'),
+      }),
     Email: joi
       .string()
       .email({ tlds: { allow: false } })
-      .required(),
-    managerName: joi.string().min(3).max(30).required().label('managerName'),
+      .required()
+      .messages({
+        'string.empty': t('emailRequired'),
+        'any.required': t('emailRequired'),
+      }),
+    managerName: joi
+      .string()
+      .min(3)
+      .max(30)
+      .required()
+      .messages({
+        'string.empty': t('managerNameRequired'),
+        'any.required': t('managerNameRequired'),
+      })
+      .label('managerName'),
   });
   const {
     register,
     handleSubmit,
-    formState: { errors ,isValid},
+    formState: { errors, isValid },
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -74,7 +100,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Therapy Center Name
+            {t('therapyCenterName')}
           </FormLabel>
 
           <Input
@@ -103,7 +129,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Complete Address
+            {t('completeAddress')}
           </FormLabel>
 
           <Input
@@ -120,7 +146,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.completeAddress}
           />
           {errors.completeAddress && (
-            <Text color="red.500"  mb={2} fontSize={16}>
+            <Text color="red.500" mb={2} fontSize={16}>
               {errors.completeAddress.message as string}
             </Text>
           )}
@@ -132,7 +158,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Email
+            {t('email')}
           </FormLabel>
 
           <Input
@@ -149,7 +175,9 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.Email}
           />
           {errors.Email && (
-            <Text color="red.500"  mb={2} fontSize={16}>{errors.Email.message as string}</Text>
+            <Text color="red.500" mb={2} fontSize={16}>
+              {errors.Email.message as string}
+            </Text>
           )}
         </GridItem>
         <GridItem>
@@ -159,7 +187,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Manager's Name
+            {t('managerName')}
           </FormLabel>
 
           <Input
@@ -176,7 +204,9 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.managerName}
           />
           {errors.managerName && (
-            <Text color="red.500"  mb={2} fontSize={16}>{errors.managerName.message as string}</Text>
+            <Text color="red.500" mb={2} fontSize={16}>
+              {errors.managerName.message as string}
+            </Text>
           )}
         </GridItem>
       </Grid>
@@ -193,9 +223,9 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
           color="#FFFFFF"
           fontSize="1.125em"
           fontWeight="700"
-          isDisabled={null || !isValid}
+          isDisabled={!isValid}
         >
-          Next
+          {t('next')}
         </Button>
 
         {sliding === 1 ? null : (
@@ -213,7 +243,7 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-            Back
+            {t('back')}
           </Button>
         )}
       </Flex>

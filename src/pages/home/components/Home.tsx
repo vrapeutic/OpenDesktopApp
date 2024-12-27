@@ -45,8 +45,11 @@ export interface FileData {
 }
 export default function Home() {
   let selectedCenter = useContext(dataContext);
+
+  const { t, i18n } = useTranslation();
+
   const [centers, setCenters] = useState([]);
-  const [centerName, setCenterName] = useState('Select Centers');
+  const [centerName, setCenterName] = useState(t('selectCenter'));
   const [isLoading, setIsLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [arrow, setArrow] = useState(false);
@@ -196,7 +199,6 @@ export default function Home() {
     }
   };
 
-  const { t, i18n } = useTranslation();
   const switchLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
   };
@@ -380,7 +382,7 @@ export default function Home() {
 }
 
 export function NotFound() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Box textAlign="center" py={10} px={6}>

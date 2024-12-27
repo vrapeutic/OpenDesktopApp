@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Flex, Image, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { config } from '../../config';
 import axios from 'axios';
@@ -28,6 +28,7 @@ const Signup: React.FC = () => {
   const totalSteps = 3;
   const [sliding, setSliding] = useState(1);
   const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
   const handleFormSubmit = (data: any) => {
     // Use the previous state to ensure the latest form data is captured
     setFormData((prevFormData) => ({ ...prevFormData, ...data }));
@@ -93,7 +94,7 @@ const Signup: React.FC = () => {
     <Flex height="inherit" direction={{ base: 'column', md: 'row', lg: 'row' }}>
       <Flex
         pos={{ md: 'sticky' }}
-        h="inherit"
+        h="100vh"
         background="#FFFFFF"
         boxShadow="0px 3px 8px rgba(0, 0, 0, 0.08)"
         borderRadius={{
@@ -103,8 +104,20 @@ const Signup: React.FC = () => {
         }}
       >
         <Box marginX="24px">
-          <Flex paddingY="27px">
+          <Flex paddingY="27px" direction="column" align="center" gap={10}>
             <Image src={VRapeutic} />
+            <Button
+              onClick={() => navigate('/login')}
+              variant="outline"
+              size="md"
+              w="full"
+              bg="#4AA6CA"
+              borderRadius="0.75em"
+              color="#FFFFFF"
+              _hover={{ opacity: 0.8 }}
+            >
+              Back to Login
+            </Button>
           </Flex>
         </Box>
       </Flex>

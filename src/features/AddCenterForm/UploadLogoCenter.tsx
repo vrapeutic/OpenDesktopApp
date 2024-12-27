@@ -150,8 +150,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
                 color="#00261C"
                 textAlign="center"
               >
-                {' '}
-                Upload Logo
+                {t('uploadLogo')}
               </ModalHeader>
               <ModalCloseButton marginLeft="100px" />
             </Box>
@@ -183,7 +182,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
                         type="file"
                         accept="image/png,image/jpeg"
                         name="logo"
-                        onChange={(e) => handleImageChange(e)}
+                        onChange={(e: any) => handleImageChange(e)}
                         style={{ display: 'none' }}
                         hidden
                       />
@@ -202,7 +201,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
                 lineHeight="18px"
                 color="#595959"
               >
-                Please upload your Therapy Logo
+                {t('uploadTherapyLogo')}
               </Text>
             </ModalBody>
 
@@ -223,7 +222,7 @@ const Uploadlogo: React.FC<uploadLogoProps> = (props) => {
                   type="submit"
                   onClick={FormonSubmit}
                 >
-                  {loading ? 'Uploading Your Data' : 'Upload'}
+                  {loading ? t('uploadingData') : t('upload')}
                 </Button>
               </FormControl>
 

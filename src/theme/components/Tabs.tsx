@@ -87,7 +87,7 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
       <TabList>
         <Tab>{t('therapyInfo')}</Tab>
         <Tab>Recent Activities </Tab>
-        <Tab>Subscriptions</Tab>
+        <Tab>{t('subscriptions')}</Tab>
         <Tab>{t('Specialists')}</Tab>
         <Tab>{t('kids')}</Tab>
         <Tab>Widgets</Tab>
@@ -101,7 +101,7 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
           <p>Recent Activities</p>
         </TabPanel>
         <TabPanel>
-          <p>Subscriptions</p>
+          <p>{t('subscriptions')}</p>
         </TabPanel>
 
         <TabPanel>

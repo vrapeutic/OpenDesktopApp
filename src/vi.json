@@ -183,6 +183,7 @@
   "connectToHeadsetAgain": "Kết nối lại với thiết bị",
   "headsetNotConnected": "Thiết bị đã chọn chưa được kết nối. Trước tiên, vui lòng nhấp vào Bắt đầu dịch vụ trong Ứng dụng chính trên kính VR.",
   "noHeadsetsAvailableInCenter": "Không có sẵn kính VR tại trung tâm này",
+  "unevaluated": "Chưa được đánh giá",
   "poor": "Kém",
   "average": "Trung bình",
   "good": "Tốt",
@@ -301,5 +302,16 @@
   "name": "Tên",
   "therapyInfo": "Thông tin trị liệu",
   "education": "Giáo dục ",
-  "speciality": "Chuyên môn"
+  "speciality": "Chuyên môn",
+  "completeAddressRequired": "Yêu cầu Địa chỉ đầy đủ",
+  "therapyCenterNameRequired": "Yêu cầu Tên Trung tâm trị liệu",
+  "emailRequired": "Yêu cầu email",
+  "managerNameRequired": "Yêu cầu Tên cán bộ quản lý",
+  "specialtyInfoRequired": "Yêu cầu thông tin về chuyên ngành",
+  "registrationNumberRequired": "Yêu cầu Số đăng ký",
+  "taxIDRequired": "Yêu cầu Mã số thuế",
+  "websiteRequired": "Yêu cầu Trang web",
+  "phoneRequired": "Yêu cầu Số điện thoại",
+  "socialMediaRequired": "Yêu cầu mạng xã hội",
+  "linkedinRequired": "Yêu cầu nhập đường dẫn LinkedIn"
 }

@@ -1,23 +1,20 @@
-import { PropsWithChildren } from 'react';
 import {
+  Box,
   chakra,
-  Stack,
   Flex,
-  Text,
-  Image,
-  Icon,
-  StackProps,
-  Tag,
-  TagLabel,
   Grid,
   GridItem,
-  Box,
-  Link,
+  Icon,
   IconButton,
+  Link,
+  Stack,
+  Tag,
+  TagLabel,
+  Text,
 } from '@chakra-ui/react';
-import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { getMe } from '@renderer/cache';
 import { useTranslation } from 'react-i18next';
+import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 interface CardWithLogoProps {
   centerData?: {
     attributes: {
@@ -159,7 +156,7 @@ const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
       </GridItem> */}
       <GridItem colSpan={4} px={4}>
         <Text my={2}>
-          {Module?.Module?.attributes?.targeted_skills && 'Specialties :'}
+          {Module?.Module?.attributes?.targeted_skills && 'Specialities :'}
           {Module?.Module?.attributes?.targeted_skills?.map((skill: any) => (
             <Tag key={skill.id} size="sm" colorScheme="gray" mr={1} my={1}>
               <TagLabel>{skill?.name}</TagLabel>

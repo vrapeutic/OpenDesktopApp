@@ -213,7 +213,9 @@ export default function Specialists() {
     <Box mx={18}>
       <HeaderSpaceBetween
         Title={t('specialists')}
-        ButtonText={state.is_center_admin ? 'Add Specialist' : null}
+        ButtonText={
+          state.is_center_admin ? t('add') + ' ' + t('specialists') : null
+        }
         onClickFunction={onOpen}
       />
 
@@ -289,7 +291,7 @@ export default function Specialists() {
         <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={true}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Enter the doctor's email</ModalHeader>
+            <ModalHeader>{t('enterEmail')}</ModalHeader>
             <form onSubmit={handleSubmit}>
               <ModalBody>
                 <Input
@@ -322,13 +324,15 @@ export default function Specialists() {
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Enter the Kid</ModalHeader>
+            <ModalHeader>
+              {t('add')} {t('kids')}
+            </ModalHeader>
             <form>
               <ModalBody>
                 <Select
-                  placeholder="Select kid"
+                  placeholder={t('selectChild')}
                   size="sm"
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     console.log('Selected kids:', e.target.value);
                     setSelectedKids(e.target.value);
                     setErrorsKids(true);

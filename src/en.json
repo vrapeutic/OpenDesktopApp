@@ -183,6 +183,7 @@
   "connectToHeadsetAgain": "Connect to headset again",
   "headsetNotConnected": "The selected headset is not connected. You might need first to click on Start Service in the Master App on the VR headset.",
   "noHeadsetsAvailableInCenter": " No VR headsets are available in this center",
+  "unevaluated": "Unevaluated",
   "poor": "Poor",
   "average": "Average",
   "good": "Good",
@@ -301,5 +302,16 @@
   "name": "Name",
   "therapyInfo": "Therapy Info",
   "education": "Education",
-  "speciality": "Speciality"
+  "speciality": "Speciality",
+  "completeAddressRequired": "Complete Address is required",
+  "therapyCenterNameRequired": "Therapy Center Name is required",
+  "emailRequired": "Email is required",
+  "managerNameRequired": "Manager's Name is required",
+  "specialtyInfoRequired": "Specialty information is required",
+  "registrationNumberRequired": "Registration Number is required",
+  "taxIDRequired": "Tax ID is required",
+  "websiteRequired": "Website is required",
+  "phoneRequired": "Phone number is required",
+  "socialMediaRequired": "Social media is required",
+  "linkedinRequired": "Linkedin is required"
 }

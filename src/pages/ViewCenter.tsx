@@ -7,6 +7,7 @@ import axios from 'axios';
 import { getMe } from '@renderer/cache';
 import { MyContext } from '@renderer/theme/ContextHelper';
 import { config } from '@renderer/config';
+import { useTranslation } from 'react-i18next';
 
 interface Doctor {
   id: string | null;
@@ -39,6 +40,8 @@ const ViewCenter = () => {
   console.log('centerData', center);
   const context = useContext(MyContext);
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (center) {
@@ -97,8 +100,8 @@ const ViewCenter = () => {
   return (
     <>
       <HeaderWithButton
-        leftText="Therapy Center"
-        rightText={context.state.is_center_admin ? 'Edit Center' : undefined}
+        leftText={t('therapyCenter')}
+        rightText={context.state.is_center_admin ? t('editCenter') : undefined}
         onButtonClick={() =>
           context.state.is_center_admin &&
           navigate('/editcenter', {
