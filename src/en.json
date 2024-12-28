@@ -125,7 +125,7 @@
   "specializationsExamples": "(like tags, for example, Sensory Integration, Physical Therapy, etc.)",
   "officialDocuments": "Official documents",
   "contact": "Contact",
-  "phone1": "Phone number 1",
+  "phone": "Phone number",
   "socialMedia": "Social media",
   "congratulations": "Congratulations",
   "profileCreatedSuccessfully": "The profile has been created successfully",
@@ -322,34 +322,33 @@
     },
     "email": {
       "required": "Email is required",
-      "invalid": "Please provide a valid email address"
-      ,
+      "invalid": "Please provide a valid email address",
       "empty": "Email cannot be empty"
     },
-   "age": {
-    "invalid": "Age must be a number",
-    "tooYoung": "Age must be between 6 and 15 years old",
-    "tooOld": "Age must be between 6 and 15 years old",
-    "required": "Age is required"
-  },
+    "age": {
+      "invalid": "Age must be a number",
+      "tooYoung": "Age must be between 6 and 15 years old",
+      "tooOld": "Age must be between 6 and 15 years old",
+      "required": "Age is required"
+    },
     "diagnoses": "Please provide at least one diagnosis.",
     "file": "A file is required."
   },
-  "kidProfile":"Kid Profile",
-  "doctor":"Doctors",
-  "lastActivity":"Last activity",
+  "kidProfile": "Kid Profile",
+  "doctor": "Doctors",
+  "lastActivity": "Last activity",
   "noDataAvailableS": "No data available",
-  "Date":"Date",
-  "sessionReport":"Session Report",
-   "youAreNotAuthorized":"You are not authorized to see the data of this child.",
-   "showReport":" Show Report",
+  "Date": "Date",
+  "sessionReport": "Session Report",
+  "youAreNotAuthorized": "You are not authorized to see the data of this child.",
+  "showReport": " Show Report",
   "noSessions": " There are no sessions",
-  "Date&Duration":" Date & Duration",
-  "Duration":"Duration",
-  "kidDetails":" Kid Details",
-  "Modules":"Modules",
-  "Level":"Level",
-  "exportCSV":"Export CSV"
-
-  
+  "Date&Duration": " Date & Duration",
+  "Duration": "Duration",
+  "kidDetails": " Kid Details",
+  "Modules": "Modules",
+  "Level": "Level",
+  "exportCSV": "Export CSV",
+  "recentActivities": "Recent Activities",
+  "widgets": "Widgets"
 }

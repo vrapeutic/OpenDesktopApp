@@ -35,7 +35,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
         'string.empty': t('registrationNumberRequired'),
         'any.required': t('registrationNumberRequired'),
       })
-      .label('Registration Number'),
+      .label(t('registrationNumber')),
     taxID: joi
       .number()
       .required()
@@ -43,7 +43,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
         'string.empty': t('taxIDRequired'),
         'any.required': t('taxIDRequired'),
       })
-      .label('Tax ID'),
+      .label(t('taxID')),
     certification: joi
       .any()
       .custom((value, helpers) => {

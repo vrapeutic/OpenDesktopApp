@@ -86,11 +86,11 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
     <Tabs>
       <TabList>
         <Tab>{t('therapyInfo')}</Tab>
-        <Tab>Recent Activities </Tab>
+        <Tab>{t('recentActivities')}</Tab>
         <Tab>{t('subscriptions')}</Tab>
-        <Tab>{t('Specialists')}</Tab>
+        <Tab>{t('specialists')}</Tab>
         <Tab>{t('kids')}</Tab>
-        <Tab>Widgets</Tab>
+        <Tab>{t('widgets')}</Tab>
       </TabList>
 
       <TabPanels>
@@ -98,7 +98,7 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
           <p>{t('therapyInfo')}</p>
         </TabPanel>
         <TabPanel>
-          <p>Recent Activities</p>
+          <p>{t('recentActivities')}</p>
         </TabPanel>
         <TabPanel>
           <p>{t('subscriptions')}</p>
@@ -184,7 +184,7 @@ const TabsViewCenter = ({ centerData }: { centerData: { id: number } }) => {
           )}
         </TabPanel>
         <TabPanel>
-          <p>Widgets</p>
+          <p>{t('widgets')}</p>
         </TabPanel>
       </TabPanels>
     </Tabs>

@@ -125,7 +125,7 @@
   "specializationsExamples": "“(ví dụ: các thẻ như Tích hợp giác quan, Vật lý trị liệu, v.v.",
   "officialDocuments": "Tài liệu chính thức",
   "contact": "Thông tin liên hệ",
-  "phone1": "Số điện thoại 1",
+  "phone": "Số điện thoại",
   "socialMedia": "Mạng xã hội",
   "congratulations": "Chúc mừng",
   "profileCreatedSuccessfully": "Đã tạo hồ sơ thành công",
@@ -315,17 +315,17 @@
   "socialMediaRequired": "Yêu cầu mạng xã hội",
   "linkedinRequired": "Yêu cầu nhập đường dẫn LinkedIn",
   "validation": {
-    "name":{
+    "name": {
       "required": "Tên là bắt buộc",
       "min": "Tên phải có ít nhất 3 ký tự",
       "max": "Tên không được vượt quá 30 ký tự"
     },
-    "email":{
+    "email": {
       "required": "Email là bắt buộc",
       "invalid": "Vui lòng cung cấp địa chỉ email hợp lệ",
       "empty": "Email không thể để trống"
     },
-    "age":  {
+    "age": {
       "invalid": "Tuổi phải là một số",
       "tooYoung": "Tuổi phải từ 6 đến 15 tuổi",
       "tooOld": "Tuổi phải từ 6 đến 15 tuổi",
@@ -334,20 +334,21 @@
     "diagnoses": "Plz provyd at leest wun diagnostica.",
     "file": "Unum filum est requiret."
   },
-  "kidProfile":"Hồ Sơ Trẻ Em",
-  "doctor":"Bác sĩ",
-   "lastActivity":"Hoạt động cuối cùng",
-   "noDataAvailableS":"Không có dữ liệu",
-    "Date":"Ngày",
-    "sessionReport": "Báo cáo phiên",
-    "youAreNotAuthorized": "Bạn không được phép xem dữ liệu của trẻ này.",
-    "showReport":"Hiển thị báo cáo",
-    "noSessions":"Không có phiên nào",
-    "Date&Duration":"Ngày & Thời gian",
-    "Duration":"Thời gian",
-    "kidDetails":"Chi tiết trẻ em",
-    "Modules":"Mô-đun",
-    "Level":"Cấp độ",
-    "exportCSV":"Xuất CSV"
-   
+  "kidProfile": "Hồ Sơ Trẻ Em",
+  "doctor": "Bác sĩ",
+  "lastActivity": "Hoạt động cuối cùng",
+  "noDataAvailableS": "Không có dữ liệu",
+  "Date": "Ngày",
+  "sessionReport": "Báo cáo phiên",
+  "youAreNotAuthorized": "Bạn không được phép xem dữ liệu của trẻ này.",
+  "showReport": "Hiển thị báo cáo",
+  "noSessions": "Không có phiên nào",
+  "Date&Duration": "Ngày & Thời gian",
+  "Duration": "Thời gian",
+  "kidDetails": "Chi tiết trẻ em",
+  "Modules": "Mô-đun",
+  "Level": "Cấp độ",
+  "exportCSV": "Xuất CSV",
+  "recentActivities": "Hoạt động gần đây",
+  "widgets": "Tiện ích"
 }

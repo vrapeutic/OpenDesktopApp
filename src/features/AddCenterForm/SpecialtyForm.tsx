@@ -40,7 +40,7 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
         'string.empty': t('specialtyInfoRequired'),
         'any.required': t('specialtyInfoRequired'),
       })
-      .label('Specialty Information'),
+      .label(t('specialtyInfo')),
     specializationschema: joi
       .array()
       .min(1)

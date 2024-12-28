@@ -116,7 +116,9 @@ const CardWithLogo: React.FC<CardWithLogoProps> = ({ centerData, Module }) => {
         <Text>
           {t('email')}: {centerData?.attributes?.email}
         </Text>
-        <Text>Cal : {centerData?.attributes?.phone_number}</Text>
+        <Text>
+          {t('phone')} : {centerData?.attributes?.phone_number}
+        </Text>
         {token && (
           <Flex direction="row" gap={2}>
             <Link display="inline" color="#3961FB" href={facebookLink?.link}>

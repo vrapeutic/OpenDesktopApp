@@ -584,7 +584,7 @@ const EditCenter = () => {
           <Grid templateColumns="repeat(2, 1fr)" gap="0em 1.5625em">
             <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-                {t('phone1')}
+                {t('phone')}
               </FormLabel>
               <Input
                 {...register('phone_number')}
