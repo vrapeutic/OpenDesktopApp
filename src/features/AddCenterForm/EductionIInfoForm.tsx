@@ -16,6 +16,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import { Image } from '../../assets/icons/Image';
 import { TherapyFormProps } from './therapyFormInterface';
+import { useTranslation } from 'react-i18next';
 
 const EductionIInfoForm: React.FC<TherapyFormProps> = ({
   onSubmit,
@@ -24,20 +25,36 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
   sliding,
   formData,
 }) => {
+  const { t } = useTranslation();
+
   const schema = joi.object({
-    registrationNumber: joi.number().required().label('Registration Number'),
-    taxID: joi.number().required().label('Tax ID'),
+    registrationNumber: joi
+      .number()
+      .required()
+      .messages({
+        'string.empty': t('registrationNumberRequired'),
+        'any.required': t('registrationNumberRequired'),
+      })
+      .label('Registration Number'),
+    taxID: joi
+      .number()
+      .required()
+      .messages({
+        'string.empty': t('taxIDRequired'),
+        'any.required': t('taxIDRequired'),
+      })
+      .label('Tax ID'),
     certification: joi
       .any()
       .custom((value, helpers) => {
         if (value) {
           const ext = value.name.split('.').pop().toLowerCase();
           if (ext !== 'pdf') {
-            return helpers.error('Invalid file type. Please upload a PDF file.');
+            return helpers.error(t('invalidFileType'));
           }
           return value;
         }
-        return helpers.error('File is required.');
+        return helpers.error(t('pleaseUploadCertification'));
       })
       .required(),
   });
@@ -65,11 +82,15 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
     }
   };
 
-  const FormonSubmit = (data: { registrationNumber: number; taxID: number; certification: File }) => {
+  const FormonSubmit = (data: {
+    registrationNumber: number;
+    taxID: number;
+    certification: File;
+  }) => {
     if (!selectedFile) {
       setError('certification', {
         type: 'manual',
-        message: 'Please upload a PDF file.',
+        message: t('invalidFileType'),
       });
     } else {
       onSubmit(data);
@@ -94,7 +115,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
       >
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-            Registration Number
+            {t('registrationNumber')}
           </FormLabel>
           <Input
             {...control.register('registrationNumber')}
@@ -114,11 +135,11 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
             </Text>
           )}
         </GridItem>
-        
+
         <GridItem rowSpan={2}>
           <FormControl>
             <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-              Certification
+              {t('certification')}
             </FormLabel>
             <Controller
               name="certification"
@@ -131,15 +152,15 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
                     border="2px solid #E8E8E8"
                     borderRadius="8px"
                     bg="#FFFFFF"
-                    cursor={"auto"}
+                    cursor={'auto'}
                   >
-                    <label style={{ cursor:"pointer"}} >
+                    <label style={{ cursor: 'pointer' }}>
                       <Image />
                       <Input
                         id="certification"
                         type="file"
                         accept="application/pdf"
-                        onChange={(e) => {
+                        onChange={(e: any) => {
                           handleCertificateChange(e);
                           field.onChange(e.target.files?.[0]);
                         }}
@@ -148,7 +169,10 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
                     </label>
                   </Button>
                   {selectedFile && (
-                    <Text mt="1em">Selected File: {selectedFile.name}</Text>
+                    <Text mt="1em">
+                      {' '}
+                      {t('selectedFile')} : {selectedFile.name}
+                    </Text>
                   )}
                   {errors.certification && (
                     <Text color="red.500" mb={2} fontSize={16}>
@@ -163,7 +187,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
 
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-            Tax ID
+            {t('taxID')}
           </FormLabel>
           <Input
             {...control.register('taxID')}
@@ -200,7 +224,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
           fontWeight="700"
           isDisabled={!isValid}
         >
-          Next
+          {t('next')}
         </Button>
 
         {sliding === 1 ? null : (
@@ -218,7 +242,7 @@ const EductionIInfoForm: React.FC<TherapyFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-            Back
+            {t('back')}
           </Button>
         )}
       </Flex>

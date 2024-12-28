@@ -255,13 +255,16 @@ import { Info } from '@renderer/assets/icons/Info';
 import { Star } from '@renderer/assets/icons/Star';
 import { Documents } from '@renderer/assets/icons/Documents';
 import { Contact } from '@renderer/assets/icons/Contact';
+import { useTranslation } from 'react-i18next';
 
 const ProgressBarAddCenter = (props: any) => {
+  const { t } = useTranslation();
+
   const steps = [
-    { title: 'General info', icon: <Info /> },
-    { title: 'Specialty', icon: <Star /> },
-    { title: 'Education info', icon: <Documents /> },
-    { title: 'Contact', icon: <Contact /> },
+    { title: t('generalInfo'), icon: <Info /> },
+    { title: t('specialty'), icon: <Star /> },
+    { title: t('educationInfo'), icon: <Documents /> },
+    { title: t('contact'), icon: <Contact /> },
   ];
   const inCompleteStatus = {
     marginTop: '45px',

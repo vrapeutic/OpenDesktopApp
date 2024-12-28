@@ -15,6 +15,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import Uploadlogo from './UploadLogoCenter';
 import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import { TherapyFormProps } from './therapyFormInterface';
+import { t } from 'i18next';
 
 const ContactForm: React.FC<TherapyFormProps> = ({
   onSubmit,
@@ -24,20 +25,39 @@ const ContactForm: React.FC<TherapyFormProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const schema = joi.object({
-    phoneNumber: joi.number().required().label('phoneNumber'),
+    phoneNumber: joi
+      .number()
+      .required()
+      .messages({
+        'string.empty': t('phoneRequired'),
+        'any.required': t('phoneRequired'),
+      })
+      .label('phoneNumber'),
     socialMedia: joi
       .string()
       .required()
+      .messages({
+        'string.empty': t('socialMediaRequired'),
+        'any.required': t('socialMediaRequired'),
+      })
       .uri({ scheme: ['http', 'https'] })
       .label('socialMedia'),
     Website: joi
       .string()
       .required()
+      .messages({
+        'string.empty': t('websiteRequired'),
+        'any.required': t('websiteRequired'),
+      })
       .uri({ scheme: ['http', 'https'] })
       .label('Website'),
     Linkedin: joi
       .string()
       .required()
+      .messages({
+        'string.empty': t('linkedinRequired'),
+        'any.required': t('linkedinRequired'),
+      })
       .uri({ scheme: ['http', 'https'] })
       .label('Linkedin'),
   });
@@ -45,7 +65,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors ,isValid},
+    formState: { errors, isValid },
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -77,7 +97,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
       >
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-            Phone number 1
+            {t('phone1')}
           </FormLabel>
           <Input
             {...register('phoneNumber')}
@@ -93,12 +113,14 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.phoneNumber}
           />
           {errors.phoneNumber && (
-            <Text color="red.500"  mb={2} fontSize={16}>{errors.phoneNumber.message as string}</Text>
+            <Text color="red.500" mb={2} fontSize={16}>
+              {errors.phoneNumber.message as string}
+            </Text>
           )}
         </GridItem>
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-            Social media
+            {t('socialMedia')}
           </FormLabel>
           <Input
             {...register('socialMedia')}
@@ -115,12 +137,14 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.socialMedia}
           />
           {errors.socialMedia && (
-            <Text color="red.500"  mb={2} fontSize={16}>{errors.socialMedia.message as string}</Text>
+            <Text color="red.500" mb={2} fontSize={16}>
+              {errors.socialMedia.message as string}
+            </Text>
           )}{' '}
         </GridItem>
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-            Website
+            {t('website')}
           </FormLabel>
           <Input
             {...register('Website')}
@@ -136,7 +160,9 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.Website}
           />
           {errors.Website && (
-            <Text color="red.500"  mb={2} fontSize={16}>{errors.Website.message as string}</Text>
+            <Text color="red.500" mb={2} fontSize={16}>
+              {errors.Website.message as string}
+            </Text>
           )}{' '}
         </GridItem>
         <GridItem>
@@ -158,7 +184,9 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             defaultValue={formData?.Linkedin}
           />
           {errors.Linkedin && (
-            <Text color="red.500"  mb={2} fontSize={16}>{errors.Linkedin.message as string}</Text>
+            <Text color="red.500" mb={2} fontSize={16}>
+              {errors.Linkedin.message as string}
+            </Text>
           )}{' '}
         </GridItem>
       </Grid>
@@ -177,7 +205,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
           fontWeight="700"
           isDisabled={!isValid}
         >
-          Next
+          {t('next')}
         </Button>
 
         {sliding === 1 ? null : (
@@ -195,7 +223,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-            Back
+            {t('back')}
           </Button>
         )}
       </Flex>
