@@ -30,10 +30,12 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
       .max(30)
       .required()
       .messages({
-        'string.empty': t('therapyCenterNameRequired'),
-        'any.required': t('therapyCenterNameRequired'),
+        'string.min': t('validation.name.min'),
+        'string.max': t('validation.name.max'),
+        'string.empty': t('validation.name.required'),
+        'any.required': t('validation.name.required'),
       })
-      .label('therapyCenterName'),
+      .label(t('therapyCenterName')),
     completeAddress: joi
       .string()
       .required()
@@ -45,20 +47,24 @@ const GeneralInfoForm: React.FC<TherapyFormProps> = ({
       .string()
       .email({ tlds: { allow: false } })
       .required()
+      .label(t('email'))
       .messages({
-        'string.empty': t('emailRequired'),
-        'any.required': t('emailRequired'),
+        'string.base': t('validation.email.invalid'),
+        'string.email': t('validation.email.invalid'),
+        'any.required': t('validation.email.required'),
+        'string.empty': t('validation.email.empty'),
       }),
     managerName: joi
       .string()
       .min(3)
       .max(30)
       .required()
+      .label(t('managerName'))
       .messages({
-        'string.empty': t('managerNameRequired'),
-        'any.required': t('managerNameRequired'),
-      })
-      .label('managerName'),
+        'string.min': t('validation.name.min'),
+        'string.empty': t('validation.name.required'),
+        'any.required': t('validation.name.required'),
+      }),
   });
   const {
     register,

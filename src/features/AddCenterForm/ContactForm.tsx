@@ -32,7 +32,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
         'string.empty': t('phoneRequired'),
         'any.required': t('phoneRequired'),
       })
-      .label('phoneNumber'),
+      .label(t('phone')),
     socialMedia: joi
       .string()
       .required()
@@ -41,7 +41,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
         'any.required': t('socialMediaRequired'),
       })
       .uri({ scheme: ['http', 'https'] })
-      .label('socialMedia'),
+      .label(t('socialMedia')),
     Website: joi
       .string()
       .required()
@@ -97,7 +97,7 @@ const ContactForm: React.FC<TherapyFormProps> = ({
       >
         <GridItem>
           <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-            {t('phone1')}
+            {t('phone')}
           </FormLabel>
           <Input
             {...register('phoneNumber')}

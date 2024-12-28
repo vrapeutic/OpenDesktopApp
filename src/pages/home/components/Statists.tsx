@@ -51,7 +51,8 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
     maxSessions: 0,
   });
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
   const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton'];
   const { state, setState } = useContext(MyContext);
   useEffect(() => {
@@ -202,7 +203,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
   };
   useEffect(() => {
     formatData();
-  }, [data, refreshKey]);
+  }, [data, refreshKey, i18n.language]);
 
   useEffect(() => {
     if (doctorData) {
@@ -492,7 +493,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                   />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="sessions" fill="#00DEA3" />
+                  <Bar dataKey="sessions" fill="#00DEA3" name={t('sessions')} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -526,7 +527,7 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                   />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="sessions" fill="#00DEA3" />
+                  <Bar dataKey="sessions" fill="#00DEA3" name={t('sessions')} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
