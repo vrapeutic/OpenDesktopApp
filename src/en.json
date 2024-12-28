@@ -313,7 +313,7 @@
   "websiteRequired": "Website is required",
   "phoneRequired": "Phone number is required",
   "socialMediaRequired": "Social media is required",
-  "linkedinRequired": "Linkedin is required"
+  "linkedinRequired": "Linkedin is required",
   "speciality": "Speciality",
   "validation": {
     "name": {
