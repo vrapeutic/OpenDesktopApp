@@ -205,12 +205,7 @@ export default function Home() {
 
   return (
     <>
-      <div>
-        <h1>{t('centerName')}</h1>
-        <p>{t('description')}</p>
-        <button onClick={() => switchLanguage('en')}>English</button>
-        <button onClick={() => switchLanguage('vi')}>Vietnamese</button>
-      </div>
+      
       {centersLoading ? (
         <Box textAlign="center" py={10} px={6}>
           <Spinner />
