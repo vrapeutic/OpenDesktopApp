@@ -18,7 +18,6 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { CiFilter } from 'react-icons/ci';
 import { RedArrow } from '@renderer/assets/icons/RedArrow';
 import { useCSVData } from '@renderer/Context/CSVDataContext';
 import { dataContext } from '@renderer/shared/Provider';
@@ -27,7 +26,6 @@ import { useContext, useEffect, useState } from 'react';
 import { Link as ReachLink, useLocation } from 'react-router-dom';
 import { useGetCenter, useGetCentersData } from '../api';
 import Statists from './Statists';
-import { FaFilter } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
 export interface ModuleData {
@@ -44,9 +42,10 @@ export interface FileData {
   date?: string;
 }
 export default function Home() {
+  const { t } = useTranslation();
   let selectedCenter = useContext(dataContext);
   const [centers, setCenters] = useState([]);
-  const [centerName, setCenterName] = useState(t("Select Centers"));
+  const [centerName, setCenterName] = useState(t('Select Centers'));
   const [isLoading, setIsLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [arrow, setArrow] = useState(false);
@@ -196,7 +195,7 @@ export default function Home() {
     }
   };
 
-  const { t } = useTranslation();
+ 
 
 
   return (

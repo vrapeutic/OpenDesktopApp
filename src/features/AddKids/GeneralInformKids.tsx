@@ -21,11 +21,12 @@ import { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import axios from 'axios';
-import UploadKidImg from './UploadKidImg';
+
 import { Image } from '../../assets/icons/Image';
 import Congratulations from './Congratulations';
 import { getMe } from '@renderer/cache';
 import { dataContext } from '@renderer/shared/Provider';
+import { useTranslation } from 'react-i18next';
 
 const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
   onSubmit,
@@ -43,6 +44,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
   const toast = useToast();
+  const { t, i18n } = useTranslation();
 
   const handleChange = (e: any) => {
     let value = e.target.value;
@@ -57,13 +59,34 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
 
 
   const schema = joi.object({
-    Name: joi.string().min(3).max(30).required().label('Name'),
-    Email: joi
-      .string()
-      .email({ tlds: { allow: false } })
-      .required(),
-    Age: joi.number().min(6).max(15).required(),
-    diagnoses: joi.array().min(1).required().label('diagnoses'),
+    Name: joi.string().min(3).max(30).required().label(t('name'))
+    .messages({
+      'string.min': t('validation.name.min'),
+      'string.empty': t('validation.name.required'),
+      'any.required': t('validation.name.required'),
+    }),
+    Email:joi.string()
+    .email({ tlds: { allow: ['com', 'net', 'org'] } }) // Specify allowed TLDs
+    .required()
+    .label(t('email'))
+    .messages({
+      'string.base': t('validation.email.invalid'),
+      'string.email': t('validation.email.invalid'),
+      'any.required': t('validation.email.required'),
+      'string.empty': t('validation.email.empty'),
+    }),
+    Age: joi.number()
+    .min(6)
+    .max(15)
+    .required()
+    .label(t('age'))
+    .messages({
+      'number.base': t('validation.age.invalid'), // Invalid number message
+      'number.min': t('validation.age.tooYoung'),  // Too young message (less than 6)
+      'number.max': t('validation.age.tooOld'),    // Too old message (greater than 15)
+      'any.required': t('validation.age.required'), // Age is required
+    }),
+    diagnoses: joi.array().min(1).required().label(t('diagnoses')).messages({'any.required':t("validation.diagnoses")}),
     file:joi.any().required().label('file'),
   });
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,6 +215,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
     });
   };
 
+  
   return (
     <Box
       bg="#FFFFFF"
@@ -213,7 +237,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Name
+          {  t('name')}
           </FormLabel>
 
           <Input
@@ -240,7 +264,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Email
+           { t('email')}
           </FormLabel>
 
           <Input
@@ -267,7 +291,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Age
+           {t('age')}
           </FormLabel>
 
           <Input
@@ -297,7 +321,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Diagnoses
+          { t('diagnoses')}
           </FormLabel>
           <Box mt="0.75em" mb=".3em">
             <Controller
@@ -325,56 +349,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
           )}
         </GridItem>
 
-        {/* <GridItem>
-          <FormControl>
-            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
-              Upload Image
-            </FormLabel>
-            <Button
-              h="128px"
-              w="174px"
-              border="2px solid #E8E8E8"
-              borderRadius="8px"
-              bg="#FFFFFF"
-              mt={'0.75em'}
-            >
-              {imagePreview ? (
-                <img src={imagePreview} alt="Preview" />
-              ) : (
-                <>
-                  <label>
-                    <Image />
-                    <Controller
-              name="file"
-              control={control}
-              render={({ field }) => (
-                
-                <Input
-                {...field}
-                type="file"
-                accept="image/png,image/jpeg"
-             
-                onChange={handleImageChange}
-                style={{ display: 'none' }}
-                hidden
-                id="file"
-                
-              />
-              )}
-            />
-                   
-                  </label>
-                </>
-              )}
-            </Button>
-            {errors.file && (
-            <Text color="red.500">{errors.file.message as string}</Text>
-          )}
-            {imagePreviewError && (
-              <Text color="red.500">"Image" is required</Text>
-            )}
-          </FormControl>
-        </GridItem> */}
+      
         <GridItem mb="5">
           <FormLabel
             display="inline"
@@ -382,7 +357,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-            Upload a photo
+          {t('uploadPhoto')}
           </FormLabel>
           <FormControl id="file" isInvalid={!!errors.file}>
             <Input
@@ -418,7 +393,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
               ) : (
                 <Flex align="center" justify="center">
                   <Image />
-                  <Text ml="2">Drag & Drop here or click to upload</Text>
+                  <Text ml="2"> {t('drag&DropToUpload')} </Text>
                 </Flex>
               )}
             </Box>
@@ -426,7 +401,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
               <Text color="red.500">{errors.file.message as string}</Text>
             )}
             {imagePreviewError && (
-              <Text color="red.500">Please upload an image.</Text>
+              <Text color="red.500">{t('uploadImgFileError')}</Text>
             )}
           </FormControl>
         </GridItem>
@@ -447,7 +422,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
           fontWeight="700"
           isDisabled={isLoading || !isValid}
         >
-          {isLoading ? <Spinner size="md" /> : 'Submit'}
+          {isLoading ? <Spinner size="md" /> : t('submit')}
         </Button>
 
         {sliding === 1 ? null : (
@@ -465,7 +440,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-            Back
+           {t('back')}
           </Button>
         )}
       </Flex>

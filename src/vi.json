@@ -301,5 +301,25 @@
   "name": "Tên",
   "therapyInfo": "Thông tin trị liệu",
   "education": "Giáo dục ",
-  "speciality": "Chuyên môn"
+  "speciality": "Chuyên môn",
+  "validation": {
+    "name":{
+      "required": "Tên là bắt buộc",
+      "min": "Tên phải có ít nhất 3 ký tự",
+      "max": "Tên không được vượt quá 30 ký tự"
+    },
+    "email":{
+      "required": "Email là bắt buộc",
+      "invalid": "Vui lòng cung cấp địa chỉ email hợp lệ",
+      "empty": "Email không thể để trống"
+    },
+    "age":  {
+      "invalid": "Tuổi phải là một số",
+      "tooYoung": "Tuổi phải từ 6 đến 15 tuổi",
+      "tooOld": "Tuổi phải từ 6 đến 15 tuổi",
+      "required": "Tuổi là bắt buộc"
+    },
+    "diagnoses": "Plz provyd at leest wun diagnostica.",
+    "file": "Unum filum est requiret."
+  }
 }

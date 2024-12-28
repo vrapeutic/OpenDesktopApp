@@ -301,5 +301,26 @@
   "name": "Name",
   "therapyInfo": "Therapy Info",
   "education": "Education",
-  "speciality": "Speciality"
+  "speciality": "Speciality",
+  "validation": {
+    "name": {
+      "required": "Name is required",
+      "min": "Name must be at least 3 characters",
+      "max": "Name must not exceed 30 characters"
+    },
+    "email": {
+      "required": "Email is required",
+      "invalid": "Please provide a valid email address"
+      ,
+      "empty": "Email cannot be empty"
+    },
+   "age": {
+    "invalid": "Age must be a number",
+    "tooYoung": "Age must be between 6 and 15 years old",
+    "tooOld": "Age must be between 6 and 15 years old",
+    "required": "Age is required"
+  },
+    "diagnoses": "Please provide at least one diagnosis.",
+    "file": "A file is required."
+  }
 }
