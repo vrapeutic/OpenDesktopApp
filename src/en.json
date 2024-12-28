@@ -314,7 +314,6 @@
   "phoneRequired": "Phone number is required",
   "socialMediaRequired": "Social media is required",
   "linkedinRequired": "Linkedin is required",
-  "speciality": "Speciality",
   "validation": {
     "name": {
       "required": "Name is required",
@@ -335,5 +334,22 @@
   },
     "diagnoses": "Please provide at least one diagnosis.",
     "file": "A file is required."
-  }
+  },
+  "kidProfile":"Kid Profile",
+  "doctor":"Doctors",
+  "lastActivity":"Last activity",
+  "noDataAvailableS": "No data available",
+  "Date":"Date",
+  "sessionReport":"Session Report",
+   "youAreNotAuthorized":"You are not authorized to see the data of this child.",
+   "showReport":" Show Report",
+  "noSessions": " There are no sessions",
+  "Date&Duration":" Date & Duration",
+  "Duration":"Duration",
+  "kidDetails":" Kid Details",
+  "Modules":"Modules",
+  "Level":"Level",
+  "exportCSV":"Export CSV"
+
+  
 }

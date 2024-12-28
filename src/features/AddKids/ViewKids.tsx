@@ -6,6 +6,7 @@ import ProfileKid from '@renderer/features/AddKids/ProfileKid';
 import TabsKids from '@renderer/theme/components/TabsKids';
 import { config } from '../../config';
 import { dataContext } from '@renderer/shared/Provider';
+import { useTranslation } from 'react-i18next';
 // import CSVReader from './cvs/Csv';
 
 const ViewKids = () => {
@@ -109,10 +110,10 @@ const ViewKids = () => {
 
     setDate(formattedDate); //
   };
-
+  const { t } = useTranslation();
   return (
     <Box px={31}>
-      <HeaderWithArrow title={'Kid Profile'} bntTitle={'Edit Profile'} />
+      <HeaderWithArrow title={t("kidProfile")} bntTitle={'Edit Profile'} />
       <ProfileKid
         img={kidsData.attributes.photo_url}
         name={kidsData.attributes.name}

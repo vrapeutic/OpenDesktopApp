@@ -1,5 +1,6 @@
 import { Box, Flex, Grid, GridItem, Text, chakra } from '@chakra-ui/react';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileKid {
   name: string;
@@ -19,6 +20,7 @@ const ProfileKid: React.FC<ProfileKid> = ({
   diagnosis,
   date,
 }) => {
+    const { t } = useTranslation();
   return (
     <Grid
       templateColumns="repeat(8, 1fr) repeat(2, 1fr) repeat(2, 1fr)"
@@ -64,7 +66,7 @@ const ProfileKid: React.FC<ProfileKid> = ({
         <Text
           style={{ fontFamily: 'Graphik LCG', fontSize: '14px', fontWeight: '500' }}
         >
-          Personal info
+          {t('personalInfo')}
         </Text>
         <Text
           style={{
@@ -75,7 +77,7 @@ const ProfileKid: React.FC<ProfileKid> = ({
           }}
           my={1}
         >
-          Age : {age} years
+          {t('age')} : {age} years
         </Text>
 
         <Text
@@ -87,7 +89,7 @@ const ProfileKid: React.FC<ProfileKid> = ({
           }}
           my={1}
         >
-          Email: {email}
+          {t('email')}: {email}
         </Text>
         <Text
           style={{

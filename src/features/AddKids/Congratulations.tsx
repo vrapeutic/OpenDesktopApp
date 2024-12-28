@@ -12,9 +12,11 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
-import { Link as ReachLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 
 export default function Congratulations(props: any) {
+    const { t } = useTranslation();
   const handleBtn=()=>{
     
   
@@ -36,7 +38,7 @@ export default function Congratulations(props: any) {
               color="#00261C"
               textAlign="center"
             >
-              Congratulations
+              {t("congratulations")}
             </ModalHeader>
             <ModalCloseButton marginLeft="100px" />
           </Box>
@@ -74,7 +76,7 @@ export default function Congratulations(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-             You can check your Kid now
+             {t("checkKidNow")}
             </Text>
           </ModalBody>
 
@@ -97,7 +99,7 @@ export default function Congratulations(props: any) {
               }}
             >
               
-                Go to Home
+                {t('goHome')}
               
             </Button>
           </ModalFooter>

@@ -314,7 +314,6 @@
   "phoneRequired": "Yêu cầu Số điện thoại",
   "socialMediaRequired": "Yêu cầu mạng xã hội",
   "linkedinRequired": "Yêu cầu nhập đường dẫn LinkedIn",
-  "speciality": "Chuyên môn",
   "validation": {
     "name":{
       "required": "Tên là bắt buộc",
@@ -334,5 +333,21 @@
     },
     "diagnoses": "Plz provyd at leest wun diagnostica.",
     "file": "Unum filum est requiret."
-  }
+  },
+  "kidProfile":"Hồ Sơ Trẻ Em",
+  "doctor":"Bác sĩ",
+   "lastActivity":"Hoạt động cuối cùng",
+   "noDataAvailableS":"Không có dữ liệu",
+    "Date":"Ngày",
+    "sessionReport": "Báo cáo phiên",
+    "youAreNotAuthorized": "Bạn không được phép xem dữ liệu của trẻ này.",
+    "showReport":"Hiển thị báo cáo",
+    "noSessions":"Không có phiên nào",
+    "Date&Duration":"Ngày & Thời gian",
+    "Duration":"Thời gian",
+    "kidDetails":"Chi tiết trẻ em",
+    "Modules":"Mô-đun",
+    "Level":"Cấp độ",
+    "exportCSV":"Xuất CSV"
+   
 }

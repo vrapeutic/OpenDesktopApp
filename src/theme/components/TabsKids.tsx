@@ -28,6 +28,7 @@ import { getMe } from '../../cache';
 import { config } from '../../config';
 import { ipcRenderer } from 'electron/renderer';
 import { assert } from 'console';
+import { useTranslation } from 'react-i18next';
 
 interface Child {
   id: number;
@@ -60,6 +61,7 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
   const [includedD, setIncludedD] = useState([]);
   const { modulesForReport, setModulesForReport, processCSVDataForReport } =
     useCSVData();
+  const { t } = useTranslation();
 
   const token = getMe()?.token;
   const headers = {
@@ -247,15 +249,15 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                   <GridItem>
                     <Box borderWidth="1px" borderRadius="lg" p={4} h="100%">
                       <Text fontSize="xl" fontWeight="bold">
-                        Date & Duration
+                       {t("Date&Duration")}
                       </Text>
                       {/* Add content here */}
                       <Text mt={2}>Date: {selectedSessionDate}</Text>
                       <Text>
-                        Duration:{' '}
+                        {t("Duration")}:{' '}
                         {modulesForReport.length > 0
                           ? calculateTotalDuration(modulesForReport)
-                          : 'No data available'}
+                          : t('noDataAvailableS')}
                       </Text>
                     </Box>
                   </GridItem>
@@ -270,7 +272,7 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                       <Text mt={2}>
                         {selectedSessionEvaluation
                           ? selectedSessionEvaluation
-                          : 'No data available'}
+                          : t('noDataAvailableS')}
                       </Text>
                     </Box>
                   </GridItem>
@@ -282,7 +284,7 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                   <GridItem>
                     <Box borderWidth="1px" borderRadius="lg" p={4}>
                       <Text fontSize="xl" fontWeight="bold">
-                        Kid Details
+                       {t("kidDetails")}
                       </Text>
                       <Box display={'flex'} gap={5}>
                         <Image
@@ -318,10 +320,10 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                   <GridItem>
                     <Box>
                       <Text fontSize="xl" fontWeight="bold" mb={4}>
-                        Modules
+                        {t("Modules")}
                       </Text>
                       {noDataAvailable ? (
-                        <Text>No Data Available</Text>
+                        <Text>{t('noDataAvailableS')}</Text>
                       ) : (
                         modulesForReport.map((module, index) => (
                           <Box
@@ -347,8 +349,8 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                               <Text>Distractors: No Distractors recorded</Text>
                             )}
 
-                            <Text>Level: {module.level}</Text>
-                            <Text>Duration: {module.formattedTimeSpent}</Text>
+                            <Text>{t("Level")}: {module.level}</Text>
+                            <Text>{t("Duration")}: {module.formattedTimeSpent}</Text>
                           </Box>
                         ))
                       )}
@@ -362,12 +364,12 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                   <GridItem colSpan={2}>
                     <Box borderWidth="1px" borderRadius="lg" p={4} h="100%">
                       <Text fontSize="xl" fontWeight="bold">
-                        Session Notes
+                        {t("sessionNotes")}
                       </Text>
                       <Text>
                         {selectedSessionNotes
                           ? selectedSessionNotes
-                          : 'No data available'}
+                          : t('noDataAvailableS')}
                       </Text>
                     </Box>
                   </GridItem>
@@ -384,7 +386,7 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                       onClick={handleExportCSV}
                       isDisabled={noFileAvailable}
                     >
-                      Export CSV
+                      {t("exportCSV")}
                     </Button>
                   </GridItem>
                 </Grid>
@@ -395,8 +397,8 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
       )}
       <Tabs py={'23px'} colorScheme="#1C1C1C">
         <TabList color={'#38383866'}>
-          <Tab>Doctors</Tab>
-          <Tab>Session</Tab>
+          <Tab>{t('doctor')}</Tab>
+          <Tab>{t('sessions')}</Tab>
         </TabList>
 
         <TabPanels>
@@ -417,17 +419,17 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                   lineHeight="24px"
                 >
                   <GridItem colSpan={1} style={{ marginLeft: '15px' }}>
-                    Name
+                    {t('name')}
                   </GridItem>
                   <GridItem colSpan={1} textAlign={'center'}>
-                    Speciality
+                   {t('speciality')}
                   </GridItem>
                   <GridItem colSpan={1} textAlign={'center'}>
-                    Sessions
+                    {t('sessions')}
                   </GridItem>
 
                   <GridItem colSpan={1} textAlign={'center'}>
-                    Last activity
+                    {t('lastActivity')}
                   </GridItem>
                 </Grid>
 
@@ -438,7 +440,7 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
                 />
               </>
             ) : (
-              <Text>No data available</Text>
+              <Text>{t('noDataAvailableS')}</Text>
             )}
           </TabPanel>
 
@@ -457,10 +459,10 @@ const TabsKids: React.FC<TabsKids> = ({ id, kidData, diagnosis }) => {
               lineHeight="24px"
             >
               <GridItem colSpan={2} textAlign={'center'}>
-                Date
+                {t("Date")}
               </GridItem>
               <GridItem colSpan={2} textAlign={'center'}>
-                Session Report
+                {t("sessionReport")}
               </GridItem>
             </Grid>
             <SessionTable
@@ -487,6 +489,8 @@ const TableData: React.FC<TableDataProps> = ({
   doctorsList,
   includedD,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Grid
       py="3"
@@ -510,7 +514,7 @@ const TableData: React.FC<TableDataProps> = ({
           alignItems="center"
         >
           <Text fontSize="14px" fontWeight="500" fontFamily="Graphik LCG">
-            You are not authorized to see the data of this child.
+            {t('youAreNotAuthorized')}
           </Text>
         </GridItem>
       ) : (
@@ -678,6 +682,7 @@ const SessionTable: React.FC<SessionTable> = ({
       transformedDate.getFullYear();
     return formattedDate;
   };
+  const { t } = useTranslation();
 
   return (
     <>
@@ -730,7 +735,7 @@ const SessionTable: React.FC<SessionTable> = ({
                   letterSpacing={'1.6%'}
                   onClick={() => handleOpenSession(session)}
                 >
-                  Show Report
+                 {t("showReport")}
                 </Button>
               </GridItem>
             </Grid>
@@ -754,7 +759,7 @@ const SessionTable: React.FC<SessionTable> = ({
         >
           <GridItem colSpan={4} display={'flex'} justifyContent={'center'}>
             <Text fontSize="14px" fontWeight="500" fontFamily="Graphik LCG">
-              There are no sessions
+             {t("noSessions")}
             </Text>
           </GridItem>
         </Grid>

@@ -44,7 +44,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedCenter = useContext(dataContext);
   const toast = useToast();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const handleChange = (e: any) => {
     let value = e.target.value;
@@ -208,7 +208,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
     console.log('error', error);
     toast({
       title: 'Error',
-      description: error.response.data.error,
+      description: t(error.response.data.error),
       status: 'error',
       duration: 5000,
       position: 'top-right',
