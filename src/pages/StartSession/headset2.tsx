@@ -28,20 +28,10 @@ import { getMe } from '@renderer/cache';
 import useSocketManager from '../../Context/SocketManagerProvider';
 import { ErrorPopup } from './ErrorPopup';
 import SelectingModule from './SelectingModule';
+import { useTranslation } from 'react-i18next';
 
-const HEADSET_FIELD = 'headset';
 
-interface HeadSet {
-  id: string;
-  type: string;
-  attributes: {
-    name: string | null;
-    brand: string;
-    model: string | null;
-    version: string | null;
-    key: string;
-  };
-}
+
 
 interface ErrorModalPropType {
   isOpen: boolean;
@@ -90,9 +80,9 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   } = useStartSessionContext();
   const { addFunction, popupFunctions } = usePopupsHandler();
   const { closeSelectingAChild } = popupFunctions;
-
+  const { t } = useTranslation();
   const {
-    dispatchSocketMessage,
+ 
     checkIfServiceExists,
     checkAppNetWorkConnection,
   } = useSocketManager();
@@ -108,9 +98,10 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
   const [errorMessages, setErrorMessages] = useState('');
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+
   const schema = Joi.object({
     headset: Joi.string().required().messages({
-      'string.empty': 'You must select a headset',
+      'string.empty': t('selectHeadsetError'),
     }),
   });
 
@@ -118,9 +109,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-    setValue,
-    getValues,
+   
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
@@ -139,7 +128,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching center headsets:', error);
-      setErrorMessages('Error fetching center headsets');
+      setErrorMessages(t('errorFetchingHeadsets'));
       onErrorOpen();
     }
   };
@@ -173,14 +162,14 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
           setDeviceIsFound(true);
         } else {
           const errorMessage =
-            sessionResponse.error || 'Error assigning session ID.';
+            sessionResponse.error || t('ErrorAssigningSessionID');
           setErrorMessages(errorMessage);
           onErrorOpen();
         }
       } else {
         const errorMessage = !appIsConnectedToInternet
-          ? 'You are not connected to the internet.'
-          : 'The selected headset is not connected. You might need first to click on Start Service in the Master App on the VR headset.';
+          ? t("connectionError")
+          : t("headsetNotConnected");
 
         setErrorMessages(errorMessage);
         onErrorOpen();
@@ -211,7 +200,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
       return { success: true };
     } catch (error) {
       onErrorOpen();
-      console.error('Error assigning session id:', error.response.data.error);
+ 
       return { success: false, error: error.response.data.error };
     }
   };
@@ -251,7 +240,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
-            Start a session
+            {t('startSession')}
           </ModalHeader>
 
           {loading ? (
@@ -263,13 +252,13 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
               {headsets.length > 0 ? (
                 <>
                   <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-                    <Text mt="25px">Select a VR Headset</Text>
+                    <Text mt="25px">{t('selectHeadsetVR')}</Text>
                     <GridItem>
                       <Select
                         {...register('headset')}
                         id="headset"
                         name="headset"
-                        placeholder="Select headset"
+                        placeholder={t('selectHeadset')}
                         size="sm"
                       >
                         {headsets.map((headset) => (
@@ -301,7 +290,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
                         navigate('/home');
                       }}
                     >
-                      Cancel Session
+                      {t('cancelSession')}
                     </Button>
                     <Button
                       w="214px"
@@ -314,13 +303,13 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
                       fontSize="18px"
                       onClick={handleSubmit(handleFormSubmit)}
                     >
-                      Connect to headset
+                      {t("connectToHeadset")}
                     </Button>
                   </ModalFooter>
                 </>
               ) : (
                 <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
-                  No VR headsets are available in this center
+                  {t('noVRHeadsetsAvailable')}
                   <Button
                       w="180px"
                       h="54px"
@@ -337,7 +326,7 @@ const SelectingHeadset2 = (props: SelectingHeadsetProps) => {
                         navigate('/home');
                       }}
                     >
-                      Cancel Session
+                        {t('cancelSession')}
                     </Button>
                 </ModalHeader>
               )}

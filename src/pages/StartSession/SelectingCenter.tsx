@@ -14,16 +14,16 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { config } from '@renderer/config';
-import SelectingHeadset from './SelectingHeadset';
+
 import Joi from 'joi';
 import axios from 'axios';
 import { dataContext } from '@renderer/shared/Provider';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useForm } from 'react-hook-form';
 import usePopupsHandler, {
-  PopupsHandlerProvider,
 } from '@renderer/Context/PopupsHandlerContext';
 import SelectingHeadset2 from './headset2';
+import { useTranslation } from 'react-i18next';
 
 export default function SelectingCenter(props: any) {
   const {
@@ -35,10 +35,10 @@ export default function SelectingCenter(props: any) {
   const [childId, setChildId] = useState('');
   const selectedCenterContext = useContext(dataContext);
   const { addFunction } = usePopupsHandler();
-
+  const { t } = useTranslation();
   const schema = Joi.object({
     kid: Joi.string().required().messages({
-      'string.empty': 'You must select a child',
+      'string.empty': t('youMustSelectaChild'),
     }),
   });
 
@@ -84,7 +84,7 @@ export default function SelectingCenter(props: any) {
       addFunction('closeSelectingAChild', props.onClose);
     }
   }, [selectedCenterContext.id]);
-
+ 
   return (
     <Box>
       <Modal isOpen={props.isOpen} onClose={props.onClose}     closeOnOverlayClick={false}
@@ -92,18 +92,18 @@ export default function SelectingCenter(props: any) {
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
-            Start a session
+           {t("startSession")}
           </ModalHeader>
           {selectedCenterContext.id ? (
             <>
               <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-                <Text mt="25px">Select a child</Text>
+                <Text mt="25px">{t("selectChild")}</Text>
                 <GridItem>
                   <Select
                     {...register('kid')}
                     id="kid"
                     name="kid"
-                    placeholder="Select Child"
+                    placeholder={t('selectChild')}
                     size="sm"
                   >
                     {kids?.map((kid) => (
@@ -130,7 +130,7 @@ export default function SelectingCenter(props: any) {
                   fontSize="15px"
                   onClick={props.onClose}
                 >
-                  Cancel Session
+                { t('cancelSession')}
                 </Button>
                 <Button
                   w="214px"
@@ -143,7 +143,7 @@ export default function SelectingCenter(props: any) {
                   fontSize="18px"
                   onClick={handleSubmit(handleFormSubmit)}
                 >
-                  Next
+                  {t('next')}
                 </Button>
               </ModalFooter>
             </>
@@ -163,7 +163,7 @@ export default function SelectingCenter(props: any) {
                   fontSize="15px"
                   onClick={props.onClose}
                 >
-                  Cancel 
+                 {t("Cancel")}
                 </Button>
             </ModalHeader>
           )}

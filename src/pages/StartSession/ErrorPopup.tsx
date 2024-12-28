@@ -18,6 +18,7 @@ import { config } from '@renderer/config';
 import axios from 'axios';
 import { getMe } from '@renderer/cache';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { useTranslation } from 'react-i18next';
 interface ErrorPopupPropType {
   isOpen: boolean;
   onClose?: () => void;
@@ -114,19 +115,19 @@ export const ErrorPopup = ({
       throw error; // Optionally rethrow to propagate the error
     }
   };
-
+ const { t } = useTranslation();
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent h="400px" w="800px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
-            Start a session error
+          {t("startSessionError")}
           </ModalHeader>
           <ModalBody fontSize="20px" fontWeight="600" mt="15px">
             <Text mt="25px">
               {errorMessages ||
-                'The selected headset could not be found on this network'}
+                t('headsetNotFound')}
             </Text>
           </ModalBody>
           <ModalFooter>
@@ -169,7 +170,7 @@ export const ErrorPopup = ({
                 onSelectAnotherHeadset();
               }}
             >
-              Select another headset
+              {t('selectAnotherHeadset')}
             </Button>
           </ModalFooter>
         </ModalContent>

@@ -19,6 +19,7 @@ import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectBooksViblio from './SelectBooksviblio';
+import { useTranslation } from 'react-i18next';
 
 const SelectLevelViblio = (props: any) => {
   const {
@@ -59,7 +60,7 @@ const SelectLevelViblio = (props: any) => {
     setSelectedLevel(level);
     setValue('selectLevel', level);
   };
-
+  const { t } = useTranslation();
   return (
     <>
       <Modal
@@ -74,7 +75,7 @@ const SelectLevelViblio = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            Select Level
+            {t('selectLevel')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -88,7 +89,7 @@ const SelectLevelViblio = (props: any) => {
                   fontSize="1rem"
                   {...register('selectLevel')}
                 >
-                  Sustained Attention
+                  {t('sustainedAttention')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -98,7 +99,7 @@ const SelectLevelViblio = (props: any) => {
                   fontSize="1rem"
                   {...register('selectLevel')}
                 >
-                  Selective Attention
+                  {t("selectiveAttention")}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -108,12 +109,12 @@ const SelectLevelViblio = (props: any) => {
                   fontSize="1rem"
                   {...register('selectLevel')}
                 >
-                  Adaptive Attention
+                  {t("adaptiveAttention")}
                 </Button>
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectLevel && 'Please select a level.'}
+                {errors.selectLevel && t('selectLevelError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -130,7 +131,7 @@ const SelectLevelViblio = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              Back
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -144,7 +145,7 @@ const SelectLevelViblio = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              Select books
+             {t('selectBooks')}
             </Button>
           </ModalFooter>
         </ModalContent>

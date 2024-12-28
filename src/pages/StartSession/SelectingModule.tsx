@@ -33,8 +33,10 @@ import { END_SESSION_MESSAGE } from '@main/constants';
 import SelectLevelGar from './Gardendo/SelectLevelGar';
 import SelectLevelBed from './Badminton/selectLevelBed';
 import KickDirection from './ScoreNo/KickDirection';
+import { useTranslation } from 'react-i18next';
 
 export default function SelectingModule(props: any) {
+    const { t } = useTranslation();
   const { popupFunctions, addFunction } = usePopupsHandler();
   const {
     socketError,
@@ -44,10 +46,8 @@ export default function SelectingModule(props: any) {
     dispatchSocketMessage,
   } = useSocketManager();
 
-  const [notFound, setNotFound] = useState(false);
-  const [errorMEssage, setErrorMEssage] = useState(null);
-  const [openRunningPopup, setOpenRunningPopup] = useState(false);
-  const [packageName, setPackagename] = useState('');
+
+
   const { startSession, sessionId, headsetKey } = useStartSessionContext();
   const {
     closeSelectingAHeadset,
@@ -84,7 +84,7 @@ export default function SelectingModule(props: any) {
     onOpen: onOpenSelectlevelGar,
     onClose: onCloseSelectlevelGar,
   } = useDisclosure();
-  const [name, setName] = useState('Modules');
+  const [name, setName] = useState(t("Modules"));
   const { setModule } = useStartSessionContext();
   const [errors, setErrors] = useState({
     selectedModule: null,
@@ -110,14 +110,14 @@ export default function SelectingModule(props: any) {
     console.log('moadel', appIsConnectedToInternet, existingDevice);
     if (!existingDevice || !appIsConnectedToInternet) {
       renderDisconnectedHeadSetError(
-        !appIsConnectedToInternet && 'You are not connected to the internet'
+        !appIsConnectedToInternet && t('connectionError')
       );
       return;
     }
 
     if (socketError) {
       setSocketError(null);
-      setOpenRunningPopup(false);
+      
     }
     const { error } = schema.validate(values, { abortEarly: false });
     if (error) {
@@ -150,7 +150,7 @@ export default function SelectingModule(props: any) {
         default:
           toast({
             title: 'error',
-            description: `This module is not available, please select anther module`,
+            description: t("thisModuleIsNotAvailable"),
             status: 'error',
             duration: 5000,
             position: 'top-right',
@@ -274,7 +274,7 @@ export default function SelectingModule(props: any) {
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
-              You have been connected successfully to the headset {headsetKey}
+              {t('connectedSuccessfully')} {headsetKey}
             </Text>
             {socketError && (
               <Text
@@ -291,7 +291,7 @@ export default function SelectingModule(props: any) {
               <>
                 {modules.length > 0 ? (
                   <>
-                    <Text mt="10px">Choose a module</Text>
+                    <Text mt="10px">{t('chooseModule')}</Text>
                     <Menu>
                       <MenuButton
                         as={Button}
@@ -333,7 +333,7 @@ export default function SelectingModule(props: any) {
                       fontWeight="500"
                       fontFamily="Graphik LCG"
                     >
-                      This center hasn't been assigned any modules yet.
+                      {t('noModulesAssigned')}
                     </Text>
                   </Box>
                 )}
@@ -346,7 +346,7 @@ export default function SelectingModule(props: any) {
                 h={'70%'}
               >
                 <Text fontSize="13px" fontWeight="500" fontFamily="Graphik LCG">
-                  Please Select Center
+                 {t('selectCenter')}
                 </Text>
               </Box>
             )}
@@ -364,7 +364,7 @@ export default function SelectingModule(props: any) {
               fontSize="15px"
               onClick={CloseModule}
             >
-              Cancel session
+              {t('cancelSession')}
             </Button>
             {selectedCenter.id && modules.length > 0 && (
               <Button
@@ -379,7 +379,7 @@ export default function SelectingModule(props: any) {
                 onClick={handleSubmit}
                 mx={2}
               >
-                Show module settings
+                {t('moduleSettings')}
               </Button>
             )}
           </ModalFooter>

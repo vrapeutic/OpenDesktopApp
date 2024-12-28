@@ -151,7 +151,7 @@
   "sessionOverallEvaluation": "Session Overall Evaluation",
   "sessionNotes": "Session Notes",
   "selectEvaluation": "Select Evaluation",
-  "cancelSession": "Cancel session",
+  "cancelSession": "Cancel Session",
   "selectAnotherHeadset": "Select another headset",
   "startSessionError": "Start a session error",
   "headsetNotFound": "The selected headset could not be found on this network",
@@ -163,7 +163,8 @@
   "errorFetchingHeadsets": "Error fetching center headsets",
   "noVRHeadsetsAvailable": "No VR headsets are available in this center",
   "sessionDataSubmitted": "Submit session data",
-  "selectHeadset": "Select a headset",
+  "selectHeadsetVR": "Select a VR headset",
+  "selectHeadset":"Select a headset",
   "noKidsAvailable": "There are no Kids",
   "selectChild": "Select a child",
   "noEvaluationDataAvailable": "No evaluation data available.",
@@ -349,7 +350,14 @@
   "kidDetails":" Kid Details",
   "Modules":"Modules",
   "Level":"Level",
-  "exportCSV":"Export CSV"
-
+  "exportCSV":"Export CSV",
+   "thisModuleIsNotAvailable":"This module is not available, please select anther module",
+  "youMustSelectaChild": "You must select a child"
+,
+"Cancel":"Cancel"
+  ,
+  "ErrorAssigningSessionID":"Error assigning session ID",
   
+  "YouAssignedLevel": "You assigned level {{level}}, book {{book}}, module name is {{module}}, and session ID is {{sessionId}}.",
+  "NoHeadsetFound":"No headset found"
 }

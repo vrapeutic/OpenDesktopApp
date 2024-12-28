@@ -12,6 +12,7 @@ import {
 import OTPInput from 'react-otp-input';
 import { config } from '@renderer/config';
 import SelectingModule from './SelectingModule';
+import { useTranslation } from 'react-i18next';
 
 export default function ValidateOtp(props: any) {
   const [otp, setOtp] = useState('');
@@ -69,6 +70,7 @@ export default function ValidateOtp(props: any) {
   const next = () => {
     setNext((current) => !current);
   };
+   const { t } = useTranslation()
 
   return (
     <>
@@ -80,7 +82,7 @@ export default function ValidateOtp(props: any) {
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
-            Start a session
+          {t("startSession")}
           </ModalHeader>
           <ModalBody fontSize="20px" fontWeight="600" mt="15px">
             <Text fontSize="12px" color="orange">

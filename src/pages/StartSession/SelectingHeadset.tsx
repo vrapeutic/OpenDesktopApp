@@ -22,11 +22,12 @@ import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useStartSessionContext } from '../../Context/StartSesstionContext';
 import { getMe } from '@renderer/cache';
-import SelectingModule from './SelectingModule';
+
 import useSocketManager from '../../Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { END_SESSION_MESSAGE } from '@main/constants';
 import { ErrorPopup } from './ErrorPopup';
+import { useTranslation } from 'react-i18next';
 
 interface ErrorsModalProps {
   isOpen: boolean;
@@ -452,25 +453,25 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
       });
     }
   }, [selectedCenterContext.id]);
-
+ const { t } = useTranslation();
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
-            Start a session
+         {t("startSession")}
           </ModalHeader>
           {headsets.length > 0 ? (
             <>
               <ModalBody fontSize="20px" fontWeight="600" mt="15px">
-                <Text mt="25px">Select a headset</Text>
+                <Text mt="25px">{t("selectHeadset")}</Text>
                 <GridItem>
                   <Select
                     {...register('headset')}
                     id="headset"
                     name="headset"
-                    placeholder="Select headset"
+                    placeholder={t("selectHeadset")}
                     size="sm"
                   >
                     {headsets.map((headset) => (
@@ -498,7 +499,7 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
                   fontWeight="700"
                   fontSize="15px"
                 >
-                  Cancel session
+                  {t('cancelSession')}
                 </Button>
                 <Button
                   w="214px"
@@ -511,13 +512,12 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
                   fontSize="18px"
                   onClick={handleSubmit(handleFormSubmit)}
                 >
-                  Connect to headset
-                </Button>
+                  {t('connectToHeadset')}                </Button>
               </ModalFooter>
             </>
           ) : (
             <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
-              No VR headsets are available in this center
+              {t('noHeadsetsAvailableInCenter')}
               <Button
                       w="180px"
                       h="54px"
@@ -534,7 +534,7 @@ const SelectingHeadset: React.FC<SelectingHeadsetProps> = (props) => {
                         navigate('/home');
                       }}
                     >
-                      Cancel Session
+                       {t('cancelSession')}
                     </Button>
             </ModalHeader>
           )}

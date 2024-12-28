@@ -27,10 +27,11 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import { useTranslation } from 'react-i18next';
 const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
-  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
+  const { module, sessionId, headsetKey } = useStartSessionContext();
   const toast = useToast();
   const {
     isOpen: isOpenConnected,
@@ -49,14 +50,14 @@ const SelectBooksViblio = (props: any) => {
   } = useSocketManager();
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
-  const toastIdRef:any = useRef();
+  const toastIdRef: any = useRef();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
   const { socketError } = useSocketManager();
   const schema = joi.object({
     selectBook: joi.number().required(),
   });
-
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -85,25 +86,26 @@ const SelectBooksViblio = (props: any) => {
         title: 'Success',
         description: (
           <Box>
-            {`You assigned level ${updatedFormData[0]} , book ${selectedBook} ,
-         module name is ${module} and session id is ${sessionId}`}
+            {t('YouAssignedLevel', {
+              level: updatedFormData[0],
+              book: selectedBook,
+              module,
+              sessionId,
+            })}
             <Button
-             color={"white"}
+              color={'white'}
               width={3}
               height={5}
               onClick={() => {
                 if (toastIdRef.current) {
-                 
                   toast.close(toastIdRef.current);
                 }
               }}
-            position={"absolute"}
-       
-            top={3}
-            right={3}
-          
+              position={'absolute'}
+              top={3}
+              right={3}
             >
-          x
+              x
             </Button>
           </Box>
         ),
@@ -115,9 +117,6 @@ const SelectBooksViblio = (props: any) => {
           // Additional logic for when the toast is removed
         },
       });
-
-
-
 
       const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection();
@@ -139,8 +138,8 @@ const SelectBooksViblio = (props: any) => {
         onOpenConnected();
       } else {
         const errorMessage = !appIsConnectedToInternet
-          ? 'You are not connected to the internet'
-          : 'No headset found';
+          ? t('connectionError')
+          : T('NoHeadsetFound');
         console.log(errorMessage);
         setErrorMEssage(errorMessage);
         setNotFound(true);
@@ -182,8 +181,7 @@ const SelectBooksViblio = (props: any) => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
-  
-  }
+  };
   return (
     <>
       <Modal
@@ -257,7 +255,7 @@ const SelectBooksViblio = (props: any) => {
               onClick={handleBackToSelectLevel}
               mx={2}
             >
-              Back to Select Level
+              {t('backToSelectLevel')}
             </Button>
             <Button
               w="180px"
@@ -272,8 +270,8 @@ const SelectBooksViblio = (props: any) => {
               mx={2}
             >
               {props.formData[0] == 2 || props.formData[0] == 3
-                ? 'select distractor'
-                : 'play'}
+                ? t('selectDistractor')
+                : t('play')}
             </Button>
           </ModalFooter>
         </ModalContent>

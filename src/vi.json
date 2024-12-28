@@ -163,6 +163,8 @@
   "errorFetchingHeadsets": "Lỗi khi tải thiết bị cho trung tâm",
   "noVRHeadsetsAvailable": "Không có sẵn kính VR tại trung tâm này",
   "sessionDataSubmitted": "Gửi dữ liệu phiên",
+  "selectHeadsetVR":" Chọn một tai nghe VR",
+ 
   "selectHeadset": "Chọn thiết bị",
   "noKidsAvailable": "Không có trẻ nào",
   "selectChild": "Chọn một trẻ",
@@ -348,6 +350,11 @@
     "kidDetails":"Chi tiết trẻ em",
     "Modules":"Mô-đun",
     "Level":"Cấp độ",
-    "exportCSV":"Xuất CSV"
-   
+    "exportCSV":"Xuất CSV",
+    "thisModuleIsNotAvailable":"Mô-đun này không có sẵn, vui lòng chọn mô-đun khác",
+    "youMustSelectaChild":"Bạn phải chọn một trẻ em",
+    "Cancel":"Hủy",
+   "ErrorAssigningSessionID":"Lỗi khi gán ID phiên",
+ "YouAssignedLevel": "Bạn đã gán cấp độ {{level}}, sách {{book}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}.",
+ "NoHeadsetFound":"Không tìm thấy tai nghe"
 }
