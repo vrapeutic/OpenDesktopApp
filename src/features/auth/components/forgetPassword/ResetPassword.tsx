@@ -110,7 +110,7 @@ const ResetPassword = () => {
       );
     }
   };
-const { t } = useTranslation();
+  const { t } = useTranslation();
   return (
     <>
       <Grid
@@ -135,11 +135,10 @@ const { t } = useTranslation();
                 fontSize="2rem"
                 color="#222631"
               >
-                {t("Welcomeback")}
+                {t('Welcomeback')}
               </Heading>
               <Text fontSize="1rem" pt="19px" color="#58667E">
-                Please enter a new password to continue using your VRapeutic
-                account.
+                {t('enterNewPassword')}
               </Text>
               <form onSubmit={onSubmit}>
                 <FormControl>
@@ -150,12 +149,14 @@ const { t } = useTranslation();
                     color="#222631"
                     m="0px"
                   >
-                    Password
+                    {t('password')}
                   </FormLabel>
                   <InputGroup>
                     <Input
                       isInvalid={Boolean(error.password)}
-                      onChange={(e:any) => handlePasswordChange(e.target.value)}
+                      onChange={(e: any) =>
+                        handlePasswordChange(e.target.value)
+                      }
                       value={data.password}
                       type={showPassword ? 'text' : 'password'}
                       borderRadius="8px"
@@ -200,12 +201,12 @@ const { t } = useTranslation();
                     color="#222631"
                     m="0px"
                   >
-                    Confirm Password
+                    {t('confirmPassword')}
                   </FormLabel>
                   <InputGroup>
                     <Input
                       isInvalid={Boolean(error.confirmPassword)}
-                      onChange={(e:any) =>
+                      onChange={(e: any) =>
                         handleConfirmPasswordChange(e.target.value)
                       }
                       value={data.confirmPassword}
@@ -229,15 +230,17 @@ const { t } = useTranslation();
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
-                      children={showConfirmPassword ? (
-                        <EyeIcon />
-                      ) : (
-                        <ViewOffIcon
-                          color={'#b6bfcd'}
-                          width="20px"
-                          height="20px"
-                        />
-                      )}
+                      children={
+                        showConfirmPassword ? (
+                          <EyeIcon />
+                        ) : (
+                          <ViewOffIcon
+                            color={'#b6bfcd'}
+                            width="20px"
+                            height="20px"
+                          />
+                        )
+                      }
                     />
                   </InputGroup>
                   {error.confirmPassword && (
@@ -263,12 +266,12 @@ const { t } = useTranslation();
                     rightIcon={<ArrowForwardIcon />}
                     isLoading={mutation.isLoading}
                   >
-                    {t("submit")}
+                    {t('submit')}
                   </Button>
                 </FormControl>
               </form>
               <Text pt="12px" fontSize="0.75rem" color="#58667E">
-              {t("ByContinuingYouAreAgreeingTo")}
+                {t('ByContinuingYouAreAgreeingTo')}
                 <Link
                   display="inline"
                   color="#4F4F4F"
@@ -276,7 +279,7 @@ const { t } = useTranslation();
                   textDecoration="underline"
                   href="https://myvrapeutic.com/privacy-policy/"
                 >
-                 {t("terms&Conditions")}
+                  {t('terms&Conditions')}
                 </Link>
               </Text>
             </Box>
@@ -287,7 +290,7 @@ const { t } = useTranslation();
               fontSize="0.75rem"
               color="#000000"
             >
-               {t("AllRightsReserved")}
+              {t('AllRightsReserved')}
             </Text>
           </Flex>
         </GridItem>

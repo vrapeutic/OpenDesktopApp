@@ -12,9 +12,12 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 const CongratulationsReset = (props: any) => {
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -29,9 +32,7 @@ const CongratulationsReset = (props: any) => {
               lineHeight="20px"
               color="#00261C"
               textAlign="center"
-            >
-              Congratulations
-            </ModalHeader>
+            ></ModalHeader>
             <ModalCloseButton marginLeft="100px" />
           </Box>
 
@@ -58,7 +59,7 @@ const CongratulationsReset = (props: any) => {
               textAlign="center"
               color="#595959"
             >
-              Congratulations
+              {t('congratulations')}
             </Text>
 
             <Text
@@ -68,7 +69,7 @@ const CongratulationsReset = (props: any) => {
               textAlign="center"
               color="#A8A8A8"
             >
-              Your password has been successfully updated
+              {t('passwordSuccessfullyUpdated')}
             </Text>
           </ModalBody>
           <ModalFooter display="table-column">
@@ -93,7 +94,7 @@ const CongratulationsReset = (props: any) => {
                 textDecoration="none"
                 onClick={props.onClose}
               >
-                Go to login
+                {t('goLogin')}
               </Button>
             </Link>
           </ModalFooter>

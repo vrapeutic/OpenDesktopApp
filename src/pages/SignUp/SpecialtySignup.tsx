@@ -36,6 +36,11 @@ const SpecialtySignup: React.FC<SignupFormProps> = ({
       .array()
       .min(1)
       .required()
+      .messages({
+        'array.min': t('validation.specializations.min'),
+        'array.base': t('validation.specializations.array'),
+        'any.required': t('validation.specializations.required'),
+      })
       .label('Specializations'),
   });
 
