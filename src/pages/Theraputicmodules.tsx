@@ -164,7 +164,7 @@ const Theraputicmodules: React.FC = () => {
                         </Td>
                         <Td>
                           <Button
-                            onClick={(e) => {
+                            onClick={(e:any) => {
                               e.stopPropagation(); // Prevents the row click event
                               navigate('/Assigntocenter', {
                                 state: { Module: Module },

@@ -155,7 +155,7 @@ const { t } = useTranslation();
                   <InputGroup>
                     <Input
                       isInvalid={Boolean(error.password)}
-                      onChange={(e) => handlePasswordChange(e.target.value)}
+                      onChange={(e:any) => handlePasswordChange(e.target.value)}
                       value={data.password}
                       type={showPassword ? 'text' : 'password'}
                       borderRadius="8px"
@@ -205,7 +205,7 @@ const { t } = useTranslation();
                   <InputGroup>
                     <Input
                       isInvalid={Boolean(error.confirmPassword)}
-                      onChange={(e) =>
+                      onChange={(e:any) =>
                         handleConfirmPasswordChange(e.target.value)
                       }
                       value={data.confirmPassword}

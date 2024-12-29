@@ -136,7 +136,7 @@ const AssignModule: React.FC = () => {
             <Select
               placeholder="Select  Module"
               size="sm"
-              onChange={(e) => {
+              onChange={(e:any) => {
                 console.log('Selected center:', e.target.value);
                 setSelectedCenter(e.target.value);
               }}

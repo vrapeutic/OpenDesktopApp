@@ -322,7 +322,7 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
                       {...register('certification')}
                       id="certification"
                       type="file"
-                      onChange={(e) => handleCertificateChange(e)}
+                      onChange={(e:any) => handleCertificateChange(e)}
                       style={{ display: 'none' }}
                     />
                   </label>

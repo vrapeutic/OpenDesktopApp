@@ -336,7 +336,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
             mb=".3em"
             borderRadius="8px"
             value={degree}
-            onChange={(e) => setDegree(e.target.value)}
+            onChange={(e:any) => setDegree(e.target.value)}
           />
 
           {errors.degree && (
@@ -428,7 +428,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
             mb=".3em"
             borderRadius="8px"
             value={university}
-            onChange={(e) => setUniversity(e.target.value)}
+            onChange={(e:any) => setUniversity(e.target.value)}
           />
 
           {errors.university && (
@@ -455,7 +455,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
                     id="certification"
                     type="file"
                     accept="application/pdf" // Update this line to accept PDF files
-                    onChange={(e) => handleCertificateChange(e)}
+                    onChange={(e:any) => handleCertificateChange(e)}
                     style={{ display: 'none' }}
                   />
                 </label>
@@ -499,7 +499,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
                     name="logo"
                     id="logo"
                     {...register('logo')}
-                    onChange={(e) => handleImageChange(e)}
+                    onChange={(e:any) => handleImageChange(e)}
                     style={{ display: 'none' }}
                     hidden
                   />

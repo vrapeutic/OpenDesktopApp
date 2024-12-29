@@ -136,7 +136,7 @@ const Assigntocenter: React.FC = () => {
             <Select
               placeholder="Select Center"
               size="sm"
-              onChange={(e) => {
+              onChange={(e:any) => {
                 console.log('Selected center:', e.target.value);
                 setSelectedCenter(e.target.value);
               }}

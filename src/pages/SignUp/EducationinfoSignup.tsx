@@ -298,7 +298,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
                     id="certification"
                     type="file"
                     accept="application/pdf"
-                    onChange={(e) => handleCertificateChange(e)}
+                    onChange={(e:any) => handleCertificateChange(e)}
                     style={{ display: 'none' }}
                   />
                 </label>

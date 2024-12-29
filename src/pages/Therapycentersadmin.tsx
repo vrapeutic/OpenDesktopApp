@@ -393,7 +393,7 @@ const nextHandler = () => {
                         }}
                         mx={2}
                         placeholder={x.attributes.model}
-                        onChange={(e) => handleChangeModel(e, x.id)}
+                        onChange={(e:any) => handleChangeModel(e, x.id)}
                         value={modelValues[x.id] || ''}
                       />
 
@@ -410,7 +410,7 @@ const nextHandler = () => {
                         }}
                         mx={2}
                         placeholder={x.attributes.key}
-                        onChange={(e) => handleChangeKey(e, x.id)}
+                        onChange={(e:any) => handleChangeKey(e, x.id)}
                         value={keyValues[x.id] || ''}
                       />
                       <Button

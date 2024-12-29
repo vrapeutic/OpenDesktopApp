@@ -186,7 +186,7 @@ const UploadDoctorImg: React.FC<UploadKidImgProps> = (props) => {
                         type="file"
                         accept="image/png,image/jpeg"
                         name="logo"
-                        onChange={(e) => handleImageChange(e)}
+                        onChange={(e:any) => handleImageChange(e)}
                         style={{ display: 'none' }}
                         hidden
                      

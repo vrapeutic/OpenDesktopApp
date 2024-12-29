@@ -176,7 +176,7 @@ console.log(response.is_admin)
                       isInvalid={
                         data.identifier.length > 0 && Boolean(error.identifier)
                       }
-                      onChange={(e) => handleIdentifierChange(e.target.value)}
+                      onChange={(e:any) => handleIdentifierChange(e.target.value)}
                       value={data.identifier}
                       type="email"
                       borderRadius="8px"
@@ -203,7 +203,7 @@ console.log(response.is_admin)
                       isInvalid={
                         data.password.length > 0 && Boolean(error.password)
                       }
-                      onChange={(e) => handlePasswordChange(e.target.value)}
+                      onChange={(e:any) => handlePasswordChange(e.target.value)}
                       value={data.password}
                       type={showPassword ? 'text' : 'password'}
                       borderRadius="8px"

@@ -119,7 +119,7 @@ const { t } = useTranslation();
                 <InputGroup>
                   <Input
                     isInvalid={data.email.length > 0 && Boolean(error.email)}
-                    onChange={(e) => handleEmailChange(e.target.value)}
+                    onChange={(e:any) => handleEmailChange(e.target.value)}
                     value={data.email}
                     type="email"
                     borderRadius="8px"

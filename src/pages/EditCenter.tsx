@@ -552,7 +552,7 @@ const EditCenter = () => {
                         id="certificate"
                         type="file"
                         accept="application/pdf" // Update this line to accept PDF files
-                        onChange={(e) => handleCertificateChange(e)}
+                        onChange={(e:any) => handleCertificateChange(e)}
                         style={{ display: 'none' }}
                       />
                     </label>
@@ -703,7 +703,7 @@ const EditCenter = () => {
                         name="logo"
                         id="logo"
                         {...register('logo')}
-                        onChange={(e) => handleImageChange(e)}
+                        onChange={(e:any) => handleImageChange(e)}
                         style={{ display: 'none' }}
                         hidden
                       />

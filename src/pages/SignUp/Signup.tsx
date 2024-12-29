@@ -8,6 +8,7 @@ import GeneralInfoSignup from './GeneralInfoSignup';
 import SpecialtySignup from './SpecialtySignup';
 import EductionIInfoSignup from './EducationinfoSignup';
 import VRapeutic from '../../assets/images/VRapeutic.png';
+import { useTranslation } from 'react-i18next';
 
 interface Center {
   id: number;
@@ -25,6 +26,7 @@ interface Center {
 }
 
 const Signup: React.FC = () => {
+  const { t } = useTranslation();
   const totalSteps = 3;
   const [sliding, setSliding] = useState(1);
   const [formData, setFormData] = useState({});
