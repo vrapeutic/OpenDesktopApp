@@ -192,11 +192,10 @@ const Notifications = (props: any) => {
                             fontSize="0.75rem"
                             color="#838383"
                           >
-                            You have been invited by{' '}
-                            {item?.attributes?.invited_by_name} to join the
-                            center named {item?.attributes?.center?.name}. You
-                            can accept or reject the invitation by clicking on
-                            one of the buttons below.
+                           {t('InvitationMessage', {
+  invitedBy: item?.attributes?.invited_by_name,
+  centerName: item?.attributes?.center?.name,
+})}
                           </Text>
                         </Flex>
                       </Flex>
@@ -213,7 +212,7 @@ const Notifications = (props: any) => {
                           color={'#fff'}
                           onClick={() => updateStatus(item?.id, 'approved')}
                         >
-                          Accept
+                         {t( "Accept")}
                         </Button>
                         <Button
                           width={100}
@@ -222,7 +221,7 @@ const Notifications = (props: any) => {
                           bg="red"
                           onClick={() => updateStatus(item?.id, 'rejected')}
                         >
-                          Deny
+                       {  t("Deny")}
                         </Button>
                       </Flex>
                     </Flex>

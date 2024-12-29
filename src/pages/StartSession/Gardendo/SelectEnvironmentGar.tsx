@@ -17,6 +17,7 @@ import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 
 import SelectNumberGar from './SelectNumberGar';
+import { useTranslation } from 'react-i18next';
 
 const SelectEnvironmentGar = (props: any) => {
   const [formData, setFormData] = useState<any[]>([]);
@@ -68,6 +69,7 @@ const SelectEnvironmentGar = (props: any) => {
     setValue('selectEnvironment', envienment);
   };
 
+   const { t } = useTranslation();
   return (
     <>
       <Modal
@@ -78,11 +80,9 @@ const SelectEnvironmentGar = (props: any) => {
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          {/* <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
-              <ModalCloseButton marginLeft="100px" />
-            </Box> */}
+        
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Environment
+          {t('chooseEnvironment')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -96,7 +96,7 @@ const SelectEnvironmentGar = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectEnvironment')}
                 >
-                  Garden
+                 {t('garden')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -105,11 +105,11 @@ const SelectEnvironmentGar = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectEnvironment')}
                 >
-                  Balcony
+                  {t("balcony")}
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectEnvironment && 'Please select a Enironment.'}
+                {errors.selectEnvironment && t("selectEnvironmentError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -126,7 +126,7 @@ const SelectEnvironmentGar = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              Back
+              {t("back")}
             </Button>
             <Button
               w="180px"
@@ -140,7 +140,7 @@ const SelectEnvironmentGar = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              Next
+             {t("next")}
             </Button>
           </ModalFooter>
         </ModalContent>

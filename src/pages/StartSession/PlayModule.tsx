@@ -13,6 +13,7 @@ import {
 import React from 'react';
 import Openconnected from './openconnected';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { useTranslation } from 'react-i18next';
 
 interface PlayModuleProps {
   isOpen: boolean;
@@ -44,6 +45,7 @@ const PlayModule = ({
     onOpen: onOpenConnectedPopup,
     onClose: onCloseConnectedPopup,
   } = useDisclosure();
+   const { t } = useTranslation();
 
   return (
     <>
@@ -79,7 +81,7 @@ const PlayModule = ({
               fontSize="15px"
               onClick={onClose}
             >
-              Cancel session
+            {t("cancelSession")}
             </Button>
             <Button
               w="180px"
@@ -93,7 +95,7 @@ const PlayModule = ({
               onClick={handleSubmit}
               mx={2}
             >
-              Play
+             {t("play")}
             </Button>
           </ModalFooter>
         </ModalContent>

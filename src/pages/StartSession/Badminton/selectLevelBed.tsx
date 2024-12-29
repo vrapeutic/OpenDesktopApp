@@ -19,8 +19,11 @@ import {
   import { useForm } from 'react-hook-form';
   import { joiResolver } from '@hookform/resolvers/joi';
   import SelectBooksBed from './SelectBooksBed';
+import { useTranslation } from 'react-i18next';
+
   
   const SelectLevelBed = (props: any) => {
+     const { t } = useTranslation();
     const {
       isOpen: isOpenSelectBooksBed,
       onOpen: onOpenSelectBooksBed,
@@ -74,7 +77,7 @@ import {
               <ModalCloseButton marginLeft="100px" />
             </Box>
             <ModalHeader textAlign="center" fontSize="1rem">
-              Select Level
+          {t("selectLevel")}
             </ModalHeader>
   
             <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -88,7 +91,7 @@ import {
                     fontSize="1rem"
                     {...register('selectLevel')}
                   >
-                    Sustained Attention
+                          {t("sustainedAttention")}
                   </Button>
                   <Button
                     onClick={() => handleButtonClick(2)}
@@ -98,7 +101,7 @@ import {
                     fontSize="1rem"
                     {...register('selectLevel')}
                   >
-                    Selective Attention
+                  {t("selectiveAttention")}
                   </Button>
                   <Button
                     onClick={() => handleButtonClick(3)}
@@ -108,12 +111,12 @@ import {
                     fontSize="1rem"
                     {...register('selectLevel')}
                   >
-                    Adaptive Attention
+                    {t("adaptiveAttention")}
                   </Button>
                 </Stack>
   
                 <FormErrorMessage>
-                  {errors.selectLevel && 'Please select a level.'}
+                  {errors.selectLevel &&t("selectLevelError")}
                 </FormErrorMessage>
               </FormControl>
             </ModalBody>
@@ -130,7 +133,7 @@ import {
                 fontSize="15px"
                 onClick={props.onClose}
               >
-                Back
+                {t("back")}
               </Button>
               <Button
                 w="180px"
@@ -144,7 +147,7 @@ import {
                 onClick={handleSubmit(handleFormSubmit)}
                 mx={2}
               >
-                Select books
+               {t('selectBooks')}
               </Button>
             </ModalFooter>
           </ModalContent>

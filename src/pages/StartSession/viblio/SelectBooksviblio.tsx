@@ -139,7 +139,7 @@ const SelectBooksViblio = (props: any) => {
       } else {
         const errorMessage = !appIsConnectedToInternet
           ? t('connectionError')
-          : T('NoHeadsetFound');
+          : t('NoHeadsetFound');
         console.log(errorMessage);
         setErrorMEssage(errorMessage);
         setNotFound(true);
@@ -196,7 +196,7 @@ const SelectBooksViblio = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            Select Books
+           {t("selectBooks")}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">

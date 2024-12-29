@@ -1,10 +1,27 @@
-import { Box, Button, Flex, Link, Image } from '@chakra-ui/react';
+import { Box, Button, Flex, Link, Image, HStack, Text } from '@chakra-ui/react';
 import ImageLogin from '../../../assets/images/ImageLogin.png';
 import { useTranslation } from 'react-i18next';
+import { Language } from '@renderer/assets/icons/Language';
+
+import i18n from '@renderer/i18n';
+import { useEffect, useState } from 'react';
 
 const LoginNavigation = () => {
   const { t } = useTranslation();
+ const [selectedLanguage, setSelectedLanguage] = useState<string>(
+    localStorage.getItem('language') || 'en'
+  );
+  const[show,setShow]=useState(false)
+  useEffect(() => {
+    i18n.changeLanguage(selectedLanguage);
+  }, [selectedLanguage, i18n]);
 
+  const switchLanguage = (lang: string) => {
+    // i18n.changeLanguage(lang);
+    setSelectedLanguage(lang);
+    localStorage.setItem('language', lang);
+    setShow(!show)
+  };
   return (
     <>
       <Flex
@@ -51,7 +68,43 @@ const LoginNavigation = () => {
         >
           {t('getStarted')}
         </Button>
+        <Box onClick={()=>setShow(!show)}>
+                  <HStack>
+                    <Language />
+                  </HStack>
+                  {show&& <Box position={"absolute"} >
+                  <Button
+                    bgColor={'transparent'}
+                    m={0}
+                    p={0}
+                    height={8}
+                    fontSize="0.875rem"
+                    fontWeight={'unset'}
+                    color="#595959"
+                    display={'block'}
+                    onClick={() => switchLanguage('en')}
+                  >
+                    EN
+                  </Button>
+                  <Button
+                    bgColor={'transparent'}
+                    m={0}
+                    p={0}
+                    height={5}
+                    fontWeight={'unset'}
+                    fontSize="0.875rem"
+                    color="#595959"
+                    display={'block'}
+                    onClick={() => switchLanguage('vi')}
+                  >
+                    VI
+                  </Button>
+                </Box>}
+                </Box>
+             
       </Flex>
+      
+     
       <Box marginLeft="-55px">
         <Image src={ImageLogin} alt="login background image" />
       </Box>

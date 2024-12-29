@@ -20,6 +20,7 @@ import { ArrowForwardIcon, CheckIcon } from '@chakra-ui/icons';
 import Joi from 'joi';
 import { useLoginMutation } from '../hooks/useLoginMutation';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
   const [data, setData] = useState({ identifier: '', password: '' });
@@ -92,7 +93,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
       });
     }
   };
-
+const { t } = useTranslation();
   return (
     <Flex maxW="400px" marginX="auto" flexDirection="column" height="100%">
       <Box maxW="23.75rem">
@@ -105,10 +106,10 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
           fontSize="2rem"
           color="#222631"
         >
-          Welcome back
+         {t ("Welcomeback")}
         </Heading>
         <Text fontSize="1rem" pt="19px" color="#58667E">
-          Please login or register to start using your VRapeutic account.
+        {t("loginOrRegister")}
         </Text>
         <form onSubmit={onSubmit}>
           <FormControl>
@@ -135,7 +136,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                 px="20px"
                 py="18px"
                 h="unset"
-                placeholder="Enter Email"
+                placeholder={t("enterEmail")}
               />
               <InputRightElement
                 h="100%"
@@ -154,7 +155,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
               color="#222631"
               m="0px"
             >
-              Password
+              {t("password")}
             </FormLabel>
             <InputGroup>
               <Input
@@ -207,7 +208,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
           </FormControl>
         </form>
         <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
-          New to VRapeutic?{' '}
+        {t("NewToVRapeutic")}
           <Link
             display="inline"
             color="#3961FB"
@@ -220,7 +221,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
           </Link>
         </Text>
         <Text pt="12px" fontSize="0.75rem" color="#58667E">
-          By continuing you are agreeing to{' '}
+      {t("ByContinuingYouAreAgreeingTo")}
           <Link
             display="inline"
             color="#4F4F4F"

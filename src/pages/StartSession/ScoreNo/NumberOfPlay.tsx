@@ -12,13 +12,16 @@ import {
   useDisclosure,
 
 } from '@chakra-ui/react';
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import BallSpeed from './BallSpeed';
+import { useTranslation } from 'react-i18next';
 
 const NumberOfPlay = (props: any) => {
+   const { t } = useTranslation();
   const [formData, setFormData] = useState<any[]>([]);
   const {
     isOpen: isOpenSelectNumber,
@@ -74,7 +77,7 @@ const NumberOfPlay = (props: any) => {
               <ModalCloseButton marginLeft="100px" />
             </Box> */}
           <ModalHeader textAlign="center" fontSize="1rem">
-            Number Of Play
+           {t("noOfPlay")}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -102,7 +105,7 @@ const NumberOfPlay = (props: any) => {
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectedNumber && 'Please select Number of Kicks.'}
+                {errors.selectedNumber && t("selectKicksNumberError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -119,7 +122,7 @@ const NumberOfPlay = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              Back
+             {  t("back")}
             </Button>
             <Button
               w="180px"
@@ -133,7 +136,7 @@ const NumberOfPlay = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              Next
+              {t("next")}
             </Button>
           </ModalFooter>
         </ModalContent>

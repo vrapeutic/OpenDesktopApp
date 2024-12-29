@@ -18,9 +18,11 @@ import {
   import joi from 'joi';
   import { joiResolver } from '@hookform/resolvers/joi';
 import BallSpeed from './BallSpeed';
+import { useTranslation } from 'react-i18next';
 
 
   const NumberOfKicks = (props: any) => {
+      const { t } = useTranslation();
     const [formData, setFormData] = useState<any[]>([]);
     const {
       isOpen: isOpenSelectNumber,
@@ -85,7 +87,7 @@ import BallSpeed from './BallSpeed';
               <ModalCloseButton marginLeft="100px" />
             </Box> */}
             <ModalHeader textAlign="center" fontSize="1rem">
-            Number of Kicks
+           {t("noOfKicks")}
             </ModalHeader>
   
             <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -96,7 +98,7 @@ import BallSpeed from './BallSpeed';
                   control={control}
                   defaultValue=""
                   render={({ field }) => (
-                    <Select {...field} placeholder="Select Number of Kicks">
+                    <Select {...field} placeholder={t('selectKicksNumber')}>
                       <option value="1" onClick={()=>handleButtonClick(1)}>1</option>
                       <option value="2"  onClick={()=>handleButtonClick(2)}>2</option>
                       <option value="3"  onClick={()=>handleButtonClick(3)}>3</option>
@@ -112,7 +114,7 @@ import BallSpeed from './BallSpeed';
                 />
                 </Stack>
                 <FormErrorMessage>
-                  {errors.selectEnvironment && 'Please select Number of Kicks.'}
+                  {errors.selectEnvironment && t("selectKicksNumberError")}
                 </FormErrorMessage>
               </FormControl>
             </ModalBody>
@@ -129,7 +131,7 @@ import BallSpeed from './BallSpeed';
                 fontSize="15px"
                 onClick={props.onClose}
               >
-                Back
+                   {t("back")}
               </Button>
               <Button
                 w="180px"
@@ -143,7 +145,7 @@ import BallSpeed from './BallSpeed';
                 fontSize="15px"
                 onClick={handleSubmit(handleFormSubmit)}
               >
-                Next
+                 {t("next")}
               </Button>
             </ModalFooter>
           </ModalContent>

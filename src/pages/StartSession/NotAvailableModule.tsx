@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import Openconnected from './openconnected';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function NotAvailableModule(props: any) {
   const {
@@ -29,6 +30,7 @@ export default function NotAvailableModule(props: any) {
     onCloseConnected();
     navigate('/');
   };
+   const { t } = useTranslation();
   return (
     <>
       <Box>
@@ -57,7 +59,7 @@ export default function NotAvailableModule(props: any) {
                 marginRight="10px"
                 onClick={props.onClose}
               >
-                Cancel session
+               {t("cancelSession")}
               </Button>
               <Button
                 w="214px"

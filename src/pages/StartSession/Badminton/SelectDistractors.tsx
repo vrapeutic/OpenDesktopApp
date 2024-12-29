@@ -26,8 +26,10 @@ import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import OpenConnectedBed from './OpenConnectedbed';
+import { useTranslation } from 'react-i18next';
 
 const SelectDistractors = (props: any) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
@@ -38,7 +40,7 @@ const SelectDistractors = (props: any) => {
   const [selectedDistractor, setselectedDistractor] = useState<number | null>(
     null
   );
-  const toastIdRef:any = useRef();
+  const toastIdRef: any = useRef();
   const {
     dispatchSocketMessage,
     checkIfServiceExists,
@@ -81,30 +83,32 @@ const SelectDistractors = (props: any) => {
     // props.onclosemodules();
     // props.onCloseBooks();
     // onOpenConnected();
- 
+
     toastIdRef.current = toast({
       title: 'Success',
       description: (
         <Box>
-          {`You assigned level ${updatedFormData[0]} and Attention Duration ${props.formData[1]} and distractor  ${selectedDistractor} 
-      module name is ${module} and session id is ${sessionId}`}
+          {t('YouAssignedLevel6', {
+            level: updatedFormData[0],
+            attentionDuration: props.formData[1],
+            distractor: selectedDistractor,
+            module,
+            sessionId,
+          })}
           <Button
-           color={"white"}
+            color={'white'}
             width={3}
             height={5}
             onClick={() => {
               if (toastIdRef.current) {
-               
                 toast.close(toastIdRef.current);
               }
             }}
-          position={"absolute"}
-     
-          top={3}
-          right={3}
-        
+            position={'absolute'}
+            top={3}
+            right={3}
           >
-        x
+            x
           </Button>
         </Box>
       ),
@@ -137,8 +141,8 @@ const SelectDistractors = (props: any) => {
       console.log(headsetid);
       console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
-        ? 'You are not connected to the internet'
-        : 'No headset found';
+        ? t('connectionError')
+        : t('NoHeadsetFound');
 
       setErrorMEssage(errorMessage);
       setNotFound(true);
@@ -175,13 +179,11 @@ const SelectDistractors = (props: any) => {
     setValue('selectDistractor', distractor);
   };
 
-
   const closeAllModalsAndToast = () => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
-  
-  }
+  };
   return (
     <>
       <Modal
@@ -196,7 +198,7 @@ const SelectDistractors = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            Select Distractors
+            {t('selectDistractors')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -238,7 +240,7 @@ const SelectDistractors = (props: any) => {
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectDistractor && 'Please select a Distractor.'}
+                {errors.selectDistractor && t('selectDistractorError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -255,7 +257,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleBackToSelectBook}
               mx={2}
             >
-              Back to Select Book
+              {t('backToSelectBook')}
             </Button>
             <Button
               w="180px"
@@ -269,7 +271,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              Play
+            {t("play")}
             </Button>
           </ModalFooter>
         </ModalContent>

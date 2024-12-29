@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import { useTranslation } from 'react-i18next';
 export default function SelectingModule(props: any) {
   const { popupFunctions, addFunction } = usePopupsHandler();
   const {
@@ -122,7 +123,7 @@ export default function SelectingModule(props: any) {
     });
     setName('modules');
   };
-
+ const { t } = useTranslation();
   return (
     <Box>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -134,7 +135,7 @@ export default function SelectingModule(props: any) {
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <Text fontSize="15px" color="orange" fontFamily="Graphik LCG">
-              You have been connected successfully to the headset{' '}
+           {t("connectedSuccessfully")}
               {props.headsetId}
             </Text>
             {socketError && (
@@ -233,7 +234,7 @@ export default function SelectingModule(props: any) {
               fontSize="15px"
               onClick={cancelSession}
             >
-              Cancel session
+           {t("cancelSession")}
             </Button>
             {selectedCenter.id && modules.length > 0 && (
               <Button

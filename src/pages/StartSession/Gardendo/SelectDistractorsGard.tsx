@@ -25,6 +25,7 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import { useTranslation } from 'react-i18next';
 const SelectDistractorsGard = (props: any) => {
   const toast = useToast();
   const navigate = useNavigate();
@@ -36,7 +37,6 @@ const SelectDistractorsGard = (props: any) => {
     onClose: onCloseConnected,
   } = useDisclosure();
 
-  const [formData, setFormData] = useState<any[]>([]);
   const [selectedDistractors, setSelectedDistractors] = useState<number | null>(
     null
   );
@@ -54,7 +54,7 @@ const SelectDistractorsGard = (props: any) => {
   const schema = joi.object({
     selectDistractors: joi.number().required(),
   });
-
+ const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -83,9 +83,14 @@ const SelectDistractorsGard = (props: any) => {
       title: 'Success',
       description: (
         <Box>
-          {`You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
-         distractor ${selectedDistractors} 
-        module name is ${module} and session id is ${sessionId}`}
+         { t('YouAssignedLevel4', {
+  level: updatedFormData[0],
+  environment: props.formData[1],
+  number: props.selectedNumber,
+  distractors: selectedDistractors,
+  module,
+  sessionId,
+})}
           <Button
            color={"white"}
             width={3}
@@ -137,20 +142,15 @@ const SelectDistractorsGard = (props: any) => {
       console.log(headsetKey);
       console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
-        ? 'You are not connected to the internet'
-        : 'No headset found';
+        ?  t('connectionError')
+        : t('NoHeadsetFound');
 
       console.log(errorMessage);
       setErrorMEssage(errorMessage);
       setNotFound(true);
     }
 
-    console.log(
-      `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
-         distractor ${selectedDistractors} 
-        module name is ${module} and session id is ${sessionId}`
-    );
-    console.log('Array of menu choices', updatedFormData);
+  
   };
 
   const cancelSession = () => {
@@ -194,11 +194,9 @@ const SelectDistractorsGard = (props: any) => {
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          {/* <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
-              <ModalCloseButton marginLeft="100px" />
-            </Box> */}
+          
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Number of Distractors
+          {t("chooseNumberOfDistractors")}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -237,7 +235,7 @@ const SelectDistractorsGard = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectDistractors && 'Please select a Distractors .'}
+                {errors.selectDistractors && t("selectDistractorError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -254,7 +252,7 @@ const SelectDistractorsGard = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              Back
+              {t("back")}
             </Button>
             <Button
               w="180px"
@@ -268,7 +266,7 @@ const SelectDistractorsGard = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              play
+              {t('play')}
             </Button>
           </ModalFooter>
         </ModalContent>

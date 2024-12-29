@@ -22,6 +22,7 @@ import BackgroundLogin from '../../../../assets/images/BackgroundLogin.png';
 import VRapeutic from '../../../../assets/images/VRapeutic.png';
 import { useSendEmail } from '../../hooks/ForgetPassword';
 import LoginNavigation from '../LoginNavigation';
+import { useTranslation } from 'react-i18next';
 
 const EnterEmail = () => {
   const [data, setData] = useState({ email: '' });
@@ -56,7 +57,7 @@ const EnterEmail = () => {
       }
     };
   };
-
+const { t } = useTranslation();
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const result = schema.validate(data);
@@ -99,8 +100,8 @@ const EnterEmail = () => {
               fontSize="2rem"
               color="#222631"
             >
-              Welcome back
-            </Heading>
+{t("Welcomeback")}         
+   </Heading>
             <Text fontSize="1rem" pt="19px" color="#58667E">
               Please enter your email address you used for registration.
             </Text>
@@ -171,7 +172,7 @@ const EnterEmail = () => {
               </Text>
             </Box>
             <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
-              New to VRapeutic?{' '}
+            {t("NewToVRapeutic")}
               <Link
                 display="inline"
                 color="#3961FB"
@@ -180,11 +181,11 @@ const EnterEmail = () => {
                 }}
                 // href="https://site.vrpeutic.ca/request-demo/"
               >
-                Create an Account
+                 {t("createAccount")}
               </Link>
             </Text>
             <Text pt="12px" fontSize="0.75rem" color="#58667E">
-              By continuing you are agreeing to{' '}
+             {t("ByContinuingYouAreAgreeingTo")}
               <Link
                 display="inline"
                 color="#4F4F4F"
@@ -192,7 +193,7 @@ const EnterEmail = () => {
                 textDecoration="underline"
                   href="https://myvrapeutic.com/privacy-policy/"
               >
-                Terms & Conditions
+                 {t("terms&Conditions")}
               </Link>
             </Text>
           </Box>

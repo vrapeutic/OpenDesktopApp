@@ -25,8 +25,10 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import { useTranslation } from 'react-i18next';
 const SelectNumberGar = (props: any) => {
   const toast = useToast();
+    const { t } = useTranslation();
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
@@ -88,8 +90,13 @@ const SelectNumberGar = (props: any) => {
         title: 'Success',
         description: (
           <Box>
-            {`You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, Number ${selectedNumber} ,
-           module name is ${module} and session id is ${sessionId}`}
+          { t('YouAssignedLevel', {
+  level: updatedFormData[0],
+  environment: props.formData[1],
+  number: selectedNumber,
+  module,
+  sessionId,
+})}
             <Button
              color={"white"}
               width={3}
@@ -140,8 +147,8 @@ const SelectNumberGar = (props: any) => {
         console.log(headsetid);
         console.log(existingDevice);
         const errorMessage = !appIsConnectedToInternet
-          ? 'You are not connected to the internet'
-          : 'No headset found';
+          ? t('connectionError')
+          : t('NoHeadsetFound');
 
         console.log(errorMessage);
         setErrorMEssage(errorMessage);
@@ -201,7 +208,7 @@ const SelectNumberGar = (props: any) => {
               <ModalCloseButton marginLeft="100px" />
             </Box> */}
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Number of Pots
+           {t("chooseNumberOfPots")}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -240,7 +247,7 @@ const SelectNumberGar = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectNumber && 'Please select a number.'}
+                {errors.selectNumber && t("selectNumberError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -257,7 +264,7 @@ const SelectNumberGar = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              Back
+              {t("back")}
             </Button>
             <Button
               w="180px"
@@ -271,7 +278,7 @@ const SelectNumberGar = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              {props.level != 1 ? 'Next' : 'Play'}
+              {props.level != 1 ? t('next') :t("play")}
             </Button>
           </ModalFooter>
         </ModalContent>

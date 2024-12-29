@@ -18,8 +18,11 @@ import {
   import { joiResolver } from '@hookform/resolvers/joi';
 import NumberOfKicks from './NumberOfKicks';
 import NumberOfPlay from './NumberOfPlay';
+import { useTranslation } from 'react-i18next';
   
   const KickDirection = (props: any) => {
+     const { t } = useTranslation();
+      
     const {
       isOpen: isOpenSelectEnvironment,
       onOpen: onOpenSelectEnvironment,
@@ -92,7 +95,7 @@ import NumberOfPlay from './NumberOfPlay';
               <ModalCloseButton marginLeft="100px" />
             </Box> */}
             <ModalHeader textAlign="center" fontSize="1rem">
-            Kick direction
+         {t("kickDirection")}
             </ModalHeader>
   
             <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -107,7 +110,7 @@ import NumberOfPlay from './NumberOfPlay';
                     as="button"
                     {...register('selectLevel')}
                   >
-                    right
+                   {t("right")}
                   </Button>
                   <Button
                     onClick={() => handleButtonClick(2)}
@@ -118,7 +121,7 @@ import NumberOfPlay from './NumberOfPlay';
                     as="button"
                     {...register('selectLevel')}
                   >
-                  center
+                 {t(" center")}
                   </Button>
                   <Button
                     onClick={() => handleButtonClick(3)}
@@ -129,11 +132,11 @@ import NumberOfPlay from './NumberOfPlay';
                     as="button"
                     {...register('selectLevel')}
                   >
-                    left
+                    {t("left")}
                   </Button>
                 </Stack>
                 <FormErrorMessage>
-                  {errors.selectLevel && 'Please select a level.'}
+                  {errors.selectLevel && t('selectLevelError')}
                 </FormErrorMessage>
               </FormControl>
             </ModalBody>
@@ -151,7 +154,7 @@ import NumberOfPlay from './NumberOfPlay';
                 onClick={props.onClose}
                 as="button"
               >
-                Back
+                  {t("back")}
               </Button>
               <Button
                 w="180px"
@@ -165,7 +168,7 @@ import NumberOfPlay from './NumberOfPlay';
                 fontSize="15px"
                 onClick={handleSubmit(handleFormSubmit)}
               >
-                Next
+                {t("next")}
               </Button>
             </ModalFooter>
           </ModalContent>

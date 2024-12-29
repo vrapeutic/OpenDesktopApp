@@ -22,14 +22,15 @@ import { useNavigate } from 'react-router-dom';
 
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 
-
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import SelectDistractors from './SelectDistractors';
 import OpenConnectedBed from './OpenConnectedbed';
+import { useTranslation } from 'react-i18next';
 const SelectBooksBed = (props: any) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
@@ -51,7 +52,7 @@ const SelectBooksBed = (props: any) => {
   } = useSocketManager();
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
-  const toastIdRef:any = useRef();
+  const toastIdRef: any = useRef();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
   const { socketError } = useSocketManager();
@@ -87,25 +88,26 @@ const SelectBooksBed = (props: any) => {
         title: 'Success',
         description: (
           <Box>
-            {`You assigned level ${updatedFormData[0]} , Attention Duration ${selectedBook} ,
-         module name is ${module} and session id is ${sessionId}`}
+            {t('YouAssignedLevel7', {
+              level: updatedFormData[0],
+              attentionDuration: selectedBook,
+              module,
+              sessionId,
+            })}
             <Button
-             color={"white"}
+              color={'white'}
               width={3}
               height={5}
               onClick={() => {
                 if (toastIdRef.current) {
-                 
                   toast.close(toastIdRef.current);
                 }
               }}
-            position={"absolute"}
-       
-            top={3}
-            right={3}
-          
+              position={'absolute'}
+              top={3}
+              right={3}
             >
-          x
+              x
             </Button>
           </Box>
         ),
@@ -117,9 +119,6 @@ const SelectBooksBed = (props: any) => {
           // Additional logic for when the toast is removed
         },
       });
-
-
-
 
       const existingDevice = await checkIfServiceExists(headsetKey);
       const appIsConnectedToInternet = await checkAppNetWorkConnection();
@@ -141,8 +140,8 @@ const SelectBooksBed = (props: any) => {
         onOpenConnected();
       } else {
         const errorMessage = !appIsConnectedToInternet
-          ? 'You are not connected to the internet'
-          : 'No headset found';
+          ? t('connectionError')
+          : t('NoHeadsetFound');
         console.log(errorMessage);
         setErrorMEssage(errorMessage);
         setNotFound(true);
@@ -184,8 +183,7 @@ const SelectBooksBed = (props: any) => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
-  
-  }
+  };
   return (
     <>
       <Modal
@@ -200,7 +198,7 @@ const SelectBooksBed = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-          Attention Duration
+            {t('attentionDuration')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -259,7 +257,7 @@ const SelectBooksBed = (props: any) => {
               onClick={handleBackToSelectLevel}
               mx={2}
             >
-              Back to Select Level
+              {t('backToSelectLevel')}
             </Button>
             <Button
               w="180px"
@@ -274,8 +272,8 @@ const SelectBooksBed = (props: any) => {
               mx={2}
             >
               {props.formData[0] == 2 || props.formData[0] == 3
-                ? 'select distractor'
-                : 'play'}
+                ? t('selectDistractors')
+                : t('play')}
             </Button>
           </ModalFooter>
         </ModalContent>

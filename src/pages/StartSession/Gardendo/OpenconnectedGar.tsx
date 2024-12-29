@@ -21,6 +21,7 @@ import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 import SelectEvaluation from '../Evaluation';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import { useTranslation } from 'react-i18next';
 
 export default function OpenconnectedGar(props: any) {
   const { dispatchSocketMessage } = useSocketManager();
@@ -114,7 +115,7 @@ export default function OpenconnectedGar(props: any) {
     props.onCloseSelectNumber();
     props.oncloseselectlevel();
   };
-
+ const { t } = useTranslation();
   return (
     <>
       <Box>
@@ -132,7 +133,7 @@ export default function OpenconnectedGar(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-              You are connected to the VR headset {headsetKey}
+            {t("connectedVr")}  {headsetKey}
             </ModalHeader>
 
             <ModalBody>
@@ -143,8 +144,7 @@ export default function OpenconnectedGar(props: any) {
                 textAlign="center"
                 color="#595959"
               >
-                Session in progress. Please see the casting app to follow the
-                child’s performance.{' '}
+               {t('sessionInProgress')}
               </Text>
 
               <Text
@@ -154,7 +154,7 @@ export default function OpenconnectedGar(props: any) {
                 textAlign="center"
                 color="#A8A8A8"
               >
-                Press on the button below to end the session.
+               {t('pressButtonToEnd')}
               </Text>
             </ModalBody>
 
@@ -171,7 +171,7 @@ export default function OpenconnectedGar(props: any) {
                 marginRight="10px"
                 onClick={handle}
               >
-                End session
+              {t('endSession')}
               </Button>
               <Button
                 w="214px"
@@ -185,7 +185,7 @@ export default function OpenconnectedGar(props: any) {
                 marginLeft="10px"
                 onClick={antherModule}
               >
-                Play Another Module
+                  {t("playAnotherModule")}
               </Button>
             </ModalFooter>
           </ModalContent>

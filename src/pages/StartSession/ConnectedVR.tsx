@@ -6,8 +6,10 @@ import PlayModule from './PlayModule';
 import { ErrorPopup } from './ErrorPopup';
 import { useNavigate } from 'react-router-dom';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { useTranslation } from 'react-i18next';
 
 const ConnectedVR = (props: any) => {
+   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { socketError } = useSocketManager();
@@ -48,8 +50,8 @@ const HEADSET_FIELD = 'headset';
       console.log(headsetKey);
       console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
-        ? 'You are not connected to the internet'
-        : 'No headset found';
+        ? t('connectionError')
+        : t('NoHeadsetFound');
 
       setErrorMEssage(errorMessage);
       setNotFound(true);

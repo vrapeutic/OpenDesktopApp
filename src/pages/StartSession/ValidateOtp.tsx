@@ -86,7 +86,7 @@ export default function ValidateOtp(props: any) {
           </ModalHeader>
           <ModalBody fontSize="20px" fontWeight="600" mt="15px">
             <Text fontSize="12px" color="orange">
-              You have been connected successfully to the headset{' '}
+            {t("connectedSuccessfully")}
               {props.headsetId}
             </Text>
             <OTPInput
@@ -109,7 +109,8 @@ export default function ValidateOtp(props: any) {
               fontWeight="700"
               fontSize="18px"
             >
-              Next
+                     {t("next")}
+
             </Button>
           </ModalFooter>
         </ModalContent>

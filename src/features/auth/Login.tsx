@@ -25,6 +25,7 @@ import Joi from 'joi';
 import { useLoginMutation } from './hooks/useLoginMutation';
 import { useAdminContext } from '../../Context/AdminContext';
 import { MyContext } from '@renderer/theme/ContextHelper';
+import { useTranslation } from 'react-i18next';
 const Login = () => {
   const [data, setData] = useState({ identifier: '', password: '' });
   const [error, setError] = useState({ identifier: null, password: null });
@@ -126,6 +127,7 @@ console.log(response.is_admin)
       });
     }
   };
+  const { t } = useTranslation();
 
   return (
     <>
@@ -152,10 +154,10 @@ console.log(response.is_admin)
                 fontSize="2rem"
                 color="#222631"
               >
-                Welcome back
+                {t("Welcomeback")}
               </Heading>
               <Text fontSize="1rem" pt="19px" color="#58667E">
-                Please login or register to start using your VRapeutic account.
+                {t("loginOrRegister")}
               </Text>
               <form onSubmit={onSubmit}>
                 <FormControl>
@@ -167,7 +169,7 @@ console.log(response.is_admin)
                     m="0px"
                   >
                     {/* Email or mobile number */}
-                    Email
+                    {t("email")}
                   </FormLabel>
                   <InputGroup>
                     <Input
@@ -183,7 +185,7 @@ console.log(response.is_admin)
                       px="20px"
                       py="18px"
                       h="unset"
-                      placeholder="Enter Email"
+                      placeholder={t("enterEmail")}
                     />
                     <InputRightElement h="100%" pr="11.33px" />
                   </InputGroup>
@@ -194,7 +196,7 @@ console.log(response.is_admin)
                     color="#222631"
                     m="0px"
                   >
-                    Password
+                   {t("password")}
                   </FormLabel>
                   <InputGroup>
                     <Input
@@ -211,7 +213,7 @@ console.log(response.is_admin)
                       py="18px"
                       h="unset"
                       letterSpacing="6px"
-                      placeholder="Password"
+                      placeholder= {t("password")}
                       _placeholder={{
                         letterSpacing: 'initial',
                       }}
@@ -233,7 +235,7 @@ console.log(response.is_admin)
                       navigate('/EnterEmail');
                     }}
                   >
-                    Forgot Password ?
+                {t("forgotPassword")}
                   </FormHelperText>
                   <Button
                     type="submit"
@@ -252,12 +254,12 @@ console.log(response.is_admin)
                     justifyContent="space-between"
                     rightIcon={<ArrowForwardIcon />}
                   >
-                    Login
+                    {t("login")}
                   </Button>
                 </FormControl>
               </form>
               <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
-                New to VRapeutic?{' '}
+               {t("NewToVRapeutic")}
                 <Link
                   display="inline"
                   color="#3961FB"
@@ -266,11 +268,11 @@ console.log(response.is_admin)
                   }}
                   // href="https://site.vrpeutic.ca/request-demo/"
                 >
-                  Create an Account
+                 {t("createAccount")}
                 </Link>
               </Text>
               <Text pt="12px" fontSize="0.75rem" color="#58667E">
-                By continuing you are agreeing to{' '}
+               {t("ByContinuingYouAreAgreeingTo")}
                 <Link
                   display="inline"
                   color="#4F4F4F"
@@ -278,7 +280,7 @@ console.log(response.is_admin)
                   textDecoration="underline"
                  href="https://myvrapeutic.com/privacy-policy/"
                 >
-                  Terms & Conditions
+                {t("terms&Conditions")}
                 </Link>
               </Text>
             </Box>

@@ -19,8 +19,10 @@ import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectjewelRodja from './Selectjewelsrodja';
+import { useTranslation } from 'react-i18next';
 
 const SelectenvRodja = (props: any) => {
+  const { t } = useTranslation();
   const {
     isOpen: isOpenSelectJewel,
     onOpen: onOpenSelectJewel,
@@ -72,7 +74,7 @@ const SelectenvRodja = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box> */}
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Environment rodja
+          {t('chooseEnvironment')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -86,7 +88,7 @@ const SelectenvRodja = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectEniverinment')}
                 >
-                  Garden
+               {t('garden')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -96,11 +98,11 @@ const SelectenvRodja = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectEniverinment')}
                 >
-                  Room
+                {t('room')}
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectEniverinment && 'Please select a Enironment.'}
+                {errors.selectEniverinment && t("selectEnvironmentError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -117,7 +119,7 @@ const SelectenvRodja = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              Back
+                {t("back")}
             </Button>
             <Button
               w="180px"
@@ -131,7 +133,7 @@ const SelectenvRodja = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              Next
+                {t("next")}
             </Button>
           </ModalFooter>
         </ModalContent>

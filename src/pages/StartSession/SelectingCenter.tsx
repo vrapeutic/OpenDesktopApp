@@ -149,7 +149,7 @@ export default function SelectingCenter(props: any) {
             </>
           ) : (
             <ModalHeader textAlign="center" fontSize="1.2rem" color="red">
-              You should select a center first from home
+          {t('selectCenterFromHome')}
               <Button
                   w="180px"
                   h="54px"

@@ -17,8 +17,10 @@ import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 
 import SelectNumberArcheeko from './SelectNumberArcheeko';
+import { useTranslation } from 'react-i18next';
 
 const SelectEnvironmentArcheeko = (props: any) => {
+     const { t } = useTranslation();
   const [formData, setFormData] = useState<any[]>([]);
   const {
     isOpen: isOpenSelectNumber,
@@ -81,7 +83,7 @@ const SelectEnvironmentArcheeko = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box> */}
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Environment
+           {t('chooseEnvironment')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -95,7 +97,7 @@ const SelectEnvironmentArcheeko = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectEnvironment')}
                 >
-                  Garden
+                  {t('garden')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -104,11 +106,11 @@ const SelectEnvironmentArcheeko = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectEnvironment')}
                 >
-                  Room
+                 {t('room')}
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectEnvironment && 'Please select a Enironment.'}
+                {errors.selectEnvironment && t("selectEnvironmentError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -125,7 +127,7 @@ const SelectEnvironmentArcheeko = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              Back
+            {t('back')}
             </Button>
             <Button
               w="180px"
@@ -139,7 +141,7 @@ const SelectEnvironmentArcheeko = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              Next
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>

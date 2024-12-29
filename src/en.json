@@ -353,7 +353,7 @@
   "ErrorAssigningSessionID":"Error assigning session ID",
   
   "YouAssignedLevel": "You assigned level {{level}}, book {{book}}, module name is {{module}}, and session ID is {{sessionId}}.",
-  "NoHeadsetFound":"No headset found"
+  "NoHeadsetFound":"No headset found",
   "Date&Duration": " Date & Duration",
   "Duration": "Duration",
   "kidDetails": " Kid Details",
@@ -361,5 +361,29 @@
   "Level": "Level",
   "exportCSV": "Export CSV",
   "recentActivities": "Recent Activities",
-  "widgets": "Widgets"
+  "widgets": "Widgets",
+  "YouAssignedLevel2": "You assigned level {{level}} and book {{book}} and distractor {{distractor}}, module name is {{module}}, and session ID is {{sessionId}}."
+,"connectedVr":" You are connected to the VR headset",
+"sampleplaceholder"
+:
+"Here is a sample placeholder",
+"errorEvaluation":"You must select an Evaluation",
+"YouAssignedLevel3": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, module name is {{module}}, and session ID is {{sessionId}}.",
+"headsetIsNotAvailable":"headset is not available for session",
+"ChooseNumberArrows/Shots":"Choose Number of Arrows/Shots",
+ "YouAssignedLevel4": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, distractor {{distractors}}, module name is {{module}}, and session ID is {{sessionId}}.",
+ "YouAssignedLevel5": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, module name is {{module}}, and session ID is {{sessionId}}.",
+ "YouAssignedLevel6": "You assigned level {{level}} and Attention Duration {{attentionDuration}} and distractor {{distractor}}, module name is {{module}}, and session ID is {{sessionId}}.",
+ "YouAssignedLevel7": "You assigned level {{level}}, Attention Duration {{attentionDuration}}, module name is {{module}}, and session ID is {{sessionId}}."
+ ,
+ "YouAssignedLevel8": "You assigned level {{level}}, environment {{environment}}, jewel {{jewel}}, module name is {{module}}, and session ID is {{sessionId}}."
+,
+"YouAssignedLevel9": "You assigned level {{level}}, environment {{environment}}, jewel {{jewel}}, distractor {{distractor}}.",
+ "YouSelectKickDirection": "You select Kick direction {{direction}}, Number of Players {{player}}, Number of Kicks {{kicks}}, Ball Speed {{ball}}, Screw {{screw}}.",
+ "InvitationMessage": "You have been invited by {{invitedBy}} to join the center named {{centerName}}. You can accept or reject the invitation by clicking on one of the buttons below.",
+  "Accept": "Accept",
+  "Deny":"Deny",
+  "Welcomeback":"Welcome back",
+   "NewToVRapeutic": "New to VRapeutic?",
+   "ByContinuingYouAreAgreeingTo": "By continuing you are agreeing to"
 }

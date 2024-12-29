@@ -26,6 +26,7 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { ErrorPopup } from '../ErrorPopup';
+import { useTranslation } from 'react-i18next';
 
 const useSocketErrorHandler = () => {
   const [socketErrorState, setSocketErrorState] = useState(null);
@@ -42,6 +43,7 @@ const useSocketErrorHandler = () => {
 };
 
 const SelectDistractorsRodja = (props: any) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { module, sessionId, headsetKey } = useStartSessionContext();
   const {
@@ -111,9 +113,14 @@ const SelectDistractorsRodja = (props: any) => {
         title: 'Success',
         description: (
           <Box>
-            {`You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , jewel ${props.selectBook},
-         distractor  ${selectedDistractor} 
-        module name is ${module} and session id is ${sessionId}`}
+          {t('YouAssignedLevel9', {
+  level: updatedFormData[0],
+  environment: props.formData[1],
+  jewel: props.selectBook,
+  distractor: selectedDistractor,
+})
+}
+       
             <Button
              color={"white"}
               width={3}
@@ -152,8 +159,8 @@ const SelectDistractorsRodja = (props: any) => {
       console.log(headsetKey);
       console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
-        ? 'You are not connected to the internet'
-        : 'No headset found';
+        ?  t('connectionError')
+        : t('NoHeadsetFound');
 
       console.log(errorMessage);
       setErrorMEssage(errorMessage);
@@ -215,7 +222,8 @@ const SelectDistractorsRodja = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            Select Distractors
+        {  t("selectDistractors")}
+         
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -257,7 +265,7 @@ const SelectDistractorsRodja = (props: any) => {
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectDistractor && 'Please select a Distractor.'}
+                {errors.selectDistractor && t("selectDistractorError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -274,7 +282,7 @@ const SelectDistractorsRodja = (props: any) => {
               onClick={handleBackToSelectBook}
               mx={2}
             >
-              Back to Select Jewel
+            {t("backToSelectJewel")}
             </Button>
             <Button
               w="180px"
@@ -288,7 +296,7 @@ const SelectDistractorsRodja = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              Play
+            {t("play")}
             </Button>
           </ModalFooter>
         </ModalContent>

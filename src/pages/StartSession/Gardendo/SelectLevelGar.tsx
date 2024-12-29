@@ -16,8 +16,11 @@ import joi from 'joi';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import SelectEnvironmentGar from './SelectEnvironmentGar';
+import { useTranslation } from 'react-i18next';
 
 const SelectLevelGar = (props: any) => {
+   const { t } = useTranslation();
+    
   const {
     isOpen: isOpenSelectEnvironment,
     onOpen: onOpenSelectEnvironment,
@@ -67,11 +70,9 @@ const SelectLevelGar = (props: any) => {
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          {/* <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
-              <ModalCloseButton marginLeft="100px" />
-            </Box> */}
+          
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Level
+           {t("chooseLevel")}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -86,7 +87,7 @@ const SelectLevelGar = (props: any) => {
                   as="button"
                   {...register('selectLevel')}
                 >
-                  Sustained Attention
+                   {t("sustainedAttention")}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -97,7 +98,7 @@ const SelectLevelGar = (props: any) => {
                   as="button"
                   {...register('selectLevel')}
                 >
-                  Selective Attention
+                {t("selectiveAttention")}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -108,11 +109,11 @@ const SelectLevelGar = (props: any) => {
                   as="button"
                   {...register('selectLevel')}
                 >
-                  Adaptive Attention
+                 {t("adaptiveAttention")}
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectLevel && 'Please select a level.'}
+                {errors.selectLevel && t("selectLevelError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -130,7 +131,7 @@ const SelectLevelGar = (props: any) => {
               onClick={props.onClose}
               as="button"
             >
-              Back
+             {t("back")}
             </Button>
             <Button
               w="180px"
@@ -144,7 +145,7 @@ const SelectLevelGar = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              Next
+          {t("next")}
             </Button>
           </ModalFooter>
         </ModalContent>

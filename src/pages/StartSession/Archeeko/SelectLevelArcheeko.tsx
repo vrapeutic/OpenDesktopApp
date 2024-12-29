@@ -8,16 +8,15 @@ import {
   ModalOverlay,
   Stack,
   useDisclosure,
-  RadioGroup,
   FormControl,
   FormErrorMessage,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SelectEnvironmentArcheeko from './SelectEnvironmentArcheeko';
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import { useTranslation } from 'react-i18next';
 
 const SelectLevelArcheeko = (props: any) => {
   const {
@@ -25,6 +24,8 @@ const SelectLevelArcheeko = (props: any) => {
     onOpen: onOpenSelectEnvironment,
     onClose: onCloseSelectEnvironment,
   } = useDisclosure();
+   const { t } = useTranslation();
+  
 
   const [formData, setFormData] = useState<any[]>([
     -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000,
@@ -73,7 +74,7 @@ const SelectLevelArcheeko = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box> */}
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Level
+         {t("chooseLevel")}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -88,7 +89,7 @@ const SelectLevelArcheeko = (props: any) => {
                   as="button"
                   {...register('selectLevel')}
                 >
-                  Sustained Attention
+                 {t("sustainedAttention")}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -99,7 +100,7 @@ const SelectLevelArcheeko = (props: any) => {
                   as="button"
                   {...register('selectLevel')}
                 >
-                  Selective Attention
+                 {t("selectiveAttention")}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -110,11 +111,11 @@ const SelectLevelArcheeko = (props: any) => {
                   as="button"
                   {...register('selectLevel')}
                 >
-                  Adaptive Attention
+                 {t("adaptiveAttention")}
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectLevel && 'Please select a level.'}
+                {errors.selectLevel &&  t("selectLevelError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -132,7 +133,7 @@ const SelectLevelArcheeko = (props: any) => {
               onClick={props.onClose}
               as="button"
             >
-              Back
+            {t("back")}
             </Button>
             <Button
               w="180px"
@@ -146,7 +147,7 @@ const SelectLevelArcheeko = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              Next
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>

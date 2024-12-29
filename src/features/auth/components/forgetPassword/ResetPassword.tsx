@@ -26,6 +26,7 @@ import LoginNavigation from '../../../../features/auth/components/LoginNavigatio
 import BackgroundLogin from '../../../../assets/images/BackgroundLogin.png';
 import CongratulationsReset from './CongratulationsReset';
 import { useResetPassword } from '../../hooks/ForgetPassword';
+import { useTranslation } from 'react-i18next';
 
 const ResetPassword = () => {
   const [data, setData] = useState({ password: '', confirmPassword: '' });
@@ -109,7 +110,7 @@ const ResetPassword = () => {
       );
     }
   };
-
+const { t } = useTranslation();
   return (
     <>
       <Grid
@@ -134,7 +135,7 @@ const ResetPassword = () => {
                 fontSize="2rem"
                 color="#222631"
               >
-                Welcome back
+                {t("Welcomeback")}
               </Heading>
               <Text fontSize="1rem" pt="19px" color="#58667E">
                 Please enter a new password to continue using your VRapeutic
@@ -267,7 +268,7 @@ const ResetPassword = () => {
                 </FormControl>
               </form>
               <Text pt="12px" fontSize="0.75rem" color="#58667E">
-                By continuing you are agreeing to{' '}
+              {t("ByContinuingYouAreAgreeingTo")}
                 <Link
                   display="inline"
                   color="#4F4F4F"
@@ -275,7 +276,7 @@ const ResetPassword = () => {
                   textDecoration="underline"
                   href="https://myvrapeutic.com/privacy-policy/"
                 >
-                  Terms & Conditions
+                 {t("terms&Conditions")}
                 </Link>
               </Text>
             </Box>

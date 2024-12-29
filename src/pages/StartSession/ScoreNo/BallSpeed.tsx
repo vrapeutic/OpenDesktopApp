@@ -23,16 +23,17 @@ import {
   import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
   import { useNavigate } from 'react-router-dom';
   import useSocketManager from '@renderer/Context/SocketManagerProvider';
-  import { ErrorPopup } from '../ErrorPopup';
+
   import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import Screw from './Screw';
+import { useTranslation } from 'react-i18next';
   const BallSpeed = (props: any) => {
     const toast = useToast();
  
     const navigate = useNavigate();
     const [notFound, setNotFound] = useState(false);
  
-   
+     const { t } = useTranslation();
     const { popupFunctions } = usePopupsHandler();
     const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
     const { socketError } = useSocketManager();
@@ -203,7 +204,7 @@ import Screw from './Screw';
               <ModalCloseButton marginLeft="100px" />
             </Box> */}
             <ModalHeader textAlign="center" fontSize="1rem">
-            Ball Speed
+            {t("ballSpeed")}
             </ModalHeader>
   
             <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -227,7 +228,7 @@ import Screw from './Screw';
                     fontSize="1.2rem"
                     {...register('selectNumber')}
                   >
-                     1,
+                     1
                   </Button>
                   <Button
                     onClick={() => handleButtonClick(3)}
@@ -242,7 +243,7 @@ import Screw from './Screw';
                 </Stack>
   
                 <FormErrorMessage>
-                  {errors.selectNumber && 'Please select a number.'}
+                  {errors.selectNumber && t("selectNumberError")}
                 </FormErrorMessage>
               </FormControl>
             </ModalBody>
@@ -259,7 +260,7 @@ import Screw from './Screw';
                 fontSize="15px"
                 onClick={props.onClose}
               >
-                Back
+              {t("back")}
               </Button>
               <Button
                 w="180px"
@@ -273,7 +274,7 @@ import Screw from './Screw';
                 fontSize="15px"
                 onClick={handleSubmit(handleFormSubmit)}
               >
-                 Next
+             {t("next")}
               </Button>
             </ModalFooter>
           </ModalContent>

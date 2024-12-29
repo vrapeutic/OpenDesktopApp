@@ -26,7 +26,9 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import { useTranslation } from 'react-i18next';
 const SelectjewelRodja = (props: any) => {
+   const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
@@ -90,8 +92,13 @@ const SelectjewelRodja = (props: any) => {
         title: 'Success',
         description: (
           <Box>
-            {`You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
-      //    module name is ${module} and session id is ${sessionId}`}
+           {t('YouAssignedLevel8', {
+  level: updatedFormData[0],
+  environment: props.formData[1],
+  jewel: selectedBook,
+  module,
+  sessionId,
+})}
             <Button
              color={"white"}
               width={3}
@@ -143,8 +150,8 @@ const SelectjewelRodja = (props: any) => {
         console.log(headsetKey);
         console.log(existingDevice);
         const errorMessage = !appIsConnectedToInternet
-          ? 'You are not connected to the internet'
-          : 'No headset found';
+          ?  t('connectionError')
+          : t('NoHeadsetFound');
 
         console.log(errorMessage);
         setErrorMEssage(errorMessage);
@@ -204,8 +211,7 @@ const SelectjewelRodja = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            Select Jewels Rodja
-          </ModalHeader>
+{t("selectJewelsRodja")}          </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
             <FormControl isInvalid={!!errors.selectLevel}>
@@ -263,7 +269,7 @@ const SelectjewelRodja = (props: any) => {
               onClick={handleBackToSelectLevel}
               mx={2}
             >
-              Back to Select Level
+               {t("backToSelectLevel")}
             </Button>
             <Button
               w="180px"
@@ -278,8 +284,8 @@ const SelectjewelRodja = (props: any) => {
               mx={2}
             >
               {props.formData[0] == 2 || props.formData[0] == 3
-                ? 'select distractor'
-                : 'play'}
+                ?  t("selectDistractor")
+                : t("play")}
             </Button>
           </ModalFooter>
         </ModalContent>

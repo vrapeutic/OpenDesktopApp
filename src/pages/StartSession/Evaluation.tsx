@@ -23,17 +23,18 @@ import axios from 'axios';
 import { config } from '@renderer/config';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import { useTranslation } from 'react-i18next';
 
 export default function SelectEvaluation(props: any) {
   const { sessionId } = useStartSessionContext();
   const { popupFunctions } = usePopupsHandler();
-
+ const { t } = useTranslation();
   const { closeSelectingAHeadset, closeSelectingAChild } = popupFunctions;
 
   const toast = useToast();
   const schema = Joi.object({
     Evaluation: Joi.string().required().messages({
-      'string.empty': 'You must select an Evaluation',
+      'string.empty': t('errorEvaluation'),
     }),
     Notes: Joi.string().optional(),
   });
@@ -115,22 +116,22 @@ export default function SelectEvaluation(props: any) {
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
           <ModalHeader textAlign="center" fontSize="30px">
-            Session Overall Evaluation
+            {t('sessionOverallEvaluation')}
           </ModalHeader>
           <ModalBody fontSize="20px" fontWeight="600" mt="5px">
-            <Text mt="25px">Session Overall Evaluation</Text>
+            <Text mt="25px">{t('sessionOverallEvaluation')}</Text>
             <GridItem>
               <Select
                 {...register('Evaluation')}
                 id="Evaluation"
-                placeholder="Select Evaluation"
+                placeholder={t('selectEvaluation')}
                 size="sm"
               >
-                <option value="poor">Poor</option>
-                <option value="average">Average</option>
-                <option value="good">Good</option>
-                <option value="very_good">Very Good</option>
-                <option value="excellent">Excellent</option>
+                <option value="poor">{t('poor')}</option>
+                <option value="average">{t('average')}</option>
+                <option value="good">{t('good')}</option>
+                <option value="very_good"> {t("veryGood")}</option>
+                <option value="excellent">{t('excellent')}</option>
               </Select>
             </GridItem>
             {errors.Evaluation && (
@@ -139,13 +140,13 @@ export default function SelectEvaluation(props: any) {
               </Text>
             )}
             <GridItem>
-              <Text mt="25px">Session Notes </Text>
+              <Text mt="25px">{t('sessionNotes')} </Text>
               <Textarea
                 {...register('Notes')}
                 id="Notes"
                 value={value}
                 onChange={handleInputChange}
-                placeholder="Here is a sample placeholder"
+                placeholder={t("sampleplaceholder")}
                 size="sm"
               />
             </GridItem>
@@ -162,7 +163,7 @@ export default function SelectEvaluation(props: any) {
               fontSize="18px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              Submit session data
+              {t("sessionDataSubmitted")}
             </Button>
           </ModalFooter>
         </ModalContent>

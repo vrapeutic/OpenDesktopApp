@@ -151,7 +151,7 @@ export const ErrorPopup = ({
                 navigate('/home');
               }}
             >
-              Cancel session
+            {t("cancelSession")}
             </Button>
             <Button
               w="214px"

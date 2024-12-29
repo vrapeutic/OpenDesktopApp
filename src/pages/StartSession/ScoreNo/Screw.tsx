@@ -24,6 +24,7 @@ import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import OpenconnectedScore from './OpenconnectedScore';
+import { useTranslation } from 'react-i18next';
 
 const Screw = (props: any) => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const Screw = (props: any) => {
     resolver: joiResolver(schema),
     mode: 'onSubmit',
   });
-
+  const { t } = useTranslation();
   const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
       props.formData[0],
@@ -135,10 +136,13 @@ const Screw = (props: any) => {
       title: 'Success',
       description: (
         <Box>
-          {`You select  Kick direction ${direction} ,
-          Number of Players ${player}, Number of Kicks ${props.formData[2]} , Ball Speed ${ball},
-         Screw ${srcew} ,
-        module name is ${module} and session id is ${sessionId}`}
+        {t('YouSelectKickDirection', {
+  direction,
+  player,
+  kicks: props.formData[2],
+  ball,
+  screw: srcew,
+})}
           <Button
             color={'white'}
             width={3}
@@ -186,8 +190,8 @@ const Screw = (props: any) => {
       console.log(headsetKey);
       console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
-        ? 'You are not connected to the internet'
-        : 'No headset found';
+        ? t('connectionError')
+        : t('NoHeadsetFound'); 
 
       console.log(errorMessage);
       setErrorMEssage(errorMessage);
@@ -231,8 +235,7 @@ const Screw = (props: any) => {
   if (socketError) {
     toast({
       title: 'Socket Error',
-      description:
-        'There is a socket error. Please resolve it before proceeding.',
+      description:t("socketError"),
       status: 'error',
       duration: 5000,
       position: 'top-right',
@@ -267,7 +270,7 @@ const Screw = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectDistractors')}
                 >
-                  Yes
+                  {t("yes")}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -277,7 +280,7 @@ const Screw = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectDistractors')}
                 >
-                  Not
+                  {t("not")}
                 </Button>
               </Stack>
 
@@ -299,7 +302,7 @@ const Screw = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              Back
+             {  t("back")}
             </Button>
             <Button
               w="180px"
@@ -313,7 +316,7 @@ const Screw = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              play
+              {t("play")}
             </Button>
           </ModalFooter>
         </ModalContent>

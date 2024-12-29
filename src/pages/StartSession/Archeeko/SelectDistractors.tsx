@@ -25,12 +25,13 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import { useTranslation } from 'react-i18next';
 
 const SelectDistractors = (props: any) => {
-
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useToast();
-  const toastIdRef:any = useRef();
+  const toastIdRef: any = useRef();
   const { module, sessionId, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenConnected,
@@ -84,24 +85,27 @@ const SelectDistractors = (props: any) => {
       title: 'Success',
       description: (
         <Box>
-          {`You assigned level ${updatedFormData[0]}, environment ${props.formData[1]}, Number ${props.selectedNumber}, module name is ${module} and session id is ${sessionId}`}
+          {t('YouAssignedLevel3', {
+            level: updatedFormData[0],
+            environment: props.formData[1],
+            number: props.selectedNumber,
+            module,
+            sessionId,
+          })}
           <Button
-              color={"white"}
-           
-               width={3}
-               height={5}
-               onClick={() => {
-                 if (toastIdRef.current) {
-                  
-                   toast.close(toastIdRef.current);
-                 }
-               }}
-             position={"absolute"}
-        
-             top={3}
-             right={3}
+            color={'white'}
+            width={3}
+            height={5}
+            onClick={() => {
+              if (toastIdRef.current) {
+                toast.close(toastIdRef.current);
+              }
+            }}
+            position={'absolute'}
+            top={3}
+            right={3}
           >
-        x
+            x
           </Button>
         </Box>
       ),
@@ -135,31 +139,23 @@ const SelectDistractors = (props: any) => {
       console.log(headsetKey);
       console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
-        ? 'You are not connected to the internet'
-        : 'No headset found';
+        ? t('connectionError')
+        : t('NoHeadsetFound');
 
       console.log(errorMessage);
       setErrorMEssage(errorMessage);
       setNotFound(true);
     }
-    console.log(
-      `You assigned level ${updatedFormData[0]} , environment ${props.formData[1]} , Number ${props.selectedNumber},
-       distractor ${selectedDistractors} 
-      module name is ${module} and session id is ${sessionId}`
-    );
-    console.log('Array of menu choices', updatedFormData);
   };
   const handleButtonClick = (distractors: number) => {
     setSelectedDistractors(distractors);
     setValue('selectDistractors', distractors);
   };
 
-
   const closeAllModalsAndToast = () => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
-  
   };
   const cancelSession = () => {
     setNotFound(false);
@@ -181,8 +177,7 @@ const SelectDistractors = (props: any) => {
   if (socketError) {
     toast({
       title: 'Socket Error',
-      description:
-        'There is a socket error. Please resolve it before proceeding.',
+      description: t('socketError'),
       status: 'error',
       duration: 5000,
       position: 'top-right',
@@ -203,7 +198,7 @@ const SelectDistractors = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box> */}
           <ModalHeader textAlign="center" fontSize="1rem">
-            Choose Number of Distractors
+            {t('chooseNumberOfDistractors')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -242,7 +237,7 @@ const SelectDistractors = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectDistractors && 'Please select a Distractors .'}
+                {errors.selectDistractors && t('selectDistractorError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -259,7 +254,7 @@ const SelectDistractors = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              Back
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -273,7 +268,7 @@ const SelectDistractors = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              play
+              {t('play')}
             </Button>
           </ModalFooter>
         </ModalContent>
