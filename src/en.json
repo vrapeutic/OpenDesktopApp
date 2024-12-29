@@ -385,5 +385,10 @@
   "Deny":"Deny",
   "Welcomeback":"Welcome back",
    "NewToVRapeutic": "New to VRapeutic?",
-   "ByContinuingYouAreAgreeingTo": "By continuing you are agreeing to"
+   "ByContinuingYouAreAgreeingTo": "By continuing you are agreeing to",
+   
+    "AllRightsReserved": "2022 All Rights Reserved. VRapeutic."
+  ,
+    "BackToLogin": "Back to Login"
+  
 }

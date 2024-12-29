@@ -277,10 +277,10 @@
   "loginOrRegister": "Vui lòng đăng nhập hoặc đăng ký để bắt đầu sử dụng tài khoản VRapeutic.",
   "forgotPassword": "Quên mật khẩu?",
   "createAccount": "Tạo tài khoản",
-  "features": ": Đặc trưng",
+  "features": " Đặc trưng",
   "aboutUs": "Giới thiệu",
   "blog": "Blog",
-  "getStarted": "“Tìm hiểu",
+  "getStarted": "Tìm hiểu",
   "assignedSuccessfully": "Đã chỉ định thành công",
   "centerName": "Tên Trung tâm",
   "toFromError": "Dữ liệu tại ô Đến phải lớn hơn ô Từ",
@@ -377,7 +377,9 @@
 ,  "Accept": "Chấp nhận","Deny":"Từ chối",
 "Welcomeback":"Chào mừng bạn trở lại",
 "NewToVRapeutic": "Mới đến VRapeutic?",
-"ByContinuingYouAreAgreeingTo": "Bằng cách tiếp tục, bạn đồng ý với"
+"ByContinuingYouAreAgreeingTo": "Bằng cách tiếp tục, bạn đồng ý với",
+"AllRightsReserved": "2022 Mọi quyền được bảo lưu. VRapeutic.",
+"BackToLogin": "Quay lại đăng nhập"
 }
 
 

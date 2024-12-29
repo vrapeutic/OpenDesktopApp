@@ -168,7 +168,7 @@ const { t } = useTranslation();
                 fontSize="1rem"
                 cursor={'pointer'}
               >
-                Back to Login
+               {t("BackToLogin")}
               </Text>
             </Box>
             <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
@@ -204,7 +204,7 @@ const { t } = useTranslation();
             fontSize="0.75rem"
             color="#000000"
           >
-            2022 All Rights Reserved. VRapeutic.
+         {t("AllRightsReserved")}
           </Text>
         </Flex>
       </GridItem>

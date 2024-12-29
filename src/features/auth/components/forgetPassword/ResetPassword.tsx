@@ -263,7 +263,7 @@ const { t } = useTranslation();
                     rightIcon={<ArrowForwardIcon />}
                     isLoading={mutation.isLoading}
                   >
-                    Submit
+                    {t("submit")}
                   </Button>
                 </FormControl>
               </form>
@@ -287,7 +287,7 @@ const { t } = useTranslation();
               fontSize="0.75rem"
               color="#000000"
             >
-              2022 All Rights Reserved. VRapeutic.
+               {t("AllRightsReserved")}
             </Text>
           </Flex>
         </GridItem>

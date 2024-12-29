@@ -116,7 +116,7 @@ const Signup: React.FC = () => {
               color="#FFFFFF"
               _hover={{ opacity: 0.8 }}
             >
-              Back to Login
+             {t("BackToLogin")}
             </Button>
           </Flex>
         </Box>

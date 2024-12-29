@@ -291,7 +291,8 @@ console.log(response.is_admin)
               fontSize="0.75rem"
               color="#000000"
             >
-              2022 All Rights Reserved. VRapeutic.
+
+            {t("AllRightsReserved")}
             </Text>
           </Flex>
         </GridItem>
