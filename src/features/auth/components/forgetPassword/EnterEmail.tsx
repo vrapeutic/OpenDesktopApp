@@ -57,7 +57,7 @@ const EnterEmail = () => {
       }
     };
   };
-const { t } = useTranslation();
+  const { t } = useTranslation();
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const result = schema.validate(data);
@@ -100,10 +100,10 @@ const { t } = useTranslation();
               fontSize="2rem"
               color="#222631"
             >
-{t("Welcomeback")}         
-   </Heading>
+              {t('Welcomeback')}
+            </Heading>
             <Text fontSize="1rem" pt="19px" color="#58667E">
-              Please enter your email address you used for registration.
+              {t('enterRegisterEmail')}
             </Text>
             <form onSubmit={onSubmit}>
               <FormControl>
@@ -114,12 +114,12 @@ const { t } = useTranslation();
                   color="#4965CA"
                   m="0px"
                 >
-                  Email
+                  {t('email')}
                 </FormLabel>
                 <InputGroup>
                   <Input
                     isInvalid={data.email.length > 0 && Boolean(error.email)}
-                    onChange={(e:any) => handleEmailChange(e.target.value)}
+                    onChange={(e: any) => handleEmailChange(e.target.value)}
                     value={data.email}
                     type="email"
                     borderRadius="8px"
@@ -150,7 +150,7 @@ const { t } = useTranslation();
                   rightIcon={<ArrowForwardIcon />}
                   isLoading={mutation.isLoading}
                 >
-                  Submit
+                  {t('submit')}
                 </Button>
               </FormControl>
             </form>
@@ -168,11 +168,11 @@ const { t } = useTranslation();
                 fontSize="1rem"
                 cursor={'pointer'}
               >
-               {t("BackToLogin")}
+                {t('BackToLogin')}
               </Text>
             </Box>
             <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
-            {t("NewToVRapeutic")}
+              {t('NewToVRapeutic')}
               <Link
                 display="inline"
                 color="#3961FB"
@@ -181,19 +181,19 @@ const { t } = useTranslation();
                 }}
                 // href="https://site.vrpeutic.ca/request-demo/"
               >
-                 {t("createAccount")}
+                {t('createAccount')}
               </Link>
             </Text>
             <Text pt="12px" fontSize="0.75rem" color="#58667E">
-             {t("ByContinuingYouAreAgreeingTo")}
+              {t('ByContinuingYouAreAgreeingTo')}
               <Link
                 display="inline"
                 color="#4F4F4F"
                 fontWeight="500"
                 textDecoration="underline"
-                  href="https://myvrapeutic.com/privacy-policy/"
+                href="https://myvrapeutic.com/privacy-policy/"
               >
-                 {t("terms&Conditions")}
+                {t('terms&Conditions')}
               </Link>
             </Text>
           </Box>
@@ -204,7 +204,7 @@ const { t } = useTranslation();
             fontSize="0.75rem"
             color="#000000"
           >
-         {t("AllRightsReserved")}
+            {t('AllRightsReserved')}
           </Text>
         </Flex>
       </GridItem>

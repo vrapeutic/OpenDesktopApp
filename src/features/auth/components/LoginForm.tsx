@@ -45,7 +45,10 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
     )
     .required();
 
-  const passwordSchema = Joi.string().min(4).required();
+  const passwordSchema = Joi.string().min(4).required().messages({
+    'string.empty': 'Password is required',
+    'string.min': 'Password must be at least 4 characters long',
+  });
 
   const schema = Joi.object().keys({
     identifier: identifierSchema,
@@ -93,7 +96,7 @@ const LoginForm = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
       });
     }
   };
-const { t } = useTranslation();
+  const { t } = useTranslation();
   return (
     <Flex maxW="400px" marginX="auto" flexDirection="column" height="100%">
       <Box maxW="23.75rem">
@@ -106,10 +109,10 @@ const { t } = useTranslation();
           fontSize="2rem"
           color="#222631"
         >
-         {t ("Welcomeback")}
+          {t('Welcomeback')}
         </Heading>
         <Text fontSize="1rem" pt="19px" color="#58667E">
-        {t("loginOrRegister")}
+          {t('loginOrRegister')}
         </Text>
         <form onSubmit={onSubmit}>
           <FormControl>
@@ -120,14 +123,14 @@ const { t } = useTranslation();
               color="#4965CA"
               m="0px"
             >
-               Email
+              {t('email')}
             </FormLabel>
             <InputGroup>
               <Input
                 isInvalid={
                   data.identifier.length > 0 && Boolean(error.identifier)
                 }
-                onChange={(e:any) => handleIdentifierChange(e.target.value)}
+                onChange={(e: any) => handleIdentifierChange(e.target.value)}
                 value={data.identifier}
                 type="email"
                 borderRadius="8px"
@@ -136,7 +139,7 @@ const { t } = useTranslation();
                 px="20px"
                 py="18px"
                 h="unset"
-                placeholder={t("enterEmail")}
+                placeholder={t('enterEmail')}
               />
               <InputRightElement
                 h="100%"
@@ -155,12 +158,12 @@ const { t } = useTranslation();
               color="#222631"
               m="0px"
             >
-              {t("password")}
+              {t('password')}
             </FormLabel>
             <InputGroup>
               <Input
                 isInvalid={data.password.length > 0 && Boolean(error.password)}
-                onChange={(e:any) => handlePasswordChange(e.target.value)}
+                onChange={(e: any) => handlePasswordChange(e.target.value)}
                 value={data.password}
                 type={showPassword ? 'text' : 'password'}
                 borderRadius="8px"
@@ -184,7 +187,7 @@ const { t } = useTranslation();
               />
             </InputGroup>
             <FormHelperText pt="12px" color="#C76565" fontSize="0.875rem">
-              Forgot Password ?
+              {t('forgotPassword')}?
             </FormHelperText>
             <Button
               type="submit"
@@ -203,12 +206,12 @@ const { t } = useTranslation();
               justifyContent="space-between"
               rightIcon={<ArrowForwardIcon />}
             >
-              Login
+              {t('login')}
             </Button>
           </FormControl>
         </form>
         <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
-        {t("NewToVRapeutic")}
+          {t('NewToVRapeutic')}
           <Link
             display="inline"
             color="#3961FB"
@@ -217,19 +220,19 @@ const { t } = useTranslation();
             }}
             // href="https://site.vrpeutic.ca/request-demo/"
           >
-            Create an Account
+            {t('createAccount')}
           </Link>
         </Text>
         <Text pt="12px" fontSize="0.75rem" color="#58667E">
-      {t("ByContinuingYouAreAgreeingTo")}
+          {t('ByContinuingYouAreAgreeingTo')}
           <Link
             display="inline"
             color="#4F4F4F"
             fontWeight="500"
             textDecoration="underline"
-              href="https://myvrapeutic.com/privacy-policy/"
+            href="https://myvrapeutic.com/privacy-policy/"
           >
-            Terms & Conditions
+            {t('terms&Conditions')}
           </Link>
         </Text>
       </Box>
@@ -240,7 +243,7 @@ const { t } = useTranslation();
         fontSize="0.75rem"
         color="#000000"
       >
-         {t("AllRightsReserved")}
+        {t('AllRightsReserved')}
       </Text>
     </Flex>
   );

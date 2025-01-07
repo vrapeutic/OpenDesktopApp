@@ -359,28 +359,43 @@
   "NoHeadsetFound": "Không tìm thấy tai nghe",
   "recentActivities": "Hoạt động gần đây",
   "widgets": "Tiện ích",
-  "YouAssignedLevel2": "Bạn đã gán cấp độ {{level}} và sách {{book}} và yếu tố gây nhiễu {{distractor}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}."
- ,"connectedVr":"Bạn đã kết nối với tai nghe VR",
- "sampleplaceholder":"Đây là một chỗ dành mẫu",
- "errorEvaluation":"Bạn phải chọn một Đánh giá",
+  "YouAssignedLevel2": "Bạn đã gán cấp độ {{level}} và sách {{book}} và yếu tố gây nhiễu {{distractor}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}.",
+  "connectedVr": "Bạn đã kết nối với tai nghe VR",
+  "sampleplaceholder": "Đây là một chỗ dành mẫu",
+  "errorEvaluation": "Bạn phải chọn một Đánh giá",
   "headsetIsNotAvailable": "Tai nghe không có sẵn cho phiên",
-  "ChooseNumberArrows/Shots":"Chọn Số lượng Mũi tên/Lượt bắn",
+  "ChooseNumberArrows/Shots": "Chọn Số lượng Mũi tên/Lượt bắn",
   "YouAssignedLevel4": "Bạn đã gán cấp độ {{level}}, môi trường {{environment}}, Số {{number}}, yếu tố gây nhiễu {{distractors}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}.",
-  "YouAssignedLevel5": "Bạn đã gán cấp độ {{level}}, môi trường {{environment}}, Số {{number}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}."
-  ,"YouAssignedLevel6": "Bạn đã gán cấp độ {{level}} và Thời gian chú ý {{attentionDuration}} và yếu tố gây nhiễu {{distractor}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}.",
-  "YouAssignedLevel7": "Bạn đã gán cấp độ {{level}}, Thời gian chú ý {{attentionDuration}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}."
-,"YouAssignedLevel8": "Bạn đã gán cấp độ {{level}}, môi trường {{environment}}, viên ngọc {{jewel}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}.",
-"YouAssignedLevel9": "Bạn đã gán cấp độ {{level}}, môi trường {{environment}}, viên ngọc {{jewel}}, yếu tố gây nhiễu {{distractor}}."
-,
-"YouSelectKickDirection": "Bạn chọn Hướng đá {{direction}}, Số cầu thủ {{player}}, Số lần đá {{kicks}}, Tốc độ bóng {{ball}}, Lực xoáy {{screw}}.",
-"InvitationMessage": "Bạn đã được mời bởi {{invitedBy}} tham gia trung tâm có tên {{centerName}}. Bạn có thể chấp nhận hoặc từ chối lời mời bằng cách nhấp vào một trong các nút bên dưới."
-,  "Accept": "Chấp nhận","Deny":"Từ chối",
-"Welcomeback":"Chào mừng bạn trở lại",
-"NewToVRapeutic": "Mới đến VRapeutic?",
-"ByContinuingYouAreAgreeingTo": "Bằng cách tiếp tục, bạn đồng ý với",
-"AllRightsReserved": "2022 Mọi quyền được bảo lưu. VRapeutic.",
-"BackToLogin": "Quay lại đăng nhập"
+  "YouAssignedLevel5": "Bạn đã gán cấp độ {{level}}, môi trường {{environment}}, Số {{number}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}.",
+  "YouAssignedLevel6": "Bạn đã gán cấp độ {{level}} và Thời gian chú ý {{attentionDuration}} và yếu tố gây nhiễu {{distractor}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}.",
+  "YouAssignedLevel7": "Bạn đã gán cấp độ {{level}}, Thời gian chú ý {{attentionDuration}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}.",
+  "YouAssignedLevel8": "Bạn đã gán cấp độ {{level}}, môi trường {{environment}}, viên ngọc {{jewel}}, tên mô-đun là {{module}}, và ID phiên là {{sessionId}}.",
+  "YouAssignedLevel9": "Bạn đã gán cấp độ {{level}}, môi trường {{environment}}, viên ngọc {{jewel}}, yếu tố gây nhiễu {{distractor}}.",
+  "YouSelectKickDirection": "Bạn chọn Hướng đá {{direction}}, Số cầu thủ {{player}}, Số lần đá {{kicks}}, Tốc độ bóng {{ball}}, Lực xoáy {{screw}}.",
+  "InvitationMessage": "Bạn đã được mời bởi {{invitedBy}} tham gia trung tâm có tên {{centerName}}. Bạn có thể chấp nhận hoặc từ chối lời mời bằng cách nhấp vào một trong các nút bên dưới.",
+  "Accept": "Chấp nhận",
+  "Deny": "Từ chối",
+  "Welcomeback": "Chào mừng bạn trở lại",
+  "NewToVRapeutic": "Mới đến VRapeutic?",
+  "ByContinuingYouAreAgreeingTo": "Bằng cách tiếp tục, bạn đồng ý với",
+  "AllRightsReserved": "2022 Mọi quyền được bảo lưu. VRapeutic.",
+  "BackToLogin": "Quay lại đăng nhập",
+  "validationForDegreeAndUniversity": {
+    "degree": {
+      "required": "Bằng cấp không được để trống",
+      "string": "Bằng cấp phải là một đoạn văn bản hợp lệ"
+    },
+    "university": {
+      "required": "Trường đại học không được để trống",
+      "string": "Trường đại học phải là một đoạn văn bản hợp lệ"
+    }
+  },
+  "validationForSpecialty": {
+    "specializations": {
+      "required": "Phải chọn ít nhất một chuyên ngành",
+      "min": "Vui lòng chọn ít nhất một chuyên ngành",
+      "array": "Chuyên ngành phải là một danh sách hợp lệ"
+    }
+  },
+  "enterRegisterEmail": "Vui lòng nhập địa chỉ email bạn đã dùng để đăng ký."
 }
-
-
-

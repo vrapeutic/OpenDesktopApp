@@ -164,7 +164,7 @@
   "noVRHeadsetsAvailable": "No VR headsets are available in this center",
   "sessionDataSubmitted": "Submit session data",
   "selectHeadsetVR": "Select a VR headset",
-  "selectHeadset":"Select a headset",
+  "selectHeadset": "Select a headset",
   "noKidsAvailable": "There are no Kids",
   "selectChild": "Select a child",
   "noEvaluationDataAvailable": "No evaluation data available.",
@@ -345,15 +345,13 @@
   "showReport": " Show Report",
   "noSessions": " There are no sessions",
 
-   "thisModuleIsNotAvailable":"This module is not available, please select anther module",
-  "youMustSelectaChild": "You must select a child"
-,
-"Cancel":"Cancel"
-  ,
-  "ErrorAssigningSessionID":"Error assigning session ID",
-  
+  "thisModuleIsNotAvailable": "This module is not available, please select anther module",
+  "youMustSelectaChild": "You must select a child",
+  "Cancel": "Cancel",
+  "ErrorAssigningSessionID": "Error assigning session ID",
+
   "YouAssignedLevel": "You assigned level {{level}}, book {{book}}, module name is {{module}}, and session ID is {{sessionId}}.",
-  "NoHeadsetFound":"No headset found",
+  "NoHeadsetFound": "No headset found",
   "Date&Duration": " Date & Duration",
   "Duration": "Duration",
   "kidDetails": " Kid Details",
@@ -362,33 +360,44 @@
   "exportCSV": "Export CSV",
   "recentActivities": "Recent Activities",
   "widgets": "Widgets",
-  "YouAssignedLevel2": "You assigned level {{level}} and book {{book}} and distractor {{distractor}}, module name is {{module}}, and session ID is {{sessionId}}."
-,"connectedVr":" You are connected to the VR headset",
-"sampleplaceholder"
-:
-"Here is a sample placeholder",
-"errorEvaluation":"You must select an Evaluation",
-"YouAssignedLevel3": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, module name is {{module}}, and session ID is {{sessionId}}.",
-"headsetIsNotAvailable":"headset is not available for session",
-"ChooseNumberArrows/Shots":"Choose Number of Arrows/Shots",
- "YouAssignedLevel4": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, distractor {{distractors}}, module name is {{module}}, and session ID is {{sessionId}}.",
- "YouAssignedLevel5": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, module name is {{module}}, and session ID is {{sessionId}}.",
- "YouAssignedLevel6": "You assigned level {{level}} and Attention Duration {{attentionDuration}} and distractor {{distractor}}, module name is {{module}}, and session ID is {{sessionId}}.",
- "YouAssignedLevel7": "You assigned level {{level}}, Attention Duration {{attentionDuration}}, module name is {{module}}, and session ID is {{sessionId}}."
- ,
- "YouAssignedLevel8": "You assigned level {{level}}, environment {{environment}}, jewel {{jewel}}, module name is {{module}}, and session ID is {{sessionId}}."
-,
-"YouAssignedLevel9": "You assigned level {{level}}, environment {{environment}}, jewel {{jewel}}, distractor {{distractor}}.",
- "YouSelectKickDirection": "You select Kick direction {{direction}}, Number of Players {{player}}, Number of Kicks {{kicks}}, Ball Speed {{ball}}, Screw {{screw}}.",
- "InvitationMessage": "You have been invited by {{invitedBy}} to join the center named {{centerName}}. You can accept or reject the invitation by clicking on one of the buttons below.",
+  "YouAssignedLevel2": "You assigned level {{level}} and book {{book}} and distractor {{distractor}}, module name is {{module}}, and session ID is {{sessionId}}.",
+  "connectedVr": " You are connected to the VR headset",
+  "sampleplaceholder": "Here is a sample placeholder",
+  "errorEvaluation": "You must select an Evaluation",
+  "YouAssignedLevel3": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, module name is {{module}}, and session ID is {{sessionId}}.",
+  "headsetIsNotAvailable": "headset is not available for session",
+  "ChooseNumberArrows/Shots": "Choose Number of Arrows/Shots",
+  "YouAssignedLevel4": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, distractor {{distractors}}, module name is {{module}}, and session ID is {{sessionId}}.",
+  "YouAssignedLevel5": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, module name is {{module}}, and session ID is {{sessionId}}.",
+  "YouAssignedLevel6": "You assigned level {{level}} and Attention Duration {{attentionDuration}} and distractor {{distractor}}, module name is {{module}}, and session ID is {{sessionId}}.",
+  "YouAssignedLevel7": "You assigned level {{level}}, Attention Duration {{attentionDuration}}, module name is {{module}}, and session ID is {{sessionId}}.",
+  "YouAssignedLevel8": "You assigned level {{level}}, environment {{environment}}, jewel {{jewel}}, module name is {{module}}, and session ID is {{sessionId}}.",
+  "YouAssignedLevel9": "You assigned level {{level}}, environment {{environment}}, jewel {{jewel}}, distractor {{distractor}}.",
+  "YouSelectKickDirection": "You select Kick direction {{direction}}, Number of Players {{player}}, Number of Kicks {{kicks}}, Ball Speed {{ball}}, Screw {{screw}}.",
+  "InvitationMessage": "You have been invited by {{invitedBy}} to join the center named {{centerName}}. You can accept or reject the invitation by clicking on one of the buttons below.",
   "Accept": "Accept",
-  "Deny":"Deny",
-  "Welcomeback":"Welcome back",
-   "NewToVRapeutic": "New to VRapeutic?",
-   "ByContinuingYouAreAgreeingTo": "By continuing you are agreeing to",
-   
-    "AllRightsReserved": "2022 All Rights Reserved. VRapeutic."
-  ,
-    "BackToLogin": "Back to Login"
-  
+  "Deny": "Deny",
+  "Welcomeback": "Welcome back",
+  "NewToVRapeutic": "New to VRapeutic?",
+  "ByContinuingYouAreAgreeingTo": "By continuing you are agreeing to",
+  "AllRightsReserved": "2022 All Rights Reserved. VRapeutic.",
+  "BackToLogin": "Back to Login",
+  "validationForDegreeAndUniversity": {
+    "degree": {
+      "required": "Degree is required",
+      "string": "Degree must be a valid text"
+    },
+    "university": {
+      "required": "University is required",
+      "string": "University must be a valid text"
+    }
+  },
+  "validationForSpecialty": {
+    "specializations": {
+      "required": "At least one specialization is required",
+      "min": "Please select at least one specialization",
+      "array": "Specializations must be a valid list"
+    }
+  },
+  "enterRegisterEmail": "Please enter your email address you used for registration."
 }

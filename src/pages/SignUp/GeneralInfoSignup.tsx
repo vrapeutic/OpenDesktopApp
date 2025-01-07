@@ -25,15 +25,29 @@ const GeneralInfoSignup: React.FC<SignupFormProps> = ({
 
   const schema = Joi.object({
     Name: Joi.string()
-
       .min(3)
       .max(30)
-
-      .required(),
+      .required()
+      .label(t('name'))
+      .messages({
+        'string.min': t('validation.name.min'),
+        'string.empty': t('validation.name.required'),
+        'any.required': t('validation.name.required'),
+      }),
     Email: Joi.string()
       .email({ tlds: { allow: false } })
-      .required(),
-    Password: Joi.string().min(6).required(),
+      .required()
+      .label(t('email'))
+      .messages({
+        'string.base': t('validation.email.invalid'),
+        'string.email': t('validation.email.invalid'),
+        'any.required': t('validation.email.required'),
+        'string.empty': t('validation.email.empty'),
+      }),
+    Password: Joi.string().min(4).required().messages({
+      'string.empty': 'Password is required',
+      'string.min': 'Password must be at least 4 characters long',
+    }),
   });
   const {
     register,

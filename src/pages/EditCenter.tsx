@@ -79,26 +79,112 @@ const EditCenter = () => {
   );
 
   const schema = joi.object({
-    name: joi.string().min(3).max(30).required().label('name'),
+    name: joi
+      .string()
+      .min(3)
+      .max(30)
+      .required()
+      .messages({
+        'string.min': t('validation.name.min'),
+        'string.empty': t('validation.name.required'),
+        'any.required': t('validation.name.required'),
+      })
+      .label(t('name')),
     email: joi
       .string()
       .email({ tlds: { allow: false } })
-      .required(),
+      .required()
+      .messages({
+        'string.base': t('validation.email.invalid'),
+        'string.email': t('validation.email.invalid'),
+        'any.required': t('validation.email.required'),
+        'string.empty': t('validation.email.empty'),
+      })
+      .label(t('email')),
     specializationschema: joi
       .array()
       .min(1)
       .required()
+      .messages({
+        'array.min': t('validation.specializations.min'),
+        'array.base': t('validation.specializations.array'),
+        'any.required': t('validation.specializations.required'),
+      })
       .label('specializationschema'),
-    tax_id: joi.number().required().label('tax_id'),
+    tax_id: joi
+      .number()
+      .required()
+      .messages({
+        'string.empty': t('taxIDRequired'),
+        'any.required': t('taxIDRequired'),
+      })
+      .label(t('taxID')),
     certificate: joi.allow(null).label('certificate'),
-    phone_number: joi.number().required().label('phone_number'),
-    website: joi.string().required().label('website'),
-    socialMedia: joi.string().required().label('socialMedia'),
-    Linkedin: joi.string().required().label('Linkedin'),
-    completeAddress: joi.string().allow(''),
-    managerName: joi.string().allow('').max(30).label('managerName'),
-    specialtyInformation: joi.string().allow(''),
-    registrationNumber: joi.number().allow(null).label('Registration Number'),
+    phone_number: joi
+      .number()
+      .required()
+      .messages({
+        'string.empty': t('phoneRequired'),
+        'any.required': t('phoneRequired'),
+      })
+      .label(t('phone')),
+    website: joi
+      .string()
+      .required()
+      .messages({
+        'string.empty': t('websiteRequired'),
+        'any.required': t('websiteRequired'),
+      })
+      .label(t('website')),
+    socialMedia: joi
+      .string()
+      .required()
+      .messages({
+        'string.empty': t('socialMediaRequired'),
+        'any.required': t('socialMediaRequired'),
+      })
+      .label(t('socialMedia')),
+    Linkedin: joi
+      .string()
+      .required()
+      .messages({
+        'string.empty': t('linkedinRequired'),
+        'any.required': t('linkedinRequired'),
+      })
+      .label('Linkedin'),
+    completeAddress: joi
+      .string()
+      .allow('')
+      .messages({
+        'string.empty': t('completeAddressRequired'),
+        'any.required': t('completeAddressRequired'),
+      }),
+    managerName: joi
+      .string()
+      .allow('')
+      .max(30)
+      .label(t('managerName'))
+      .messages({
+        'string.min': t('validation.name.min'),
+        'string.empty': t('validation.name.required'),
+        'any.required': t('validation.name.required'),
+      }),
+    specialtyInformation: joi
+      .string()
+      .allow('')
+      .messages({
+        'string.empty': t('specialtyInfoRequired'),
+        'any.required': t('specialtyInfoRequired'),
+      })
+      .label(t('specialtyInfo')),
+    registrationNumber: joi
+      .number()
+      .allow(null)
+      .messages({
+        'string.empty': t('registrationNumberRequired'),
+        'any.required': t('registrationNumberRequired'),
+      })
+      .label(t('registrationNumber')),
     logo: joi
       .any()
       .label('logo')
@@ -552,7 +638,7 @@ const EditCenter = () => {
                         id="certificate"
                         type="file"
                         accept="application/pdf" // Update this line to accept PDF files
-                        onChange={(e:any) => handleCertificateChange(e)}
+                        onChange={(e: any) => handleCertificateChange(e)}
                         style={{ display: 'none' }}
                       />
                     </label>
@@ -703,7 +789,7 @@ const EditCenter = () => {
                         name="logo"
                         id="logo"
                         {...register('logo')}
-                        onChange={(e:any) => handleImageChange(e)}
+                        onChange={(e: any) => handleImageChange(e)}
                         style={{ display: 'none' }}
                         hidden
                       />

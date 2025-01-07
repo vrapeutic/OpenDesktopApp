@@ -8,10 +8,10 @@ import { useEffect, useState } from 'react';
 
 const LoginNavigation = () => {
   const { t } = useTranslation();
- const [selectedLanguage, setSelectedLanguage] = useState<string>(
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(
     localStorage.getItem('language') || 'en'
   );
-  const[show,setShow]=useState(false)
+  const [show, setShow] = useState(false);
   useEffect(() => {
     i18n.changeLanguage(selectedLanguage);
   }, [selectedLanguage, i18n]);
@@ -20,7 +20,7 @@ const LoginNavigation = () => {
     // i18n.changeLanguage(lang);
     setSelectedLanguage(lang);
     localStorage.setItem('language', lang);
-    setShow(!show)
+    setShow(!show);
   };
   return (
     <>
@@ -68,43 +68,43 @@ const LoginNavigation = () => {
         >
           {t('getStarted')}
         </Button>
-        <Box onClick={()=>setShow(!show)}>
-                  <HStack>
-                    <Language />
-                  </HStack>
-                  {show&& <Box position={"absolute"} >
-                  <Button
-                    bgColor={'transparent'}
-                    m={0}
-                    p={0}
-                    height={8}
-                    fontSize="0.875rem"
-                    fontWeight={'unset'}
-                    color="#595959"
-                    display={'block'}
-                    onClick={() => switchLanguage('en')}
-                  >
-                    EN
-                  </Button>
-                  <Button
-                    bgColor={'transparent'}
-                    m={0}
-                    p={0}
-                    height={5}
-                    fontWeight={'unset'}
-                    fontSize="0.875rem"
-                    color="#595959"
-                    display={'block'}
-                    onClick={() => switchLanguage('vi')}
-                  >
-                    VI
-                  </Button>
-                </Box>}
-                </Box>
-             
+        <Box onClick={() => setShow(!show)}>
+          <HStack>
+            <Language />
+          </HStack>
+          {show && (
+            <Box position={'absolute'}>
+              <Button
+                bgColor={'transparent'}
+                m={0}
+                p={0}
+                height={8}
+                fontSize="0.875rem"
+                fontWeight={'unset'}
+                color="#595959"
+                display={'block'}
+                onClick={() => switchLanguage('en')}
+              >
+                EN
+              </Button>
+              <Button
+                bgColor={'transparent'}
+                m={0}
+                p={0}
+                height={5}
+                fontWeight={'unset'}
+                fontSize="0.875rem"
+                color="#595959"
+                display={'block'}
+                onClick={() => switchLanguage('vi')}
+              >
+                VI
+              </Button>
+            </Box>
+          )}
+        </Box>
       </Flex>
-      
-     
+
       <Box marginLeft="-55px">
         <Image src={ImageLogin} alt="login background image" />
       </Box>

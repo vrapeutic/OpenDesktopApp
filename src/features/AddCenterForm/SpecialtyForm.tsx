@@ -46,8 +46,9 @@ const SpecialtyForm: React.FC<TherapyFormProps> = ({
       .min(1)
       .required()
       .messages({
-        'string.empty': t('specialtyInfoRequired'),
-        'any.required': t('specialtyInfoRequired'),
+        'array.min': t('validation.specializations.min'),
+        'array.base': t('validation.specializations.array'),
+        'any.required': t('validation.specializations.required'),
       })
       .label('Specialization Schema'),
   });

@@ -44,8 +44,22 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
   const { t } = useTranslation();
 
   const schema = joi.object({
-    Degree: joi.string().required().label('Degree'),
-    University: joi.string().required().label('University'),
+    Degree: joi
+      .string()
+      .required()
+      .messages({
+        'string.empty': t('validation.degree.required'),
+        'string.base': t('validation.degree.string'),
+      })
+      .label(t('degree')),
+    University: joi
+      .string()
+      .required()
+      .messages({
+        'string.empty': t('validation.university.required'),
+        'string.base': t('validation.university.string'),
+      })
+      .label(t('university')),
     certification: joi
       .any()
       .custom((value, helpers) => {
@@ -298,7 +312,7 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
                     id="certification"
                     type="file"
                     accept="application/pdf"
-                    onChange={(e:any) => handleCertificateChange(e)}
+                    onChange={(e: any) => handleCertificateChange(e)}
                     style={{ display: 'none' }}
                   />
                 </label>
