@@ -398,6 +398,7 @@
     }
   },
   "enterRegisterEmail": "Vui lòng nhập địa chỉ email bạn đã dùng để đăng ký.",
-  "vietnamese":"Tiếng Việt",
-  "English":"Tiếng Anh"
+  "vietnamese": "Tiếng Việt",
+  "English": "Tiếng Anh",
+  "selectLanguageError": "Vui lòng chọn ngôn ngữ"
 }

@@ -26,21 +26,22 @@ import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { useTranslation } from 'react-i18next';
+import SelectLanguage from './SelectLanguage';
 const SelectDistractorsGard = (props: any) => {
   const toast = useToast();
   const navigate = useNavigate();
 
   const { module, sessionId, headsetKey } = useStartSessionContext();
   const {
-    isOpen: isOpenConnected,
-    onOpen: onOpenConnected,
-    onClose: onCloseConnected,
+    isOpen: isOpenLanguage,
+    onOpen: onOpenLanguage,
+    onClose: onCloseLanguage,
   } = useDisclosure();
 
   const [selectedDistractors, setSelectedDistractors] = useState<number | null>(
     null
   );
-  const toastIdRef:any = useRef();
+  const toastIdRef: any = useRef();
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
   const {
@@ -54,7 +55,7 @@ const SelectDistractorsGard = (props: any) => {
   const schema = joi.object({
     selectDistractors: joi.number().required(),
   });
- const { t } = useTranslation();
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -69,7 +70,7 @@ const SelectDistractorsGard = (props: any) => {
     const updatedFormData = [
       props.formData[0],
       props.formData[1],
-      props.selectedNumber,
+      props.formData[2], // Preserve number
       data.selectDistractors,
       ...props.formData.slice(4),
     ];
@@ -77,80 +78,76 @@ const SelectDistractorsGard = (props: any) => {
     console.log('all subimtted data in distractor', updatedFormData);
     props.setFormData(updatedFormData);
 
-    navigate('/Therapycenters');
-    props.onClose();
-    toastIdRef.current = toast({
-      title: 'Success',
-      description: (
-        <Box>
-         { t('YouAssignedLevel4', {
-  level: updatedFormData[0],
-  environment: props.formData[1],
-  number: props.selectedNumber,
-  distractors: selectedDistractors,
-  module,
-  sessionId,
-})}
-          <Button
-           color={"white"}
-            width={3}
-            height={5}
-            onClick={() => {
-              if (toastIdRef.current) {
-               
-                toast.close(toastIdRef.current);
-              }
-            }}
-          position={"absolute"}
-     
-          top={3}
-          right={3}
-        
-          >
-        x
-          </Button>
-        </Box>
-      ),
-      status: 'success',
-      duration: null,
-      position: 'bottom-left',
-      onCloseComplete: () => {
-        console.log('Toast has been removed.');
-        // Additional logic for when the toast is removed
-      },
-    });
+    // navigate('/Therapycenters');
+    // props.onClose();
+    // toastIdRef.current = toast({
+    //   title: 'Success',
+    //   description: (
+    //     <Box>
+    //       {t('YouAssignedLevel4', {
+    //         level: updatedFormData[0],
+    //         environment: props.formData[1],
+    //         number: props.selectedNumber,
+    //         distractors: selectedDistractors,
+    //         module,
+    //         sessionId,
+    //       })}
+    //       <Button
+    //         color={'white'}
+    //         width={3}
+    //         height={5}
+    //         onClick={() => {
+    //           if (toastIdRef.current) {
+    //             toast.close(toastIdRef.current);
+    //           }
+    //         }}
+    //         position={'absolute'}
+    //         top={3}
+    //         right={3}
+    //       >
+    //         x
+    //       </Button>
+    //     </Box>
+    //   ),
+    //   status: 'success',
+    //   duration: null,
+    //   position: 'bottom-left',
+    //   onCloseComplete: () => {
+    //     console.log('Toast has been removed.');
+    //     // Additional logic for when the toast is removed
+    //   },
+    // });
+    onOpenLanguage();
 
-    const existingDevice = await checkIfServiceExists(headsetKey);
-    const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    if (appIsConnectedToInternet && existingDevice) {
-      // if (appIsConnectedToInternet) {
-      console.log('updatedFormData', updatedFormData);
-      const socketMessage = {
-        sessionId,
-        [MODULE_PACKAGE_KEY]: module,
-        deviceId: headsetKey,
-      };
+    // const existingDevice = await checkIfServiceExists(headsetKey);
+    // const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+    // if (appIsConnectedToInternet && existingDevice) {
+    //   // if (appIsConnectedToInternet) {
+    //   console.log('updatedFormData', updatedFormData);
+    //   const socketMessage = {
+    //     sessionId,
+    //     [MODULE_PACKAGE_KEY]: module,
+    //     deviceId: headsetKey,
+    //   };
 
-      dispatchSocketMessage(
-        START_APP_MESSAGE,
-        socketMessage,
-        headsetKey,
-        updatedFormData
-      );
-      onOpenConnected();
-    } else {
-      console.log(headsetKey);
-      console.log(existingDevice);
-      const errorMessage = !appIsConnectedToInternet
-        ?  t('connectionError')
-        : t('NoHeadsetFound');
+    //   dispatchSocketMessage(
+    //     START_APP_MESSAGE,
+    //     socketMessage,
+    //     headsetKey,
+    //     updatedFormData
+    //   );
+    //   onOpenLanguage();
+    // } else {
+    //   console.log(headsetKey);
+    //   console.log(existingDevice);
+    //   const errorMessage = !appIsConnectedToInternet
+    //     ? t('connectionError')
+    //     : t('NoHeadsetFound');
 
-      console.log(errorMessage);
-      setErrorMEssage(errorMessage);
-      setNotFound(true);
-    }
-
-  
+    //   console.log(errorMessage);
+    //   setErrorMEssage(errorMessage);
+    //   setNotFound(true);
+    // }
   };
 
   const cancelSession = () => {
@@ -182,7 +179,6 @@ const SelectDistractorsGard = (props: any) => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
-  
   };
   return (
     <>
@@ -194,9 +190,8 @@ const SelectDistractorsGard = (props: any) => {
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          
           <ModalHeader textAlign="center" fontSize="1rem">
-          {t("chooseNumberOfDistractors")}
+            {t('chooseNumberOfDistractors')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -235,7 +230,7 @@ const SelectDistractorsGard = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectDistractors && t("selectDistractorError")}
+                {errors.selectDistractors && t('selectDistractorError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -252,7 +247,7 @@ const SelectDistractorsGard = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              {t("back")}
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -282,9 +277,12 @@ const SelectDistractorsGard = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenconnectedGar
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
+        <SelectLanguage
+          isOpen={isOpenLanguage}
+          onClose={onCloseLanguage}
+          formData={props.formData}
+          setFormData={props.setFormData}
+          updatedFormData={props.updatedFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
           SelectDistractors={props.onClose}

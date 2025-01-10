@@ -1,98 +1,97 @@
-import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
+  FormControl,
+  FormErrorMessage,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  FormControl,
-  FormErrorMessage,
   Stack,
-  useToast,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
-import joi from 'joi';
-import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { useNavigate } from 'react-router-dom';
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-
-import useSocketManager from '@renderer/Context/SocketManagerProvider';
-import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
-import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
-import OpenConnectedBed from './OpenConnectedbed';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import joi from 'joi';
+import { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import SelectLanguage from './SelectLanguage';
+import { useNavigate } from 'react-router-dom';
+import { ErrorPopup } from '../ErrorPopup';
+import OpenconnectedGar from './OpenconnectedGar';
 
-const SelectDistractors = (props: any) => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
-  const {
-    isOpen: isOpenLanguage,
-    onOpen: onOpenLanguage,
-    onClose: onCloseLanguage,
-  } = useDisclosure();
-  const [selectedDistractor, setselectedDistractor] = useState<number | null>(
-    null
-  );
-  const toastIdRef: any = useRef();
+const LANGUAGES = [
+  { id: 1, name: 'Vietnamese' },
+  { id: 2, name: 'English' },
+] as const;
+
+const schema = joi.object({
+  selectLanguage: joi.number().required(),
+});
+
+const SelectLanguage = (props: any) => {
+  const [notFound, setNotFound] = useState(false);
+  const [errorMEssage, setErrorMEssage] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<number | null>(null);
   const {
     dispatchSocketMessage,
     checkIfServiceExists,
     checkAppNetWorkConnection,
+    socketError,
   } = useSocketManager();
-  const [notFound, setNotFound] = useState(false);
-  const [errorMEssage, setErrorMEssage] = useState(null);
-
+  const { module, sessionId, headsetKey } = useStartSessionContext();
+  const {
+    isOpen: isOpenConnected,
+    onOpen: onOpenConnected,
+    onClose: onCloseConnected,
+  } = useDisclosure();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-  const { socketError } = useSocketManager();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const toast = useToast();
+  const toastIdRef: any = useRef();
 
-  const schema = joi.object({
-    selectDistractor: joi.number().required(),
-  });
   const {
     register,
     handleSubmit,
-    setValue,
-
     formState: { errors },
+    setValue,
   } = useForm({
     resolver: joiResolver(schema),
-    mode: 'onTouched',
+    mode: 'onSubmit',
   });
+
+  console.log(props.updatedFormData, 'props.formData');
 
   const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
-      props.formData[0],
-      props.formData[1],
-      data.selectDistractor,
-      ...props.formData.slice(3),
+      props.formData[0], // level
+      props.formData[1], // environment
+      props.formData[2], // number
+      props.formData[3], // distractor
+      data.selectLanguage,
+      ...props.formData.slice(5),
     ];
+    console.log(updatedFormData, 'updatedFormData');
+
     props.setFormData(updatedFormData);
 
     navigate('/home');
-    // props.onClose();
-    // props.oncloseselectlevel();
-    // props.onclosemodules();
-    // props.onCloseBooks();
-    // onOpenConnected();
-
+    props.onClose();
     toastIdRef.current = toast({
       title: 'Success',
       description: (
         <Box>
-          {t('YouAssignedLevel6', {
+          {t('YouAssignedLevel3', {
             level: updatedFormData[0],
-            attentionDuration: props.formData[1],
-            distractor: selectedDistractor,
+            attentionDuration: updatedFormData[2],
             module,
             sessionId,
           })}
@@ -124,7 +123,6 @@ const SelectDistractors = (props: any) => {
     const existingDevice = await checkIfServiceExists(headsetKey);
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     if (appIsConnectedToInternet && existingDevice) {
-      console.log(updatedFormData);
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: module,
@@ -137,10 +135,8 @@ const SelectDistractors = (props: any) => {
         headsetKey,
         updatedFormData
       );
-      onOpenLanguage();
+      onOpenConnected();
     } else {
-      console.log(headsetid);
-      console.log(existingDevice);
       const errorMessage = !appIsConnectedToInternet
         ? t('connectionError')
         : t('NoHeadsetFound');
@@ -149,7 +145,16 @@ const SelectDistractors = (props: any) => {
       setNotFound(true);
     }
   };
+  const handleButtonClick = (language: number) => {
+    setSelectedLanguage(language);
+    setValue('selectLanguage', language);
+  };
 
+  const closeAllModalsAndToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  };
   const cancelSession = () => {
     setNotFound(false);
     closeSelectingAModule();
@@ -168,80 +173,51 @@ const SelectDistractors = (props: any) => {
   };
 
   if (socketError) {
-    return null;
+    toast({
+      title: 'Socket Error',
+      description: t('socketError'),
+      status: 'error',
+      duration: 5000,
+      position: 'top-right',
+    });
+    return;
   }
 
-  const handleBackToSelectBook = () => {
-    props.onClose();
-  };
-
-  const handleButtonClick = (distractor: number) => {
-    setselectedDistractor(distractor);
-    setValue('selectDistractor', distractor);
-  };
-
-  const closeAllModalsAndToast = () => {
-    if (toastIdRef.current) {
-      toast.close(toastIdRef.current);
-    }
-  };
   return (
     <>
       <Modal
         isOpen={props.isOpen}
         onClose={props.onClose}
         closeOnOverlayClick={false}
-        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
-            <ModalCloseButton marginLeft="100px" />
-          </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            {t('selectDistractors')}
+            {t('language')}
           </ModalHeader>
-
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectLevel}>
+            <FormControl isInvalid={!!errors.selectLanguage}>
               <Stack spacing={4} direction="column" align="center">
-                <Button
-                  onClick={() => handleButtonClick(1)}
-                  bg={selectedDistractor === 1 ? 'blue.300' : 'gray.300'}
-                  color="black"
-                  width="12em"
-                  fontSize="1.2rem"
-                  {...register('selectDistractor')}
-                  value={1}
-                >
-                  1
-                </Button>
-
-                <Button
-                  onClick={() => handleButtonClick(2)}
-                  bg={selectedDistractor === 2 ? 'blue.300' : 'gray.300'}
-                  color="black"
-                  width="12em"
-                  fontSize="1.2rem"
-                  {...register('selectDistractor')}
-                  value={2}
-                >
-                  2
-                </Button>
-                <Button
-                  onClick={() => handleButtonClick(3)}
-                  bg={selectedDistractor === 3 ? 'blue.300' : 'gray.300'}
-                  color="black"
-                  width="12em"
-                  fontSize="1.2rem"
-                  {...register('selectDistractor')}
-                  value={3}
-                >
-                  3
-                </Button>
+                {LANGUAGES.map((lang) => (
+                  <Button
+                    key={lang.id}
+                    onClick={() => {
+                      setSelectedLanguage(lang.id);
+                      setValue('selectLanguage', lang.id);
+                    }}
+                    bg={selectedLanguage === lang.id ? 'blue.300' : 'gray.300'}
+                    color="black"
+                    width="12em"
+                    fontSize="1.2rem"
+                    {...register('selectLanguage')}
+                  >
+                    {t(lang.name)}
+                  </Button>
+                ))}
               </Stack>
+
               <FormErrorMessage>
-                {errors.selectDistractor && t('selectDistractorError')}
+                {errors.selectLanguage && t('selectLanguageError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -249,20 +225,21 @@ const SelectDistractors = (props: any) => {
             <Button
               w="180px"
               h="54px"
+              mx={2}
               bg="#00DEA3"
               borderRadius="12px"
               color="#FFFFFF"
               fontFamily="Graphik LCG"
               fontWeight="700"
               fontSize="15px"
-              onClick={handleBackToSelectBook}
-              mx={2}
+              onClick={props.onClose}
             >
-              {t('backToSelectBook')}
+              {t('back')}
             </Button>
             <Button
               w="180px"
               h="54px"
+              mx={2}
               bg="#00DEA3"
               borderRadius="12px"
               color="#FFFFFF"
@@ -270,7 +247,6 @@ const SelectDistractors = (props: any) => {
               fontWeight="700"
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
-              mx={2}
             >
               {t('play')}
             </Button>
@@ -288,32 +264,20 @@ const SelectDistractors = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <SelectLanguage
-          isOpen={isOpenLanguage}
-          onClose={onCloseLanguage}
-          formData={props.formData}
-          setFormData={props.setFormData}
+        <OpenconnectedGar
+          isOpen={isOpenConnected}
+          onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
-          onCloseSelectBooksBed={props.onCloseSelectBooksBed}
-          onCloseSelectDistractors={props.onClose}
+          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+          SelectDistractors={props.onClose}
+          onCloseSelectNumber={props.onCloseSelectNumber}
           oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />
       )}
-
-      {/* 
-        {onOpenConnected && (
-         <OpenConnectedVi
-         isOpen={isOpenConnected}
-         onClose={onCloseConnected}
-         onclosemodules={props.onclosemodules}
-         onCloseSelectBooksBed={props.onCloseSelectBooksBed}
-         onCloseSelectDistractors={props.onClose}
-       />
-      )} */}
     </>
   );
 };
 
-export default SelectDistractors;
+export default SelectLanguage;
