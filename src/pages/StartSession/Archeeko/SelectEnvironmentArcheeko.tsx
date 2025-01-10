@@ -28,9 +28,6 @@ const SelectEnvironmentArcheeko = (props: any) => {
     onClose: onCloseSelectNumber,
   } = useDisclosure();
 
-  // const [formData, setFormData] = useState<any[]>([
-  //   -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000,
-  // ]);
 
   const schema = joi.object({
     selectEnvironment: joi.number().required(),
@@ -79,9 +76,7 @@ const SelectEnvironmentArcheeko = (props: any) => {
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          {/* <Box borderBottom="1px solid rgba(0, 0, 0, 0.08)">
-            <ModalCloseButton marginLeft="100px" />
-          </Box> */}
+          
           <ModalHeader textAlign="center" fontSize="1rem">
            {t('chooseEnvironment')}
           </ModalHeader>

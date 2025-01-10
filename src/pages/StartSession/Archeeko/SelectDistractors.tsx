@@ -26,6 +26,7 @@ import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { useTranslation } from 'react-i18next';
+import Language from './Language';
 
 const SelectDistractors = (props: any) => {
   const { t } = useTranslation();
@@ -38,6 +39,11 @@ const SelectDistractors = (props: any) => {
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
+   const {
+      isOpen: isOpenLanguage,
+      onOpen: onOpenLanguage,
+      onClose: onCloseLanguage,
+    } = useDisclosure();
 
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
@@ -79,8 +85,8 @@ const SelectDistractors = (props: any) => {
     console.log('all subimtted data in distractor', updatedFormData);
     props.setFormData(updatedFormData);
 
-    navigate('/home');
-    props.onClose();
+    
+  onOpenLanguage();
     toastIdRef.current = toast({
       title: 'Success',
       description: (
@@ -121,7 +127,7 @@ const SelectDistractors = (props: any) => {
     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     if (appIsConnectedToInternet && existingDevice) {
       // if (appIsConnectedToInternet ) {
-      console.log(updatedFormData);
+    
       const socketMessage = {
         sessionId,
         [MODULE_PACKAGE_KEY]: module,
@@ -268,7 +274,7 @@ const SelectDistractors = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              {t('play')}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -284,29 +290,22 @@ const SelectDistractors = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenconnectedArcheeko
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
-          onclosemodules={props.onclosemodules}
-          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={props.onClose}
-          onCloseSelectNumber={props.onCloseSelectNumber}
-          oncloseselectlevel={props.oncloseselectlevel}
-          closeAllModalsAndToast={closeAllModalsAndToast}
-          closeAllModals={closeAllModalsAndToast}
+        
+        <Language
+        isOpen={isOpenLanguage}
+        onClose={onCloseLanguage}
+        formData={props.formData}
+        updatedFormData={props.updatedFormData}
+        selectedNumber={props.selectedNumber}
+        setFormData={props.setFormData}
+
+        onclosemodules={props.onclosemodules}
+        onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+        onCloseSelectNumber={props.onClose}
+        oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
-      {/* {onOpenConnected && (
-        <OpenconnectedArcheeko
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
-          onclosemodules={props.onclosemodules}
-          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={props.onClose}
-          onCloseSelectNumber={props.onCloseSelectNumber}
-          oncloseselectlevel={props.oncloseselectlevel}
-        />
-      )} */}
+      
     </>
   );
 };

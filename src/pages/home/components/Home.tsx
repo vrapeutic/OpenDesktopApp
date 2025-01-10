@@ -132,7 +132,7 @@ export default function Home() {
     setArrow(false);
   };
 
-  console.log('sessionData:', sessionData);
+
 
   useEffect(() => {
     if (sessionIds.length > 0 && reportDir) {

@@ -399,5 +399,8 @@
       "array": "Specializations must be a valid list"
     }
   },
-  "enterRegisterEmail": "Please enter your email address you used for registration."
+  "enterRegisterEmail": "Please enter your email address you used for registration.",
+  "vietnamese":"Vietnamese",
+  "English":"Tiếng Anh"
+
 }

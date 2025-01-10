@@ -397,5 +397,7 @@
       "array": "Chuyên ngành phải là một danh sách hợp lệ"
     }
   },
-  "enterRegisterEmail": "Vui lòng nhập địa chỉ email bạn đã dùng để đăng ký."
+  "enterRegisterEmail": "Vui lòng nhập địa chỉ email bạn đã dùng để đăng ký.",
+  "vietnamese":"Tiếng Việt",
+  "English":"Tiếng Anh"
 }

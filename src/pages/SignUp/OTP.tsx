@@ -66,7 +66,7 @@ export default function OTP() {
         
 
 
-        'https://vrapeutic-unicef.eu-west-1.elasticbeanstalk.com/api/v1/admins/software_modules',
+        'https://vrapeutic-api-production.eba-7rjfenj2.eu-west-1.elasticbeanstalk.com/api/v1/admins/software_modules',
         {
           headers: {
             otp: `${otp}`,
