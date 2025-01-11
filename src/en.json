@@ -372,7 +372,7 @@
   "YouAssignedLevel6": "You assigned level {{level}} and Attention Duration {{attentionDuration}} and distractor {{distractor}}, module name is {{module}}, and session ID is {{sessionId}}.",
   "YouAssignedLevel7": "You assigned level {{level}}, Attention Duration {{attentionDuration}}, module name is {{module}}, and session ID is {{sessionId}}.",
   "YouAssignedLevel8": "You assigned level {{level}}, environment {{environment}}, jewel {{jewel}}, module name is {{module}}, and session ID is {{sessionId}}.",
-  "YouAssignedLevel9": "You assigned level {{level}}, environment {{environment}}, jewel {{jewel}}, distractor {{distractor}}.",
+  "YouAssignedLevel9": "You assigned level {{level}}, environment {{environment}}, jewel {{jewel}}, distractor {{distractor}},module name is {{module}},language is {{language}}, and session ID is {{sessionId}}",
   "YouSelectKickDirection": "You select Kick direction {{direction}}, Number of Players {{player}}, Number of Kicks {{kicks}}, Ball Speed {{ball}}, Screw {{screw}}.",
   "InvitationMessage": "You have been invited by {{invitedBy}} to join the center named {{centerName}}. You can accept or reject the invitation by clicking on one of the buttons below.",
   "Accept": "Accept",
