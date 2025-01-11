@@ -84,7 +84,7 @@ const SelectNumberArcheeko = (props: any) => {
       ...props.formData.slice(3),
     ];
     props.setFormData(updatedFormData);
-
+ console.log(updatedFormData,"jjjjj");
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
@@ -92,71 +92,73 @@ const SelectNumberArcheeko = (props: any) => {
 
       console.log('session id', sessionId);
 
-      toastIdRef.current = toast({
-        title: 'Success',
-        description: (
-          <Box>
-            {t('YouAssignedLevel3', {
-              level: updatedFormData[0],
-              environment: props.formData[1],
-              number: props.selectedNumber,
-              module,
-              sessionId,
-            })}
-            <Button
-              color={'white'}
-              width={3}
-              height={5}
-              onClick={() => {
-                if (toastIdRef.current) {
-                  toast.close(toastIdRef.current);
-                }
-              }}
-              position={'absolute'}
-              top={3}
-              right={3}
-            >
-              x
-            </Button>
-          </Box>
-        ),
-        status: 'success',
-        duration: null,
-        position: 'bottom-left',
-        onCloseComplete: () => {
-          console.log('Toast has been removed.');
-          // Additional logic for when the toast is removed
-        },
-      });
-      const existingDevice = await checkIfServiceExists(headsetKey);
-      const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-      if (appIsConnectedToInternet && existingDevice) {
-        // if (appIsConnectedToInternet ) {
-        console.log(updatedFormData);
-        const socketMessage = {
-          sessionId,
-          [MODULE_PACKAGE_KEY]: module,
-          deviceId: headsetKey,
-        };
+      // toastIdRef.current = toast({
+      //   title: 'Success',
+      //   description: (
+      //     <Box>
+      //  {t('YouAssignedLevel3', {
+      //                 level: updatedFormData[0],
+      //                 environment: props.formData[1],
+      //                 number: props.selectedNumber,
+      //                 distractor: props.formData[3],
+      //                 language: data.selectDistractors,
+      //                 module,
+      //                 sessionId,
+      //               })}
+      //       <Button
+      //         color={'white'}
+      //         width={3}
+      //         height={5}
+      //         onClick={() => {
+      //           if (toastIdRef.current) {
+      //             toast.close(toastIdRef.current);
+      //           }
+      //         }}
+      //         position={'absolute'}
+      //         top={3}
+      //         right={3}
+      //       >
+      //         x
+      //       </Button>
+      //     </Box>
+      //   ),
+      //   status: 'success',
+      //   duration: null,
+      //   position: 'bottom-left',
+      //   onCloseComplete: () => {
+      //     console.log('Toast has been removed.');
+      //     // Additional logic for when the toast is removed
+      //   },
+      // });
+      // const existingDevice = await checkIfServiceExists(headsetKey);
+      // const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+      // if (appIsConnectedToInternet && existingDevice) {
+      //   // if (appIsConnectedToInternet ) {
+      //   console.log(updatedFormData);
+      //   const socketMessage = {
+      //     sessionId,
+      //     [MODULE_PACKAGE_KEY]: module,
+      //     deviceId: headsetKey,
+      //   };
 
-        dispatchSocketMessage(
-          START_APP_MESSAGE,
-          socketMessage,
-          headsetKey,
-          updatedFormData
-        );
-        onOpenConnected();
-      } else {
-        console.log(headsetKey);
-        console.log(existingDevice);
-        const errorMessage = !appIsConnectedToInternet
-          ? t('connectionError')
-          : t('NoHeadsetFound');
+      //   dispatchSocketMessage(
+      //     START_APP_MESSAGE,
+      //     socketMessage,
+      //     headsetKey,
+      //     updatedFormData
+      //   );
+      //   onOpenConnected();
+      // } else {
+      //   console.log(headsetKey);
+      //   console.log(existingDevice);
+      //   const errorMessage = !appIsConnectedToInternet
+      //     ? t('connectionError')
+      //     : t('NoHeadsetFound');
 
-        console.log(errorMessage);
-        setErrorMEssage(errorMessage);
-        setNotFound(true);
-      }
+      //   console.log(errorMessage);
+      //   setErrorMEssage(errorMessage);
+      //   setNotFound(true);
+      // }
 
       console.log('Array of menu choices', updatedFormData);
     }

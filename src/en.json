@@ -364,7 +364,7 @@
   "connectedVr": " You are connected to the VR headset",
   "sampleplaceholder": "Here is a sample placeholder",
   "errorEvaluation": "You must select an Evaluation",
-  "YouAssignedLevel3": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, module name is {{module}}, and session ID is {{sessionId}}.",
+  "YouAssignedLevel3": "You assigned level {{level}}, environment {{environment}}, Numberis {{number}},distractor is {{distractor}},language is {{language}}, module name is {{module}}, and session ID is {{sessionId}}.",
   "headsetIsNotAvailable": "headset is not available for session",
   "ChooseNumberArrows/Shots": "Choose Number of Arrows/Shots",
   "YouAssignedLevel4": "You assigned level {{level}}, environment {{environment}}, Number {{number}}, distractor {{distractors}}, module name is {{module}}, and session ID is {{sessionId}}.",

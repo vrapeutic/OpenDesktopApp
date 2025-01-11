@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 const SelectEnvironmentArcheeko = (props: any) => {
      const { t } = useTranslation();
-  const [formData, setFormData] = useState<any[]>([]);
+
   const {
     isOpen: isOpenSelectNumber,
     onOpen: onOpenSelectNumber,
@@ -148,10 +148,10 @@ const SelectEnvironmentArcheeko = (props: any) => {
           onClose={onCloseSelectNumber}
           onCloseSelectEnvironment={props.onClose}
           formData={props.formData}
-          setFormData={setFormData}
+          setFormData={props.setFormData}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
-          level={formData[0] && formData[0].level}
+          level={props.formData[0] && props.formData[0].level}
         />
       )}
     </>
