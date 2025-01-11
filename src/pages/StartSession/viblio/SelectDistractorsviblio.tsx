@@ -20,21 +20,22 @@ import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-
 import OpenConnectedVi from './openConnectedVi';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { useTranslation } from 'react-i18next';
+import SelectLanguage from './SelectLanguage';
+import { on } from 'events';
 
 const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
-    isOpen: isOpenConnected,
-    onOpen: onOpenConnected,
-    onClose: onCloseConnected,
+    isOpen: isOpenLanguage,
+    onOpen: onOpenLanguage,
+    onClose: onCloseLanguage,
   } = useDisclosure();
   const [selectedDistractor, setselectedDistractor] = useState<number | null>(
     null
@@ -55,9 +56,12 @@ const SelectDistractors = (props: any) => {
   const { t } = useTranslation();
 
   const schema = joi.object({
-    selectDistractor: joi.number().required().messages({
-      'any.required': t('validation.age.rerequired')
-    })
+    selectDistractor: joi
+      .number()
+      .required()
+      .messages({
+        'any.required': t('validation.age.rerequired'),
+      }),
   });
   const {
     register,
@@ -79,76 +83,78 @@ const SelectDistractors = (props: any) => {
     ];
     props.setFormData(updatedFormData);
 
-    navigate('/home');
+    onOpenLanguage();
+
+    // navigate('/home');
     // props.onClose();
     // props.oncloseselectlevel();
     // props.onclosemodules();
     // props.onCloseBooks();
     // onOpenConnected();
 
-    toastIdRef.current = toast({
-      title: 'Success',
-      description: (
-        <Box>
-          {t('YouAssignedLevel', {
-            level: updatedFormData[0],
-            book: props.formData[1],
-            distractor: selectedDistractor,
-            module,
-            sessionId,
-          })}
-          <Button
-            color={'white'}
-            width={3}
-            height={5}
-            onClick={() => {
-              if (toastIdRef.current) {
-                toast.close(toastIdRef.current);
-              }
-            }}
-            position={'absolute'}
-            top={3}
-            right={3}
-          >
-            x
-          </Button>
-        </Box>
-      ),
-      status: 'success',
-      duration: null,
-      position: 'bottom-left',
-      onCloseComplete: () => {
-        console.log('Toast has been removed.');
-        // Additional logic for when the toast is removed
-      },
-    });
-    const existingDevice = await checkIfServiceExists(headsetKey);
-    const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    if (appIsConnectedToInternet && existingDevice) {
-      console.log(updatedFormData);
-      const socketMessage = {
-        sessionId,
-        [MODULE_PACKAGE_KEY]: module,
-        deviceId: headsetKey,
-      };
+    // toastIdRef.current = toast({
+    //   title: 'Success',
+    //   description: (
+    //     <Box>
+    //       {t('YouAssignedLevel', {
+    //         level: updatedFormData[0],
+    //         book: props.formData[1],
+    //         distractor: selectedDistractor,
+    //         module,
+    //         sessionId,
+    //       })}
+    //       <Button
+    //         color={'white'}
+    //         width={3}
+    //         height={5}
+    //         onClick={() => {
+    //           if (toastIdRef.current) {
+    //             toast.close(toastIdRef.current);
+    //           }
+    //         }}
+    //         position={'absolute'}
+    //         top={3}
+    //         right={3}
+    //       >
+    //         x
+    //       </Button>
+    //     </Box>
+    //   ),
+    //   status: 'success',
+    //   duration: null,
+    //   position: 'bottom-left',
+    //   onCloseComplete: () => {
+    //     console.log('Toast has been removed.');
+    //     // Additional logic for when the toast is removed
+    //   },
+    // });
+    // const existingDevice = await checkIfServiceExists(headsetKey);
+    // const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+    // if (appIsConnectedToInternet && existingDevice) {
+    //   console.log(updatedFormData);
+    //   const socketMessage = {
+    //     sessionId,
+    //     [MODULE_PACKAGE_KEY]: module,
+    //     deviceId: headsetKey,
+    //   };
 
-      dispatchSocketMessage(
-        START_APP_MESSAGE,
-        socketMessage,
-        headsetKey,
-        updatedFormData
-      );
-      onOpenConnected();
-    } else {
-      console.log(headsetid);
-      console.log(existingDevice);
-      const errorMessage = !appIsConnectedToInternet
-        ?  t('connectionError')
-        : t('NoHeadsetFound');
+    //   dispatchSocketMessage(
+    //     START_APP_MESSAGE,
+    //     socketMessage,
+    //     headsetKey,
+    //     updatedFormData
+    //   );
 
-      setErrorMEssage(errorMessage);
-      setNotFound(true);
-    }
+    // } else {
+    //   console.log(headsetid);
+    //   console.log(existingDevice);
+    //   const errorMessage = !appIsConnectedToInternet
+    //     ? t('connectionError')
+    //     : t('NoHeadsetFound');
+
+    //   setErrorMEssage(errorMessage);
+    //   setNotFound(true);
+    // }
   };
 
   const cancelSession = () => {
@@ -200,7 +206,7 @@ const SelectDistractors = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-         { t("selectDistractors")}
+            {t('selectDistractors')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -242,7 +248,7 @@ const SelectDistractors = (props: any) => {
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectDistractor && t("selectDistractorError")}
+                {errors.selectDistractor && t('selectDistractorError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -273,7 +279,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-            {t('play')}
+              {t('play')}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -289,9 +295,11 @@ const SelectDistractors = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenConnectedVi
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
+        <SelectLanguage
+          isOpen={isOpenLanguage}
+          onClose={onCloseLanguage}
+          formdata={props.formData}
+          setFormData={props.setFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectBooksviblio={props.onCloseSelectBooksviblio}
           onCloseSelectDistractors={props.onClose}

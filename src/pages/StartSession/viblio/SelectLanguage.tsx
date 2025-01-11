@@ -24,7 +24,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ErrorPopup } from '../ErrorPopup';
-import OpenConnectedBed from './OpenConnectedbed';
+import OpenConnectedVi from './openConnectedVi';
 
 const LANGUAGES = [
   { id: 1, name: 'Vietnamese' },
@@ -68,15 +68,17 @@ const SelectLanguage = (props: any) => {
     mode: 'onSubmit',
   });
 
+  console.log(props.updatedFormData, 'props.formData');
+
   const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
-      props.formData[0],
-      props.formData[1],
-      props.formData[2],
+      props.formData[0], // level
+      props.formData[1], // environment
+      props.formData[2], // number
       data.selectLanguage,
       ...props.formData.slice(4),
     ];
-    console.log(updatedFormData);
+    console.log(updatedFormData, 'updatedFormData');
 
     props.setFormData(updatedFormData);
 
@@ -261,13 +263,14 @@ const SelectLanguage = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenConnectedBed
+        <OpenConnectedVi
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
-          onCloseSelectBooksBed={props.onClose}
-          oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
-          onCloseSelectDistractors={props.onClose}
+          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+          SelectDistractors={props.onClose}
+          onCloseSelectNumber={props.onCloseSelectNumber}
+          oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />
