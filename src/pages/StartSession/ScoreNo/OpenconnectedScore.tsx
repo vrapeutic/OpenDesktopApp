@@ -110,7 +110,6 @@ export default function OpenconnectedScore(props: any) {
       headsetKey
     );
     props.onClose()
-   
     props.onCloseSelectEnvironment()
     props.SelectDistractors()
     props.onCloseSelectNumber()

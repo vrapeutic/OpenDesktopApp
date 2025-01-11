@@ -65,6 +65,7 @@ const Screw = (props: any) => {
     handleSubmit,
     formState: { errors },
     setValue,
+    
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onSubmit',
@@ -137,71 +138,7 @@ const Screw = (props: any) => {
       srcew = 'Not';
     }
     onOpenLanguage();
-//     toastIdRef.current = toast({
-//       title: 'Success',
-//       description: (
-//         <Box>
-//         {t('YouSelectKickDirection', {
-//   direction,
-//   player,
-//   kicks: props.formData[2],
-//   ball,
-//   screw: srcew,
-// })}
-//           <Button
-//             color={'white'}
-//             width={3}
-//             height={5}
-//             onClick={() => {
-//               if (toastIdRef.current) {
-//                 toast.close(toastIdRef.current);
-//               }
-//             }}
-//             position={'absolute'}
-//             top={3}
-//             right={3}
-//           >
-//             x
-//           </Button>
-//         </Box>
-//       ),
-//       status: 'success',
-//       duration: null,
-//       position: 'bottom-left',
-//       onCloseComplete: () => {
-//         console.log('Toast has been removed.');
-//         // Additional logic for when the toast is removed
-//       },
-//     });
-    // const existingDevice = await checkIfServiceExists(headsetKey);
-    // const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    // if (appIsConnectedToInternet && existingDevice) {
-    //   // if (appIsConnectedToInternet ) {
-    //   console.log(updatedFormData);
-    //   const socketMessage = {
-    //     sessionId,
-    //     [MODULE_PACKAGE_KEY]: module,
-    //     deviceId: headsetKey,
-    //   };
 
-    //   dispatchSocketMessage(
-    //     START_APP_MESSAGE,
-    //     socketMessage,
-    //     headsetKey,
-    //     updatedFormData
-    //   );
-     
-    // } else {
-    //   console.log(headsetKey);
-    //   console.log(existingDevice);
-    //   const errorMessage = !appIsConnectedToInternet
-    //     ? t('connectionError')
-    //     : t('NoHeadsetFound'); 
-
-    //   console.log(errorMessage);
-    //   setErrorMEssage(errorMessage);
-    //   setNotFound(true);
-    // }
     console.log(
       updatedFormData,
       `You select  Kick direction ${updatedFormData[0]} , Number of Kicks ${props.formData[1]} , Ball Speed ${props.selectedNumber},
@@ -321,7 +258,7 @@ const Screw = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              {t("play")}
+              {t("next")}
             </Button>
           </ModalFooter>
         </ModalContent>
