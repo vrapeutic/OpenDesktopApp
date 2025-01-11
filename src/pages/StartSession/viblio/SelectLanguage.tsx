@@ -68,8 +68,6 @@ const SelectLanguage = (props: any) => {
     mode: 'onSubmit',
   });
 
-  console.log(props.updatedFormData, 'props.formData');
-
   const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
       props.formData[0],
@@ -143,10 +141,6 @@ const SelectLanguage = (props: any) => {
       setErrorMEssage(errorMessage);
       setNotFound(true);
     }
-  };
-  const handleButtonClick = (language: number) => {
-    setSelectedLanguage(language);
-    setValue('selectLanguage', language);
   };
 
   const closeAllModalsAndToast = () => {
@@ -266,11 +260,10 @@ const SelectLanguage = (props: any) => {
         <OpenConnectedVi
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
-          onclosemodules={props.onclosemodules}
-          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={props.onClose}
-          onCloseSelectNumber={props.onCloseSelectNumber}
+          onCloseSelectBooksviblio={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectDistractors={props.onClose}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />

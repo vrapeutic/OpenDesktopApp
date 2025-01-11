@@ -271,7 +271,7 @@ const SelectBooksViblio = (props: any) => {
               mx={2}
             >
               {props.formData[0] == 2 || props.formData[0] == 3
-                ? t('selectDistractor')
+                ? t('selectBooks')
                 : t('play')}
             </Button>
           </ModalFooter>
@@ -305,6 +305,7 @@ const SelectBooksViblio = (props: any) => {
           onClose={onCloseLanguage}
           formData={props.formData}
           setFormData={props.setFormData}
+          updatedFormData={props.updatedFormData}
           onCloseSelectBooksviblio={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}

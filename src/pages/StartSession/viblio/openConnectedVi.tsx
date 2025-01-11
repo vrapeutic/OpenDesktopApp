@@ -15,7 +15,7 @@ import {
 import { getMe } from '@renderer/cache';
 
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import { END_SESSION_MESSAGE } from '@main/constants'
+import { END_SESSION_MESSAGE } from '@main/constants';
 import axios from 'axios';
 import { config } from '@renderer/config';
 
@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function OpenConnectedVi(props: any) {
   const { dispatchSocketMessage } = useSocketManager();
-  const { startSession, sessionId , headsetKey } = useStartSessionContext();
+  const { startSession, sessionId, headsetKey } = useStartSessionContext();
   const toast = useToast();
   const { t } = useTranslation();
   const {
@@ -35,7 +35,6 @@ export default function OpenConnectedVi(props: any) {
   } = useDisclosure();
 
   const handle = async () => {
-   
     try {
       localStorage.removeItem('sessionID');
       dispatchSocketMessage(
@@ -44,7 +43,7 @@ export default function OpenConnectedVi(props: any) {
         headsetKey
       );
       await endSissionApi();
-      onevaluationOpen()
+      onevaluationOpen();
       // props.onClose();
       // props.onclosemodules();
       // navigate('/');
@@ -73,20 +72,20 @@ export default function OpenConnectedVi(props: any) {
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
     const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
-  
+
     // Format the date string
     const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
-  
+
     console.log(formattedDate);
-  
+
     const date1String = startSession;
     const date2String = formattedDate;
     console.log(date1String, date2String);
-  
+
     // Create Date objects
-    const date1:any = new Date(date1String);
-    const date2:any = new Date(date2String);
-  
+    const date1: any = new Date(date1String);
+    const date2: any = new Date(date2String);
+
     // Calculate the difference in milliseconds
     const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
     console.log(timeDifferenceInMilliseconds);
@@ -95,36 +94,38 @@ export default function OpenConnectedVi(props: any) {
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
-    props.closeAllModalsAndToast()
+    props.closeAllModalsAndToast();
 
     const api = axios.put(
-        `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
-        {   "vr_duration": differenceInMinutes },
-        { headers }
-      );
-    return  api
+      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+      { vr_duration: differenceInMinutes },
+      { headers }
+    );
+    return api;
   };
-  const antherModule =()=>{
+  const antherModule = () => {
     dispatchSocketMessage(
       END_SESSION_MESSAGE,
       { deviceId: headsetKey },
       headsetKey
     );
-    props.onClose()
-    props.closeAllModalsAndToast()
-    
-    props.onCloseSelectBooksviblio()
-    props.oncloseselectlevel()
-    props.onCloseSelectDistractors()
-   
-  }
-  
+    props.onClose();
+    props.closeAllModalsAndToast();
+
+    props.onCloseSelectBooksviblio();
+    props.oncloseselectlevel();
+    props.onCloseSelectDistractors();
+  };
 
   return (
     <>
       <Box>
-        <Modal isOpen={props.isOpen} onClose={props.onClose}  closeOnOverlayClick={false}
-        closeOnEsc={false}>
+        <Modal
+          isOpen={props.isOpen}
+          onClose={props.onClose}
+          closeOnOverlayClick={false}
+          closeOnEsc={false}
+        >
           <ModalOverlay />
           <ModalContent
             h="400px"
@@ -133,7 +134,7 @@ export default function OpenConnectedVi(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-             {t('connectedVr')} {headsetKey}
+              {t('connectedVr')} {headsetKey}
             </ModalHeader>
 
             <ModalBody>
@@ -144,7 +145,7 @@ export default function OpenConnectedVi(props: any) {
                 textAlign="center"
                 color="#595959"
               >
-               {t('sessionInProgress')}
+                {t('sessionInProgress')}
               </Text>
 
               <Text
@@ -185,7 +186,7 @@ export default function OpenConnectedVi(props: any) {
                 marginLeft="10px"
                 onClick={antherModule}
               >
-              {t('endSession')}
+                {t('playAnotherModule')}
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -196,8 +197,8 @@ export default function OpenConnectedVi(props: any) {
         <SelectEvaluation
           isOpen={isevaluationopen}
           onClose={onevalutionClose}
-         closeopenconnected={props.onClose}
-         closemodules={props.onclosemodules}
+          closeopenconnected={props.onClose}
+          closemodules={props.onclosemodules}
         />
       )}
     </>

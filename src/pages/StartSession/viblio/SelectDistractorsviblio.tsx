@@ -279,7 +279,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              {t('play')}
+              {t('selectDistractors')}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -298,8 +298,9 @@ const SelectDistractors = (props: any) => {
         <SelectLanguage
           isOpen={isOpenLanguage}
           onClose={onCloseLanguage}
-          formdata={props.formData}
+          formData={props.formData}
           setFormData={props.setFormData}
+          updatedFormData={props.updatedFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectBooksviblio={props.onCloseSelectBooksviblio}
           onCloseSelectDistractors={props.onClose}

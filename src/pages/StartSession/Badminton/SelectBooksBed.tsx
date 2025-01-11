@@ -271,7 +271,7 @@ const SelectBooksBed = (props: any) => {
               mx={2}
             >
               {props.formData[0] == 2 || props.formData[0] == 3
-                ? t('selectDistractors')
+                ? t('selectBooks')
                 : t('play')}
             </Button>
           </ModalFooter>
