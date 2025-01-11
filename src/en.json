@@ -400,7 +400,7 @@
     }
   },
   "enterRegisterEmail": "Please enter your email address you used for registration.",
-  "vietnamese":"Vietnamese",
-  "English":"Tiếng Anh"
-
+  "vietnamese": "Vietnamese",
+  "English": "English",
+  "selectLanguageError": "Please select a language"
 }

@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
+  FormControl,
+  FormErrorMessage,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,26 +10,24 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  FormControl,
-  FormErrorMessage,
   Stack,
-  useToast,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
-import joi from 'joi';
-import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { useNavigate } from 'react-router-dom';
-
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-
-import useSocketManager from '@renderer/Context/SocketManagerProvider';
-import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
-import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
-import SelectDistractors from './SelectDistractors';
-import OpenConnectedBed from './OpenConnectedbed';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import joi from 'joi';
+import { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ErrorPopup } from '../ErrorPopup';
+import SelectDistractors from './SelectDistractors';
+import SelectLanguage from './SelectLanguage';
+
 const SelectBooksBed = (props: any) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -36,9 +35,9 @@ const SelectBooksBed = (props: any) => {
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const toast = useToast();
   const {
-    isOpen: isOpenConnected,
-    onOpen: onOpenConnected,
-    onClose: onCloseConnected,
+    isOpen: isOpenLanguage,
+    onOpen: onOpenLanguage,
+    onClose: onCloseLanguage,
   } = useDisclosure();
   const {
     isOpen: isOpenSelectDistractors,
@@ -137,7 +136,7 @@ const SelectBooksBed = (props: any) => {
           headsetKey,
           updatedFormData
         );
-        onOpenConnected();
+        onOpenLanguage();
       } else {
         const errorMessage = !appIsConnectedToInternet
           ? t('connectionError')
@@ -301,9 +300,11 @@ const SelectBooksBed = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenConnectedBed
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
+        <SelectLanguage
+          isOpen={isOpenLanguage}
+          onClose={onCloseLanguage}
+          formData={props.formData}
+          setFormData={props.setFormData}
           onCloseSelectBooksBed={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}

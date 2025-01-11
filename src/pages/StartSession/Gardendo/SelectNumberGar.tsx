@@ -26,14 +26,15 @@ import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { useTranslation } from 'react-i18next';
+import SelectLanguage from './SelectLanguage';
 const SelectNumberGar = (props: any) => {
   const toast = useToast();
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
-    isOpen: isOpenConnected,
-    onOpen: onOpenConnected,
-    onClose: onCloseConnected,
+    isOpen: isOpenLanguage,
+    onOpen: onOpenLanguage,
+    onClose: onCloseLanguage,
   } = useDisclosure();
   const navigate = useNavigate();
 
@@ -57,7 +58,7 @@ const SelectNumberGar = (props: any) => {
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
   const { socketError } = useSocketManager();
-  const toastIdRef:any = useRef();
+  const toastIdRef: any = useRef();
   const {
     register,
     handleSubmit,
@@ -70,7 +71,6 @@ const SelectNumberGar = (props: any) => {
 
   let updatedFormData;
   const handleFormSubmit = async (data: any) => {
-    console.log(data.selectNumber);
     updatedFormData = [
       props.formData[0],
       props.formData[1],
@@ -83,77 +83,76 @@ const SelectNumberGar = (props: any) => {
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      navigate('/Therapycenters');
+      onOpenLanguage();
+
+      // navigate('/Therapycenters');
 
       console.log('session id', sessionId);
-      toastIdRef.current = toast({
-        title: 'Success',
-        description: (
-          <Box>
-          { t('YouAssignedLevel', {
-  level: updatedFormData[0],
-  environment: props.formData[1],
-  number: selectedNumber,
-  module,
-  sessionId,
-})}
-            <Button
-             color={"white"}
-              width={3}
-              height={5}
-              onClick={() => {
-                if (toastIdRef.current) {
-                 
-                  toast.close(toastIdRef.current);
-                }
-              }}
-            position={"absolute"}
-       
-            top={3}
-            right={3}
-          
-            >
-          x
-            </Button>
-          </Box>
-        ),
-        status: 'success',
-        duration: null,
-        position: 'bottom-left',
-        onCloseComplete: () => {
-          console.log('Toast has been removed.');
-          // Additional logic for when the toast is removed
-        },
-      });
+      // toastIdRef.current = toast({
+      //   title: 'Success',
+      //   description: (
+      //     <Box>
+      //       {t('YouAssignedLevel', {
+      //         level: updatedFormData[0],
+      //         environment: props.formData[1],
+      //         number: selectedNumber,
+      //         module,
+      //         sessionId,
+      //       })}
+      //       <Button
+      //         color={'white'}
+      //         width={3}
+      //         height={5}
+      //         onClick={() => {
+      //           if (toastIdRef.current) {
+      //             toast.close(toastIdRef.current);
+      //           }
+      //         }}
+      //         position={'absolute'}
+      //         top={3}
+      //         right={3}
+      //       >
+      //         x
+      //       </Button>
+      //     </Box>
+      //   ),
+      //   status: 'success',
+      //   duration: null,
+      //   position: 'bottom-left',
+      //   onCloseComplete: () => {
+      //     console.log('Toast has been removed.');
+      //     // Additional logic for when the toast is removed
+      //   },
+      // });
 
-      const existingDevice = await checkIfServiceExists(headsetKey);
-      const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-      if (appIsConnectedToInternet && existingDevice) {
-        console.log('updatedFormData', updatedFormData);
-        const socketMessage = {
-          sessionId,
-          [MODULE_PACKAGE_KEY]: module,
-          deviceId: headsetKey,
-        };
+      // const existingDevice = await checkIfServiceExists(headsetKey);
+      // const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+      // if (appIsConnectedToInternet && existingDevice) {
+      //   console.log('updatedFormData', updatedFormData);
+      //   const socketMessage = {
+      //     sessionId,
+      //     [MODULE_PACKAGE_KEY]: module,
+      //     deviceId: headsetKey,
+      //   };
 
-        dispatchSocketMessage(
-          START_APP_MESSAGE,
-          socketMessage,
-          headsetKey,
-          updatedFormData
-        );
-        onOpenConnected();
-      } else {
-        console.log(headsetid);
-        console.log(existingDevice);
-        const errorMessage = !appIsConnectedToInternet
-          ? t('connectionError')
-          : t('NoHeadsetFound');
+      //   dispatchSocketMessage(
+      //     START_APP_MESSAGE,
+      //     socketMessage,
+      //     headsetKey,
+      //     updatedFormData
+      //   );
+      //   onOpenLanguage();
+      // } else {
+      //   console.log(headsetid);
+      //   console.log(existingDevice);
+      //   const errorMessage = !appIsConnectedToInternet
+      //     ? t('connectionError')
+      //     : t('NoHeadsetFound');
 
-        console.log(errorMessage);
-        setErrorMEssage(errorMessage);
-        setNotFound(true);
-      }
+      //   console.log(errorMessage);
+      //   setErrorMEssage(errorMessage);
+      //   setNotFound(true);
+      // }
 
       console.log(
         `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, Number ${selectedNumber} ,
@@ -191,8 +190,7 @@ const SelectNumberGar = (props: any) => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
-  
-  }
+  };
 
   return (
     <>
@@ -208,7 +206,7 @@ const SelectNumberGar = (props: any) => {
               <ModalCloseButton marginLeft="100px" />
             </Box> */}
           <ModalHeader textAlign="center" fontSize="1rem">
-           {t("chooseNumberOfPots")}
+            {t('chooseNumberOfPots')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -247,7 +245,7 @@ const SelectNumberGar = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectNumber && t("selectNumberError")}
+                {errors.selectNumber && t('selectNumberError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -264,7 +262,7 @@ const SelectNumberGar = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              {t("back")}
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -278,7 +276,7 @@ const SelectNumberGar = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              {props.level != 1 ? t('next') :t("play")}
+              {props.level != 1 ? t('next') : t('play')}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -309,9 +307,12 @@ const SelectNumberGar = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenconnectedGar
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
+        <SelectLanguage
+          isOpen={isOpenLanguage}
+          onClose={onCloseLanguage}
+          formData={props.formData}
+          setFormData={props.setFormData}
+          updatedFormData={updatedFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
           SelectDistractors={onCloseSelectDistractors}
