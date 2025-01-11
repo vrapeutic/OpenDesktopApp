@@ -72,84 +72,7 @@ import { useTranslation } from 'react-i18next';
   
       console.log('updated form data in number', updatedFormData);
       onOpenSelectDistractors();
-    //   if (props.formData[0] === 2 || props.formData[0] === 3) {
-    //     onOpenSelectDistractors();
-    //   } else {
-    //     navigate('/Therapycenters');
-  
-    //     console.log('session id', sessionId);
-  
-       
-  
-    //     toastIdRef.current = toast({
-    //       title: 'Success',
-    //       description: (
-    //         <Box>
-    //           {`You assigned level ${updatedFormData[0]}, environment ${props.formData[1]}, Number ${props.selectedNumber}, module name is ${module} and session id is ${sessionId}`}
-    //           <Button
-    //            color={"white"}
-    //             width={3}
-    //             height={5}
-    //             onClick={() => {
-    //               if (toastIdRef.current) {
-                   
-    //                 toast.close(toastIdRef.current);
-    //               }
-    //             }}
-    //           position={"absolute"}
-         
-    //           top={3}
-    //           right={3}
-            
-    //           >
-    //         x
-    //           </Button>
-    //         </Box>
-    //       ),
-    //       status: 'success',
-    //       duration: null,
-    //       position: 'bottom-left',
-    //       onCloseComplete: () => {
-    //         console.log('Toast has been removed.');
-    //         // Additional logic for when the toast is removed
-    //       },
-    //     });
-    //     const existingDevice = await checkIfServiceExists(headsetKey);
-    //     const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    //     if (appIsConnectedToInternet && existingDevice) {
-    //       // if (appIsConnectedToInternet ) {
-    //       console.log(updatedFormData);
-    //       const socketMessage = {
-    //         sessionId,
-    //         [MODULE_PACKAGE_KEY]: module,
-    //         deviceId: headsetKey,
-    //       };
-  
-    //       dispatchSocketMessage(
-    //         START_APP_MESSAGE,
-    //         socketMessage,
-    //         headsetKey,
-    //         updatedFormData
-    //       );
-    //       onOpenConnected();
-    //     } else {
-    //       console.log(headsetKey);
-    //       console.log(existingDevice);
-    //       const errorMessage = !appIsConnectedToInternet
-    //         ? 'You are not connected to the internet'
-    //         : 'No headset found';
-  
-    //       console.log(errorMessage);
-    //       setErrorMEssage(errorMessage);
-    //       setNotFound(true);
-    //     }
-  
-    //     console.log(
-    //       `You select Kick direction ${updatedFormData[0]} ,Number of Kicks ${props.formData[1]},  Ball Speed ${selectedNumber} ,
-    //        module name is ${module} and session id is ${sessionId}`
-    //     );
-    //     console.log('Array of menu choices', updatedFormData);
-    //   }
+ 
     };
   
     const handleButtonClick = (number: number) => {
@@ -284,7 +207,7 @@ import { useTranslation } from 'react-i18next';
             isOpen={ isOpenSelectDistractors }
             onClose={onCloseSelectDistractors}
             formData={props.formData}
-            updatedFormData={updatedFormData}
+            updatedFormData={props.updatedFormData}
             selectedNumber={selectedNumber}
             setFormData={props.setFormData}
             onclosemodules={props.onclosemodules}

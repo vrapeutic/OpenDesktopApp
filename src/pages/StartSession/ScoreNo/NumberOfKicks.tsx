@@ -53,7 +53,6 @@ import { useTranslation } from 'react-i18next';
     });
   
     const handleFormSubmit = (data: any) => {
-      console.log(data.selectEnvironment);
       const updatedFormData = [
         props.formData[0],
         props.formData[1],

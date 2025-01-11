@@ -25,6 +25,7 @@ import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import OpenconnectedScore from './OpenconnectedScore';
 import { useTranslation } from 'react-i18next';
+import Language from './Language';
 
 const Screw = (props: any) => {
   const navigate = useNavigate();
@@ -36,7 +37,11 @@ const Screw = (props: any) => {
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
-
+  const {
+      isOpen: isOpenLanguage,
+      onOpen: onOpenLanguage,
+      onClose: onCloseLanguage,
+    } = useDisclosure();
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
   const {
@@ -70,12 +75,11 @@ const Screw = (props: any) => {
       props.formData[0],
       props.formData[1],
       props.formData[2],
-      props.selectedNumber,
       data.selectDistractors,
       ...props.formData.slice(4),
     ];
 
-    console.log('all subimtted data in distractor', updatedFormData);
+    console.log('all subimtted data in distractor', updatedFormData,props.formData);
     props.setFormData(updatedFormData);
 
     navigate('/home');
@@ -132,78 +136,79 @@ const Screw = (props: any) => {
     } else {
       srcew = 'Not';
     }
-    toastIdRef.current = toast({
-      title: 'Success',
-      description: (
-        <Box>
-        {t('YouSelectKickDirection', {
-  direction,
-  player,
-  kicks: props.formData[2],
-  ball,
-  screw: srcew,
-})}
-          <Button
-            color={'white'}
-            width={3}
-            height={5}
-            onClick={() => {
-              if (toastIdRef.current) {
-                toast.close(toastIdRef.current);
-              }
-            }}
-            position={'absolute'}
-            top={3}
-            right={3}
-          >
-            x
-          </Button>
-        </Box>
-      ),
-      status: 'success',
-      duration: null,
-      position: 'bottom-left',
-      onCloseComplete: () => {
-        console.log('Toast has been removed.');
-        // Additional logic for when the toast is removed
-      },
-    });
-    const existingDevice = await checkIfServiceExists(headsetKey);
-    const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    if (appIsConnectedToInternet && existingDevice) {
-      // if (appIsConnectedToInternet ) {
-      console.log(updatedFormData);
-      const socketMessage = {
-        sessionId,
-        [MODULE_PACKAGE_KEY]: module,
-        deviceId: headsetKey,
-      };
+    onOpenLanguage();
+//     toastIdRef.current = toast({
+//       title: 'Success',
+//       description: (
+//         <Box>
+//         {t('YouSelectKickDirection', {
+//   direction,
+//   player,
+//   kicks: props.formData[2],
+//   ball,
+//   screw: srcew,
+// })}
+//           <Button
+//             color={'white'}
+//             width={3}
+//             height={5}
+//             onClick={() => {
+//               if (toastIdRef.current) {
+//                 toast.close(toastIdRef.current);
+//               }
+//             }}
+//             position={'absolute'}
+//             top={3}
+//             right={3}
+//           >
+//             x
+//           </Button>
+//         </Box>
+//       ),
+//       status: 'success',
+//       duration: null,
+//       position: 'bottom-left',
+//       onCloseComplete: () => {
+//         console.log('Toast has been removed.');
+//         // Additional logic for when the toast is removed
+//       },
+//     });
+    // const existingDevice = await checkIfServiceExists(headsetKey);
+    // const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+    // if (appIsConnectedToInternet && existingDevice) {
+    //   // if (appIsConnectedToInternet ) {
+    //   console.log(updatedFormData);
+    //   const socketMessage = {
+    //     sessionId,
+    //     [MODULE_PACKAGE_KEY]: module,
+    //     deviceId: headsetKey,
+    //   };
 
-      dispatchSocketMessage(
-        START_APP_MESSAGE,
-        socketMessage,
-        headsetKey,
-        updatedFormData
-      );
-      onOpenConnected();
-    } else {
-      console.log(headsetKey);
-      console.log(existingDevice);
-      const errorMessage = !appIsConnectedToInternet
-        ? t('connectionError')
-        : t('NoHeadsetFound'); 
+    //   dispatchSocketMessage(
+    //     START_APP_MESSAGE,
+    //     socketMessage,
+    //     headsetKey,
+    //     updatedFormData
+    //   );
+     
+    // } else {
+    //   console.log(headsetKey);
+    //   console.log(existingDevice);
+    //   const errorMessage = !appIsConnectedToInternet
+    //     ? t('connectionError')
+    //     : t('NoHeadsetFound'); 
 
-      console.log(errorMessage);
-      setErrorMEssage(errorMessage);
-      setNotFound(true);
-    }
+    //   console.log(errorMessage);
+    //   setErrorMEssage(errorMessage);
+    //   setNotFound(true);
+    // }
     console.log(
       updatedFormData,
       `You select  Kick direction ${updatedFormData[0]} , Number of Kicks ${props.formData[1]} , Ball Speed ${props.selectedNumber},
          Screw ${selectedDistractors} 
         module name is ${module} and session id is ${sessionId}`
     );
-    console.log('Array of menu choices', updatedFormData);
+    console.log('Array of menu choices sawn', updatedFormData);
   };
   const handleButtonClick = (distractors: number) => {
     setSelectedDistractors(distractors);
@@ -332,16 +337,17 @@ const Screw = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenconnectedScore
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
-          onclosemodules={props.onclosemodules}
-          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={props.onClose}
-          onCloseSelectNumber={props.onCloseSelectNumber}
-          oncloseselectlevel={props.oncloseselectlevel}
-          closeAllModalsAndToast={closeAllModalsAndToast}
-          closeAllModals={closeAllModalsAndToast}
+        <Language
+        isOpen={isOpenLanguage }
+        onClose={onCloseLanguage}
+        formData={props.formData}
+        updatedFormData={props.updatedFormData}
+        selectedNumber={props.selectedNumber}
+        setFormData={props.setFormData}
+        onclosemodules={props.onclosemodules}
+        onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+        onCloseSelectNumber={props.onClose}
+        oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
     </>

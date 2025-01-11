@@ -148,7 +148,7 @@ const NumberOfPlay = (props: any) => {
           onClose={onCloseSelectNumber}
           onCloseselectedNumber={props.onClose}
           formData={props.formData}
-          setFormData={setFormData}
+          setFormData={props.setFormData}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
           level={formData[0] && formData[0].level}
