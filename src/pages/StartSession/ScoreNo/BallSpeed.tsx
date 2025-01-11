@@ -151,7 +151,7 @@ import { useTranslation } from 'react-i18next';
                     fontSize="1.2rem"
                     {...register('selectNumber')}
                   >
-                     1
+                     2
                   </Button>
                   <Button
                     onClick={() => handleButtonClick(3)}
@@ -161,7 +161,7 @@ import { useTranslation } from 'react-i18next';
                     fontSize="1.2rem"
                     {...register('selectNumber')}
                   >
-                    2
+                    3
                   </Button>
                 </Stack>
   
