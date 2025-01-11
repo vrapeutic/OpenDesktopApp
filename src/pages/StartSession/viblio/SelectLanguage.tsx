@@ -72,9 +72,9 @@ const SelectLanguage = (props: any) => {
 
   const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
-      props.formData[0], // level
-      props.formData[1], // environment
-      props.formData[2], // number
+      props.formData[0],
+      props.formData[1],
+      props.formData[2],
       data.selectLanguage,
       ...props.formData.slice(4),
     ];
