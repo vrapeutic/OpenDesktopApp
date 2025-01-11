@@ -283,8 +283,9 @@ const Screw = (props: any) => {
         setFormData={props.setFormData}
         onclosemodules={props.onclosemodules}
         onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-        onCloseSelectNumber={props.onClose}
+        onCloseSelectNumber={props.onCloseSelectNumber}
         oncloseselectlevel={props.oncloseselectlevel}
+        onCloseselectedNumber={props.onCloseselectedNumber}
         />
       )}
     </>

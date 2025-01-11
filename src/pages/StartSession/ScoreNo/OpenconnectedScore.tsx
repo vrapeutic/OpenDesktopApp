@@ -116,6 +116,7 @@ export default function OpenconnectedScore(props: any) {
     props.onCloseSelectNumber()
     props.oncloseselectlevel()
     props.closeAllModalsAndToast()
+   {props.onCloseselectedNumber&&props.onCloseselectedNumber()} 
    
   }
  

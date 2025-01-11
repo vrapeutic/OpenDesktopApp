@@ -330,7 +330,7 @@ const Language = (props: any) => {
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
           SelectDistractors={props.onClose}
           onCloseSelectNumber={props.onCloseSelectNumber}
-          
+          onCloseselectedNumber={props.onCloseselectedNumber}
           oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}

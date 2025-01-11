@@ -213,6 +213,8 @@ import { useTranslation } from 'react-i18next';
             onclosemodules={props.onclosemodules}
             onCloseSelectEnvironment={props.onCloseSelectEnvironment}
             onCloseSelectNumber={props.onClose}
+            onCloseselectedNumber={props.onCloseselectedNumber}
+            
             oncloseselectlevel={props.oncloseselectlevel}
           />
         {/* {onOpenConnected && (
