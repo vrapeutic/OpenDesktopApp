@@ -69,7 +69,7 @@ const SelectEnvironmentGar = (props: any) => {
     setValue('selectEnvironment', envienment);
   };
 
-   const { t } = useTranslation();
+  const { t } = useTranslation();
   return (
     <>
       <Modal
@@ -80,9 +80,8 @@ const SelectEnvironmentGar = (props: any) => {
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-        
           <ModalHeader textAlign="center" fontSize="1rem">
-          {t('chooseEnvironment')}
+            {t('chooseEnvironment')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -96,7 +95,7 @@ const SelectEnvironmentGar = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectEnvironment')}
                 >
-                 {t('garden')}
+                  {t('garden')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -105,11 +104,11 @@ const SelectEnvironmentGar = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectEnvironment')}
                 >
-                  {t("balcony")}
+                  {t('balcony')}
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectEnvironment && t("selectEnvironmentError")}
+                {errors.selectEnvironment && t('selectEnvironmentError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -126,7 +125,7 @@ const SelectEnvironmentGar = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-              {t("back")}
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -140,7 +139,7 @@ const SelectEnvironmentGar = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-             {t("next")}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>

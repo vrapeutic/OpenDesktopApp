@@ -272,7 +272,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              {t('play')}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>

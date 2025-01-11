@@ -21,22 +21,22 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import SelectDistractors from './SelectDistractorsviblio';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-
-import OpenConnectedVi from './openConnectedVi';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { useTranslation } from 'react-i18next';
+import SelectLanguage from './SelectLanguage';
+import { on } from 'events';
 const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
   const { module, sessionId, headsetKey } = useStartSessionContext();
   const toast = useToast();
   const {
-    isOpen: isOpenConnected,
-    onOpen: onOpenConnected,
-    onClose: onCloseConnected,
+    isOpen: isOpenLanguage,
+    onOpen: onOpenLanguage,
+    onClose: onCloseLanguage,
   } = useDisclosure();
   const {
     isOpen: isOpenSelectDistractors,
@@ -80,73 +80,74 @@ const SelectBooksViblio = (props: any) => {
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      navigate('/home');
-
-      toastIdRef.current = toast({
-        title: 'Success',
-        description: (
-          <Box>
-            {t('YouAssignedLevel', {
-              level: updatedFormData[0],
-              book: selectedBook,
-              module,
-              sessionId,
-            })}
-            <Button
-              color={'white'}
-              width={3}
-              height={5}
-              onClick={() => {
-                if (toastIdRef.current) {
-                  toast.close(toastIdRef.current);
-                }
-              }}
-              position={'absolute'}
-              top={3}
-              right={3}
-            >
-              x
-            </Button>
-          </Box>
-        ),
-        status: 'success',
-        duration: null,
-        position: 'bottom-left',
-        onCloseComplete: () => {
-          console.log('Toast has been removed.');
-          // Additional logic for when the toast is removed
-        },
-      });
-
-      const existingDevice = await checkIfServiceExists(headsetKey);
-      const appIsConnectedToInternet = await checkAppNetWorkConnection();
-      //TODO: consider move this flow to HOC
-      console.log('vibloi', appIsConnectedToInternet, existingDevice);
-      if (appIsConnectedToInternet && existingDevice) {
-        console.log(updatedFormData);
-        const socketMessage = {
-          sessionId,
-          [MODULE_PACKAGE_KEY]: module,
-          deviceId: headsetKey,
-        };
-        dispatchSocketMessage(
-          START_APP_MESSAGE,
-          socketMessage,
-          headsetKey,
-          updatedFormData
-        );
-        onOpenConnected();
-      } else {
-        const errorMessage = !appIsConnectedToInternet
-          ? t('connectionError')
-          : t('NoHeadsetFound');
-        console.log(errorMessage);
-        setErrorMEssage(errorMessage);
-        setNotFound(true);
-      }
-
-      console.log('Array of menu choices', updatedFormData);
+      onOpenLanguage();
     }
+    // navigate('/home');
+    //   toastIdRef.current = toast({
+    //     title: 'Success',
+    //     description: (
+    //       <Box>
+    //         {t('YouAssignedLevel', {
+    //           level: updatedFormData[0],
+    //           book: selectedBook,
+    //           module,
+    //           sessionId,
+    //         })}
+    //         <Button
+    //           color={'white'}
+    //           width={3}
+    //           height={5}
+    //           onClick={() => {
+    //             if (toastIdRef.current) {
+    //               toast.close(toastIdRef.current);
+    //             }
+    //           }}
+    //           position={'absolute'}
+    //           top={3}
+    //           right={3}
+    //         >
+    //           x
+    //         </Button>
+    //       </Box>
+    //     ),
+    //     status: 'success',
+    //     duration: null,
+    //     position: 'bottom-left',
+    //     onCloseComplete: () => {
+    //       console.log('Toast has been removed.');
+    //       // Additional logic for when the toast is removed
+    //     },
+    //   });
+
+    //   const existingDevice = await checkIfServiceExists(headsetKey);
+    //   const appIsConnectedToInternet = await checkAppNetWorkConnection();
+    //   //TODO: consider move this flow to HOC
+    //   console.log('vibloi', appIsConnectedToInternet, existingDevice);
+    //   if (appIsConnectedToInternet && existingDevice) {
+    //     console.log(updatedFormData);
+    //     const socketMessage = {
+    //       sessionId,
+    //       [MODULE_PACKAGE_KEY]: module,
+    //       deviceId: headsetKey,
+    //     };
+    //     dispatchSocketMessage(
+    //       START_APP_MESSAGE,
+    //       socketMessage,
+    //       headsetKey,
+    //       updatedFormData
+    //     );
+    //     onOpenConnected();
+    //   } else {
+    //     const errorMessage = !appIsConnectedToInternet
+    //       ? t('connectionError')
+    //       : t('NoHeadsetFound');
+    //     console.log(errorMessage);
+    //     setErrorMEssage(errorMessage);
+    //     setNotFound(true);
+    //   }
+
+    //   console.log('Array of menu choices', updatedFormData);
+    // }
   };
   const cancelSession = () => {
     setNotFound(false);
@@ -196,7 +197,7 @@ const SelectBooksViblio = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-           {t("selectBooks")}
+            {t('selectBooks')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -270,7 +271,7 @@ const SelectBooksViblio = (props: any) => {
               mx={2}
             >
               {props.formData[0] == 2 || props.formData[0] == 3
-                ? t('selectDistractor')
+                ? t('selectBooks')
                 : t('play')}
             </Button>
           </ModalFooter>
@@ -299,9 +300,12 @@ const SelectBooksViblio = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenConnectedVi
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
+        <SelectLanguage
+          isOpen={isOpenLanguage}
+          onClose={onCloseLanguage}
+          formData={props.formData}
+          setFormData={props.setFormData}
+          updatedFormData={props.updatedFormData}
           onCloseSelectBooksviblio={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}

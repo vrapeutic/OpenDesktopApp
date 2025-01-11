@@ -18,8 +18,8 @@ import React, { useState } from 'react';
 import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import SelectBooksViblio from './SelectBooksviblio';
 import { useTranslation } from 'react-i18next';
+import SelectBooksViblio from './SelectBooksviblio';
 
 const SelectLevelViblio = (props: any) => {
   const {
@@ -99,7 +99,7 @@ const SelectLevelViblio = (props: any) => {
                   fontSize="1rem"
                   {...register('selectLevel')}
                 >
-                  {t("selectiveAttention")}
+                  {t('selectiveAttention')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -109,7 +109,7 @@ const SelectLevelViblio = (props: any) => {
                   fontSize="1rem"
                   {...register('selectLevel')}
                 >
-                  {t("adaptiveAttention")}
+                  {t('adaptiveAttention')}
                 </Button>
               </Stack>
 
@@ -145,7 +145,7 @@ const SelectLevelViblio = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-             {t('selectBooks')}
+              {t('selectLevel')}
             </Button>
           </ModalFooter>
         </ModalContent>

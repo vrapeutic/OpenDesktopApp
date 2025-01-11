@@ -24,7 +24,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ErrorPopup } from '../ErrorPopup';
-import OpenConnectedBed from './OpenConnectedbed';
+import OpenConnectedVi from './openConnectedVi';
 
 const LANGUAGES = [
   { id: 1, name: 'Vietnamese' },
@@ -76,7 +76,7 @@ const SelectLanguage = (props: any) => {
       data.selectLanguage,
       ...props.formData.slice(4),
     ];
-    console.log(updatedFormData);
+    console.log(updatedFormData, 'updatedFormData');
 
     props.setFormData(updatedFormData);
 
@@ -141,10 +141,6 @@ const SelectLanguage = (props: any) => {
       setErrorMEssage(errorMessage);
       setNotFound(true);
     }
-  };
-  const handleButtonClick = (language: number) => {
-    setSelectedLanguage(language);
-    setValue('selectLanguage', language);
   };
 
   const closeAllModalsAndToast = () => {
@@ -261,10 +257,10 @@ const SelectLanguage = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenConnectedBed
+        <OpenConnectedVi
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
-          onCloseSelectBooksBed={props.onClose}
+          onCloseSelectBooksviblio={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
           onCloseSelectDistractors={props.onClose}

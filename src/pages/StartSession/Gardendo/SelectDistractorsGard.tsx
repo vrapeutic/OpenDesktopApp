@@ -70,7 +70,7 @@ const SelectDistractorsGard = (props: any) => {
     const updatedFormData = [
       props.formData[0],
       props.formData[1],
-      props.formData[2], // Preserve number
+      props.selectedNumber,
       data.selectDistractors,
       ...props.formData.slice(4),
     ];
