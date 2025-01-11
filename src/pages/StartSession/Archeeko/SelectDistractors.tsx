@@ -13,18 +13,15 @@ import {
   useDisclosure,
   Box,
 } from '@chakra-ui/react';
-import React, { useRef, useState } from 'react';
+import React, {  useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 
-import OpenconnectedArcheeko from './OpenconnectedArcheeko';
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { ErrorPopup } from '../ErrorPopup';
-import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { useTranslation } from 'react-i18next';
 import Language from './Language';
 
@@ -32,13 +29,7 @@ const SelectDistractors = (props: any) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useToast();
-  const toastIdRef: any = useRef();
-  const { module, sessionId, headsetKey } = useStartSessionContext();
-  const {
-    isOpen: isOpenConnected,
-    onOpen: onOpenConnected,
-    onClose: onCloseConnected,
-  } = useDisclosure();
+
    const {
       isOpen: isOpenLanguage,
       onOpen: onOpenLanguage,
@@ -48,9 +39,7 @@ const SelectDistractors = (props: any) => {
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
   const {
-    dispatchSocketMessage,
-    checkIfServiceExists,
-    checkAppNetWorkConnection,
+ 
     socketError,
   } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();

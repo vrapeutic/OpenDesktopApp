@@ -27,6 +27,7 @@ import { ErrorPopup } from '../ErrorPopup';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { useTranslation } from 'react-i18next';
+import Language from './Language';
 const SelectjewelRodja = (props: any) => {
    const { t } = useTranslation();
   const navigate = useNavigate();
@@ -49,11 +50,17 @@ const SelectjewelRodja = (props: any) => {
     onOpen: onOpenConnected,
     onClose: onCloseConnected,
   } = useDisclosure();
+
   const {
     isOpen: isOpenSelectDistractors,
     onOpen: onOpenSelectDistractors,
     onClose: onCloseSelectDistractors,
   } = useDisclosure();
+    const {
+      isOpen: isOpenLanguage,
+      onOpen: onOpenLanguage,
+      onClose: onCloseLanguage,
+    } = useDisclosure();
 
   const schema = joi.object({
     selectBook: joi.number().required(),
@@ -84,79 +91,79 @@ const SelectjewelRodja = (props: any) => {
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      navigate('/home');
-      onOpenConnected();
+      
+      onOpenLanguage();
       // console.log("session id",sessionId)
 
-      toastIdRef.current = toast({
-        title: 'Success',
-        description: (
-          <Box>
-           {t('YouAssignedLevel8', {
-  level: updatedFormData[0],
-  environment: props.formData[1],
-  jewel: selectedBook,
-  module,
-  sessionId,
-})}
-            <Button
-             color={"white"}
-              width={3}
-              height={5}
-              onClick={() => {
-                if (toastIdRef.current) {
+//       toastIdRef.current = toast({
+//         title: 'Success',
+//         description: (
+//           <Box>
+//            {t('YouAssignedLevel8', {
+//   level: updatedFormData[0],
+//   environment: props.formData[1],
+//   jewel: selectedBook,
+//   module,
+//   sessionId,
+// })}
+//             <Button
+//              color={"white"}
+//               width={3}
+//               height={5}
+//               onClick={() => {
+//                 if (toastIdRef.current) {
                  
-                  toast.close(toastIdRef.current);
-                }
-              }}
-            position={"absolute"}
+//                   toast.close(toastIdRef.current);
+//                 }
+//               }}
+//             position={"absolute"}
        
-            top={3}
-            right={3}
+//             top={3}
+//             right={3}
           
-            >
-          x
-            </Button>
-          </Box>
-        ),
-        status: 'success',
-        duration: null,
-        position: 'bottom-left',
-        onCloseComplete: () => {
-          console.log('Toast has been removed.');
-          // Additional logic for when the toast is removed
-        },
-      });
-      const existingDevice = await checkIfServiceExists(headsetKey);
-      const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-      if (appIsConnectedToInternet && existingDevice) {
-        // if (appIsConnectedToInternet) {
-        console.log('updatedFormData', updatedFormData);
-        const socketMessage = {
-          sessionId,
-          [MODULE_PACKAGE_KEY]: module,
-          deviceId: headsetKey,
-        };
+//             >
+//           x
+//             </Button>
+//           </Box>
+//         ),
+//         status: 'success',
+//         duration: null,
+//         position: 'bottom-left',
+//         onCloseComplete: () => {
+//           console.log('Toast has been removed.');
+//           // Additional logic for when the toast is removed
+//         },
+//       });
+//       const existingDevice = await checkIfServiceExists(headsetKey);
+//       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+//       if (appIsConnectedToInternet && existingDevice) {
+//         // if (appIsConnectedToInternet) {
+//         console.log('updatedFormData', updatedFormData);
+//         const socketMessage = {
+//           sessionId,
+//           [MODULE_PACKAGE_KEY]: module,
+//           deviceId: headsetKey,
+//         };
 
-        dispatchSocketMessage(
-          START_APP_MESSAGE,
-          socketMessage,
-          headsetKey,
-          updatedFormData
-        );
-        onOpenConnected();
-        props.onClose();
-      } else {
-        console.log(headsetKey);
-        console.log(existingDevice);
-        const errorMessage = !appIsConnectedToInternet
-          ?  t('connectionError')
-          : t('NoHeadsetFound');
+//         dispatchSocketMessage(
+//           START_APP_MESSAGE,
+//           socketMessage,
+//           headsetKey,
+//           updatedFormData
+//         );
+//         onOpenConnected();
+//         props.onClose();
+//       } else {
+//         console.log(headsetKey);
+//         console.log(existingDevice);
+//         const errorMessage = !appIsConnectedToInternet
+//           ?  t('connectionError')
+//           : t('NoHeadsetFound');
 
-        console.log(errorMessage);
-        setErrorMEssage(errorMessage);
-        setNotFound(true);
-      }
+//         console.log(errorMessage);
+//         setErrorMEssage(errorMessage);
+//         setNotFound(true);
+//       }
 
       // console.log(
       //   `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
@@ -285,7 +292,7 @@ const SelectjewelRodja = (props: any) => {
             >
               {props.formData[0] == 2 || props.formData[0] == 3
                 ?  t("selectDistractor")
-                : t("play")}
+                : t("next")}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -304,6 +311,7 @@ const SelectjewelRodja = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
           onCloseSelectJewel={props.onClose}
           onCloseBooks={props.onClose}
+         
         />
       )}
 
@@ -317,14 +325,17 @@ const SelectjewelRodja = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        <OpenconnectedRodja
-          oncloseselectlevel={props.oncloseselectlevel}
-          onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
-          onCloseSelectJewel={props.onClose}
-          isOpen={isOpenConnected}
-          onClose={onCloseConnected}
+        <Language
+          isOpen={isOpenLanguage}
+          onClose={onCloseLanguage}
           onclosemodules={props.onclosemodules}
+          onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
+          oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectJewel={props.onClose}
           onCloseSelectDistractors={props.onClose}
+          formData={props.formData}
+          updatedFormData={props.updatedFormData}
+          setFormData={props.setFormData}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />
