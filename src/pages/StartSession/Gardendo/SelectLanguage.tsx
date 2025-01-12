@@ -91,7 +91,9 @@ const SelectLanguage = (props: any) => {
         <Box>
           {t('YouAssignedLevel3', {
             level: updatedFormData[0],
-            attentionDuration: updatedFormData[2],
+            environment: updatedFormData[1],
+            number: updatedFormData[2],
+            distractor: updatedFormData[3],
             module,
             sessionId,
           })}

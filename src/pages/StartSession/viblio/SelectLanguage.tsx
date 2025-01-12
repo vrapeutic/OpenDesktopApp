@@ -86,9 +86,10 @@ const SelectLanguage = (props: any) => {
       title: 'Success',
       description: (
         <Box>
-          {t('YouAssignedLevel3', {
+          {t('YouAssignedLevel6', {
             level: updatedFormData[0],
             attentionDuration: updatedFormData[2],
+            distractor: updatedFormData[3],
             module,
             sessionId,
           })}
