@@ -260,7 +260,7 @@ const SelectLanguage = (props: any) => {
         <OpenConnectedVi
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
-          onCloseSelectBooksviblio={props.onClose}
+          onCloseSelectBooksviblio={props.onCloseSelectBooksviblio}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
           onCloseSelectDistractors={props.onClose}

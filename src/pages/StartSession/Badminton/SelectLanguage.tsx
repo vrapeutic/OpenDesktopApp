@@ -86,9 +86,10 @@ const SelectLanguage = (props: any) => {
       title: 'Success',
       description: (
         <Box>
-          {t('YouAssignedLevel3', {
+          {t('YouAssignedLevel6', {
             level: updatedFormData[0],
             attentionDuration: updatedFormData[2],
+            distractor: updatedFormData[3],
             module,
             sessionId,
           })}
@@ -264,7 +265,7 @@ const SelectLanguage = (props: any) => {
         <OpenConnectedBed
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
-          onCloseSelectBooksBed={props.onClose}
+          onCloseSelectBooksBed={props.onCloseSelectBooksBed}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
           onCloseSelectDistractors={props.onClose}
