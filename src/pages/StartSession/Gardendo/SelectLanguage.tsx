@@ -78,6 +78,9 @@ const SelectLanguage = (props: any) => {
       props.formData[3], // distractor
       data.selectLanguage,
       ...props.formData.slice(5),
+      props.formData[6],
+      props.formData[7],
+
     ];
     console.log(updatedFormData, 'updatedFormData');
 

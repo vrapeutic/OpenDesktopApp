@@ -402,5 +402,11 @@
   "enterRegisterEmail": "Please enter your email address you used for registration.",
   "vietnamese": "Vietnamese",
   "English": "English",
-  "selectLanguageError": "Please select a language"
+  "selectLanguageError": "Please select a language",
+  "CourseSelection":"Course Selection",
+  "WateringOnly": "Watering Only",
+  "AudioON": "Audio ON",
+  "AudioOFF": "Audio OFF",
+  "FillingThenWatering": "Filling Then Watering",
+  "AudioDistraction":"Audio Distraction"
 }

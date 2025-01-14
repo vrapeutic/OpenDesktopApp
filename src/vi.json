@@ -400,5 +400,12 @@
   "enterRegisterEmail": "Vui lòng nhập địa chỉ email bạn đã dùng để đăng ký.",
   "vietnamese": "Tiếng Việt",
   "English": "Tiếng Anh",
-  "selectLanguageError": "Vui lòng chọn ngôn ngữ"
+  "selectLanguageError": "Vui lòng chọn ngôn ngữ",
+  "CourseSelection":"Chọn Khóa Học",
+  "WateringOnly": "Chỉ Tưới Nước",
+  "AudioON": "Bật Âm Thanh",
+  "AudioOFF": "Tắt Âm Thanh",
+  "FillingThenWatering": "Đổ Nước Rồi Tưới",
+  "AudioDistraction":"Sự Phân Tâm Âm Thanh"
+
 }
