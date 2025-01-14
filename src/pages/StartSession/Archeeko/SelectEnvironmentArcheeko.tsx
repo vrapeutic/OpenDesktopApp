@@ -94,15 +94,7 @@ const SelectEnvironmentArcheeko = (props: any) => {
                 >
                   {t('garden')}
                 </Button>
-                <Button
-                  onClick={() => handleButtonClick(2)}
-                  bg={selectedEniverinment === 2 ? 'blue.300' : 'gray.300'}
-                  width="12em"
-                  fontSize="1.2rem"
-                  {...register('selectEnvironment')}
-                >
-                 {t('room')}
-                </Button>
+                
               </Stack>
               <FormErrorMessage>
                 {errors.selectEnvironment && t("selectEnvironmentError")}

@@ -90,16 +90,7 @@ const SelectenvRodja = (props: any) => {
                 >
                {t('garden')}
                 </Button>
-                <Button
-                  onClick={() => handleButtonClick(2)}
-                  bg={selectedEniverinment === 2 ? 'blue.300' : 'gray.300'}
-                  color="black"
-                  width="12em"
-                  fontSize="1.2rem"
-                  {...register('selectEniverinment')}
-                >
-                {t('room')}
-                </Button>
+                
               </Stack>
               <FormErrorMessage>
                 {errors.selectEniverinment && t("selectEnvironmentError")}

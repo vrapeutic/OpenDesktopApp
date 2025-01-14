@@ -406,5 +406,11 @@
   "distractor": "Distractor",
   "attentionType": "Attention Type",
   "Library": "Library",
-  "Haino Court": "Haino Court"
+  "Haino Court": "Haino Court",
+  "CourseSelection": "Course Selection",
+  "WateringOnly": "Watering Only",
+  "AudioON": "Audio ON",
+  "AudioOFF": "Audio OFF",
+  "FillingThenWatering": "Filling Then Watering",
+  "AudioDistraction": "Audio Distraction"
 }
