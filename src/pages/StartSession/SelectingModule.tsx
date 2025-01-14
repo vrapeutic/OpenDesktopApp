@@ -22,7 +22,7 @@ import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';
 import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import SelectLevelViblio from './viblio/SelectLevelviblio';
+import SelectAttentionTypeBedViblio from './viblio/SelectAttentionTypeBedViblio';
 import SelectLevelRodja from './rodja/SelectLevelrodja';
 import axios from 'axios';
 import { getMe } from '@renderer/cache';
@@ -31,12 +31,12 @@ import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { END_SESSION_MESSAGE } from '@main/constants';
 import SelectLevelGar from './Gardendo/SelectLevelGar';
-import SelectLevelBed from './Badminton/selectLevelBed';
+import SelectAttentionTypeBed from './Badminton/SelectAttentionTypeBed';
 import KickDirection from './ScoreNo/KickDirection';
 import { useTranslation } from 'react-i18next';
 
 export default function SelectingModule(props: any) {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const { popupFunctions, addFunction } = usePopupsHandler();
   const {
     socketError,
@@ -45,8 +45,6 @@ export default function SelectingModule(props: any) {
     checkAppNetWorkConnection,
     dispatchSocketMessage,
   } = useSocketManager();
-
-
 
   const { startSession, sessionId, headsetKey } = useStartSessionContext();
   const {
@@ -62,9 +60,9 @@ export default function SelectingModule(props: any) {
   } = useDisclosure();
 
   const {
-    isOpen: isOpenSelectlevelviblio,
-    onOpen: onOpenSelectlevelviblio,
-    onClose: onCloseSelectlevelviblio,
+    isOpen: isOpenAttentionTypeBedViblio,
+    onOpen: onOpenSelectAttentionTypeBedViblio,
+    onClose: onCloseAttentionTypeBedViblio,
   } = useDisclosure();
 
   const selectedCenter = useContext(dataContext);
@@ -84,13 +82,13 @@ export default function SelectingModule(props: any) {
     onOpen: onOpenSelectlevelGar,
     onClose: onCloseSelectlevelGar,
   } = useDisclosure();
-  const [name, setName] = useState(t("Modules"));
+  const [name, setName] = useState(t('Modules'));
   const { setModule } = useStartSessionContext();
   const [errors, setErrors] = useState({
     selectedModule: null,
   });
   const {
-    isOpen: isKickDirection ,
+    isOpen: isKickDirection,
     onOpen: onKickDirection,
     onClose: onCloseKickDirection,
   } = useDisclosure();
@@ -98,9 +96,9 @@ export default function SelectingModule(props: any) {
     selectedModule: Joi.string().required().label('module Name'),
   });
   const {
-    isOpen: isOpenSelectlevelBed,
-    onOpen: onOpenSelectlevelBed,
-    onClose: onCloseSelectlevelBed,
+    isOpen: isOpenSelectAttentionTypeBed,
+    onOpen: onOpenSelectAttentionTypeBed,
+    onClose: onCloseSelectAttentionTypeBed,
   } = useDisclosure();
   //new Code
   const handleSubmit = async (event: any) => {
@@ -117,7 +115,6 @@ export default function SelectingModule(props: any) {
 
     if (socketError) {
       setSocketError(null);
-      
     }
     const { error } = schema.validate(values, { abortEarly: false });
     if (error) {
@@ -134,7 +131,7 @@ export default function SelectingModule(props: any) {
           return onOpenSelectlevelArcheeko();
         case 'Viblio':
           console.log('Viblio', name);
-          return onOpenSelectlevelviblio();
+          return onOpenSelectAttentionTypeBedViblio();
         case 'Rodja':
           console.log('Rodja', name);
           return onOpenSelectlevelrodja();
@@ -142,15 +139,15 @@ export default function SelectingModule(props: any) {
           console.log('GardenDo', name);
           return onOpenSelectlevelGar();
         case 'Badminton':
-          return onOpenSelectlevelBed();
-          case 'ScoreNo':
-            console.log('ScoreNo', name);
-            return onKickDirection();
-          
+          return onOpenSelectAttentionTypeBed();
+        case 'ScoreNo':
+          console.log('ScoreNo', name);
+          return onKickDirection();
+
         default:
           toast({
             title: 'error',
-            description: t("thisModuleIsNotAvailable"),
+            description: t('thisModuleIsNotAvailable'),
             status: 'error',
             duration: 5000,
             position: 'top-right',
@@ -346,7 +343,7 @@ export default function SelectingModule(props: any) {
                 h={'70%'}
               >
                 <Text fontSize="13px" fontWeight="500" fontFamily="Graphik LCG">
-                 {t('selectCenter')}
+                  {t('selectCenter')}
                 </Text>
               </Box>
             )}
@@ -385,10 +382,10 @@ export default function SelectingModule(props: any) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenSelectlevelviblio && (
-        <SelectLevelViblio
-          isOpen={isOpenSelectlevelviblio}
-          onClose={onCloseSelectlevelviblio}
+      {onOpenSelectAttentionTypeBedViblio && (
+        <SelectAttentionTypeBedViblio
+          isOpen={isOpenAttentionTypeBedViblio}
+          onClose={onCloseAttentionTypeBedViblio}
           onclosemodules={props.onClose}
         />
       )}
@@ -413,19 +410,20 @@ export default function SelectingModule(props: any) {
           onclosemodules={props.onClose}
         />
       )}
-      {onOpenSelectlevelBed && (
-        <SelectLevelBed
-          isOpen={isOpenSelectlevelBed}
-          onClose={onCloseSelectlevelBed}
-          onclosemodules={props.onClose}
+      {onOpenSelectAttentionTypeBed && (
+        <SelectAttentionTypeBed
+          isOpen={isOpenSelectAttentionTypeBed}
+          onClose={onCloseSelectAttentionTypeBed}
+          onCloseModules={props.onClose}
         />
       )}
-       {onKickDirection && (
+      {onKickDirection && (
         <KickDirection
           isOpen={isKickDirection}
           onClose={onCloseKickDirection}
           onclosemodules={props.onClose}
-        />)}
+        />
+      )}
     </Box>
   );
 }

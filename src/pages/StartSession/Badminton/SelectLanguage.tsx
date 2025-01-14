@@ -73,8 +73,9 @@ const SelectLanguage = (props: any) => {
       props.formData[0],
       props.formData[1],
       props.formData[2],
-      data.selectLanguage,
-      ...props.formData.slice(4),
+      data.selectLanguage, // Move selectLanguage to index 3
+      props.formData[3], // Move previous formData[3] to index 4
+      ...props.formData.slice(5),
     ];
     console.log(updatedFormData);
 
@@ -265,10 +266,11 @@ const SelectLanguage = (props: any) => {
         <OpenConnectedBed
           isOpen={isOpenConnected}
           onClose={onCloseConnected}
-          onCloseSelectBooksBed={props.onCloseSelectBooksBed}
-          oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectAttentionTypeBed={props.onCloseSelectAttentionTypeBed}
+          onCloseSelectEnvironmentBed={props.onCloseSelectEnvironmentBed}
+          onCloseSelectAttentionSpan={props.onCloseSelectAttentionSpan}
+          onCloseSelectDistractors={props.onCloseSelectDistractors}
           onclosemodules={props.onclosemodules}
-          onCloseSelectDistractors={props.onClose}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />

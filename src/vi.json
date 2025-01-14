@@ -400,5 +400,9 @@
   "enterRegisterEmail": "Vui lòng nhập địa chỉ email bạn đã dùng để đăng ký.",
   "vietnamese": "Tiếng Việt",
   "English": "Tiếng Anh",
-  "selectLanguageError": "Vui lòng chọn ngôn ngữ"
+  "selectLanguageError": "Vui lòng chọn ngôn ngữ",
+  "distractor": "Chướng ngại vật",
+  "attentionType": "Loại chú ý",
+  "Library": "Thư viện",
+  "Haino Court": "Tòa án Haino"
 }

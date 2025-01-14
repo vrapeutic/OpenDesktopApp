@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
+  FormControl,
+  FormErrorMessage,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,29 +10,23 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  FormControl,
-  FormErrorMessage,
   Stack,
-  useToast,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
-import joi from 'joi';
-import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { useNavigate } from 'react-router-dom';
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import OpenConnectedVi from './openConnectedVi';
-import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
-import { ErrorPopup } from '../ErrorPopup';
-import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import joi from 'joi';
+import { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ErrorPopup } from '../ErrorPopup';
 import SelectLanguage from './SelectLanguage';
-import { on } from 'events';
 
 const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
-  const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
   const {
     isOpen: isOpenLanguage,
     onOpen: onOpenLanguage,
@@ -41,11 +36,7 @@ const SelectDistractors = (props: any) => {
     null
   );
   const toastIdRef: any = useRef();
-  const {
-    dispatchSocketMessage,
-    checkIfServiceExists,
-    checkAppNetWorkConnection,
-  } = useSocketManager();
+
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
 
@@ -78,83 +69,13 @@ const SelectDistractors = (props: any) => {
     const updatedFormData = [
       props.formData[0],
       props.formData[1],
+      props.formData[2],
       data.selectDistractor,
-      ...props.formData.slice(3),
+      ...props.formData.slice(4),
     ];
     props.setFormData(updatedFormData);
 
     onOpenLanguage();
-
-    // navigate('/home');
-    // props.onClose();
-    // props.oncloseselectlevel();
-    // props.onclosemodules();
-    // props.onCloseBooks();
-    // onOpenConnected();
-
-    // toastIdRef.current = toast({
-    //   title: 'Success',
-    //   description: (
-    //     <Box>
-    //       {t('YouAssignedLevel', {
-    //         level: updatedFormData[0],
-    //         book: props.formData[1],
-    //         distractor: selectedDistractor,
-    //         module,
-    //         sessionId,
-    //       })}
-    //       <Button
-    //         color={'white'}
-    //         width={3}
-    //         height={5}
-    //         onClick={() => {
-    //           if (toastIdRef.current) {
-    //             toast.close(toastIdRef.current);
-    //           }
-    //         }}
-    //         position={'absolute'}
-    //         top={3}
-    //         right={3}
-    //       >
-    //         x
-    //       </Button>
-    //     </Box>
-    //   ),
-    //   status: 'success',
-    //   duration: null,
-    //   position: 'bottom-left',
-    //   onCloseComplete: () => {
-    //     console.log('Toast has been removed.');
-    //     // Additional logic for when the toast is removed
-    //   },
-    // });
-    // const existingDevice = await checkIfServiceExists(headsetKey);
-    // const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-    // if (appIsConnectedToInternet && existingDevice) {
-    //   console.log(updatedFormData);
-    //   const socketMessage = {
-    //     sessionId,
-    //     [MODULE_PACKAGE_KEY]: module,
-    //     deviceId: headsetKey,
-    //   };
-
-    //   dispatchSocketMessage(
-    //     START_APP_MESSAGE,
-    //     socketMessage,
-    //     headsetKey,
-    //     updatedFormData
-    //   );
-
-    // } else {
-    //   console.log(headsetid);
-    //   console.log(existingDevice);
-    //   const errorMessage = !appIsConnectedToInternet
-    //     ? t('connectionError')
-    //     : t('NoHeadsetFound');
-
-    //   setErrorMEssage(errorMessage);
-    //   setNotFound(true);
-    // }
   };
 
   const cancelSession = () => {
@@ -221,7 +142,7 @@ const SelectDistractors = (props: any) => {
                   {...register('selectDistractor')}
                   value={1}
                 >
-                  1
+                  1 {t('distractor')}
                 </Button>
 
                 <Button
@@ -233,7 +154,7 @@ const SelectDistractors = (props: any) => {
                   {...register('selectDistractor')}
                   value={2}
                 >
-                  2
+                  2 {t('distractor')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -244,7 +165,7 @@ const SelectDistractors = (props: any) => {
                   {...register('selectDistractor')}
                   value={3}
                 >
-                  3
+                  3 {t('distractor')}
                 </Button>
               </Stack>
               <FormErrorMessage>
@@ -265,7 +186,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleBackToSelectBook}
               mx={2}
             >
-              {t('backToSelectBook')}
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -279,7 +200,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              {t('selectDistractors')}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -302,24 +223,14 @@ const SelectDistractors = (props: any) => {
           setFormData={props.setFormData}
           updatedFormData={props.updatedFormData}
           onclosemodules={props.onclosemodules}
-          onCloseSelectBooksviblio={props.onCloseSelectBooksviblio}
+          onCloseSelectBooksViblio={props.onCloseSelectBooksViblio}
           onCloseSelectDistractors={props.onClose}
-          oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectEnvironmentViblio={props.onCloseSelectEnvironmentViblio}
+          onCloseSelectAttentionType={props.onCloseSelectAttentionType}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />
       )}
-
-      {/* 
-        {onOpenConnected && (
-         <OpenConnectedVi
-         isOpen={isOpenConnected}
-         onClose={onCloseConnected}
-         onclosemodules={props.onclosemodules}
-         onCloseSelectBooksviblio={props.onCloseSelectBooksviblio}
-         onCloseSelectDistractors={props.onClose}
-       />
-      )} */}
     </>
   );
 };

@@ -111,10 +111,10 @@ export default function OpenConnectedVi(props: any) {
     );
     props.onClose();
     props.closeAllModalsAndToast();
-
-    props.onCloseSelectBooksviblio();
-    props.oncloseselectlevel();
-    props.onCloseSelectDistractors();
+    props.onCloseSelectBooksViblio();
+    props.onCloseSelectAttentionType();
+    props.onCloseSelectDistractors && props.onCloseSelectDistractors();
+    props.onCloseSelectEnvironmentViblio();
   };
 
   return (
@@ -198,7 +198,7 @@ export default function OpenConnectedVi(props: any) {
           isOpen={isevaluationopen}
           onClose={onevalutionClose}
           closeopenconnected={props.onClose}
-          closemodules={props.onclosemodules}
+          onslosemodules={props.onslosemodules}
         />
       )}
     </>

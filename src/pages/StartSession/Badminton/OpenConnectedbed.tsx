@@ -1,31 +1,30 @@
-import React, { useState, useEffect, useContext } from 'react';
 import {
+  Box,
+  Button,
   Modal,
-  ModalOverlay,
+  ModalBody,
   ModalContent,
   ModalFooter,
-  Button,
   ModalHeader,
-  Box,
-  useDisclosure,
-  ModalBody,
+  ModalOverlay,
   Text,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { getMe } from '@renderer/cache';
 
-import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import { END_SESSION_MESSAGE } from '@main/constants'
-import axios from 'axios';
+import { END_SESSION_MESSAGE } from '@main/constants';
 import { config } from '@renderer/config';
+import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
+import axios from 'axios';
 
-import SelectEvaluation from '../Evaluation';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import { useTranslation } from 'react-i18next';
+import SelectEvaluation from '../Evaluation';
 
 export default function OpenConnectedBed(props: any) {
   const { dispatchSocketMessage } = useSocketManager();
-  const { startSession, sessionId , headsetKey } = useStartSessionContext();
+  const { startSession, sessionId, headsetKey } = useStartSessionContext();
   const toast = useToast();
   const {
     isOpen: isevaluationopen,
@@ -34,7 +33,6 @@ export default function OpenConnectedBed(props: any) {
   } = useDisclosure();
 
   const handle = async () => {
-   
     try {
       localStorage.removeItem('sessionID');
       dispatchSocketMessage(
@@ -43,7 +41,7 @@ export default function OpenConnectedBed(props: any) {
         headsetKey
       );
       await endSissionApi();
-      onevaluationOpen()
+      onevaluationOpen();
       // props.onClose();
       // props.onclosemodules();
       // navigate('/');
@@ -72,20 +70,20 @@ export default function OpenConnectedBed(props: any) {
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
     const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
-  
+
     // Format the date string
     const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
-  
+
     console.log(formattedDate);
-  
+
     const date1String = startSession;
     const date2String = formattedDate;
     console.log(date1String, date2String);
-  
+
     // Create Date objects
-    const date1:any = new Date(date1String);
-    const date2:any = new Date(date2String);
-  
+    const date1: any = new Date(date1String);
+    const date2: any = new Date(date2String);
+
     // Calculate the difference in milliseconds
     const timeDifferenceInMilliseconds = Math.abs(date2 - date1);
     console.log(timeDifferenceInMilliseconds);
@@ -94,36 +92,39 @@ export default function OpenConnectedBed(props: any) {
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
-    props.closeAllModalsAndToast()
+    props.closeAllModalsAndToast();
 
     const api = axios.put(
-        `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
-        {   "vr_duration": differenceInMinutes },
-        { headers }
-      );
-    return  api
+      `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
+      { vr_duration: differenceInMinutes },
+      { headers }
+    );
+    return api;
   };
-  const antherModule =()=>{
+  const handleSelectAnotherModule = () => {
     dispatchSocketMessage(
       END_SESSION_MESSAGE,
       { deviceId: headsetKey },
       headsetKey
     );
-    props.onClose()
-    props.closeAllModalsAndToast()
-    
-    props.onCloseSelectBooksBed()
-    props.oncloseselectlevel()
-    props.onCloseSelectDistractors()
-   
-  }
-   const { t } = useTranslation();
+    props.onClose();
+    props.closeAllModalsAndToast();
+    props.onCloseSelectAttentionTypeBed();
+    props.onCloseSelectEnvironmentBed();
+    props.onCloseSelectAttentionSpan();
+    props.onCloseSelectDistractors && props.onCloseSelectDistractors();
+  };
+  const { t } = useTranslation();
 
   return (
     <>
       <Box>
-        <Modal isOpen={props.isOpen} onClose={props.onClose}  closeOnOverlayClick={false}
-        closeOnEsc={false}>
+        <Modal
+          isOpen={props.isOpen}
+          onClose={props.onClose}
+          closeOnOverlayClick={false}
+          closeOnEsc={false}
+        >
           <ModalOverlay />
           <ModalContent
             h="400px"
@@ -132,7 +133,7 @@ export default function OpenConnectedBed(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-            {t("connectedVr")} {headsetKey}
+              {t('connectedVr')} {headsetKey}
             </ModalHeader>
 
             <ModalBody>
@@ -143,7 +144,7 @@ export default function OpenConnectedBed(props: any) {
                 textAlign="center"
                 color="#595959"
               >
-             {t('sessionInProgress')}
+                {t('sessionInProgress')}
               </Text>
 
               <Text
@@ -153,7 +154,7 @@ export default function OpenConnectedBed(props: any) {
                 textAlign="center"
                 color="#A8A8A8"
               >
-               {t('pressButtonToEnd')}
+                {t('pressButtonToEnd')}
               </Text>
             </ModalBody>
 
@@ -170,7 +171,7 @@ export default function OpenConnectedBed(props: any) {
                 marginRight="10px"
                 onClick={handle}
               >
-               {t('endSession')}
+                {t('endSession')}
               </Button>
               <Button
                 w="214px"
@@ -182,9 +183,9 @@ export default function OpenConnectedBed(props: any) {
                 fontWeight="700"
                 fontSize="18px"
                 marginLeft="10px"
-                onClick={antherModule}
+                onClick={handleSelectAnotherModule}
               >
-                   {t("playAnotherModule")}
+                {t('playAnotherModule')}
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -195,8 +196,8 @@ export default function OpenConnectedBed(props: any) {
         <SelectEvaluation
           isOpen={isevaluationopen}
           onClose={onevalutionClose}
-         closeopenconnected={props.onClose}
-         closemodules={props.onclosemodules}
+          closeopenconnected={props.onClose}
+          onclosemodules={props.onclosemodules}
         />
       )}
     </>

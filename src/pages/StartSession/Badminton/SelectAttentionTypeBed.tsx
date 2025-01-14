@@ -19,22 +19,25 @@ import joi from 'joi';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useTranslation } from 'react-i18next';
-import SelectBooksViblio from './SelectBooksviblio';
+import SelectEnvironment from './SelectEnvironment';
 
-const SelectLevelViblio = (props: any) => {
+const SelectAttentionTypeBed = (props: any) => {
+  const { t } = useTranslation();
   const {
-    isOpen: isOpenSelectBooksviblio,
-    onOpen: onOpenSelectBooksviblio,
-    onClose: onCloseSelectBooksviblio,
+    isOpen: isOpenSelectEnvironment,
+    onOpen: onOpenSelectEnvironment,
+    onClose: onCloseSelectEnvironment,
   } = useDisclosure();
 
   const [formData, setFormData] = useState<any[]>([
     -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000,
   ]);
-  const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
+  const [selectedAttentionType, setSelectedAttentionType] = useState<
+    number | null
+  >(null);
 
   const schema = joi.object({
-    selectLevel: joi.number().required(),
+    selectAttentionType: joi.number().required(),
   });
 
   const {
@@ -48,19 +51,19 @@ const SelectLevelViblio = (props: any) => {
   });
 
   const handleFormSubmit = (data: any) => {
-    setFormData([data.selectLevel, ...formData.slice(1)]);
+    setFormData([data.selectAttentionType, ...formData.slice(1)]);
     console.log('Form Data Submitted: ', [
-      data.selectLevel,
+      data.selectAttentionType,
       ...formData.slice(1),
     ]);
-    onOpenSelectBooksviblio();
+    onOpenSelectEnvironment();
   };
 
   const handleButtonClick = (level: number) => {
-    setSelectedLevel(level);
-    setValue('selectLevel', level);
+    setSelectedAttentionType(level);
+    setValue('selectAttentionType', level);
   };
-  const { t } = useTranslation();
+
   return (
     <>
       <Modal
@@ -75,46 +78,46 @@ const SelectLevelViblio = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            {t('selectLevel')}
+            {t('attentionType')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectLevel}>
+            <FormControl isInvalid={!!errors.selectAttentionType}>
               <Stack spacing={4} direction="column" align="center">
                 <Button
                   onClick={() => handleButtonClick(1)}
-                  bg={selectedLevel === 1 ? 'blue.300' : 'gray.300'}
+                  bg={selectedAttentionType === 1 ? 'blue.300' : 'gray.300'}
                   color="black"
                   width="12em"
                   fontSize="1rem"
-                  {...register('selectLevel')}
+                  {...register('selectAttentionType')}
                 >
                   {t('sustainedAttention')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
-                  bg={selectedLevel === 2 ? 'blue.300' : 'gray.300'}
+                  bg={selectedAttentionType === 2 ? 'blue.300' : 'gray.300'}
                   color="black"
                   width="12em"
                   fontSize="1rem"
-                  {...register('selectLevel')}
+                  {...register('selectAttentionType')}
                 >
                   {t('selectiveAttention')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
-                  bg={selectedLevel === 3 ? 'blue.300' : 'gray.300'}
+                  bg={selectedAttentionType === 3 ? 'blue.300' : 'gray.300'}
                   color="black"
                   width="12em"
                   fontSize="1rem"
-                  {...register('selectLevel')}
+                  {...register('selectAttentionType')}
                 >
                   {t('adaptiveAttention')}
                 </Button>
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectLevel && t('selectLevelError')}
+                {errors.selectAttentionType && t('selectLevelError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -145,18 +148,18 @@ const SelectLevelViblio = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              {t('selectLevel')}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenSelectBooksviblio && (
-        <SelectBooksViblio
-          isOpen={isOpenSelectBooksviblio}
-          onClose={onCloseSelectBooksviblio}
+      {onOpenSelectEnvironment && (
+        <SelectEnvironment
+          isOpen={isOpenSelectEnvironment}
+          onClose={onCloseSelectEnvironment}
           formData={formData}
           setFormData={setFormData}
-          oncloseselectlevel={props.onClose}
+          onCloseSelectAttentionTypeBed={props.onClose}
           onclosemodules={props.onclosemodules}
         />
       )}
@@ -164,4 +167,4 @@ const SelectLevelViblio = (props: any) => {
   );
 };
 
-export default SelectLevelViblio;
+export default SelectAttentionTypeBed;

@@ -15,41 +15,37 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
-import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
 import joi from 'joi';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { ErrorPopup } from '../ErrorPopup';
-import SelectDistractors from './SelectDistractorsviblio';
+import SelectDistractors from './SelectDistractors';
 import SelectLanguage from './SelectLanguage';
-const SelectBooksViblio = (props: any) => {
-  const navigate = useNavigate();
-  const [selectedBook, setselectedBook] = useState<number | null>(null);
+
+const SelectAttentionSpanBed = (props: any) => {
+  const { t } = useTranslation();
+  const [selectedAttentionSpan, setSelectedAttentionSpan] = useState<
+    number | null
+  >(null);
   const toast = useToast();
   const {
-    isOpen: isOpenLanguage,
-    onOpen: onOpenLanguage,
-    onClose: onCloseLanguage,
+    isOpen: isOpenSelectLanguage,
+    onOpen: onOpenSelectLanguage,
+    onClose: onCloseSelectLanguage,
   } = useDisclosure();
   const {
     isOpen: isOpenSelectDistractors,
     onOpen: onOpenSelectDistractors,
     onClose: onCloseSelectDistractors,
   } = useDisclosure();
-
-  const [notFound, setNotFound] = useState(false);
-  const [errorMEssage, setErrorMEssage] = useState(null);
   const toastIdRef: any = useRef();
-  const { popupFunctions } = usePopupsHandler();
-  const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
   const { socketError } = useSocketManager();
+
   const schema = joi.object({
-    selectBook: joi.number().required(),
+    selectAttentionSpan: joi.number().required(),
   });
-  const { t } = useTranslation();
+
   const {
     register,
     handleSubmit,
@@ -64,7 +60,7 @@ const SelectBooksViblio = (props: any) => {
     const updatedFormData = [
       props.formData[0],
       props.formData[1],
-      data.selectBook,
+      data.selectAttentionSpan,
       ...props.formData.slice(3),
     ];
     props.setFormData(updatedFormData);
@@ -72,24 +68,8 @@ const SelectBooksViblio = (props: any) => {
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      onOpenLanguage();
+      onOpenSelectLanguage();
     }
-  };
-  const cancelSession = () => {
-    setNotFound(false);
-    closeSelectingAModule();
-    closeSelectingAHeadset();
-    navigate('/home');
-  };
-
-  const closeErrorModal = () => {
-    setNotFound(false);
-    closeSelectingAModule();
-  };
-
-  const selectAnotherHeadset = () => {
-    setNotFound(false);
-    closeSelectingAModule();
   };
 
   if (socketError) {
@@ -100,8 +80,8 @@ const SelectBooksViblio = (props: any) => {
   };
 
   const handleButtonClick = (book: number) => {
-    setselectedBook(book);
-    setValue('selectBook', book);
+    setSelectedAttentionSpan(book);
+    setValue('selectAttentionSpan', book);
   };
 
   const closeAllModalsAndToast = () => {
@@ -123,49 +103,49 @@ const SelectBooksViblio = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-            {t('selectBooks')}
+            {t('attentionDuration')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectLevel}>
+            <FormControl isInvalid={!!errors.selectAttentionSpan}>
               <Stack spacing={4} direction="column" align="center">
                 <Button
                   onClick={() => handleButtonClick(1)}
-                  bg={selectedBook === 1 ? 'blue.300' : 'gray.300'}
+                  bg={selectedAttentionSpan === 1 ? 'blue.300' : 'gray.300'}
                   color="black"
                   width="12em"
                   fontSize="1.2rem"
-                  {...register('selectBook')}
+                  {...register('selectAttentionSpan')}
                   value={1}
                 >
-                  5
+                  20
                 </Button>
 
                 <Button
                   onClick={() => handleButtonClick(2)}
-                  bg={selectedBook === 2 ? 'blue.300' : 'gray.300'}
+                  bg={selectedAttentionSpan === 2 ? 'blue.300' : 'gray.300'}
                   color="black"
                   width="12em"
                   fontSize="1.2rem"
-                  {...register('selectBook')}
+                  {...register('selectAttentionSpan')}
                   value={2}
                 >
-                  10
+                  40
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
-                  bg={selectedBook === 3 ? 'blue.300' : 'gray.300'}
+                  bg={selectedAttentionSpan === 3 ? 'blue.300' : 'gray.300'}
                   color="black"
                   width="12em"
                   fontSize="1.2rem"
-                  {...register('selectBook')}
+                  {...register('selectAttentionSpan')}
                   value={3}
                 >
-                  15
+                  60
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectBook && 'Please select a book.'}
+                {errors.selectAttentionSpan && 'Please select a book.'}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -207,33 +187,25 @@ const SelectBooksViblio = (props: any) => {
           onClose={onCloseSelectDistractors}
           formData={props.formData}
           setFormData={props.setFormData}
-          onCloseSelectAttentionType={props.onCloseSelectAttentionType}
-          onCloseSelectBooksViblio={props.onClose}
-          onCloseSelectEnvironmentViblio={props.onCloseSelectEnvironmentViblio}
+          onCloseSelectAttentionTypeBed={props.onCloseSelectAttentionTypeBed}
+          onCloseSelectEnvironmentBed={props.onCloseSelectEnvironmentBed}
+          onCloseSelectAttentionSpan={props.onClose}
           onclosemodules={props.onclosemodules}
+          closeAllModalsAndToast={closeAllModalsAndToast}
+          closeAllModals={closeAllModalsAndToast}
         />
       )}
 
-      {notFound ? (
-        <ErrorPopup
-          isOpen={notFound}
-          onClose={closeErrorModal}
-          closeSelectingAHeadset={closeSelectingAHeadset}
-          onCancelSession={cancelSession}
-          onSelectAnotherHeadset={selectAnotherHeadset}
-          errorMessages={errorMEssage}
-        />
-      ) : (
+      {onOpenSelectLanguage && (
         <SelectLanguage
-          isOpen={isOpenLanguage}
-          onClose={onCloseLanguage}
+          isOpen={isOpenSelectLanguage}
+          onClose={onCloseSelectLanguage}
           formData={props.formData}
           setFormData={props.setFormData}
-          updatedFormData={props.updatedFormData}
-          onCloseSelectBooksViblio={props.onClose}
-          onCloseSelectEnvironmentViblio={props.onCloseSelectEnvironmentViblio}
-          onCloseSelectAttentionType={props.onCloseSelectAttentionType}
-          onCloseModules={props.onCloseModules}
+          onCloseSelectAttentionSpan={props.onClose}
+          onCloseSelectEnvironmentBed={props.onCloseSelectEnvironmentBed}
+          onCloseSelectAttentionTypeBed={props.onCloseSelectAttentionTypeBed}
+          onclosemodules={props.onclosemodules}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />
@@ -242,4 +214,4 @@ const SelectBooksViblio = (props: any) => {
   );
 };
 
-export default SelectBooksViblio;
+export default SelectAttentionSpanBed;

@@ -402,5 +402,9 @@
   "enterRegisterEmail": "Please enter your email address you used for registration.",
   "vietnamese": "Vietnamese",
   "English": "English",
-  "selectLanguageError": "Please select a language"
+  "selectLanguageError": "Please select a language",
+  "distractor": "Distractor",
+  "attentionType": "Attention Type",
+  "Library": "Library",
+  "Haino Court": "Haino Court"
 }
