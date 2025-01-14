@@ -222,7 +222,7 @@ const SelectNumberArcheeko = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectNumber')}
                 >
-                  1
+                  5
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -232,7 +232,7 @@ const SelectNumberArcheeko = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectNumber')}
                 >
-                  2
+                  10
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -242,7 +242,7 @@ const SelectNumberArcheeko = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectNumber')}
                 >
-                  3
+                  15
                 </Button>
               </Stack>
 
