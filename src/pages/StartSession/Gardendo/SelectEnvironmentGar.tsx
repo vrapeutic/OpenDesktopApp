@@ -20,16 +20,11 @@ import SelectNumberGar from './SelectNumberGar';
 import { useTranslation } from 'react-i18next';
 
 const SelectEnvironmentGar = (props: any) => {
-  const [formData, setFormData] = useState<any[]>([]);
   const {
     isOpen: isOpenSelectNumber,
     onOpen: onOpenSelectNumber,
     onClose: onCloseSelectNumber,
   } = useDisclosure();
-
-  // const [formData, setFormData] = useState<any[]>([
-  //   -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000,
-  // ]);
 
   const schema = joi.object({
     selectEnvironment: joi.number().required(),
@@ -151,10 +146,10 @@ const SelectEnvironmentGar = (props: any) => {
           onClose={onCloseSelectNumber}
           onCloseSelectEnvironment={props.onClose}
           formData={props.formData}
-          setFormData={setFormData}
+          setFormData={props.setFormData}
           oncloseselectlevel={props.oncloseselectlevel}
           onclosemodules={props.onclosemodules}
-          level={formData[0] && formData[0].level}
+          level={props.formData[0] && props.formData[0].level}
         />
       )}
     </>

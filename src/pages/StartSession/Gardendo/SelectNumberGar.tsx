@@ -69,9 +69,8 @@ const SelectNumberGar = (props: any) => {
     mode: 'onSubmit',
   });
 
-  let updatedFormData;
   const handleFormSubmit = async (data: any) => {
-    updatedFormData = [
+    const updatedFormData = [
       props.formData[0],
       props.formData[1],
       data.selectNumber,
@@ -287,7 +286,6 @@ const SelectNumberGar = (props: any) => {
           isOpen={props.level !== 1 ? isOpenSelectDistractors : null}
           onClose={onCloseSelectDistractors}
           formData={props.formData}
-          updatedFormData={updatedFormData}
           selectedNumber={selectedNumber}
           setFormData={props.setFormData}
           onclosemodules={props.onclosemodules}
@@ -312,7 +310,6 @@ const SelectNumberGar = (props: any) => {
           onClose={onCloseLanguage}
           formData={props.formData}
           setFormData={props.setFormData}
-          updatedFormData={updatedFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
           SelectDistractors={onCloseSelectDistractors}

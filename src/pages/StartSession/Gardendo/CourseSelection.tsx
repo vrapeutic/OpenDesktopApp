@@ -1,88 +1,81 @@
 import {
-    Button,
-    Modal,
-    ModalBody,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-    Stack,
-    FormControl,
-    FormErrorMessage,
-    useToast,
-    useDisclosure,
-    Box,
-  } from '@chakra-ui/react';
-  import { useRef, useState } from 'react';
-  import { useForm } from 'react-hook-form';
-  import joi from 'joi';
-  import { joiResolver } from '@hookform/resolvers/joi';
-  import { useNavigate } from 'react-router-dom';
-  
-  import useSocketManager from '@renderer/Context/SocketManagerProvider';
-  import { ErrorPopup } from '../ErrorPopup';
-  import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  FormControl,
+  FormErrorMessage,
+  useToast,
+  useDisclosure,
+  Box,
+} from '@chakra-ui/react';
+import { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import joi from 'joi';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { useNavigate } from 'react-router-dom';
 
-  import { useTranslation } from 'react-i18next';
-  import SelectLanguage from './SelectLanguage';
+import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import { ErrorPopup } from '../ErrorPopup';
+import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
+
+import { useTranslation } from 'react-i18next';
+import SelectLanguage from './SelectLanguage';
 import Aduio from './Aduio';
-const CourseSelection = (props:any) => {
-    const toast = useToast();
-      const toastIdRef: any = useRef();
-      const [notFound, setNotFound] = useState(false);
-      const {
-        isOpen: isOpenLanguage,
-        onOpen: onOpenLanguage,
-        onClose: onCloseLanguage,
-      } = useDisclosure();
-      const {
-        isOpen: isOpenAduio,
-        onOpen: onOpenAduio,
-        onClose: onCloseAduio,
-      } = useDisclosure();
-      
-    const navigate = useNavigate();
-     const [errorMEssage, setErrorMEssage] = useState(null);
- const [selectedCourse, setSelectedCourse] = useState<number | null>(
-    null
-  );  
+const CourseSelection = (props: any) => {
+  const toast = useToast();
+  const toastIdRef: any = useRef();
+  const [notFound, setNotFound] = useState(false);
+  const {
+    isOpen: isOpenLanguage,
+    onOpen: onOpenLanguage,
+    onClose: onCloseLanguage,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenAduio,
+    onOpen: onOpenAduio,
+    onClose: onCloseAduio,
+  } = useDisclosure();
+
+  const navigate = useNavigate();
+  const [errorMEssage, setErrorMEssage] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const schema = joi.object({
     selectedCourses: joi.number().required(),
   });
-   const { t } = useTranslation();
-   const { popupFunctions } = usePopupsHandler();
-   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-   const { socketError } = useSocketManager();
-    const {
-      register,
-      handleSubmit,
-      formState: { errors },
-      setValue,
-    } = useForm({
-      resolver: joiResolver(schema),
-      mode: 'onSubmit',
-    });
-    console.log(props.formData,"props")
+  const { t } = useTranslation();
+  const { popupFunctions } = usePopupsHandler();
+  const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
+  const { socketError } = useSocketManager();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: joiResolver(schema),
+    mode: 'onSubmit',
+  });
 
-    const handleFormSubmit = async (data: any) => {
-        const updatedFormData = [
-          props.formData[0],
-          props.formData[1],
-          props.selectedNumber,
-          props.selectDistractors,
-          props.formData[4],
-          data.selectedCourses,
-          ...props.formData.slice(6),
-        ];
-        props.setFormData(updatedFormData);
-        console.log('all subimtted data in cousres', updatedFormData);
-        props.formData[0]? onOpenAduio(): onOpenLanguage()
-       
-     
-    
-      
-      };
-      
+  const handleFormSubmit = async (data: any) => {
+    const updatedFormData = [
+      props.formData[0],
+      props.formData[1],
+      props.formData[2],
+      props.formData[3],
+      props.formData[4],
+      data.selectedCourses,
+      ...props.formData.slice(6),
+    ];
+    props.setFormData(updatedFormData);
+    console.log('all subimtted data in cousres', updatedFormData);
+    props.formData[0] === 2 ? onOpenAduio() : onOpenLanguage();
+  };
+
   const cancelSession = () => {
     setNotFound(false);
     closeSelectingAModule();
@@ -113,10 +106,10 @@ const CourseSelection = (props:any) => {
       toast.close(toastIdRef.current);
     }
   };
-  
+
   return (
     <>
-       <Modal
+      <Modal
         isOpen={props.isOpen}
         onClose={props.onClose}
         closeOnOverlayClick={false}
@@ -139,7 +132,7 @@ const CourseSelection = (props:any) => {
                   fontSize="1.2rem"
                   {...register('selectedCourses')}
                 >
-                 {t("WateringOnly")}
+                  {t('WateringOnly')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -149,9 +142,8 @@ const CourseSelection = (props:any) => {
                   fontSize="1.2rem"
                   {...register('selectedCourses')}
                 >
-                  {t("FillingThenWatering")}
+                  {t('FillingThenWatering')}
                 </Button>
-               
               </Stack>
 
               <FormErrorMessage>
@@ -201,26 +193,24 @@ const CourseSelection = (props:any) => {
           onSelectAnotherHeadset={selectAnotherHeadset}
           errorMessages={errorMEssage}
         />
+      ) : props.formData[0] === 2 ? (
+        <Aduio
+          isOpen={isOpenAduio}
+          onClose={onCloseAduio}
+          formData={props.formData}
+          setFormData={props.setFormData}
+          updatedFormData={props.updatedFormData}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+          SelectDistractors={props.dSelectDistractors}
+          CourseSelection={props.onClose}
+          onCloseSelectNumber={props.onCloseSelectNumber}
+          oncloseselectlevel={props.oncloseselectlevel}
+          closeAllModalsAndToast={closeAllModalsAndToast}
+          closeAllModals={closeAllModalsAndToast}
+        />
       ) : (
-
-        props.formData[0]===2?
-            <Aduio
-            isOpen={isOpenAduio}
-            onClose={onCloseAduio}
-            formData={props.formData}
-            setFormData={props.setFormData}
-            updatedFormData={props.updatedFormData}
-            onclosemodules={props.onclosemodules}
-            onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-            SelectDistractors={props.dSelectDistractors}
-            CourseSelection={props.onClose}
-            onCloseSelectNumber={props.onCloseSelectNumber}
-            oncloseselectlevel={props.oncloseselectlevel}
-            closeAllModalsAndToast={closeAllModalsAndToast}
-            closeAllModals={closeAllModalsAndToast}
-          />
-            :
-            <SelectLanguage
+        <SelectLanguage
           isOpen={isOpenLanguage}
           onClose={onCloseLanguage}
           formData={props.formData}
@@ -235,12 +225,9 @@ const CourseSelection = (props:any) => {
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />
-        
-        
       )}
     </>
-  )
-}
+  );
+};
 
-export default CourseSelection
-
+export default CourseSelection;

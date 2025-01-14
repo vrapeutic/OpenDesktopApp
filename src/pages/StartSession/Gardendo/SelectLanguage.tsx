@@ -68,8 +68,6 @@ const SelectLanguage = (props: any) => {
     mode: 'onSubmit',
   });
 
-  console.log(props.updatedFormData, 'props.formData');
-
   const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
       props.formData[0], // level
@@ -80,7 +78,6 @@ const SelectLanguage = (props: any) => {
       ...props.formData.slice(5),
       props.formData[6],
       props.formData[7],
-
     ];
     console.log(updatedFormData, 'updatedFormData');
 

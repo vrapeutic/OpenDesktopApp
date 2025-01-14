@@ -178,7 +178,7 @@ const SelectDistractors = (props: any) => {
               onClick={handleBackToSelectBook}
               mx={2}
             >
-              {t('backToSelectBook')}
+              {t('back')}
             </Button>
             <Button
               w="180px"

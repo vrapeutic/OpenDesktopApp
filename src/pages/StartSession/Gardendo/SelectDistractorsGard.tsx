@@ -216,7 +216,6 @@ const SelectDistractorsGard = (props: any) => {
           selectDistractors={selectedDistractors}
           selectedNumber={props.selectedNumber}
           setFormData={props.setFormData}
-          updatedFormData={props.updatedFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
           SelectDistractors={props.onClose}

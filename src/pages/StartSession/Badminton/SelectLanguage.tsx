@@ -73,8 +73,8 @@ const SelectLanguage = (props: any) => {
       props.formData[0],
       props.formData[1],
       props.formData[2],
-      data.selectLanguage, // Move selectLanguage to index 3
       props.formData[3], // Move previous formData[3] to index 4
+      data.selectLanguage, // Move selectLanguage to index 3
       ...props.formData.slice(5),
     ];
     console.log(updatedFormData);
