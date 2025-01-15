@@ -13,7 +13,7 @@ import {
   useDisclosure,
   Box,
 } from '@chakra-ui/react';
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -30,18 +30,15 @@ const SelectDistractors = (props: any) => {
   const navigate = useNavigate();
   const toast = useToast();
 
-   const {
-      isOpen: isOpenLanguage,
-      onOpen: onOpenLanguage,
-      onClose: onCloseLanguage,
-    } = useDisclosure();
+  const {
+    isOpen: isOpenLanguage,
+    onOpen: onOpenLanguage,
+    onClose: onCloseLanguage,
+  } = useDisclosure();
 
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
-  const {
- 
-    socketError,
-  } = useSocketManager();
+  const { socketError } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
   const [selectedDistractors, setSelectedDistractors] = useState<number | null>(
@@ -57,6 +54,7 @@ const SelectDistractors = (props: any) => {
     handleSubmit,
     formState: { errors },
     setValue,
+    trigger,
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onSubmit',
@@ -70,16 +68,16 @@ const SelectDistractors = (props: any) => {
       data.selectDistractors,
       ...props.formData.slice(4),
     ];
- 
+
     console.log('all subimtted data in distractor', updatedFormData);
     props.setFormData(updatedFormData);
 
-  onOpenLanguage();
-  
+    onOpenLanguage();
   };
-  const handleButtonClick = (distractors: number) => {
+  const handleButtonClick = async (distractors: number) => {
     setSelectedDistractors(distractors);
     setValue('selectDistractors', distractors);
+    await trigger('selectDistractors');
   };
 
   // const closeAllModalsAndToast = () => {
@@ -214,21 +212,19 @@ const SelectDistractors = (props: any) => {
           errorMessages={errorMEssage}
         />
       ) : (
-        
         <Language
-        isOpen={isOpenLanguage}
-        onClose={onCloseLanguage}
-        formData={props.formData}
-        updatedFormData={props.updatedFormData}
-        selectedNumber={props.selectedNumber}
-        setFormData={props.setFormData}
-        onclosemodules={props.onclosemodules}
-        onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-        onCloseSelectNumber={props.onClose}
-        oncloseselectlevel={props.oncloseselectlevel}
+          isOpen={isOpenLanguage}
+          onClose={onCloseLanguage}
+          formData={props.formData}
+          updatedFormData={props.updatedFormData}
+          selectedNumber={props.selectedNumber}
+          setFormData={props.setFormData}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+          onCloseSelectNumber={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
-      
     </>
   );
 };
