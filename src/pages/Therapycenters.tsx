@@ -140,7 +140,6 @@ const TherapyCenters: React.FC = () => {
   };
 
   const renderTable = () => {
-    console.log(centersList[0], 'testjhghegfhjgjhgfh');
     return (
       <>
         {centersList.length == 0 ? (
@@ -219,7 +218,6 @@ const TherapyCenters: React.FC = () => {
   const navigate = useNavigate();
 
   const handleCenterClick = (center: Center) => {
-    console.log('Clicked Center Data:', center);
     navigate('/ViewCenter', { state: { center: center, includes: includes } });
   };
 

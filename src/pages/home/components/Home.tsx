@@ -18,17 +18,15 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { CiFilter } from 'react-icons/ci';
 import { RedArrow } from '@renderer/assets/icons/RedArrow';
 import { useCSVData } from '@renderer/Context/CSVDataContext';
 import { dataContext } from '@renderer/shared/Provider';
 import Papa from 'papaparse';
 import { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link as ReachLink, useLocation } from 'react-router-dom';
 import { useGetCenter, useGetCentersData } from '../api';
 import Statists from './Statists';
-import { FaFilter } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next';
 
 export interface ModuleData {
   moduleName: string;
@@ -46,7 +44,7 @@ export interface FileData {
 export default function Home() {
   let selectedCenter = useContext(dataContext);
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [centers, setCenters] = useState([]);
   const [centerName, setCenterName] = useState(t('selectCenter'));
@@ -66,7 +64,22 @@ export default function Home() {
 
   const { data, isLoading: centersLoading } = useGetCentersData();
   const mutation = useGetCenter();
-  console.log(location.state);
+
+  useEffect(() => {
+    setCenterName(t('selectCenter'));
+    setIsLoading(false);
+    setFiles([]);
+    setFileDataArray([]);
+    setSessionIds([]);
+    setSessionData({});
+    setAvailableMonths([]);
+
+    // If there's a selected center, fetch its data
+    if (Object.keys(selectedCenterContext).length > 0) {
+      handleClick(selectedCenterContext);
+    }
+  }, [location.key]);
+
   useEffect(() => {
     const fetchReportDir = async () => {
       try {
@@ -96,7 +109,6 @@ export default function Home() {
   }, []);
 
   const handleClick = (center: any) => {
-    console.log(center?.attributes?.name, center?.id);
     setCenterName(center?.attributes?.name);
 
     setIsLoading(true);
@@ -132,13 +144,11 @@ export default function Home() {
     setArrow(false);
   };
 
-
-
   useEffect(() => {
     if (sessionIds.length > 0 && reportDir) {
-      handleListFiles(); // This now runs after session IDs are fetched
+      handleListFiles();
     }
-  }, [sessionIds, reportDir]);
+  }, [sessionIds, reportDir, refreshKey]);
 
   const handleListFiles = async () => {
     try {
@@ -154,31 +164,28 @@ export default function Home() {
 
   const readFiles = async (files: string[]): Promise<FileData[]> => {
     const fileDataArray: FileData[] = [];
-    let filesRead = 0;
+    const errors: string[] = [];
 
     for (const file of files) {
-      const sessionIDFromFile = file.replace('.csv', '');
-      if (sessionIds.includes(sessionIDFromFile)) {
-        const fileData = await handleReadFile(`${reportDir}/${file}`);
-        if (fileData) {
-          fileDataArray.push({
-            fileName: file,
-            modules: fileData,
-          });
-          filesRead++;
+      try {
+        const sessionIDFromFile = file.replace('.csv', '');
+        if (sessionIds.includes(sessionIDFromFile)) {
+          const fileData = await handleReadFile(`${reportDir}/${file}`);
+          if (fileData) {
+            fileDataArray.push({
+              fileName: file,
+              modules: fileData,
+              date: sessionData[sessionIDFromFile],
+            });
+          }
         }
-      } else {
-        console.log(
-          'Session ID not found in sessionIds state:',
-          sessionIDFromFile
-        );
+      } catch (error) {
+        errors.push(`Error processing file ${file}: ${error}`);
       }
     }
 
-    if (filesRead === 0) {
-      console.log('No matching files found for session IDs.');
-    } else {
-      console.log(`${filesRead} files were processed.`);
+    if (errors.length > 0) {
+      console.error('Errors during file processing:', errors);
     }
 
     return fileDataArray;
@@ -199,13 +206,8 @@ export default function Home() {
     }
   };
 
-  const switchLanguage = (lang: string) => {
-    i18n.changeLanguage(lang);
-  };
-
   return (
     <>
-      
       {centersLoading ? (
         <Box textAlign="center" py={10} px={6}>
           <Spinner />

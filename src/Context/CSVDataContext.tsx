@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 type ModuleData = {
   moduleName: string;
@@ -36,165 +36,120 @@ export const CSVProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [modulesForHome, setModulesForHome] = useState<ModuleData[]>([]);
   const [modulesForReport, setModulesForReport] = useState<ModuleData[]>([]);
-  const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton']; // Replace with your actual module names
-  // Function to convert "HH:MM" time string to total minutes
+  const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton'];
+
   const parseDateTime = (dateTimeString: string): Date => {
-    const [datePart, timePart] = dateTimeString.split(' ');
-    const [day, month, year] = datePart.split('/').map(Number);
-    const [hours, minutes] = timePart.split(':').map(Number);
-    return new Date(year, month - 1, day, hours, minutes);
+    try {
+      const [datePart, timePart] = dateTimeString.split(' ');
+      const [day, month, year] = datePart.split('/').map(Number);
+      const [hours, minutes] = timePart.split(':').map(Number);
+      return new Date(year, month - 1, day, hours, minutes);
+    } catch (error) {
+      console.error('Error parsing date:', dateTimeString);
+      return new Date();
+    }
   };
 
-  // Function to calculate time difference in minutes
   const calculateTimeDifference = (start: Date, end: Date): number => {
     return Math.round((end.getTime() - start.getTime()) / (1000 * 60));
   };
 
-  // Function to format time spent
   const formatTimeSpent = (totalMinutes: number): string => {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-
     let result = '';
-
-    if (hours > 0) {
-      result += `${hours} hour${hours > 1 ? 's' : ''}`;
-    }
-
+    if (hours > 0) result += `${hours} hour${hours > 1 ? 's' : ''}`;
     if (minutes > 0) {
-      if (hours > 0) {
-        result += ' and ';
-      }
+      if (hours > 0) result += ' and ';
       result += `${minutes} minute${minutes > 1 ? 's' : ''}`;
     }
-
     return result || '0 minutes';
   };
 
-  const processCSVDataForHome = (parsedData: string[][]): ModuleData[] => {
-    const modules: ModuleData[] = [];
-    let currentModule: ModuleData | null = null;
-    let moduleStartTime: Date | null = null;
-    let moduleEndTime: Date | null = null;
+  const processCSVData = (
+    parsedData: string[][],
+    forHome: boolean
+  ): ModuleData[] => {
+    const modules: { [key: string]: ModuleData } = {};
+    let currentModuleName: string | null = null;
 
-    parsedData.forEach((row) => {
-      const dateTimeString = row[0].trim();
-      if (moduleNames.includes(row[0].trim())) {
-        if (currentModule) {
-          currentModule.totalTimeSpent =
-            moduleStartTime && moduleEndTime
-              ? calculateTimeDifference(moduleStartTime, moduleEndTime)
-              : 0;
-          currentModule.formattedTimeSpent = formatTimeSpent(
-            currentModule.totalTimeSpent
-          );
-          modules.push(currentModule);
-        }
-        currentModule = {
-          moduleName: row[0].trim(),
-          totalTimeSpent: 0,
-          formattedTimeSpent: '',
-          distractors: [],
-          level: parseInt(row[1].trim(), 10),
-        };
-        moduleStartTime = null;
-        moduleEndTime = null;
-      } else if (
-        currentModule &&
-        row[0].trim().toLowerCase() !== 'target starting time' &&
-        row[0].trim() !== ''
-      ) {
-        const currentDateTime = parseDateTime(dateTimeString);
-        if (!moduleStartTime) {
-          moduleStartTime = currentDateTime;
-        }
-        moduleEndTime = currentDateTime;
+    parsedData.forEach((row, index) => {
+      const currentRow = row[0]?.trim();
 
-        const distractorName = row[3].trim(); // Assume distractor name is in the third column
-        if (
-          distractorName &&
-          !currentModule.distractors.includes(distractorName)
-        ) {
-          currentModule.distractors.push(distractorName);
+      // Skip header or empty rows
+      if (!currentRow || currentRow.toLowerCase() === 'target starting time') {
+        return;
+      }
+
+      // Check if this row is a module name
+      if (moduleNames.includes(currentRow)) {
+        currentModuleName = currentRow;
+        if (!modules[currentModuleName]) {
+          modules[currentModuleName] = {
+            moduleName: currentModuleName,
+            totalTimeSpent: 0,
+            formattedTimeSpent: '',
+            distractors: [],
+            level: parseInt(row[1]?.trim() || '0', 10),
+            startTime: undefined,
+            endTime: undefined,
+          };
+        }
+        return;
+      }
+
+      // Process timestamps and distractors for current module
+      if (currentModuleName && modules[currentModuleName]) {
+        try {
+          const timestamp = parseDateTime(currentRow);
+          const currentModule = modules[currentModuleName];
+
+          if (!currentModule.startTime || timestamp < currentModule.startTime) {
+            currentModule.startTime = timestamp;
+          }
+          if (!currentModule.endTime || timestamp > currentModule.endTime) {
+            currentModule.endTime = timestamp;
+          }
+
+          // Add distractor if present
+          const distractor = row[3]?.trim();
+          if (distractor && !currentModule.distractors.includes(distractor)) {
+            currentModule.distractors.push(distractor);
+          }
+        } catch (error) {
+          console.error('Error processing row:', row);
         }
       }
     });
 
-    if (currentModule) {
-      currentModule.totalTimeSpent =
-        moduleStartTime && moduleEndTime
-          ? calculateTimeDifference(moduleStartTime, moduleEndTime)
-          : 0;
-      currentModule.formattedTimeSpent = formatTimeSpent(
-        currentModule.totalTimeSpent
-      );
-      modules.push(currentModule);
+    // Calculate total time spent for each module
+    Object.values(modules).forEach((module) => {
+      if (module.startTime && module.endTime) {
+        module.totalTimeSpent = calculateTimeDifference(
+          module.startTime,
+          module.endTime
+        );
+        module.formattedTimeSpent = formatTimeSpent(module.totalTimeSpent);
+      }
+    });
+
+    const processedModules = Object.values(modules);
+
+    if (forHome) {
+      setModulesForHome(processedModules);
+    } else {
+      setModulesForReport(processedModules);
     }
 
-    setModulesForHome(modules);
-    return modules;
+    return processedModules;
   };
+
+  const processCSVDataForHome = (parsedData: string[][]): ModuleData[] => {
+    return processCSVData(parsedData, true);
+  };
+
   const processCSVDataForReport = (parsedData: string[][]): ModuleData[] => {
-    const modules: ModuleData[] = [];
-    let currentModule: ModuleData | null = null;
-    let moduleStartTime: Date | null = null;
-    let moduleEndTime: Date | null = null;
-
-    parsedData.forEach((row) => {
-      const dateTimeString = row[0].trim();
-      if (moduleNames.includes(row[0].trim())) {
-        if (currentModule) {
-          currentModule.totalTimeSpent =
-            moduleStartTime && moduleEndTime
-              ? calculateTimeDifference(moduleStartTime, moduleEndTime)
-              : 0;
-          currentModule.formattedTimeSpent = formatTimeSpent(
-            currentModule.totalTimeSpent
-          );
-          modules.push(currentModule);
-        }
-        currentModule = {
-          moduleName: row[0].trim(),
-          totalTimeSpent: 0,
-          formattedTimeSpent: '',
-          distractors: [],
-          level: parseInt(row[1].trim(), 10),
-        };
-        moduleStartTime = null;
-        moduleEndTime = null;
-      } else if (
-        currentModule &&
-        row[0].trim().toLowerCase() !== 'target starting time' &&
-        row[0].trim() !== ''
-      ) {
-        const currentDateTime = parseDateTime(dateTimeString);
-        if (!moduleStartTime) {
-          moduleStartTime = currentDateTime;
-        }
-        moduleEndTime = currentDateTime;
-
-        const distractorName = row[3].trim(); // Assume distractor name is in the third column
-        if (
-          distractorName &&
-          !currentModule.distractors.includes(distractorName)
-        ) {
-          currentModule.distractors.push(distractorName);
-        }
-      }
-    });
-
-    if (currentModule) {
-      currentModule.totalTimeSpent =
-        moduleStartTime && moduleEndTime
-          ? calculateTimeDifference(moduleStartTime, moduleEndTime)
-          : 0;
-      currentModule.formattedTimeSpent = formatTimeSpent(
-        currentModule.totalTimeSpent
-      );
-      modules.push(currentModule);
-    }
-    setModulesForReport(modules);
-    return modules;
+    return processCSVData(parsedData, false);
   };
 
   return (
