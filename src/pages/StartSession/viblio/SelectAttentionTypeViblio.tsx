@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 import SelectBooksViblio from './SelectBooksviblio';
 import SelectEnvironmentViblio from './SelectEnvironmentViblio';
 
-const SelectAttentionTypeBedViblio = (props: any) => {
+const SelectAttentionTypeViblio = (props: any) => {
   const {
     isOpen: isOpenSelectEnvironmentViblio,
     onOpen: onOpenSelectEnvironmentViblio,
@@ -167,4 +167,4 @@ const SelectAttentionTypeBedViblio = (props: any) => {
   );
 };
 
-export default SelectAttentionTypeBedViblio;
+export default SelectAttentionTypeViblio;

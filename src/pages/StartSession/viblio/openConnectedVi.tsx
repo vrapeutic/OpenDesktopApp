@@ -43,6 +43,7 @@ export default function OpenConnectedVi(props: any) {
         headsetKey
       );
       await endSissionApi();
+      props.closeAllModalsAndToast();
       onevaluationOpen();
       // props.onClose();
       // props.onclosemodules();
@@ -198,7 +199,7 @@ export default function OpenConnectedVi(props: any) {
           isOpen={isevaluationopen}
           onClose={onevalutionClose}
           closeopenconnected={props.onClose}
-          onslosemodules={props.onslosemodules}
+          closemodules={props.onclosemodules}
         />
       )}
     </>
