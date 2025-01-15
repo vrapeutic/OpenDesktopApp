@@ -19,8 +19,8 @@ import SelectEnvironmentGar from './SelectEnvironmentGar';
 import { useTranslation } from 'react-i18next';
 
 const SelectLevelGar = (props: any) => {
-   const { t } = useTranslation();
-    
+  const { t } = useTranslation();
+
   const {
     isOpen: isOpenSelectEnvironment,
     onOpen: onOpenSelectEnvironment,
@@ -70,9 +70,8 @@ const SelectLevelGar = (props: any) => {
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
-          
           <ModalHeader textAlign="center" fontSize="1rem">
-           {t("chooseLevel")}
+            {t('attentionType')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -87,7 +86,7 @@ const SelectLevelGar = (props: any) => {
                   as="button"
                   {...register('selectLevel')}
                 >
-                   {t("sustainedAttention")}
+                  {t('sustainedAttention')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -98,7 +97,7 @@ const SelectLevelGar = (props: any) => {
                   as="button"
                   {...register('selectLevel')}
                 >
-                {t("selectiveAttention")}
+                  {t('selectiveAttention')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -109,11 +108,11 @@ const SelectLevelGar = (props: any) => {
                   as="button"
                   {...register('selectLevel')}
                 >
-                 {t("adaptiveAttention")}
+                  {t('adaptiveAttention')}
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectLevel && t("selectLevelError")}
+                {errors.selectLevel && t('selectAttentionTypeError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -131,7 +130,7 @@ const SelectLevelGar = (props: any) => {
               onClick={props.onClose}
               as="button"
             >
-             {t("back")}
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -145,7 +144,7 @@ const SelectLevelGar = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-          {t("next")}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>

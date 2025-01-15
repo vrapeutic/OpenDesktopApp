@@ -59,8 +59,8 @@ const SelectLevelRodja = (props: any) => {
     setSelectedLevel(level);
     setValue('selectLevel', level);
   };
- const { t } = useTranslation();
-  
+  const { t } = useTranslation();
+
   return (
     <>
       <Modal
@@ -68,8 +68,6 @@ const SelectLevelRodja = (props: any) => {
         onClose={props.onClose}
         closeOnOverlayClick={false}
         closeOnEsc={false}
-
-
       >
         <ModalOverlay />
         <ModalContent h="400px" w="500px" bgColor="#FFFFFF" borderRadius="10px">
@@ -77,7 +75,7 @@ const SelectLevelRodja = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-          {t("selectLevel")}
+            {t('attentionType')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -91,7 +89,7 @@ const SelectLevelRodja = (props: any) => {
                   fontSize="1rem"
                   {...register('selectLevel')}
                 >
-                     {t("sustainedAttention")}
+                  {t('sustainedAttention')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(2)}
@@ -101,7 +99,7 @@ const SelectLevelRodja = (props: any) => {
                   fontSize="1rem"
                   {...register('selectLevel')}
                 >
-               {t("selectiveAttention")}
+                  {t('selectiveAttention')}
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -111,12 +109,12 @@ const SelectLevelRodja = (props: any) => {
                   fontSize="1rem"
                   {...register('selectLevel')}
                 >
-                {t("adaptiveAttention")}
+                  {t('adaptiveAttention')}
                 </Button>
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectLevel && t("selectLevelError")}
+                {errors.selectLevel && t('selectAttentionTypeError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -133,7 +131,7 @@ const SelectLevelRodja = (props: any) => {
               fontSize="15px"
               onClick={props.onClose}
             >
-          {  t("back")}
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -147,7 +145,7 @@ const SelectLevelRodja = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-             {t("selectEnvironment")}
+              {t('selectEnvironment')}
             </Button>
           </ModalFooter>
         </ModalContent>

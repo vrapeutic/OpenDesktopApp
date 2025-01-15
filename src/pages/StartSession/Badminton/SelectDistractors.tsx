@@ -141,7 +141,7 @@ const SelectDistractors = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
                 >
-                  1 {t('distractor')}
+                  1
                 </Button>
 
                 <Button
@@ -152,7 +152,7 @@ const SelectDistractors = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
                 >
-                  2 {t('distractor')}
+                  2
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -162,7 +162,7 @@ const SelectDistractors = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
                 >
-                  3 {t('distractor')}
+                  3
                 </Button>
               </Stack>
               <FormErrorMessage>

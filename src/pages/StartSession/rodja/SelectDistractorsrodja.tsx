@@ -61,9 +61,11 @@ const SelectDistractorsRodja = (props: any) => {
   } = useSocketManager();
   const { popupFunctions } = usePopupsHandler();
   const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
-  const [selectedDistractor, setselectedDistractor] = useState<number | null>(null);
+  const [selectedDistractor, setselectedDistractor] = useState<number | null>(
+    null
+  );
   const toast = useToast();
-  const toastIdRef:any = useRef();
+  const toastIdRef: any = useRef();
   const schema = joi.object({
     selectDistractor: joi.number().required(),
   });
@@ -79,7 +81,6 @@ const SelectDistractorsRodja = (props: any) => {
   });
 
   const handleFormSubmit = async (data: any) => {
-
     const updatedFormData = [
       props.formData[0],
       props.formData[1],
@@ -88,74 +89,72 @@ const SelectDistractorsRodja = (props: any) => {
       ...props.formData.slice(4),
     ];
     props.setFormData(updatedFormData);
-    onOpenLanguage()
-    
+    onOpenLanguage();
+
     // const existingDevice = await checkIfServiceExists(headsetKey);
     // const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
     // if (appIsConnectedToInternet && existingDevice) {
-      // if (appIsConnectedToInternet) {
+    // if (appIsConnectedToInternet) {
 
-     
+    // console.log('all subimtted data in distractor', updatedFormData);
 
-      // console.log('all subimtted data in distractor', updatedFormData);
-      
-      // console.log('updatedFormData', updatedFormData);
-      // const socketMessage = {
-      //   sessionId,
-      //   [MODULE_PACKAGE_KEY]: module,
-      //   deviceId: headsetKey,
-      // };
-      // dispatchSocketMessage(
-      //   START_APP_MESSAGE,
-      //   socketMessage,
-      //   headsetKey,
-      //   updatedFormData
-      // );
-      // navigate('/home');
-      // props.onClose();
-      // onOpenConnected();
-//       toastIdRef.current = toast({
-//         title: 'Success',
-//         description: (
-//           <Box>
-//           {t('YouAssignedLevel9', {
-//   level: updatedFormData[0],
-//   environment: props.formData[1],
-//   jewel: props.selectBook,
-//   distractor: selectedDistractor,
-// })
-// }
-       
-//             <Button
-//              color={"white"}
-//               width={3}
-//               height={5}
-//               onClick={() => {
-//                 if (toastIdRef.current) {
-                 
-//                   toast.close(toastIdRef.current);
-//                 }
-//               }}
-//             position={"absolute"}
-       
-//             top={3}
-//             right={3}
-          
-//             >
-//           x
-//             </Button>
-//           </Box>
-//         ),
-//         status: 'success',
-//         duration: null,
-//         position: 'bottom-left',
-//         onCloseComplete: () => {
-//           console.log('Toast has been removed.');
-//           // Additional logic for when the toast is removed
-//         },
-//       });
-     
-      // console.log('Array of menu choices', updatedFormData);
+    // console.log('updatedFormData', updatedFormData);
+    // const socketMessage = {
+    //   sessionId,
+    //   [MODULE_PACKAGE_KEY]: module,
+    //   deviceId: headsetKey,
+    // };
+    // dispatchSocketMessage(
+    //   START_APP_MESSAGE,
+    //   socketMessage,
+    //   headsetKey,
+    //   updatedFormData
+    // );
+    // navigate('/home');
+    // props.onClose();
+    // onOpenConnected();
+    //       toastIdRef.current = toast({
+    //         title: 'Success',
+    //         description: (
+    //           <Box>
+    //           {t('YouAssignedLevel9', {
+    //   level: updatedFormData[0],
+    //   environment: props.formData[1],
+    //   jewel: props.selectBook,
+    //   distractor: selectedDistractor,
+    // })
+    // }
+
+    //             <Button
+    //              color={"white"}
+    //               width={3}
+    //               height={5}
+    //               onClick={() => {
+    //                 if (toastIdRef.current) {
+
+    //                   toast.close(toastIdRef.current);
+    //                 }
+    //               }}
+    //             position={"absolute"}
+
+    //             top={3}
+    //             right={3}
+
+    //             >
+    //           x
+    //             </Button>
+    //           </Box>
+    //         ),
+    //         status: 'success',
+    //         duration: null,
+    //         position: 'bottom-left',
+    //         onCloseComplete: () => {
+    //           console.log('Toast has been removed.');
+    //           // Additional logic for when the toast is removed
+    //         },
+    //       });
+
+    // console.log('Array of menu choices', updatedFormData);
     // } else {
     //   // console.log(headsetKey);
     //   // console.log(existingDevice);
@@ -207,8 +206,7 @@ const SelectDistractorsRodja = (props: any) => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
-  
-  }
+  };
   return (
     <>
       <Modal
@@ -223,8 +221,7 @@ const SelectDistractorsRodja = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-        {  t("selectDistractors")}
-         
+            {t('selectDistractors')}
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
@@ -237,7 +234,6 @@ const SelectDistractorsRodja = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
-                 
                 >
                   1
                 </Button>
@@ -249,7 +245,6 @@ const SelectDistractorsRodja = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
-                 
                 >
                   2
                 </Button>
@@ -260,13 +255,12 @@ const SelectDistractorsRodja = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
-                
                 >
                   3
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectDistractor && t("selectDistractorError")}
+                {errors.selectDistractor && t('selectDistractorError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -283,7 +277,7 @@ const SelectDistractorsRodja = (props: any) => {
               onClick={handleBackToSelectBook}
               mx={2}
             >
-            {t("backToSelectJewel")}
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -297,7 +291,7 @@ const SelectDistractorsRodja = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-            {t("next")}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -320,7 +314,6 @@ const SelectDistractorsRodja = (props: any) => {
           onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
           oncloseselectlevel={props.oncloseselectlevel}
           onCloseSelectJewel={props.onCloseSelectJewel}
-         
           onCloseSelectDistractors={props.onClose}
           formData={props.formData}
           updatedFormData={props.updatedFormData}
