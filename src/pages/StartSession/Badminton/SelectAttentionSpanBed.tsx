@@ -142,7 +142,7 @@ const SelectAttentionSpanBed = (props: any) => {
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectAttentionSpan && 'Please select a book.'}
+                {errors.selectAttentionSpan && 'Please select a attention Duration.'}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>

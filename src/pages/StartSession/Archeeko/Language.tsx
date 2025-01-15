@@ -226,7 +226,7 @@ const Language = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectDistractors && t('selectDistractorError')}
+                {errors.selectDistractors && t('selectLanguageError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>

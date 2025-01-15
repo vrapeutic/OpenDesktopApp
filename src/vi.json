@@ -411,5 +411,7 @@
   "AudioOFF": "Tắt Âm Thanh",
   "FillingThenWatering": "Đổ Nước Rồi Tưới",
   "AudioDistraction": "Sự Phân Tâm Âm Thanh",
-  "selectAttentionTypeError": "Vui lòng chọn loại tập trung"
+  "selectAttentionTypeError": "Vui lòng chọn loại tập trung",
+  "CourseSelectionError":"Please select a  Course Selection",
+   "AudioError":"Vui lòng chọn một âm thanh gây phân tâm"
 }

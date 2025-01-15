@@ -143,7 +143,7 @@ const Aduio = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectedCourses && t('selectDistractorError')}
+                {errors.selectedCourses && t('AudioError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>

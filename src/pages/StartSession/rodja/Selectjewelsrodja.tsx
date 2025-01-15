@@ -29,13 +29,13 @@ import { MODULE_PACKAGE_KEY, START_APP_MESSAGE } from '@main/constants';
 import { useTranslation } from 'react-i18next';
 import Language from './Language';
 const SelectjewelRodja = (props: any) => {
-   const { t } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedBook, setselectedBook] = useState<number | null>(null);
   const { module, sessionId, headsetid, headsetKey } = useStartSessionContext();
 
   const toast = useToast();
-  const toastIdRef:any = useRef();
+  const toastIdRef: any = useRef();
   const [notFound, setNotFound] = useState(false);
   const [errorMEssage, setErrorMEssage] = useState(null);
   const {
@@ -56,11 +56,11 @@ const SelectjewelRodja = (props: any) => {
     onOpen: onOpenSelectDistractors,
     onClose: onCloseSelectDistractors,
   } = useDisclosure();
-    const {
-      isOpen: isOpenLanguage,
-      onOpen: onOpenLanguage,
-      onClose: onCloseLanguage,
-    } = useDisclosure();
+  const {
+    isOpen: isOpenLanguage,
+    onOpen: onOpenLanguage,
+    onClose: onCloseLanguage,
+  } = useDisclosure();
 
   const schema = joi.object({
     selectBook: joi.number().required(),
@@ -91,79 +91,78 @@ const SelectjewelRodja = (props: any) => {
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      
       onOpenLanguage();
       // console.log("session id",sessionId)
 
-//       toastIdRef.current = toast({
-//         title: 'Success',
-//         description: (
-//           <Box>
-//            {t('YouAssignedLevel8', {
-//   level: updatedFormData[0],
-//   environment: props.formData[1],
-//   jewel: selectedBook,
-//   module,
-//   sessionId,
-// })}
-//             <Button
-//              color={"white"}
-//               width={3}
-//               height={5}
-//               onClick={() => {
-//                 if (toastIdRef.current) {
-                 
-//                   toast.close(toastIdRef.current);
-//                 }
-//               }}
-//             position={"absolute"}
-       
-//             top={3}
-//             right={3}
-          
-//             >
-//           x
-//             </Button>
-//           </Box>
-//         ),
-//         status: 'success',
-//         duration: null,
-//         position: 'bottom-left',
-//         onCloseComplete: () => {
-//           console.log('Toast has been removed.');
-//           // Additional logic for when the toast is removed
-//         },
-//       });
-//       const existingDevice = await checkIfServiceExists(headsetKey);
-//       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
-//       if (appIsConnectedToInternet && existingDevice) {
-//         // if (appIsConnectedToInternet) {
-//         console.log('updatedFormData', updatedFormData);
-//         const socketMessage = {
-//           sessionId,
-//           [MODULE_PACKAGE_KEY]: module,
-//           deviceId: headsetKey,
-//         };
+      //       toastIdRef.current = toast({
+      //         title: 'Success',
+      //         description: (
+      //           <Box>
+      //            {t('YouAssignedLevel8', {
+      //   level: updatedFormData[0],
+      //   environment: props.formData[1],
+      //   jewel: selectedBook,
+      //   module,
+      //   sessionId,
+      // })}
+      //             <Button
+      //              color={"white"}
+      //               width={3}
+      //               height={5}
+      //               onClick={() => {
+      //                 if (toastIdRef.current) {
 
-//         dispatchSocketMessage(
-//           START_APP_MESSAGE,
-//           socketMessage,
-//           headsetKey,
-//           updatedFormData
-//         );
-//         onOpenConnected();
-//         props.onClose();
-//       } else {
-//         console.log(headsetKey);
-//         console.log(existingDevice);
-//         const errorMessage = !appIsConnectedToInternet
-//           ?  t('connectionError')
-//           : t('NoHeadsetFound');
+      //                   toast.close(toastIdRef.current);
+      //                 }
+      //               }}
+      //             position={"absolute"}
 
-//         console.log(errorMessage);
-//         setErrorMEssage(errorMessage);
-//         setNotFound(true);
-//       }
+      //             top={3}
+      //             right={3}
+
+      //             >
+      //           x
+      //             </Button>
+      //           </Box>
+      //         ),
+      //         status: 'success',
+      //         duration: null,
+      //         position: 'bottom-left',
+      //         onCloseComplete: () => {
+      //           console.log('Toast has been removed.');
+      //           // Additional logic for when the toast is removed
+      //         },
+      //       });
+      //       const existingDevice = await checkIfServiceExists(headsetKey);
+      //       const appIsConnectedToInternet = await checkAppNetWorkConnection(); //TODO: consider move this flow to HOC
+      //       if (appIsConnectedToInternet && existingDevice) {
+      //         // if (appIsConnectedToInternet) {
+      //         console.log('updatedFormData', updatedFormData);
+      //         const socketMessage = {
+      //           sessionId,
+      //           [MODULE_PACKAGE_KEY]: module,
+      //           deviceId: headsetKey,
+      //         };
+
+      //         dispatchSocketMessage(
+      //           START_APP_MESSAGE,
+      //           socketMessage,
+      //           headsetKey,
+      //           updatedFormData
+      //         );
+      //         onOpenConnected();
+      //         props.onClose();
+      //       } else {
+      //         console.log(headsetKey);
+      //         console.log(existingDevice);
+      //         const errorMessage = !appIsConnectedToInternet
+      //           ?  t('connectionError')
+      //           : t('NoHeadsetFound');
+
+      //         console.log(errorMessage);
+      //         setErrorMEssage(errorMessage);
+      //         setNotFound(true);
+      //       }
 
       // console.log(
       //   `You assigned level ${updatedFormData[0]} ,environment ${props.formData[1]}, jewel ${selectedBook} ,
@@ -202,8 +201,7 @@ const SelectjewelRodja = (props: any) => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
-  
-  }
+  };
   return (
     <>
       <Modal
@@ -218,10 +216,11 @@ const SelectjewelRodja = (props: any) => {
             <ModalCloseButton marginLeft="100px" />
           </Box>
           <ModalHeader textAlign="center" fontSize="1rem">
-{t("selectJewelsRodja")}          </ModalHeader>
+            {t('selectJewelsRodja')}{' '}
+          </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectLevel}>
+            <FormControl isInvalid={!!errors.selectBook}>
               <Stack spacing={4} direction="column" align="center">
                 <Button
                   onClick={() => handleButtonClick(1)}
@@ -230,7 +229,6 @@ const SelectjewelRodja = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectBook')}
-                  value={1}
                 >
                   5
                 </Button>
@@ -242,7 +240,6 @@ const SelectjewelRodja = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectBook')}
-                  value={2}
                 >
                   10
                 </Button>
@@ -253,13 +250,12 @@ const SelectjewelRodja = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectBook')}
-                  value={3}
                 >
                   15
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectBook && 'Please select a book.'}
+                {errors.selectBook && t("selectJewelError")}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -276,7 +272,7 @@ const SelectjewelRodja = (props: any) => {
               onClick={handleBackToSelectLevel}
               mx={2}
             >
-               {t("backToSelectLevel")}
+              {t('backToSelectLevel')}
             </Button>
             <Button
               w="180px"
@@ -291,8 +287,8 @@ const SelectjewelRodja = (props: any) => {
               mx={2}
             >
               {props.formData[0] == 2 || props.formData[0] == 3
-                ?  t("selectDistractor")
-                : t("next")}
+                ? t('selectDistractor')
+                : t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -311,7 +307,6 @@ const SelectjewelRodja = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
           onCloseSelectJewel={props.onClose}
           onCloseBooks={props.onClose}
-         
         />
       )}
 

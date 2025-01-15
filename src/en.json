@@ -408,10 +408,13 @@
   "Library": "Library",
   "Hanoi Court": "Hanoi Court",
   "CourseSelection": "Course Selection",
+  "CourseSelectionError": " Please select a  Course Selection",
   "WateringOnly": "Watering Only",
   "AudioON": "Audio ON",
   "AudioOFF": "Audio OFF",
   "FillingThenWatering": "Filling Then Watering",
   "AudioDistraction": "Audio Distraction",
-  "selectAttentionTypeError": "Please select an attention type"
+  "selectAttentionTypeError": "Please select an attention type",
+  "AudioError":"Please select a  Audio Distraction"
+
 }

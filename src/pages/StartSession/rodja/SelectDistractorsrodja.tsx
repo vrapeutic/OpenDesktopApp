@@ -228,7 +228,7 @@ const SelectDistractorsRodja = (props: any) => {
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectLevel}>
+            <FormControl isInvalid={!!errors.selectDistractor}>
               <Stack spacing={4} direction="column" align="center">
                 <Button
                   onClick={() => handleButtonClick(1)}
@@ -237,7 +237,7 @@ const SelectDistractorsRodja = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
-                  value={1}
+                 
                 >
                   1
                 </Button>
@@ -249,7 +249,7 @@ const SelectDistractorsRodja = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
-                  value={2}
+                 
                 >
                   2
                 </Button>
@@ -260,7 +260,7 @@ const SelectDistractorsRodja = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
-                  value={3}
+                
                 >
                   3
                 </Button>

@@ -147,7 +147,7 @@ const CourseSelection = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectedCourses && t('selectDistractorError')}
+                {errors.selectedCourses && t('CourseSelectionError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
