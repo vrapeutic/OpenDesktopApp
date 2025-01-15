@@ -117,7 +117,7 @@ const SelectAttentionTypeBed = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectAttentionType && t('selectLevelError')}
+                {errors.selectAttentionType && t('selectAttentionTypeError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>

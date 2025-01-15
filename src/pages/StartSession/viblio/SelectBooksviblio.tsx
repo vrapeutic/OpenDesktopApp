@@ -27,7 +27,7 @@ import SelectDistractors from './SelectDistractorsviblio';
 import SelectLanguage from './SelectLanguage';
 const SelectBooksViblio = (props: any) => {
   const navigate = useNavigate();
-  const [selectedBook, setselectedBook] = useState<number | null>(null);
+  const [selectedBook, setSelectedBook] = useState<number | null>(null);
   const toast = useToast();
   const {
     isOpen: isOpenLanguage,
@@ -57,7 +57,7 @@ const SelectBooksViblio = (props: any) => {
     formState: { errors },
   } = useForm({
     resolver: joiResolver(schema),
-    mode: 'onTouched',
+    mode: 'onSubmit',
   });
 
   const handleFormSubmit = async (data: any) => {
@@ -100,7 +100,7 @@ const SelectBooksViblio = (props: any) => {
   };
 
   const handleButtonClick = (book: number) => {
-    setselectedBook(book);
+    setSelectedBook(book);
     setValue('selectBook', book);
   };
 
@@ -127,7 +127,7 @@ const SelectBooksViblio = (props: any) => {
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectLevel}>
+            <FormControl isInvalid={!!errors.selectBook}>
               <Stack spacing={4} direction="column" align="center">
                 <Button
                   onClick={() => handleButtonClick(1)}
@@ -136,7 +136,6 @@ const SelectBooksViblio = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectBook')}
-                  value={1}
                 >
                   5
                 </Button>
@@ -148,7 +147,6 @@ const SelectBooksViblio = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectBook')}
-                  value={2}
                 >
                   10
                 </Button>
@@ -159,7 +157,6 @@ const SelectBooksViblio = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectBook')}
-                  value={3}
                 >
                   15
                 </Button>

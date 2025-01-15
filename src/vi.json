@@ -404,11 +404,12 @@
   "distractor": "Chướng ngại vật",
   "attentionType": "Loại chú ý",
   "Library": "Thư viện",
-  "Haino Court": "Tòa án Haino",
+  "Hanoi Court": "Tòa án Hanoi",
   "CourseSelection": "Chọn Khóa Học",
   "WateringOnly": "Chỉ Tưới Nước",
   "AudioON": "Bật Âm Thanh",
   "AudioOFF": "Tắt Âm Thanh",
   "FillingThenWatering": "Đổ Nước Rồi Tưới",
-  "AudioDistraction": "Sự Phân Tâm Âm Thanh"
+  "AudioDistraction": "Sự Phân Tâm Âm Thanh",
+  "selectAttentionTypeError": "Vui lòng chọn loại tập trung"
 }

@@ -220,7 +220,7 @@
   "chooseEnvironmentRodja": "Choose Environment Rodja",
   "garden": "Garden",
   "room": "Room",
-  "selectEnvironmentError": "Please select a Environment.",
+  "selectEnvironmentError": "Please select an Environment.",
   "selectJewelsRodja": "Select Jewels Rodja",
   "selectJewelError": "Please select a jewel.",
   "selectLevelRodja": "Select Level Rodja",
@@ -406,11 +406,12 @@
   "distractor": "Distractor",
   "attentionType": "Attention Type",
   "Library": "Library",
-  "Haino Court": "Haino Court",
+  "Hanoi Court": "Hanoi Court",
   "CourseSelection": "Course Selection",
   "WateringOnly": "Watering Only",
   "AudioON": "Audio ON",
   "AudioOFF": "Audio OFF",
   "FillingThenWatering": "Filling Then Watering",
-  "AudioDistraction": "Audio Distraction"
+  "AudioDistraction": "Audio Distraction",
+  "selectAttentionTypeError": "Please select an attention type"
 }

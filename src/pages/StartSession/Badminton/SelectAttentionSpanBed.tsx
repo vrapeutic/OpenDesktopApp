@@ -116,7 +116,6 @@ const SelectAttentionSpanBed = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectAttentionSpan')}
-                  value={1}
                 >
                   20
                 </Button>
@@ -128,7 +127,6 @@ const SelectAttentionSpanBed = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectAttentionSpan')}
-                  value={2}
                 >
                   40
                 </Button>
@@ -139,7 +137,6 @@ const SelectAttentionSpanBed = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectAttentionSpan')}
-                  value={3}
                 >
                   60
                 </Button>

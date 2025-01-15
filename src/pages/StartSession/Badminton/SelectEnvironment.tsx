@@ -88,7 +88,7 @@ const SelectEnvironment = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectEnvironment')}
                 >
-                  {t('Haino Court')}
+                  {t('Hanoi Court')}
                 </Button>
               </Stack>
               <FormErrorMessage>

@@ -32,7 +32,7 @@ const SelectDistractors = (props: any) => {
     onOpen: onOpenLanguage,
     onClose: onCloseLanguage,
   } = useDisclosure();
-  const [selectedDistractor, setselectedDistractor] = useState<number | null>(
+  const [selectedDistractor, setSelectedDistractor] = useState<number | null>(
     null
   );
   const toastIdRef: any = useRef();
@@ -51,20 +51,21 @@ const SelectDistractors = (props: any) => {
       .number()
       .required()
       .messages({
-        'any.required': t('validation.age.rerequired'),
+        'any.required': t('selectDistractorError'),
+        'number.base': t('selectDistractorError'),
       }),
   });
+
   const {
     register,
     handleSubmit,
     setValue,
-
     formState: { errors },
+    trigger,
   } = useForm({
     resolver: joiResolver(schema),
-    mode: 'onTouched',
+    mode: 'onSubmit',
   });
-
   const handleFormSubmit = async (data: any) => {
     const updatedFormData = [
       props.formData[0],
@@ -103,9 +104,10 @@ const SelectDistractors = (props: any) => {
     props.onClose();
   };
 
-  const handleButtonClick = (distractor: number) => {
-    setselectedDistractor(distractor);
+  const handleButtonClick = async (distractor: number) => {
+    setSelectedDistractor(distractor);
     setValue('selectDistractor', distractor);
+    await trigger('selectDistractor');
   };
 
   const closeAllModalsAndToast = () => {
@@ -131,7 +133,7 @@ const SelectDistractors = (props: any) => {
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectLevel}>
+            <FormControl isInvalid={!!errors.selectDistractor}>
               <Stack spacing={4} direction="column" align="center">
                 <Button
                   onClick={() => handleButtonClick(1)}
@@ -140,7 +142,6 @@ const SelectDistractors = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
-                  value={1}
                 >
                   1 {t('distractor')}
                 </Button>
@@ -152,7 +153,6 @@ const SelectDistractors = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
-                  value={2}
                 >
                   2 {t('distractor')}
                 </Button>
@@ -163,7 +163,6 @@ const SelectDistractors = (props: any) => {
                   width="12em"
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
-                  value={3}
                 >
                   3 {t('distractor')}
                 </Button>
