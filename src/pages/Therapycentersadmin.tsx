@@ -26,7 +26,7 @@ import { useAdminContext } from '@renderer/Context/AdminContext';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
 import { dataContext } from '@renderer/shared/Provider';
-import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon, DeleteIcon, EditIcon, RepeatIcon } from '@chakra-ui/icons';
 import VrModal from './VrModal';
 
 interface Center {
@@ -457,6 +457,21 @@ const nextHandler = () => {
                   >
                     <DeleteIcon />
                   </Button>
+                  <Button
+                    type="button"
+                    padding="10px"
+                    margin="5px"
+                    bg="red"
+                    borderRadius="8px"
+                    fontSize="14px"
+                    fontFamily="Graphik LCG"
+                    boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                    color={'yollow'}
+                    onClick={() => handleDelete(x.id)}
+                  >
+                    <RepeatIcon />
+                  </Button>
+                  
                 </Flex>
               );
             })}
