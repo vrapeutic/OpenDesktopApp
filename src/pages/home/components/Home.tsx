@@ -43,9 +43,7 @@ export interface FileData {
 }
 export default function Home() {
   let selectedCenter = useContext(dataContext);
-
   const { t } = useTranslation();
-
   const [centers, setCenters] = useState([]);
   const [centerName, setCenterName] = useState(t('selectCenter'));
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +53,7 @@ export default function Home() {
   const { processCSVDataForHome } = useCSVData();
   const [files, setFiles] = useState([]);
   const [reportDir, setReportDir] = useState('');
-  const { isOpen: isOpen, onOpen: onOpen, onClose: onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [sessionIds, setSessionIds] = useState<string[]>([]);
   const [fileDataArray, setFileDataArray] = useState<FileData[]>([]);
   const [availableMonths, setAvailableMonths] = useState([]);
@@ -64,6 +62,20 @@ export default function Home() {
 
   const { data, isLoading: centersLoading } = useGetCentersData();
   const mutation = useGetCenter();
+
+  const getCurrentMonthSessions = (data: any[]) => {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+
+    return data.filter((session: any) => {
+      const sessionDate = new Date(session?.attributes?.created_at);
+      return (
+        sessionDate.getMonth() === currentMonth &&
+        sessionDate.getFullYear() === currentYear
+      );
+    });
+  };
 
   useEffect(() => {
     setCenterName(t('selectCenter'));
@@ -74,7 +86,6 @@ export default function Home() {
     setSessionData({});
     setAvailableMonths([]);
 
-    // If there's a selected center, fetch its data
     if (Object.keys(selectedCenterContext).length > 0) {
       handleClick(selectedCenterContext);
     }
@@ -110,16 +121,27 @@ export default function Home() {
 
   const handleClick = (center: any) => {
     setCenterName(center?.attributes?.name);
-
     setIsLoading(true);
     selectedCenter = Object.assign(selectedCenter, center);
+
     mutation.mutate(center?.id, {
       onSuccess: (data: any) => {
         if (data) {
           setIsLoading(false);
-          const sessionIdsFromApi = data.map((session: any) => session.id);
+          console.log(data, 'sessionData');
+
+          // Filter sessions for current month
+          const currentMonthSessions = getCurrentMonthSessions(data);
+          console.log(currentMonthSessions, 'currentMonthSessions');
+
+          // Set session IDs only for current month
+          const sessionIdsFromApi = currentMonthSessions.map(
+            (session: any) => session.id
+          );
           setSessionIds(sessionIdsFromApi);
-          const sessionData = data.reduce(
+
+          // Create session data mapping for all sessions (we keep this for reference)
+          const sessionData = currentMonthSessions.reduce(
             (acc: { [key: string]: string }, session: any) => {
               acc[session.id] = session?.attributes?.created_at;
               return acc;
@@ -128,7 +150,7 @@ export default function Home() {
           );
           setSessionData(sessionData);
 
-          // Extract unique months from the session dates
+          // Extract unique months (although we're only using current month now)
           const uniqueMonths = new Set<string>();
           Object.values(sessionData).forEach((date: string) => {
             const month = new Date(date).toLocaleString('en', {
