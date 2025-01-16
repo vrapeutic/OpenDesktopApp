@@ -84,11 +84,6 @@ const SelectAttentionSpanBed = (props: any) => {
     setValue('selectAttentionSpan', book);
   };
 
-  const closeAllModalsAndToast = () => {
-    if (toastIdRef.current) {
-      toast.close(toastIdRef.current);
-    }
-  };
   return (
     <>
       <Modal
@@ -142,7 +137,8 @@ const SelectAttentionSpanBed = (props: any) => {
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectAttentionSpan && 'Please select a attention Duration.'}
+                {errors.selectAttentionSpan &&
+                  'Please select a attention Duration.'}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -188,8 +184,6 @@ const SelectAttentionSpanBed = (props: any) => {
           onCloseSelectEnvironmentBed={props.onCloseSelectEnvironmentBed}
           onCloseSelectAttentionSpan={props.onClose}
           onclosemodules={props.onclosemodules}
-          closeAllModalsAndToast={closeAllModalsAndToast}
-          closeAllModals={closeAllModalsAndToast}
         />
       )}
 
@@ -203,8 +197,6 @@ const SelectAttentionSpanBed = (props: any) => {
           onCloseSelectEnvironmentBed={props.onCloseSelectEnvironmentBed}
           onCloseSelectAttentionTypeBed={props.onCloseSelectAttentionTypeBed}
           onclosemodules={props.onclosemodules}
-          closeAllModalsAndToast={closeAllModalsAndToast}
-          closeAllModals={closeAllModalsAndToast}
         />
       )}
     </>

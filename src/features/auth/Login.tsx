@@ -36,17 +36,14 @@ const Login = () => {
   const { setAdminBoolean } = useAdminContext();
 
   const onLoginSuccess = (response: any) => {
-    console.log('onLoginSuccess my function:', response);
-
     setAdminBoolean(response.is_admin);
-console.log(response.is_admin)
     response.is_admin
       ? navigate('/validateotp', {
           state: {
             id: null,
             email: null,
             admin: response.is_admin,
-            is_center_admin: response?.doctor?.attributes?.is_center_admin
+            is_center_admin: response?.doctor?.attributes?.is_center_admin,
           },
         })
       : navigate('/validateotp', {
@@ -54,15 +51,15 @@ console.log(response.is_admin)
             id: response.doctor.id,
             email: response.doctor.attributes.email,
             admin: response.is_admin,
-            is_center_admin: response.doctor.attributes.is_center_admin
+            is_center_admin: response.doctor.attributes.is_center_admin,
           },
         });
-      setState({
-           id: response.doctor.id,
-          email: response.doctor.attributes.email,
-          admin: response.is_admin ,
-          is_center_admin: response.doctor.attributes.is_center_admin});
-         
+    setState({
+      id: response.doctor.id,
+      email: response.doctor.attributes.email,
+      admin: response.is_admin,
+      is_center_admin: response.doctor.attributes.is_center_admin,
+    });
   };
 
   const identifierSchema = Joi.alternatives()
@@ -154,10 +151,10 @@ console.log(response.is_admin)
                 fontSize="2rem"
                 color="#222631"
               >
-                {t("Welcomeback")}
+                {t('Welcomeback')}
               </Heading>
               <Text fontSize="1rem" pt="19px" color="#58667E">
-                {t("loginOrRegister")}
+                {t('loginOrRegister')}
               </Text>
               <form onSubmit={onSubmit}>
                 <FormControl>
@@ -169,14 +166,16 @@ console.log(response.is_admin)
                     m="0px"
                   >
                     {/* Email or mobile number */}
-                    {t("email")}
+                    {t('email')}
                   </FormLabel>
                   <InputGroup>
                     <Input
                       isInvalid={
                         data.identifier.length > 0 && Boolean(error.identifier)
                       }
-                      onChange={(e:any) => handleIdentifierChange(e.target.value)}
+                      onChange={(e: any) =>
+                        handleIdentifierChange(e.target.value)
+                      }
                       value={data.identifier}
                       type="email"
                       borderRadius="8px"
@@ -185,7 +184,7 @@ console.log(response.is_admin)
                       px="20px"
                       py="18px"
                       h="unset"
-                      placeholder={t("enterEmail")}
+                      placeholder={t('enterEmail')}
                     />
                     <InputRightElement h="100%" pr="11.33px" />
                   </InputGroup>
@@ -196,14 +195,16 @@ console.log(response.is_admin)
                     color="#222631"
                     m="0px"
                   >
-                   {t("password")}
+                    {t('password')}
                   </FormLabel>
                   <InputGroup>
                     <Input
                       isInvalid={
                         data.password.length > 0 && Boolean(error.password)
                       }
-                      onChange={(e:any) => handlePasswordChange(e.target.value)}
+                      onChange={(e: any) =>
+                        handlePasswordChange(e.target.value)
+                      }
                       value={data.password}
                       type={showPassword ? 'text' : 'password'}
                       borderRadius="8px"
@@ -213,7 +214,7 @@ console.log(response.is_admin)
                       py="18px"
                       h="unset"
                       letterSpacing="6px"
-                      placeholder= {t("password")}
+                      placeholder={t('password')}
                       _placeholder={{
                         letterSpacing: 'initial',
                       }}
@@ -235,7 +236,7 @@ console.log(response.is_admin)
                       navigate('/EnterEmail');
                     }}
                   >
-                {t("forgotPassword")}
+                    {t('forgotPassword')}
                   </FormHelperText>
                   <Button
                     type="submit"
@@ -254,12 +255,12 @@ console.log(response.is_admin)
                     justifyContent="space-between"
                     rightIcon={<ArrowForwardIcon />}
                   >
-                    {t("login")}
+                    {t('login')}
                   </Button>
                 </FormControl>
               </form>
               <Text pt="32px" color="#4F4F4F" fontWeight="500" fontSize="1rem">
-               {t("NewToVRapeutic")}
+                {t('NewToVRapeutic')}
                 <Link
                   display="inline"
                   color="#3961FB"
@@ -268,19 +269,19 @@ console.log(response.is_admin)
                   }}
                   // href="https://site.vrpeutic.ca/request-demo/"
                 >
-                 {t("createAccount")}
+                  {t('createAccount')}
                 </Link>
               </Text>
               <Text pt="12px" fontSize="0.75rem" color="#58667E">
-               {t("ByContinuingYouAreAgreeingTo")}
+                {t('ByContinuingYouAreAgreeingTo')}
                 <Link
                   display="inline"
                   color="#4F4F4F"
                   fontWeight="500"
                   textDecoration="underline"
-                 href="https://myvrapeutic.com/privacy-policy/"
+                  href="https://myvrapeutic.com/privacy-policy/"
                 >
-                {t("terms&Conditions")}
+                  {t('terms&Conditions')}
                 </Link>
               </Text>
             </Box>
@@ -291,8 +292,7 @@ console.log(response.is_admin)
               fontSize="0.75rem"
               color="#000000"
             >
-
-            {t("AllRightsReserved")}
+              {t('AllRightsReserved')}
             </Text>
           </Flex>
         </GridItem>

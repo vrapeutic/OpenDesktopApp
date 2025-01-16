@@ -84,11 +84,11 @@ const SelectNumberArcheeko = (props: any) => {
       ...props.formData.slice(3),
     ];
     props.setFormData(updatedFormData);
- console.log(updatedFormData,"jjjjj");
+    console.log(updatedFormData, 'jjjjj');
     if (props.formData[0] === 2 || props.formData[0] === 3) {
       onOpenSelectDistractors();
     } else {
-      onOpenLanguage()
+      onOpenLanguage();
 
       console.log('session id', sessionId);
 
@@ -278,7 +278,7 @@ const SelectNumberArcheeko = (props: any) => {
               fontSize="15px"
               onClick={handleSubmit(handleFormSubmit)}
             >
-              {props.level != 1 ? t('next') : t('play')}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -309,16 +309,16 @@ const SelectNumberArcheeko = (props: any) => {
         />
       ) : (
         <Language
-        isOpen={isOpenLanguage}
-        onClose={onCloseLanguage}
-        formData={props.formData}
-        updatedFormData={updatedFormData}
-        selectedNumber={selectedNumber}
-        setFormData={props.setFormData}
-        onclosemodules={props.onclosemodules}
-        onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-        onCloseSelectNumber={props.onClose}
-        oncloseselectlevel={props.oncloseselectlevel}
+          isOpen={isOpenLanguage}
+          onClose={onCloseLanguage}
+          formData={props.formData}
+          updatedFormData={updatedFormData}
+          selectedNumber={selectedNumber}
+          setFormData={props.setFormData}
+          onclosemodules={props.onclosemodules}
+          onCloseSelectEnvironment={props.onCloseSelectEnvironment}
+          onCloseSelectNumber={props.onClose}
+          oncloseselectlevel={props.oncloseselectlevel}
         />
       )}
       {/* {onOpenConnected && (

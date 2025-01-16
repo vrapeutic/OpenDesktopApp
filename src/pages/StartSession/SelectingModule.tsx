@@ -22,7 +22,7 @@ import { dataContext } from '@renderer/shared/Provider';
 import { useNavigate } from 'react-router-dom';
 import SelectLevelArcheeko from './Archeeko/SelectLevelArcheeko';
 import { useStartSessionContext } from '@renderer/Context/StartSesstionContext';
-import SelectAttentionTypeBedViblio from './viblio/SelectAttentionTypeBedViblio';
+import SelectAttentionTypeViblio from './viblio/SelectAttentionTypeViblio';
 import SelectLevelRodja from './rodja/SelectLevelrodja';
 import axios from 'axios';
 import { getMe } from '@renderer/cache';
@@ -60,9 +60,9 @@ export default function SelectingModule(props: any) {
   } = useDisclosure();
 
   const {
-    isOpen: isOpenAttentionTypeBedViblio,
-    onOpen: onOpenSelectAttentionTypeBedViblio,
-    onClose: onCloseAttentionTypeBedViblio,
+    isOpen: isOpenAttentionTypeViblio,
+    onOpen: onOpenSelectAttentionTypeViblio,
+    onClose: onCloseAttentionTypeViblio,
   } = useDisclosure();
 
   const selectedCenter = useContext(dataContext);
@@ -131,7 +131,7 @@ export default function SelectingModule(props: any) {
           return onOpenSelectlevelArcheeko();
         case 'Viblio':
           console.log('Viblio', name);
-          return onOpenSelectAttentionTypeBedViblio();
+          return onOpenSelectAttentionTypeViblio();
         case 'Rodja':
           console.log('Rodja', name);
           return onOpenSelectlevelrodja();
@@ -382,10 +382,10 @@ export default function SelectingModule(props: any) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {onOpenSelectAttentionTypeBedViblio && (
-        <SelectAttentionTypeBedViblio
-          isOpen={isOpenAttentionTypeBedViblio}
-          onClose={onCloseAttentionTypeBedViblio}
+      {onOpenSelectAttentionTypeViblio && (
+        <SelectAttentionTypeViblio
+          isOpen={isOpenAttentionTypeViblio}
+          onClose={onCloseAttentionTypeViblio}
           onclosemodules={props.onClose}
         />
       )}
@@ -414,7 +414,7 @@ export default function SelectingModule(props: any) {
         <SelectAttentionTypeBed
           isOpen={isOpenSelectAttentionTypeBed}
           onClose={onCloseSelectAttentionTypeBed}
-          onCloseModules={props.onClose}
+          onclosemodules={props.onClose}
         />
       )}
       {onKickDirection && (

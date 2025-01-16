@@ -66,6 +66,7 @@ const Language = (props: any) => {
   );
   const toast = useToast();
   const toastIdRef: any = useRef();
+
   const schema = joi.object({
     selectDistractor: joi.number().required(),
   });
@@ -77,7 +78,7 @@ const Language = (props: any) => {
     formState: { errors },
   } = useForm({
     resolver: joiResolver(schema),
-    mode: 'onTouched',
+    mode: 'onSubmit',
   });
 
   const handleFormSubmit = async (data: any) => {
@@ -228,7 +229,7 @@ const Language = (props: any) => {
           </ModalHeader>
 
           <ModalBody fontSize="20px" fontWeight="600" mt="25px">
-            <FormControl isInvalid={!!errors.selectDistractors}>
+            <FormControl isInvalid={!!errors.selectDistractor}>
               <Stack spacing={4} direction="column" align="center">
                 <Button
                   onClick={() => handleButtonClick(1)}
@@ -253,7 +254,7 @@ const Language = (props: any) => {
               </Stack>
 
               <FormErrorMessage>
-                {errors.selectDistractors && t('selectDistractorError')}
+                {errors.selectDistractor && t('selectLanguageError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>

@@ -12,22 +12,17 @@ import {
   ModalOverlay,
   Stack,
   useDisclosure,
-  useToast,
 } from '@chakra-ui/react';
 import { joiResolver } from '@hookform/resolvers/joi';
-import joi from 'joi';
-import { useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import usePopupsHandler from '@renderer/Context/PopupsHandlerContext';
 import useSocketManager from '@renderer/Context/SocketManagerProvider';
+import joi from 'joi';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ErrorPopup } from '../ErrorPopup';
 import SelectLanguage from './SelectLanguage';
 
 const SelectDistractors = (props: any) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const {
     isOpen: isOpenLanguage,
     onOpen: onOpenLanguage,
@@ -36,13 +31,8 @@ const SelectDistractors = (props: any) => {
   const [selectedDistractor, setSelectedDistractor] = useState<number | null>(
     null
   );
-  const toastIdRef: any = useRef();
-  const [notFound, setNotFound] = useState(false);
-  const [errorMEssage, setErrorMEssage] = useState(null);
-  const { popupFunctions } = usePopupsHandler();
-  const { closeSelectingAHeadset, closeSelectingAModule } = popupFunctions;
+
   const { socketError } = useSocketManager();
-  const toast = useToast();
 
   const schema = joi.object({
     selectDistractor: joi
@@ -77,23 +67,6 @@ const SelectDistractors = (props: any) => {
     onOpenLanguage();
   };
 
-  const cancelSession = () => {
-    setNotFound(false);
-    closeSelectingAModule();
-    closeSelectingAHeadset();
-    navigate('/home');
-  };
-
-  const closeErrorModal = () => {
-    setNotFound(false);
-    closeSelectingAModule();
-  };
-
-  const selectAnotherHeadset = () => {
-    setNotFound(false);
-    closeSelectingAModule();
-  };
-
   if (socketError) {
     return null;
   }
@@ -108,11 +81,6 @@ const SelectDistractors = (props: any) => {
     await trigger('selectDistractor');
   };
 
-  const closeAllModalsAndToast = () => {
-    if (toastIdRef.current) {
-      toast.close(toastIdRef.current);
-    }
-  };
   return (
     <>
       <Modal
@@ -141,7 +109,7 @@ const SelectDistractors = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
                 >
-                  1 {t('distractor')}
+                  1
                 </Button>
 
                 <Button
@@ -152,7 +120,7 @@ const SelectDistractors = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
                 >
-                  2 {t('distractor')}
+                  2
                 </Button>
                 <Button
                   onClick={() => handleButtonClick(3)}
@@ -162,7 +130,7 @@ const SelectDistractors = (props: any) => {
                   fontSize="1.2rem"
                   {...register('selectDistractor')}
                 >
-                  3 {t('distractor')}
+                  3
                 </Button>
               </Stack>
               <FormErrorMessage>
@@ -203,16 +171,7 @@ const SelectDistractors = (props: any) => {
         </ModalContent>
       </Modal>
 
-      {notFound ? (
-        <ErrorPopup
-          isOpen={notFound}
-          onClose={closeErrorModal}
-          closeSelectingAHeadset={closeSelectingAHeadset}
-          onCancelSession={cancelSession}
-          onSelectAnotherHeadset={selectAnotherHeadset}
-          errorMessages={errorMEssage}
-        />
-      ) : (
+      {onOpenLanguage && (
         <SelectLanguage
           isOpen={isOpenLanguage}
           onClose={onCloseLanguage}
@@ -223,8 +182,6 @@ const SelectDistractors = (props: any) => {
           onCloseSelectEnvironmentBed={props.onCloseSelectEnvironmentBed}
           onCloseSelectDistractors={props.onClose}
           onclosemodules={props.onclosemodules}
-          closeAllModalsAndToast={closeAllModalsAndToast}
-          closeAllModals={closeAllModalsAndToast}
         />
       )}
     </>

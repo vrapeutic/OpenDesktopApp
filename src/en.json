@@ -415,6 +415,5 @@
   "FillingThenWatering": "Filling Then Watering",
   "AudioDistraction": "Audio Distraction",
   "selectAttentionTypeError": "Please select an attention type",
-  "AudioError":"Please select a  Audio Distraction"
-
+  "AudioError": "Please select an Audio Distraction"
 }

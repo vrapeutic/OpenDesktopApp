@@ -230,9 +230,7 @@ const SelectBooksViblio = (props: any) => {
           onCloseSelectBooksViblio={props.onClose}
           onCloseSelectEnvironmentViblio={props.onCloseSelectEnvironmentViblio}
           onCloseSelectAttentionType={props.onCloseSelectAttentionType}
-          onCloseModules={props.onCloseModules}
-          closeAllModalsAndToast={closeAllModalsAndToast}
-          closeAllModals={closeAllModalsAndToast}
+          onclosemodules={props.onclosemodules}
         />
       )}
     </>

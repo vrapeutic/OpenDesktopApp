@@ -255,7 +255,7 @@ const SelectjewelRodja = (props: any) => {
                 </Button>
               </Stack>
               <FormErrorMessage>
-                {errors.selectBook && t("selectJewelError")}
+                {errors.selectBook && t('selectJewelError')}
               </FormErrorMessage>
             </FormControl>
           </ModalBody>
@@ -272,7 +272,7 @@ const SelectjewelRodja = (props: any) => {
               onClick={handleBackToSelectLevel}
               mx={2}
             >
-              {t('backToSelectLevel')}
+              {t('back')}
             </Button>
             <Button
               w="180px"
@@ -286,9 +286,7 @@ const SelectjewelRodja = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              {props.formData[0] == 2 || props.formData[0] == 3
-                ? t('selectDistractor')
-                : t('next')}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>

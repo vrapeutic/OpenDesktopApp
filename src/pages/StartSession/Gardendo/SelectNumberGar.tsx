@@ -275,7 +275,7 @@ const SelectNumberGar = (props: any) => {
               onClick={handleSubmit(handleFormSubmit)}
               mx={2}
             >
-              {props.level != 1 ? t('next') : t('play')}
+              {t('next')}
             </Button>
           </ModalFooter>
         </ModalContent>

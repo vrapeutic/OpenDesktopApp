@@ -75,9 +75,12 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
         moduleCounts.length / fileDataArray.length;
       console.log('averageModulesPerSession', averageModulesPerSession);
       console.log('uniqueModules', uniqueModules);
-      const averageLevelsPerSession =
-        allModules.reduce((acc: any, curr: any) => acc + curr.level, 0) /
-        allModules.length;
+      const averageLevelsPerSession = Number(
+        (
+          allModules.reduce((acc: any, curr: any) => acc + curr.level, 0) /
+          allModules.length
+        ).toFixed(1)
+      );
 
       const maxSessions = Math.max(
         ...allModules.map((module: any) => module.totalTimeSpent)
@@ -210,7 +213,6 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
       transformDoctorData();
       handleProcessFile(fileDataArray);
     } else {
-      console.log('out');
       setState((prevState) => ({
         ...prevState,
         is_center_ad: false,
@@ -267,7 +269,13 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
   }
   return (
     <Box>
-      <Grid templateColumns="repeat(2, 1fr)" gap={5}>
+      <Grid
+        templateColumns={{
+          base: 'repeat(1, 1fr)', // 1 column on mobile
+          md: 'repeat(2, 1fr)', // 2 columns on medium screens and up
+        }}
+        gap={4}
+      >
         <GridItem colSpan={[2, 1]} textAlign={'center'}>
           <Stack spacing={4}>
             <Box

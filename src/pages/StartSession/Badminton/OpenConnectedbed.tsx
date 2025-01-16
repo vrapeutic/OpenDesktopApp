@@ -41,9 +41,10 @@ export default function OpenConnectedBed(props: any) {
         headsetKey
       );
       await endSissionApi();
+      props.closeAllModalsAndToast();
+      // props.onclosemodules();
       onevaluationOpen();
       // props.onClose();
-      // props.onclosemodules();
       // navigate('/');
     } catch (error) {
       console.log(error.response);
@@ -92,7 +93,6 @@ export default function OpenConnectedBed(props: any) {
       (timeDifferenceInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
     );
     console.log(differenceInMinutes);
-    props.closeAllModalsAndToast();
 
     const api = axios.put(
       `${config.apiURL}/api/v1/sessions/${sessionId}/end_session`,
@@ -108,11 +108,11 @@ export default function OpenConnectedBed(props: any) {
       headsetKey
     );
     props.onClose();
-    props.closeAllModalsAndToast();
+    props.onCloseSelectDistractors && props.onCloseSelectDistractors();
     props.onCloseSelectAttentionTypeBed();
     props.onCloseSelectEnvironmentBed();
     props.onCloseSelectAttentionSpan();
-    props.onCloseSelectDistractors && props.onCloseSelectDistractors();
+    props.closeAllModalsAndToast();
   };
   const { t } = useTranslation();
 
@@ -197,7 +197,7 @@ export default function OpenConnectedBed(props: any) {
           isOpen={isevaluationopen}
           onClose={onevalutionClose}
           closeopenconnected={props.onClose}
-          onclosemodules={props.onclosemodules}
+          closemodules={props.onclosemodules}
         />
       )}
     </>
