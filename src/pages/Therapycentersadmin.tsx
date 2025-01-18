@@ -26,7 +26,6 @@ import axios from 'axios';
 import { useAdminContext } from '@renderer/Context/AdminContext';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
-import { dataContext } from '@renderer/shared/Provider';
 import {
   CheckIcon,
   CloseIcon,
@@ -43,7 +42,7 @@ interface Center {
     // Add other attributes as needed
   };
 }
-
+ let center=""
 interface ModelKeyValues {
   [id: string]: {
     model?: any;
@@ -52,8 +51,7 @@ interface ModelKeyValues {
 }
 export default function Therapycentersadmin() {
   const toast = useToast();
-  const retrievedString = localStorage.getItem('selectedCenter');
-  const selectedCenterContext: any = JSON.parse(retrievedString);
+
 
   const {
     isOpen: isOpenVR,
@@ -82,7 +80,8 @@ export default function Therapycentersadmin() {
   const [keyValues, setKeyValues] = useState<{ [key: string]: string }>({});
   const { otp } = useAdminContext();
   const [showEdit, setShowEdit] = useState(true);
-  const selectedCenter = useContext(dataContext);
+  const[ refresh, setRefresh ] = useState(false)
+const[centerId,setCenterId]= useState("");
 
   const nextHandler = () => {
     console.log('jjjjj');
@@ -90,7 +89,7 @@ export default function Therapycentersadmin() {
 
   useEffect(() => {
     getCenters();
-  }, []);
+  }, [refresh]);
 
   const headers = {
     otp: `${otp}`,
@@ -103,8 +102,7 @@ export default function Therapycentersadmin() {
         { headers }
       );
       setCentersData(response.data.data);
-      console.log(response.data);
-      console.log(response.data.data);
+     
     } catch (error) {
       console.error(error);
     }
@@ -124,7 +122,7 @@ export default function Therapycentersadmin() {
     onCloseVR();
     toast({
       title: 'Success',
-      description: 'Add successfully',
+      description: ' successfully',
       status: 'success',
       duration: 5000,
       position: 'top-right',
@@ -140,8 +138,8 @@ export default function Therapycentersadmin() {
     setId(id);
   };
 
+
   const receiveDataFromChild = (dataFromChild: any) => {
-    console.log('receiveDataFromChild', dataFromChild);
     setChildData(dataFromChild);
   };
 
@@ -208,29 +206,47 @@ export default function Therapycentersadmin() {
         `${config.apiURL}/api/v1/admins/delete_headset/${x}`,
         { headers }
       );
-      console.log(response);
+      await  getHeadset(center)
+      setRefresh(true)
       handleSuccess();
-      // const updatedData = childData.filter((item) => item.id !== x);
-      // setChildData(updatedData);
+
+ 
+     
     } catch (error) {
       handleError(error);
       console.error(error);
     }
   };
+
   const handleRestor = async (id: number | string) => {
     try {
       const response = await axios.put(
-        `${config.apiURL}/api/v1/admins/headsets/${id}/restore`,
+        `${config.apiURL}/api/v1/admins/headsets/${id}/restore`,{},
         { headers }
       );
       console.log(response);
+      await  getHeadset(center)
       handleSuccess();
+   
+     
     } catch (error) {
       handleError(error);
       console.error(error);
     }
   };
-  console.log(childData,"childData")
+const getHeadset = async (centerId: string) => {
+  setCenterId(centerId)
+    try {
+      const response = await axios.get(
+        `${config.apiURL}/api/v1/admins/headsets?q[center_id_eq]=${centerId}`,
+        { headers }
+      );
+      setChildData(response.data.data);
+    } catch (error) {
+      console.error(error);
+      handleError(error);
+    }
+  };
 
   return (
     <>
@@ -278,6 +294,7 @@ export default function Therapycentersadmin() {
         openEditHandle={openEditHandle}
         onOpenEdit={onOpenEdit}
         sendDataToParent={receiveDataFromChild}
+        getHeadset={getHeadset}
       />
       {onOpenVR && (
         <VrModal
@@ -469,6 +486,22 @@ export default function Therapycentersadmin() {
                       </Tooltip>
                     </>
                   )}
+                  {x?.attributes?.discarded_at? <Tooltip label="restor">
+                    <Button
+                      type="button"
+                      padding="10px"
+                      margin="5px"
+                      bg="#F5B50E"
+                      borderRadius="8px"
+                      fontSize="14px"
+                      fontFamily="Graphik LCG"
+                      boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                      color={'white'}
+                      onClick={() => handleRestor(x.id)}
+                    >
+                      <RepeatIcon />
+                    </Button>
+                  </Tooltip>:
                   <Tooltip label="delete">
                     <Button
                       type="button"
@@ -484,23 +517,8 @@ export default function Therapycentersadmin() {
                     >
                       <DeleteIcon />
                     </Button>
-                  </Tooltip>
-                  <Tooltip label="restor">
-                    <Button
-                      type="button"
-                      padding="10px"
-                      margin="5px"
-                      bg="#F5B50E"
-                      borderRadius="8px"
-                      fontSize="14px"
-                      fontFamily="Graphik LCG"
-                      boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-                      color={'white'}
-                      onClick={() => handleRestor(x.id)}
-                    >
-                      <RepeatIcon />
-                    </Button>
-                  </Tooltip>
+                  </Tooltip>}
+                 
                 </Flex>
               );
             })}
@@ -550,6 +568,7 @@ const DataTable = ({
   };
 
   const getHeadset = async (x: any) => {
+    center=x
     try {
       const response = await axios.get(
         `${config.apiURL}/api/v1/admins/headsets?q[center_id_eq]=${x}`,
