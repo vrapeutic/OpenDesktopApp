@@ -213,7 +213,7 @@ const SelectDistractorsGard = (props: any) => {
           isOpen={isOpenCourse}
           onClose={onCloseCourse}
           formData={props.formData}
-          selectDistractors={selectedDistractors}
+          selectDistractors={props.onClose}
           selectedNumber={props.selectedNumber}
           setFormData={props.setFormData}
           onclosemodules={props.onclosemodules}
@@ -223,19 +223,10 @@ const SelectDistractorsGard = (props: any) => {
           oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
+          
         />
       )}
-      {/* {onOpenConnected && (
-          <OpenconnectedGar
-            isOpen={isOpenConnected}
-            onClose={onCloseConnected}
-            onclosemodules={props.onclosemodules}
-            onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-            SelectDistractors={props.onClose}
-            onCloseSelectNumber={props.onCloseSelectNumber}
-            oncloseselectlevel={props.oncloseselectlevel}
-          />
-        )} */}
+     
     </>
   );
 };

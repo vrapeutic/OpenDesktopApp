@@ -198,12 +198,13 @@ const Aduio = (props: any) => {
           updatedFormData={props.updatedFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={props.dSelectDistractors}
-          CourseSelection={props.onClose}
+          SelectDistractors={props.SelectDistractors}
+          CourseSelection={props.CourseSelection}
           onCloseSelectNumber={props.onCloseSelectNumber}
           oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
+          onCloseAduio={props.onClose}
         />
       )}
     </>

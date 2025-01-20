@@ -202,7 +202,7 @@ const CourseSelection = (props: any) => {
           updatedFormData={props.updatedFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={props.dSelectDistractors}
+          SelectDistractors={props.SelectDistractors}
           CourseSelection={props.onClose}
           onCloseSelectNumber={props.onCloseSelectNumber}
           oncloseselectlevel={props.oncloseselectlevel}
@@ -218,12 +218,13 @@ const CourseSelection = (props: any) => {
           updatedFormData={props.updatedFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={props.dSelectDistractors}
+          SelectDistractors={props.SelectDistractors}
           CourseSelection={props.onClose}
           onCloseSelectNumber={props.onCloseSelectNumber}
           oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
+          selectDistractors={props.selectDistractors}
         />
       )}
     </>

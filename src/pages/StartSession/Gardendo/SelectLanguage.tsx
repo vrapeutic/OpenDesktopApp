@@ -272,11 +272,15 @@ const SelectLanguage = (props: any) => {
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={props.onClose}
+          SelectDistractors={props.SelectDistractors}
           onCloseSelectNumber={props.onCloseSelectNumber}
           oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
+          CourseSelection={props.CourseSelection}
+          onCloseAduio={props.onCloseAduio}
+        
+          selectDistractors={props.selectDistractors}
         />
       )}
     </>

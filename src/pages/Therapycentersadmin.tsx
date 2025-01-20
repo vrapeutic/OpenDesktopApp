@@ -400,7 +400,7 @@ const getHeadset = async (centerId: string) => {
                       <Text mx={3} width={'20%'}>
                         {x.attributes.key}
                       </Text>
-                      <Tooltip label="edit">
+                      <Tooltip label="Edit">
                       <Button
                         type="button"
                         padding="10px"
@@ -452,7 +452,7 @@ const getHeadset = async (centerId: string) => {
                         onChange={(e: any) => handleChangeKey(e, x.id)}
                         value={keyValues[x.id] || ''}
                       />
-                      <Tooltip label="close">
+                      <Tooltip label="Close">
                         <Button
                           type="button"
                           padding="10px"
@@ -486,7 +486,7 @@ const getHeadset = async (centerId: string) => {
                       </Tooltip>
                     </>
                   )}
-                  {x?.attributes?.discarded_at? <Tooltip label="restor">
+                  {x?.attributes?.discarded_at? <Tooltip label="Restore">
                     <Button
                       type="button"
                       padding="10px"
@@ -502,7 +502,7 @@ const getHeadset = async (centerId: string) => {
                       <RepeatIcon />
                     </Button>
                   </Tooltip>:
-                  <Tooltip label="delete">
+                  <Tooltip label="Delete">
                     <Button
                       type="button"
                       padding="10px"
