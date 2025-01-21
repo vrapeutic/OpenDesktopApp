@@ -178,6 +178,7 @@ export default function Home() {
       setFiles(files);
       console.log('Files: from list ', files);
       const fileDataArray = await readFiles(files);
+      console.log(fileDataArray);
       setFileDataArray(fileDataArray);
     } catch (error) {
       console.log('Error listing files:', error);
@@ -197,7 +198,6 @@ export default function Home() {
             fileDataArray.push({
               fileName: file,
               modules: fileData,
-              date: sessionData[sessionIDFromFile],
             });
           }
         }

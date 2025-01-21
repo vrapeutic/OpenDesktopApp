@@ -36,20 +36,23 @@ export const CSVProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [modulesForHome, setModulesForHome] = useState<ModuleData[]>([]);
   const [modulesForReport, setModulesForReport] = useState<ModuleData[]>([]);
-  const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton'];
+  const moduleNames = [
+    'Archeeko',
+    'Viblio',
+    'GardenDo',
+    'Rodja',
+    'Badminton',
+    'ScoreNo',
+  ];
 
   const parseDateTime = (dateTimeString: string): Date => {
-    try {
-      const [datePart, timePart] = dateTimeString.split(' ');
-      const [day, month, year] = datePart.split('/').map(Number);
-      const [hours, minutes] = timePart.split(':').map(Number);
-      return new Date(year, month - 1, day, hours, minutes);
-    } catch (error) {
-      console.error('Error parsing date:', dateTimeString);
-      return new Date();
-    }
+    const [datePart, timePart] = dateTimeString.split(' ');
+    const [day, month, year] = datePart.split('/').map(Number);
+    const [hours, minutes] = timePart.split(':').map(Number);
+    return new Date(year, month - 1, day, hours, minutes);
   };
 
+  // Function to calculate time difference in minutes
   const calculateTimeDifference = (start: Date, end: Date): number => {
     return Math.round((end.getTime() - start.getTime()) / (1000 * 60));
   };
@@ -70,78 +73,72 @@ export const CSVProvider: React.FC<{ children: React.ReactNode }> = ({
     parsedData: string[][],
     forHome: boolean
   ): ModuleData[] => {
-    const modules: { [key: string]: ModuleData } = {};
-    let currentModuleName: string | null = null;
+    const modules: ModuleData[] = [];
+    let currentModule: ModuleData | null = null;
+    let moduleStartTime: Date | null = null;
+    let moduleEndTime: Date | null = null;
 
-    parsedData.forEach((row, index) => {
-      const currentRow = row[0]?.trim();
-
-      // Skip header or empty rows
-      if (!currentRow || currentRow.toLowerCase() === 'target starting time') {
-        return;
-      }
-
-      // Check if this row is a module name
-      if (moduleNames.includes(currentRow)) {
-        currentModuleName = currentRow;
-        if (!modules[currentModuleName]) {
-          modules[currentModuleName] = {
-            moduleName: currentModuleName,
-            totalTimeSpent: 0,
-            formattedTimeSpent: '',
-            distractors: [],
-            level: parseInt(row[1]?.trim() || '0', 10),
-            startTime: undefined,
-            endTime: undefined,
-          };
+    parsedData.forEach((row) => {
+      const dateTimeString = row[0].trim();
+      if (moduleNames.includes(row[0].trim())) {
+        if (currentModule) {
+          currentModule.totalTimeSpent =
+            moduleStartTime && moduleEndTime
+              ? calculateTimeDifference(moduleStartTime, moduleEndTime)
+              : 0;
+          currentModule.formattedTimeSpent = formatTimeSpent(
+            currentModule.totalTimeSpent
+          );
+          modules.push(currentModule);
         }
-        return;
-      }
+        currentModule = {
+          moduleName: row[0].trim(),
+          totalTimeSpent: 0,
+          formattedTimeSpent: '',
+          distractors: [],
+          level: parseInt(row[1].trim(), 10),
+        };
+        moduleStartTime = null;
+        moduleEndTime = null;
+      } else if (
+        currentModule &&
+        row[0].trim().toLowerCase() !== 'target starting time' &&
+        row[0].trim() !== ''
+      ) {
+        const currentDateTime = parseDateTime(dateTimeString);
+        if (!moduleStartTime) {
+          moduleStartTime = currentDateTime;
+        }
+        moduleEndTime = currentDateTime;
 
-      // Process timestamps and distractors for current module
-      if (currentModuleName && modules[currentModuleName]) {
-        try {
-          const timestamp = parseDateTime(currentRow);
-          const currentModule = modules[currentModuleName];
-
-          if (!currentModule.startTime || timestamp < currentModule.startTime) {
-            currentModule.startTime = timestamp;
-          }
-          if (!currentModule.endTime || timestamp > currentModule.endTime) {
-            currentModule.endTime = timestamp;
-          }
-
-          // Add distractor if present
-          const distractor = row[3]?.trim();
-          if (distractor && !currentModule.distractors.includes(distractor)) {
-            currentModule.distractors.push(distractor);
-          }
-        } catch (error) {
-          console.error('Error processing row:', row);
+        const distractorName = row[3]?.trim(); // Assume distractor name is in the third column
+        if (
+          distractorName &&
+          !currentModule.distractors.includes(distractorName)
+        ) {
+          currentModule.distractors.push(distractorName);
         }
       }
     });
 
-    // Calculate total time spent for each module
-    Object.values(modules).forEach((module) => {
-      if (module.startTime && module.endTime) {
-        module.totalTimeSpent = calculateTimeDifference(
-          module.startTime,
-          module.endTime
-        );
-        module.formattedTimeSpent = formatTimeSpent(module.totalTimeSpent);
-      }
-    });
-
-    const processedModules = Object.values(modules);
-
-    if (forHome) {
-      setModulesForHome(processedModules);
-    } else {
-      setModulesForReport(processedModules);
+    if (currentModule) {
+      currentModule.totalTimeSpent =
+        moduleStartTime && moduleEndTime
+          ? calculateTimeDifference(moduleStartTime, moduleEndTime)
+          : 0;
+      currentModule.formattedTimeSpent = formatTimeSpent(
+        currentModule.totalTimeSpent
+      );
+      modules.push(currentModule);
     }
 
-    return processedModules;
+    if (forHome) {
+      setModulesForHome(modules);
+    } else {
+      setModulesForReport(modules);
+    }
+
+    return modules;
   };
 
   const processCSVDataForHome = (parsedData: string[][]): ModuleData[] => {

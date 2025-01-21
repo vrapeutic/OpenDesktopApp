@@ -53,7 +53,14 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
 
   const { t, i18n } = useTranslation();
 
-  const moduleNames = ['Archeeko', 'Viblio', 'GardenDo', 'Rodja', 'Badminton'];
+  const moduleNames = [
+    'Archeeko',
+    'Viblio',
+    'GardenDo',
+    'Rodja',
+    'Badminton',
+    'ScoreNo',
+  ];
   const { state, setState } = useContext(MyContext);
   useEffect(() => {
     if (fileDataArray && fileDataArray.length > 0) {
@@ -420,6 +427,16 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
                       }
                     >
                       Rodja
+                    </Tag>
+                    {/* ScoreNo */}
+                    <Tag
+                      size="lg"
+                      variant={moduleExistence['ScoreNo'] ? 'solid' : 'outline'}
+                      colorScheme={
+                        moduleExistence['ScoreNo'] ? 'primary' : 'gray'
+                      }
+                    >
+                      ScoreNo
                     </Tag>
                   </>
                 ) : (
