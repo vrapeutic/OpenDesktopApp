@@ -308,7 +308,7 @@ const Language = (props: any) => {
           onCloseSelectEnvrodja={props.onCloseSelectEnvrodja}
           oncloseselectlevel={props.oncloseselectlevel}
           onCloseSelectJewel={props.onCloseSelectJewel}
-          onCloseSelectDistractors={props.onClose}
+          onCloseSelectDistractors={props.onCloseSelectDistractors}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
         />

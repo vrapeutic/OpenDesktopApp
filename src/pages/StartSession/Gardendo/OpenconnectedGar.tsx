@@ -103,6 +103,7 @@ export default function OpenconnectedGar(props: any) {
     return api;
   };
   const antherModule = () => {
+    console.log("onCloseCourse")
     dispatchSocketMessage(
       END_SESSION_MESSAGE,
       { deviceId: headsetKey },
@@ -111,11 +112,20 @@ export default function OpenconnectedGar(props: any) {
     props.closeAllModalsAndToast();
     props.onClose();
     props.onCloseSelectEnvironment();
-    props.SelectDistractors();
     props.onCloseSelectNumber();
     props.oncloseselectlevel();
+    {
+      props.CourseSelection && props.CourseSelection();
+    }
+    {
+      props.onCloseAduio&& props.onCloseAduio();
+    }
+    {
+      props.SelectDistractors && props.SelectDistractors();
+    }
+   {  props.selectDistractors&& props.selectDistractors()}
   };
- const { t } = useTranslation();
+  const { t } = useTranslation();
   return (
     <>
       <Box>
@@ -133,7 +143,7 @@ export default function OpenconnectedGar(props: any) {
             borderRadius="10px"
           >
             <ModalHeader textAlign="center" fontSize="1rem">
-            {t("connectedVr")}  {headsetKey}
+              {t('connectedVr')} {headsetKey}
             </ModalHeader>
 
             <ModalBody>
@@ -144,7 +154,7 @@ export default function OpenconnectedGar(props: any) {
                 textAlign="center"
                 color="#595959"
               >
-               {t('sessionInProgress')}
+                {t('sessionInProgress')}
               </Text>
 
               <Text
@@ -154,7 +164,7 @@ export default function OpenconnectedGar(props: any) {
                 textAlign="center"
                 color="#A8A8A8"
               >
-               {t('pressButtonToEnd')}
+                {t('pressButtonToEnd')}
               </Text>
             </ModalBody>
 
@@ -171,7 +181,7 @@ export default function OpenconnectedGar(props: any) {
                 marginRight="10px"
                 onClick={handle}
               >
-              {t('endSession')}
+                {t('endSession')}
               </Button>
               <Button
                 w="214px"
@@ -185,7 +195,7 @@ export default function OpenconnectedGar(props: any) {
                 marginLeft="10px"
                 onClick={antherModule}
               >
-                  {t("playAnotherModule")}
+                {t('playAnotherModule')}
               </Button>
             </ModalFooter>
           </ModalContent>

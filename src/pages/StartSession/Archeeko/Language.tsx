@@ -278,11 +278,12 @@ const Language = (props: any) => {
           onClose={onCloseConnected}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={props.onClose}
+          SelectDistractors={props.onCloseSelectDistractors}
           onCloseSelectNumber={props.onCloseSelectNumber}
           oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}
           closeAllModals={closeAllModalsAndToast}
+         
         />
       )}
       {/* {onOpenConnected && (

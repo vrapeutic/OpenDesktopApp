@@ -286,7 +286,7 @@ const SelectNumberGar = (props: any) => {
           isOpen={props.level !== 1 ? isOpenSelectDistractors : null}
           onClose={onCloseSelectDistractors}
           formData={props.formData}
-          selectedNumber={selectedNumber}
+          selectedNumber={props.selectedNumber}
           setFormData={props.setFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
@@ -312,7 +312,7 @@ const SelectNumberGar = (props: any) => {
           setFormData={props.setFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          SelectDistractors={onCloseSelectDistractors}
+          SelectDistractors={props.onCloseSelectDistractors}
           onCloseSelectNumber={props.onClose}
           oncloseselectlevel={props.oncloseselectlevel}
           closeAllModalsAndToast={closeAllModalsAndToast}

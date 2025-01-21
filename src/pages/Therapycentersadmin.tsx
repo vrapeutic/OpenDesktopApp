@@ -16,6 +16,7 @@ import {
   ModalOverlay,
   Switch,
   Text,
+  Tooltip,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
@@ -25,8 +26,13 @@ import axios from 'axios';
 import { useAdminContext } from '@renderer/Context/AdminContext';
 import { config } from '@renderer/config';
 import { useNavigate } from 'react-router-dom';
-import { dataContext } from '@renderer/shared/Provider';
-import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import {
+  CheckIcon,
+  CloseIcon,
+  DeleteIcon,
+  EditIcon,
+  RepeatIcon,
+} from '@chakra-ui/icons';
 import VrModal from './VrModal';
 
 interface Center {
@@ -36,7 +42,7 @@ interface Center {
     // Add other attributes as needed
   };
 }
-
+ let center=""
 interface ModelKeyValues {
   [id: string]: {
     model?: any;
@@ -45,8 +51,6 @@ interface ModelKeyValues {
 }
 export default function Therapycentersadmin() {
   const toast = useToast();
-  const retrievedString = localStorage.getItem('selectedCenter');
-  const selectedCenterContext:any = JSON.parse(retrievedString);
 
 
   const {
@@ -65,7 +69,6 @@ export default function Therapycentersadmin() {
     onClose: onCloseEdit,
   } = useDisclosure();
 
- 
   const [id, setId] = useState('');
   const [errors, setErrors] = useState({
     model: null,
@@ -77,16 +80,16 @@ export default function Therapycentersadmin() {
   const [keyValues, setKeyValues] = useState<{ [key: string]: string }>({});
   const { otp } = useAdminContext();
   const [showEdit, setShowEdit] = useState(true);
-  const selectedCenter = useContext(dataContext);
+  const[ refresh, setRefresh ] = useState(false)
+const[centerId,setCenterId]= useState("");
 
-const nextHandler = () => {
+  const nextHandler = () => {
     console.log('jjjjj');
   };
 
-
   useEffect(() => {
     getCenters();
-  }, []);
+  }, [refresh]);
 
   const headers = {
     otp: `${otp}`,
@@ -99,8 +102,7 @@ const nextHandler = () => {
         { headers }
       );
       setCentersData(response.data.data);
-      console.log(response.data);
-      console.log(response.data.data);
+     
     } catch (error) {
       console.error(error);
     }
@@ -120,13 +122,12 @@ const nextHandler = () => {
     onCloseVR();
     toast({
       title: 'Success',
-      description: 'Add successfully',
+      description: ' successfully',
       status: 'success',
       duration: 5000,
       position: 'top-right',
     });
   };
-
 
   const openVr = (id: string) => {
     console.log(id);
@@ -137,8 +138,8 @@ const nextHandler = () => {
     setId(id);
   };
 
+
   const receiveDataFromChild = (dataFromChild: any) => {
-    console.log('receiveDataFromChild', dataFromChild);
     setChildData(dataFromChild);
   };
 
@@ -205,16 +206,47 @@ const nextHandler = () => {
         `${config.apiURL}/api/v1/admins/delete_headset/${x}`,
         { headers }
       );
-      console.log(response);
+      await  getHeadset(center)
+      setRefresh(true)
       handleSuccess();
-      const updatedData = childData.filter((item) => item.id !== x);
-      setChildData(updatedData);
+
+ 
+     
     } catch (error) {
       handleError(error);
       console.error(error);
     }
   };
 
+  const handleRestor = async (id: number | string) => {
+    try {
+      const response = await axios.put(
+        `${config.apiURL}/api/v1/admins/headsets/${id}/restore`,{},
+        { headers }
+      );
+      console.log(response);
+      await  getHeadset(center)
+      handleSuccess();
+   
+     
+    } catch (error) {
+      handleError(error);
+      console.error(error);
+    }
+  };
+const getHeadset = async (centerId: string) => {
+  setCenterId(centerId)
+    try {
+      const response = await axios.get(
+        `${config.apiURL}/api/v1/admins/headsets?q[center_id_eq]=${centerId}`,
+        { headers }
+      );
+      setChildData(response.data.data);
+    } catch (error) {
+      console.error(error);
+      handleError(error);
+    }
+  };
 
   return (
     <>
@@ -237,7 +269,7 @@ const nextHandler = () => {
         fontFamily="Graphik LCG"
         fontWeight="500"
         lineHeight="24px"
-        cursor={"pointer"}
+        cursor={'pointer'}
       >
         <GridItem colSpan={3} style={{ marginLeft: '15px' }}>
           Name
@@ -262,9 +294,15 @@ const nextHandler = () => {
         openEditHandle={openEditHandle}
         onOpenEdit={onOpenEdit}
         sendDataToParent={receiveDataFromChild}
+        getHeadset={getHeadset}
       />
       {onOpenVR && (
-       <VrModal id={id} onOpenVR={()=>onOpenVR()}  onCloseVR={()=>onCloseVR()} isOpenVR={isOpenVR}/>
+        <VrModal
+          id={id}
+          onOpenVR={() => onOpenVR()}
+          onCloseVR={() => onCloseVR()}
+          isOpenVR={isOpenVR}
+        />
       )}
       {onOpenModal && (
         <Modal
@@ -362,7 +400,7 @@ const nextHandler = () => {
                       <Text mx={3} width={'20%'}>
                         {x.attributes.key}
                       </Text>
-
+                      <Tooltip label="Edit">
                       <Button
                         type="button"
                         padding="10px"
@@ -377,6 +415,7 @@ const nextHandler = () => {
                       >
                         <EditIcon />
                       </Button>
+                      </Tooltip>
                     </>
                   ) : (
                     <>
@@ -393,7 +432,7 @@ const nextHandler = () => {
                         }}
                         mx={2}
                         placeholder={x.attributes.model}
-                        onChange={(e:any) => handleChangeModel(e, x.id)}
+                        onChange={(e: any) => handleChangeModel(e, x.id)}
                         value={modelValues[x.id] || ''}
                       />
 
@@ -410,53 +449,76 @@ const nextHandler = () => {
                         }}
                         mx={2}
                         placeholder={x.attributes.key}
-                        onChange={(e:any) => handleChangeKey(e, x.id)}
+                        onChange={(e: any) => handleChangeKey(e, x.id)}
                         value={keyValues[x.id] || ''}
                       />
-                      <Button
-                        type="button"
-                        padding="10px"
-                        margin="5px"
-                        bg="orange"
-                        borderRadius="8px"
-                        fontSize="14px"
-                        fontFamily="Graphik LCG"
-                        boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-                        color={'white'}
-                        onClick={() => setShowEdit(!showEdit)}
-                      >
-                        <CloseIcon />
-                      </Button>
-                      <Button
-                        type="button"
-                        padding="10px"
-                        margin="5px"
-                        bg="green"
-                        borderRadius="8px"
-                        fontSize="14px"
-                        fontFamily="Graphik LCG"
-                        boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-                        color={'white'}
-                        onClick={() => editModel(x.id)}
-                      >
-                        <CheckIcon />
-                      </Button>
+                      <Tooltip label="Close">
+                        <Button
+                          type="button"
+                          padding="10px"
+                          margin="5px"
+                          bg="orange"
+                          borderRadius="8px"
+                          fontSize="14px"
+                          fontFamily="Graphik LCG"
+                          boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                          color={'white'}
+                          onClick={() => setShowEdit(!showEdit)}
+                        >
+                          <CloseIcon />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip label="edit">
+                        <Button
+                          type="button"
+                          padding="10px"
+                          margin="5px"
+                          bg="green"
+                          borderRadius="8px"
+                          fontSize="14px"
+                          fontFamily="Graphik LCG"
+                          boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                          color={'white'}
+                          onClick={() => editModel(x.id)}
+                        >
+                          <CheckIcon />
+                        </Button>
+                      </Tooltip>
                     </>
                   )}
-                  <Button
-                    type="button"
-                    padding="10px"
-                    margin="5px"
-                    bg="red"
-                    borderRadius="8px"
-                    fontSize="14px"
-                    fontFamily="Graphik LCG"
-                    boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
-                    color={'white'}
-                    onClick={() => handleDelete(x.id)}
-                  >
-                    <DeleteIcon />
-                  </Button>
+                  {x?.attributes?.discarded_at? <Tooltip label="Restore">
+                    <Button
+                      type="button"
+                      padding="10px"
+                      margin="5px"
+                      bg="#F5B50E"
+                      borderRadius="8px"
+                      fontSize="14px"
+                      fontFamily="Graphik LCG"
+                      boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                      color={'white'}
+                      onClick={() => handleRestor(x.id)}
+                    >
+                      <RepeatIcon />
+                    </Button>
+                  </Tooltip>:
+                  <Tooltip label="Delete">
+                    <Button
+                      type="button"
+                      padding="10px"
+                      margin="5px"
+                      bg="red"
+                      borderRadius="8px"
+                      fontSize="14px"
+                      fontFamily="Graphik LCG"
+                      boxShadow="0px 2px 8px rgba(251, 203, 24, 0.24)"
+                      color={'white'}
+                      onClick={() => handleDelete(x.id)}
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </Tooltip>}
+                 
                 </Flex>
               );
             })}
@@ -506,6 +568,7 @@ const DataTable = ({
   };
 
   const getHeadset = async (x: any) => {
+    center=x
     try {
       const response = await axios.get(
         `${config.apiURL}/api/v1/admins/headsets?q[center_id_eq]=${x}`,
@@ -538,7 +601,7 @@ const DataTable = ({
             lineHeight="24px"
             key={x.id}
             onClick={() => handleCenterClick(x)}
-            cursor={"pointer"}
+            cursor={'pointer'}
           >
             <GridItem
               colSpan={3}
@@ -598,10 +661,9 @@ const DataTable = ({
                       color={'white'}
                       onClick={(e: any) => {
                         e.stopPropagation();
-                        navigate('/AssignModule',{
+                        navigate('/AssignModule', {
                           state: { Module: x },
                         });
-                        
                       }}
                     >
                       Assign a module
@@ -642,9 +704,8 @@ const DataTable = ({
                         onOpenEdit();
                         getHeadset(x.id);
                       }}
-                    > 
+                    >
                       Edit or Delete headset
-
                     </Button>
                   </Box>
                 </Box>

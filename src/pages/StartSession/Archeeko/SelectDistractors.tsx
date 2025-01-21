@@ -221,8 +221,9 @@ const SelectDistractors = (props: any) => {
           setFormData={props.setFormData}
           onclosemodules={props.onclosemodules}
           onCloseSelectEnvironment={props.onCloseSelectEnvironment}
-          onCloseSelectNumber={props.onClose}
+          onCloseSelectNumber={props.onCloseSelectNumber}
           oncloseselectlevel={props.oncloseselectlevel}
+          onCloseSelectDistractors={props.onClose}
         />
       )}
     </>

@@ -107,12 +107,13 @@ export default function OpenconnectedArcheeko(props: any) {
       headsetKey
     );
     props.onClose()
-   
     props.onCloseSelectEnvironment()
-    props.SelectDistractors()
+    
+    {props.SelectDistractors&&props.SelectDistractors()}
     props.onCloseSelectNumber()
     props.oncloseselectlevel()
     props.closeAllModalsAndToast()
+    {props.onCloseSelectDistractors&&props.onCloseSelectDistractors()}
    
   }
  
