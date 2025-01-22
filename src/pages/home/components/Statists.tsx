@@ -71,17 +71,22 @@ const Statists = ({ refreshKey, loading, fileDataArray }: any) => {
         0
       );
 
-      const longestVRSession = allModules.reduce(
-        (acc: any, curr: any) => Math.max(acc, curr.totalTimeSpent),
-        0
-      );
+      const longestVRSession = fileDataArray.reduce((max: any, file: any) => {
+        // Sum the totalTimeSpent for all modules in this session
+        const sessionTotal = file.modules.reduce(
+          (sum: any, module: any) => sum + module.totalTimeSpent,
+          0
+        );
+        // Return the maximum value between the current max and this session's total
+        return Math.max(max, sessionTotal);
+      }, 0);
 
       const moduleCounts = allModules.map((item: any) => item.moduleName);
       const uniqueModules = [...new Set(moduleCounts)].length;
-      const averageModulesPerSession =
-        moduleCounts.length / fileDataArray.length;
-      console.log('averageModulesPerSession', averageModulesPerSession);
-      console.log('uniqueModules', uniqueModules);
+      const averageModulesPerSession = Number(
+        (moduleCounts.length / fileDataArray.length).toFixed(1)
+      );
+
       const averageLevelsPerSession = Number(
         (
           allModules.reduce((acc: any, curr: any) => acc + curr.level, 0) /
