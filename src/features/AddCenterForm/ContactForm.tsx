@@ -15,7 +15,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import Uploadlogo from './UploadLogoCenter';
 import Progressbar from '../../theme/components/ProgressBarAddCenter';
 import { TherapyFormProps } from './therapyFormInterface';
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 const ContactForm: React.FC<TherapyFormProps> = ({
   onSubmit,
@@ -24,6 +24,9 @@ const ContactForm: React.FC<TherapyFormProps> = ({
   formData,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { t } = useTranslation();
+
   const schema = joi.object({
     phoneNumber: joi
       .number()
