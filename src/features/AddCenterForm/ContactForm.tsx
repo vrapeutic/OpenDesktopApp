@@ -27,8 +27,6 @@ const ContactForm: React.FC<TherapyFormProps> = ({
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { t } = useTranslation();
-
   const schema = joi.object({
     phoneNumber: joi
       .number()
