@@ -538,7 +538,7 @@ const getHeadset = async (centerId: string) => {
                 color={'white'}
                 onClick={() => onCloseEdit()}
               >
-                Cancel
+                Okay
               </Button>
             </ModalFooter>
           </ModalContent>
