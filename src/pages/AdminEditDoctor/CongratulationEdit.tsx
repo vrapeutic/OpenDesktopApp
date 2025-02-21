@@ -2,7 +2,6 @@ import { CheckIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
-  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,9 +11,14 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
-import { Link as ReachLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function CongratulationEdit(props: any) {
+  const navigate = useNavigate();
+  const handleCloseBtn = () => {
+    props.onClose();
+    navigate('/Therapycentersadmin');
+  };
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -67,7 +71,7 @@ export default function CongratulationEdit(props: any) {
               textAlign="center"
               color="#A8A8A8"
             >
-            The Profile has been edited successfully
+              The Profile has been edited successfully
             </Text>
           </ModalBody>
 
@@ -85,17 +89,9 @@ export default function CongratulationEdit(props: any) {
               fontSize="18px"
               lineHeight="21.09px"
               textDecoration="none"
-              onClick={props.onClose}
+              onClick={handleCloseBtn}
             >
-              <Link
-                as={ReachLink}
-                to={'/'}
-                _hover={{
-                  textDecoration: 'none',
-                }}
-              >
-                Go to home
-              </Link>
+              Go to home
             </Button>
           </ModalFooter>
         </ModalContent>

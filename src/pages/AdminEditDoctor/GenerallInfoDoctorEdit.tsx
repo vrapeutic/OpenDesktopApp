@@ -172,12 +172,12 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     }
   };
 
-  const handleImageChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
-  await  setLogo(file);
-    trigger('logo')
+    await setLogo(file);
+    trigger('logo');
     if (!file) {
       setValue('logo', null);
       setError('logo', { message: 'Please upload a logo.' });
@@ -222,7 +222,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     const formData = createFormEdit(data);
     try {
       await postFormData(formData);
-     
+
       console.log(formData);
     } catch (error) {
       handleError(error);
@@ -234,22 +234,22 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
   };
   const createFormEdit = (data: any) => {
     const doctorFormData = new FormData();
-  
+
     doctorFormData.append('name', data.name);
     doctorFormData.append('degree', data.degree);
     doctorFormData.append('university', data.university);
-  
+
     // Append certification (if available)
     if (data.certification) {
       doctorFormData.append('certification', data.certification);
     }
-  
+
     // Append logo (if available)
     if (logo) {
-      console.log(logo)
+      console.log(logo);
       doctorFormData.append('photo', logo);
     }
-   
+
     // Append specialty IDs (only the 'id' from each speciality)
     if (data.specialities && data.specialities.length > 0) {
       data.specialities.forEach((speciality: { id: string }) => {
@@ -259,10 +259,10 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
     } else {
       console.error('No specialties provided');
     }
-  
+
     return doctorFormData;
   };
-  
+
   const customStyles = {
     control: (provided: any) => ({
       ...provided,
@@ -336,7 +336,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
             mb=".3em"
             borderRadius="8px"
             value={degree}
-            onChange={(e:any) => setDegree(e.target.value)}
+            onChange={(e: any) => setDegree(e.target.value)}
           />
 
           {errors.degree && (
@@ -428,7 +428,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
             mb=".3em"
             borderRadius="8px"
             value={university}
-            onChange={(e:any) => setUniversity(e.target.value)}
+            onChange={(e: any) => setUniversity(e.target.value)}
           />
 
           {errors.university && (
@@ -455,7 +455,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
                     id="certification"
                     type="file"
                     accept="application/pdf" // Update this line to accept PDF files
-                    onChange={(e:any) => handleCertificateChange(e)}
+                    onChange={(e: any) => handleCertificateChange(e)}
                     style={{ display: 'none' }}
                   />
                 </label>
@@ -474,7 +474,12 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
         <GridItem rowSpan={2} mb="5">
           <>
             <FormControl>
-              <FormLabel m="0em" letterSpacing="0.256px" color="#15134B" cursor="pointer">
+              <FormLabel
+                m="0em"
+                letterSpacing="0.256px"
+                color="#15134B"
+                cursor="pointer"
+              >
                 upload photo
               </FormLabel>
               <Button
@@ -486,7 +491,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
                 position={'relative'}
                 cursor="auto"
               >
-                <label style={{ cursor:"pointer"}} >
+                <label style={{ cursor: 'pointer' }}>
                   <img
                     src={imagePreview}
                     alt="brand_logo"
@@ -499,7 +504,7 @@ const GeneralInfoDoctorEdit: React.FC<TherapyFormProps> = ({
                     name="logo"
                     id="logo"
                     {...register('logo')}
-                    onChange={(e:any) => handleImageChange(e)}
+                    onChange={(e: any) => handleImageChange(e)}
                     style={{ display: 'none' }}
                     hidden
                   />

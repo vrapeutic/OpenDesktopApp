@@ -100,12 +100,12 @@ const EditModule = () => {
     mode: 'onTouched',
   });
 
-  const handleImageChange  =async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
     const previewUrl = URL.createObjectURL(file);
     await setImagePreview(previewUrl);
     await setLogo(file);
-    trigger("logo")
+    trigger('logo');
     if (!file) {
       setValue('logo', file);
       await setError('logo', { message: 'Please upload a logo.' });
@@ -115,7 +115,7 @@ const EditModule = () => {
   const handleError = (error: any) => {
     toast({
       title: 'Error',
-      description: error.response.data,
+      description: error?.response?.data?.error,
       status: 'error',
       duration: 9000,
       position: 'top-right',
@@ -174,8 +174,6 @@ const EditModule = () => {
   };
 
   const FormOnSubmit = (data: any) => {
-    console.log('Form Submitted'); // Log to check if the form is submitted
-    console.log('Form Data:', data); // Log to inspect the form data
     SendDataToApi(data);
     setLoading(true);
     console.log('Updated FormData in:', data);
@@ -481,7 +479,12 @@ const EditModule = () => {
             <GridItem rowSpan={2} mb="5">
               <>
                 <FormControl>
-                  <FormLabel m="0em" letterSpacing="0.256px" color="#15134B"  cursor="pointer">
+                  <FormLabel
+                    m="0em"
+                    letterSpacing="0.256px"
+                    color="#15134B"
+                    cursor="pointer"
+                  >
                     Upload Photo
                   </FormLabel>
                   <Button
@@ -493,7 +496,7 @@ const EditModule = () => {
                     position={'relative'}
                     cursor={'auto'}
                   >
-                    <label style={{ cursor:"pointer"}} >
+                    <label style={{ cursor: 'pointer' }}>
                       <img
                         src={imagePreview}
                         alt="brand_logo"
@@ -506,7 +509,7 @@ const EditModule = () => {
                         name="logo"
                         id="logo"
                         {...register('logo')}
-                        onChange={(e:any) => handleImageChange(e)}
+                        onChange={(e: any) => handleImageChange(e)}
                         style={{ display: 'none' }}
                         hidden
                       />

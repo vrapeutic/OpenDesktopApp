@@ -190,13 +190,13 @@ const EductionIInfoSignup: React.FC<SignupFormProps> = ({
 
   const handleError = (error: any) => {
     console.log('error', error);
-    // toast({
-    //   title: 'Error',
-    //   description: error?.response?.data|| error?.response?.data?.error,
-    //   status: 'error',
-    //   duration: 5000,
-    //   position: 'top-right',
-    // });
+    toast({
+      title: 'Error',
+      description: error?.response?.data || error?.response?.data?.error,
+      status: 'error',
+      duration: 5000,
+      position: 'top-right',
+    });
   };
 
   return (

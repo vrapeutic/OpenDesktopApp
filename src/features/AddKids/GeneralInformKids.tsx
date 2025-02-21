@@ -56,38 +56,48 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
     }
   };
 
-
-
   const schema = joi.object({
-    Name: joi.string().min(3).max(30).required().label(t('name'))
-    .messages({
-      'string.min': t('validation.name.min'),
-      'string.empty': t('validation.name.required'),
-      'any.required': t('validation.name.required'),
-    }),
-    Email:joi.string()
-    .email({ tlds: { allow: ['com', 'net', 'org'] } }) // Specify allowed TLDs
-    .required()
-    .label(t('email'))
-    .messages({
-      'string.base': t('validation.email.invalid'),
-      'string.email': t('validation.email.invalid'),
-      'any.required': t('validation.email.required'),
-      'string.empty': t('validation.email.empty'),
-    }),
-    Age: joi.number()
-    .min(6)
-    .max(15)
-    .required()
-    .label(t('age'))
-    .messages({
-      'number.base': t('validation.age.invalid'), // Invalid number message
-      'number.min': t('validation.age.tooYoung'),  // Too young message (less than 6)
-      'number.max': t('validation.age.tooOld'),    // Too old message (greater than 15)
-      'any.required': t('validation.age.required'), // Age is required
-    }),
-    diagnoses: joi.array().min(1).required().label(t('diagnoses')).messages({'any.required':t("validation.diagnoses")}),
-    file:joi.any().required().label('file'),
+    Name: joi
+      .string()
+      .min(3)
+      .max(30)
+      .required()
+      .label(t('name'))
+      .messages({
+        'string.min': t('validation.name.min'),
+        'string.empty': t('validation.name.required'),
+        'any.required': t('validation.name.required'),
+      }),
+    Email: joi
+      .string()
+      .email({ tlds: { allow: ['com', 'net', 'org'] } }) // Specify allowed TLDs
+      .required()
+      .label(t('email'))
+      .messages({
+        'string.base': t('validation.email.invalid'),
+        'string.email': t('validation.email.invalid'),
+        'any.required': t('validation.email.required'),
+        'string.empty': t('validation.email.empty'),
+      }),
+    Age: joi
+      .number()
+      .min(6)
+      .max(15)
+      .required()
+      .label(t('age'))
+      .messages({
+        'number.base': t('validation.age.invalid'), // Invalid number message
+        'number.min': t('validation.age.tooYoung'), // Too young message (less than 6)
+        'number.max': t('validation.age.tooOld'), // Too old message (greater than 15)
+        'any.required': t('validation.age.required'), // Age is required
+      }),
+    diagnoses: joi
+      .array()
+      .min(1)
+      .required()
+      .label(t('diagnoses'))
+      .messages({ 'any.required': t('validation.diagnoses') }),
+    file: joi.any().required().label('file'),
   });
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
@@ -97,7 +107,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
       setImagePreview(previewUrl);
       setImagePreviewError(false);
       setValue('file', file);
-                    trigger('file'); // Trigger validation for the 'diagnoses' field
+      trigger('file'); // Trigger validation for the 'diagnoses' field
     }
   };
   const {
@@ -215,7 +225,6 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
     });
   };
 
-  
   return (
     <Box
       bg="#FFFFFF"
@@ -237,7 +246,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-          {  t('name')}
+            {t('name')}
           </FormLabel>
 
           <Input
@@ -264,7 +273,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-           { t('email')}
+            {t('email')}
           </FormLabel>
 
           <Input
@@ -291,7 +300,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-           {t('age')}
+            {t('age')}
           </FormLabel>
 
           <Input
@@ -321,7 +330,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-          { t('diagnoses')}
+            {t('diagnoses')}
           </FormLabel>
           <Box mt="0.75em" mb=".3em">
             <Controller
@@ -349,7 +358,6 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
           )}
         </GridItem>
 
-      
         <GridItem mb="5">
           <FormLabel
             display="inline"
@@ -357,7 +365,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             letterSpacing="0.256px"
             color="#15134B"
           >
-          {t('uploadPhoto')}
+            {t('uploadPhoto')}
           </FormLabel>
           <FormControl id="file" isInvalid={!!errors.file}>
             <Input
@@ -375,7 +383,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
               _hover={{
                 bg: 'rgba(57, 97, 251, 0.1)',
               }}
-              width={"70%"}
+              width={'70%'}
               p="1em"
               onClick={() => document.getElementById('file-upload')?.click()}
             >
@@ -440,12 +448,18 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
             fontSize="1.125em"
             fontWeight="700"
           >
-           {t('back')}
+            {t('back')}
           </Button>
         )}
       </Flex>
-      
-      {onOpen && <Congratulations isOpen={isOpen} onClose={onClose}   backHandler={backHandler}/>}
+
+      {onOpen && (
+        <Congratulations
+          isOpen={isOpen}
+          onClose={onClose}
+          backHandler={backHandler}
+        />
+      )}
     </Box>
   );
 };

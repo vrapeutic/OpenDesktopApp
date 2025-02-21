@@ -30,7 +30,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
   backHandler,
   sliding,
   datachild,
-  centerID
+  centerID,
 }) => {
   const animatedComponents = makeAnimated();
   const [diagnoses, setDiagnoses] = useState([]);
@@ -48,14 +48,14 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     Age: joi.required(),
     diagnoses: joi.array().min(1).required().label('diagnoses'),
     logo: joi
-    .any()
-    .label('logo')
-    .custom((value, helpers) => {
-      if (value && value.name) {
-        return helpers.error('Invalid file type. Please upload a  photo.');
-      }
-      return value;
-    }),
+      .any()
+      .label('logo')
+      .custom((value, helpers) => {
+        if (value && value.name) {
+          return helpers.error('Invalid file type. Please upload a  photo.');
+        }
+        return value;
+      }),
   });
   const {
     register,
@@ -64,7 +64,9 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     setValue,
     setError,
 
-  control, trigger} = useForm({
+    control,
+    trigger,
+  } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
   });
@@ -87,7 +89,6 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
   }) => {
     onSubmit(data);
     SendDataToApi(data);
-
   };
   useEffect(() => {
     getAllDiagnoses();
@@ -163,32 +164,28 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
     setLogo(file);
-    trigger("logo")
+    trigger('logo');
     if (!file) {
       setValue('logo', null);
       setError('logo', { message: 'Please upload a logo.' });
     }
   };
-  const SendDataToApi = async (data:any) => {
-    const formData = createFormEdit(data)
+  const SendDataToApi = async (data: any) => {
+    const formData = createFormEdit(data);
     try {
       await postFormData(formData);
-     
     } catch (error) {
       handleError(error);
     } finally {
-      console.log("mm")
+      console.log('mm');
     }
   };
 
-
-
-  const createFormEdit = (data:any) => {
+  const createFormEdit = (data: any) => {
     const childFormData = new FormData();
     childFormData.append('child[name]', data.Name);
     childFormData.append('child[age]', data.Age);
     childFormData.append('center_id', centerID);
-    
 
     {
       logo && childFormData.append('child[photo]', logo);
@@ -201,47 +198,43 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     return childFormData;
   };
 
- const postFormData = async (formData: FormData) => {
-  try {
-    const token = getMe()?.token;
-    const headers = {
-      ...(datachild
-        ? { otp: otp }
-        : { Authorization: `Bearer ${token}` }),
-    };
+  const postFormData = async (formData: FormData) => {
+    try {
+      const token = getMe()?.token;
+      const headers = {
+        ...(datachild ? { otp: otp } : { Authorization: `Bearer ${token}` }),
+      };
 
-    const response = await axios.put(
-      `${config.apiURL}/api/v1/admins/edit_child/?child_id=${datachild.id}&center_id=${centerID}`,
-      formData,
-      { headers }
-    );
-    handleSuccess();
-    
-    return response; 
-  } catch (error) {
-    // Handle error appropriately
-    handleError(error)
-    console.error('Error in posting form data:', error);
-    throw new Error('Error while posting form data'); // You can also customize this error message
-  }
-};
+      const response = await axios.put(
+        `${config.apiURL}/api/v1/admins/edit_child/?child_id=${datachild.id}&center_id=${centerID}`,
+        formData,
+        { headers }
+      );
+      handleSuccess();
 
+      return response;
+    } catch (error) {
+      // Handle error appropriately
+      handleError(error);
+      console.error('Error in posting form data:', error);
+      throw new Error('Error while posting form data'); // You can also customize this error message
+    }
+  };
 
   const handleSuccess = () => {
     onOpen();
   };
-  
+
   const handleError = (error: any) => {
     onClose();
     toast({
       title: 'Error',
-      description: error.response?.data?.error,
+      description: error?.response?.data?.error,
       status: 'error',
       duration: 5000,
       position: 'top-right',
     });
   };
-
 
   return (
     <Box
@@ -322,7 +315,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
             Diagnoses
           </FormLabel>
           <Box mt="0.75em" mb=".3em">
-          <Controller
+            <Controller
               name="diagnoses"
               control={control}
               render={({ field }) => (
@@ -337,7 +330,6 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
                   onChange={handleSpecializations}
                   styles={customStyles}
                   value={selectedDiagnoses}
-                 
                 />
               )}
             />
@@ -362,7 +354,12 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
 
         <GridItem mb="5">
           <>
-            <FormLabel m="0em" letterSpacing="0.256px" color="#15134B" cursor={"pointer"}>
+            <FormLabel
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
+              cursor={'pointer'}
+            >
               upload photo
             </FormLabel>
             <Button
@@ -372,9 +369,9 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
               borderRadius="8px"
               bg="#FFFFFF"
               position={'relative'}
-              cursor={"auto"}
+              cursor={'auto'}
             >
-              <label style={{ cursor:"pointer"}}>
+              <label style={{ cursor: 'pointer' }}>
                 <img
                   src={imagePreview}
                   alt="brand_logo"
@@ -387,7 +384,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
                   name="logo"
                   id="logo"
                   {...register('logo')}
-                  onChange={(e:any) => handleImageChange(e)}
+                  onChange={(e: any) => handleImageChange(e)}
                   style={{ display: 'none' }}
                   hidden
                 />
@@ -402,7 +399,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
       </Grid>
 
       <Flex flexDirection="row-reverse">
-      <Button
+        <Button
           type="submit"
           bg={isValid ? '#4AA6CA' : '#D3D3D3'}
           borderRadius="0.75em"
@@ -438,12 +435,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
           </Button>
         )}
       </Flex>
-      {onOpen && (
-        <Congratulations
-        isOpen={isOpen}
-        onClose={onClose}
-      />
-      )}
+      {onOpen && <Congratulations isOpen={isOpen} onClose={onClose} />}
     </Box>
   );
 };

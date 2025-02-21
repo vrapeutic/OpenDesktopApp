@@ -15,8 +15,12 @@ import {
 import { Link as ReachLink, useNavigate } from 'react-router-dom';
 
 export default function CongratulationsAssignCenter(props: any) {
-  console.log(props);
   const navigate = useNavigate();
+
+  const handleBackBtn = () => {
+    props.onClose();
+    navigate('/Theraputicmodules');
+  };
 
   return (
     <>
@@ -88,17 +92,11 @@ export default function CongratulationsAssignCenter(props: any) {
               fontSize="18px"
               lineHeight="21.09px"
               textDecoration="none"
+              onClick={handleBackBtn}
             >
-              <Link
-                as={ReachLink}
-                to={'/Theraputicmodules'}
-                _hover={{
-                  textDecoration: 'none',
-                }}
-              >
-                Go Back
-              </Link>
+              Go Back
             </Button>
+
             <Button
               h="54px"
               w={{ base: '100%', md: 'auto' }} // Set width to full width on small screens, auto on medium and larger screens

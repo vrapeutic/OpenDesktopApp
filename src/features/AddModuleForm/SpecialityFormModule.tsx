@@ -55,7 +55,6 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
-
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -127,9 +126,10 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
   };
 
   const handleError = (error: any) => {
+    console.log(error, 'error');
     toast({
       title: 'Error',
-      description: error.response.data,
+      description: error?.response?.data?.error,
       status: 'error',
       duration: 5000,
       position: 'top-right',
@@ -146,7 +146,7 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       setLogo(file);
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
-   
+
       setValue('file', file);
       trigger('file'); // Trigger validation for the 'diagnoses' field
     }
@@ -175,16 +175,20 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
             <Grid gap={2} templateColumns="repeat(2, 1fr)">
               <GridItem>
                 <FormLabel>From</FormLabel>
-                <Input {...register('From')} id="From"  />
+                <Input {...register('From')} id="From" />
                 {errors.From && (
-                  <Text color="red.500" mb={2} fontSize={16}>{errors.From.message as string}</Text>
+                  <Text color="red.500" mb={2} fontSize={16}>
+                    {errors.From.message as string}
+                  </Text>
                 )}
               </GridItem>
               <GridItem>
                 <FormLabel>To</FormLabel>
                 <Input {...register('To')} id="To" />
                 {errors.To && (
-                  <Text color="red.500" mb={2} fontSize={16}>{errors.To.message as string}</Text>
+                  <Text color="red.500" mb={2} fontSize={16}>
+                    {errors.To.message as string}
+                  </Text>
                 )}
               </GridItem>
             </Grid>
@@ -199,62 +203,62 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
               </Text>
             )}
           </GridItem>
-       
+
           <GridItem my="5">
-          <FormLabel
-            display="inline"
-            m="0em"
-            letterSpacing="0.256px"
-            color="#15134B"
-          >
-            Upload a photo
-          </FormLabel>
-          <FormControl id="file" isInvalid={!!errors.file}>
-            <Input
-              type="file"
-              border="none"
-              accept="image/*"
-              onChange={handleImageChange}
-              display="none"
-              id="file-upload"
-            />
-            <Box
-              border="2px dashed #4965CA"
-              cursor="pointer"
-              borderRadius="8px"
-              _hover={{
-                bg: 'rgba(57, 97, 251, 0.1)',
-              }}
-              width={"70%"}
-              p="1em"
-              onClick={() => document.getElementById('file-upload')?.click()}
+            <FormLabel
+              display="inline"
+              m="0em"
+              letterSpacing="0.256px"
+              color="#15134B"
             >
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  style={{
-                    width: '100%',
-                    height: 150,
-                    borderRadius: '8px',
-                    objectFit: 'contain',
-                  }}
-                />
-              ) : (
-                <Flex align="center" justify="center">
-                  <Image />
-                  <Text ml="2">Drag & Drop here or click to upload</Text>
-                </Flex>
+              Upload a photo
+            </FormLabel>
+            <FormControl id="file" isInvalid={!!errors.file}>
+              <Input
+                type="file"
+                border="none"
+                accept="image/*"
+                onChange={handleImageChange}
+                display="none"
+                id="file-upload"
+              />
+              <Box
+                border="2px dashed #4965CA"
+                cursor="pointer"
+                borderRadius="8px"
+                _hover={{
+                  bg: 'rgba(57, 97, 251, 0.1)',
+                }}
+                width={'70%'}
+                p="1em"
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
+                {imagePreview ? (
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    style={{
+                      width: '100%',
+                      height: 150,
+                      borderRadius: '8px',
+                      objectFit: 'contain',
+                    }}
+                  />
+                ) : (
+                  <Flex align="center" justify="center">
+                    <Image />
+                    <Text ml="2">Drag & Drop here or click to upload</Text>
+                  </Flex>
+                )}
+              </Box>
+              {errors.file && (
+                <Text color="red.500">{errors.file.message as string}</Text>
               )}
-            </Box>
-            {errors.file && (
-              <Text color="red.500">{errors.file.message as string}</Text>
-            )}
-            {/* {imagePreviewError && (
+              {/* {imagePreviewError && (
               <Text color="red.500">Please upload an image.</Text>
             )} */}
-          </FormControl>
-        </GridItem>
+            </FormControl>
+          </GridItem>
         </Grid>
 
         <Flex flexDirection="row-reverse" m={3}>
