@@ -218,7 +218,7 @@ const GeneralInfoFormKids: React.FC<TherapyFormProps> = ({
     console.log('error', error);
     toast({
       title: 'Error',
-      description: t(error.response.data.error),
+      description: error?.response?.data?.error,
       status: 'error',
       duration: 5000,
       position: 'top-right',
