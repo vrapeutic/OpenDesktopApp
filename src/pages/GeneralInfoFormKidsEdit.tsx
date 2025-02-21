@@ -30,6 +30,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
   backHandler,
   sliding,
   datachild,
+  centerID
 }) => {
   const animatedComponents = makeAnimated();
   const [diagnoses, setDiagnoses] = useState([]);
@@ -172,7 +173,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     const formData = createFormEdit(data)
     try {
       await postFormData(formData);
-      handleSuccess();
+     
     } catch (error) {
       handleError(error);
     } finally {
@@ -186,6 +187,8 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     const childFormData = new FormData();
     childFormData.append('child[name]', data.Name);
     childFormData.append('child[age]', data.Age);
+    childFormData.append('center_id', centerID);
+    
 
     {
       logo && childFormData.append('child[photo]', logo);
@@ -198,7 +201,8 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     return childFormData;
   };
 
-  const postFormData = (formData: FormData) => {
+ const postFormData = async (formData: FormData) => {
+  try {
     const token = getMe()?.token;
     const headers = {
       ...(datachild
@@ -206,15 +210,22 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
         : { Authorization: `Bearer ${token}` }),
     };
 
-   
-    axios.put(
-            `${config.apiURL}/api/v1/admins/edit_child/?child_id=${datachild.id}`,
-            formData,
-            { headers }
-          )
-        
+    const response = await axios.put(
+      `${config.apiURL}/api/v1/admins/edit_child/?child_id=${datachild.id}&center_id=${centerID}`,
+      formData,
+      { headers }
+    );
+    handleSuccess();
+    
+    return response; 
+  } catch (error) {
+    // Handle error appropriately
+    handleError(error)
+    console.error('Error in posting form data:', error);
+    throw new Error('Error while posting form data'); // You can also customize this error message
+  }
+};
 
-  };
 
   const handleSuccess = () => {
     onOpen();
@@ -224,7 +235,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     onClose();
     toast({
       title: 'Error',
-      description: error.response.data.error,
+      description: error.response?.data?.error,
       status: 'error',
       duration: 5000,
       position: 'top-right',

@@ -5,5 +5,6 @@ export interface TherapyFormProps {
     sliding?:number
     formData?:any;
     datachild?:any;
+    centerID?:string;
   }
   

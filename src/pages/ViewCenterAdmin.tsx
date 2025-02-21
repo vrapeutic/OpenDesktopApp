@@ -36,6 +36,7 @@ const ViewCenterAdmin = () => {
               sliding={sliding}
               formData={formData}
               datachild={kidsList}
+              centerID={centerData.id}
             />
           </>
         );
