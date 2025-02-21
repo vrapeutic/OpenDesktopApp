@@ -11,8 +11,9 @@ import {
   Input,
   Stack,
   Text,
-  Toast,
+ 
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import Select from 'react-select';
 import { ArrowBackIcon } from '@chakra-ui/icons';
@@ -43,6 +44,7 @@ const EditCenter = () => {
   const navigate = useNavigate();
   const url = centerData?.attributes?.certificate?.url;
   const fileName = url.split('/').pop().split('?')[0];
+  const toast = useToast();
   const {
     isOpen: isOpenCongratulationsEditcenter,
     onOpen: onOpenCongratulationsEditcenter,
@@ -209,7 +211,7 @@ const EditCenter = () => {
   });
 
   const animatedComponents = makeAnimated();
-
+console.log(centerData.attributes,"centerData.attributes")
   useEffect(() => {
     // Set the initial values for the form fields using centerData
     if (centerData) {
@@ -224,10 +226,10 @@ const EditCenter = () => {
         'specialtyInformation',
         centerData.attributes.specialtyInformation ?? ''
       );
-      setValue(
-        'registrationNumber',
-        centerData.attributes.registration_number ?? ''
-      );
+      // setValue(
+      //   'registrationNumber',
+      //   centerData.attributes.registration_number ?? ''
+      // );
       setValue('socialMedia', matchingLinks[0] ?? '');
       setValue('Linkedin', matchingLinks[1] ?? '');
 
@@ -305,17 +307,28 @@ const EditCenter = () => {
   const goBack = () => {
     navigate(-1);
   };
-  const EditFormData = (formData: FormData) => {
-    const token = getMe()?.token;
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-    return axios.put(
-      `${config.apiURL}/api/v1/centers/${centerData.id}`,
-      formData,
-      { headers }
-    );
+  const EditFormData = async (formData: FormData) => {
+    try {
+      const token = getMe()?.token;
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axios.put(
+        `${config.apiURL}/api/v1/centers/${centerData.id}`,
+        formData,
+        { headers }
+      );
+      handleSuccess();
+
+      return response; // Return the response if successful
+    } catch (error) {
+      // Handle error appropriately
+      handleError(error);
+      console.log(error.response.data)
+      
+    }
   };
+  
   const FormOnSubmit = async (data: any) => {
     const formData = serialize(
       {
@@ -350,9 +363,15 @@ const EditCenter = () => {
 
     try {
       await EditFormData(formData);
-      handleSuccess();
     } catch (error) {
       handleError(error);
+      Toast({
+        title: 'Error',
+        description: error.response.data,
+        status: 'error',
+        duration: 5000,
+        position: 'top-right',
+      });
     }
   };
 
@@ -362,14 +381,16 @@ const EditCenter = () => {
   };
 
   const handleError = (error: any) => {
-    onDeleteCongratulationsEditcenter();
-    Toast({
+    console.log(error.response.data)
+    toast({
       title: 'Error',
-      description: error.response.data.error,
-      status: 'success',
+      description: error.response.data,
+      status: 'error',
       duration: 5000,
       position: 'top-right',
     });
+    onDeleteCongratulationsEditcenter();
+  
   };
 
   const handleCloseEditCenterModal = () => {
