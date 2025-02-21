@@ -190,7 +190,7 @@ export default function Specialists() {
       console.log(response.data); // Log the response or handle it as needed
       toast({
         title: 'Success',
-        description: response.data?.message || 'Assignment successful',
+        description: response.data || 'Assignment successful',
         status: 'success',
         duration: 5000,
         position: 'top-right',
@@ -201,7 +201,7 @@ export default function Specialists() {
       toast({
         title: 'Error',
         description:
-          error?.response?.data?.message || 'An unexpected error occurred.',
+          error?.response?.data?.error || 'An unexpected error occurred.',
         status: 'error',
         duration: 5000,
         position: 'top-right',
