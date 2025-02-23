@@ -97,6 +97,18 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
     try {
       const response = await axios.get(`${config.apiURL}/api/v1/diagnoses`);
       await setDiagnoses(response.data);
+      // const x: any[] = datachild.relationships.specialties.data;
+      // const filteredArray = specialistsList.filter((item: any) => {
+      //   return x.some((elem) => elem.id === String(item.id));
+      // });
+      // console.log(filteredArray);
+      // const mappedSpecialties = filteredArray.map((y: any) => ({
+      //   id: y.id,
+      //   label: y.name,
+      //   value: y.id,
+      // }));
+
+      // setValue('specialities', mappedSpecialties);
       const filterAndMapData = async () => {
         // Perform filtering using datachild
         const x: any[] = datachild.relationships.diagnoses.data;
@@ -114,7 +126,7 @@ const GeneralInfoFormKidsEdit: React.FC<TherapyFormProps> = ({
           value: y.id,
         }));
 
-        console.log('Mapped array:', m);
+        console.log('Mapped array:', datachild.relationships.diagnoses.data);
 
         // Set values or update state using filtered and mapped data
         if (datachild) {

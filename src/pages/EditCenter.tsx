@@ -12,6 +12,8 @@ import {
   Stack,
   Text,
  
+  Toast,
+ 
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
@@ -211,11 +213,11 @@ const EditCenter = () => {
   });
 
   const animatedComponents = makeAnimated();
-console.log(centerData.attributes,"centerData.attributes")
+
   useEffect(() => {
     // Set the initial values for the form fields using centerData
     if (centerData) {
-      setValue('name', centerData.attributes.name ?? '');
+      setValue('name', centerData.attributes.name);
       setValue('email', centerData.attributes.email ?? '');
       setValue('phone_number', centerData.attributes.phone_number ?? null);
       setValue('website', centerData.attributes.website ?? '');
@@ -238,7 +240,7 @@ console.log(centerData.attributes,"centerData.attributes")
         setImagePreview(centerData.attributes.logo.url);
       }
     }
-  }, [centerData, setValue, matchingLinks]);
+  }, [centerData]);
 
   const getSpecialists = async () => {
     try {
@@ -329,6 +331,7 @@ console.log(centerData.attributes,"centerData.attributes")
     }
   };
   
+
   const FormOnSubmit = async (data: any) => {
     const formData = serialize(
       {
@@ -467,7 +470,7 @@ console.log(centerData.attributes,"centerData.attributes")
                 <Text color="red.500">{errors.email.message as string}</Text>
               )}
             </GridItem>
-            <GridItem>
+            {/* <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
                 {t('completeAddress')}
               </FormLabel>
@@ -485,9 +488,9 @@ console.log(centerData.attributes,"centerData.attributes")
                 width={'100%'}
                 height={'38px'}
               />
-            </GridItem>
+            </GridItem> */}
 
-            <GridItem>
+            {/* <GridItem>
               <FormLabel m="0em" letterSpacing="0.256px" color="#15134B">
                 {t('managerName')}
               </FormLabel>
@@ -505,7 +508,7 @@ console.log(centerData.attributes,"centerData.attributes")
                 width={'100%'}
                 height={'38px'}
               />
-            </GridItem>
+            </GridItem> */}
           </Grid>
 
           <Text
@@ -517,7 +520,7 @@ console.log(centerData.attributes,"centerData.attributes")
             {t('specialty')}
           </Text>
 
-          <Grid>
+          {/* <Grid>
             <GridItem>
               <FormLabel
                 display="inline"
@@ -552,7 +555,7 @@ console.log(centerData.attributes,"centerData.attributes")
                 multiple
               />
             </GridItem>
-          </Grid>
+          </Grid> */}
           <Grid templateColumns="repeat(2, 1fr)">
             <GridItem>
               <FormLabel
