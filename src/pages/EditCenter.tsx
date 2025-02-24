@@ -228,10 +228,10 @@ const EditCenter = () => {
         'specialtyInformation',
         centerData.attributes.specialtyInformation ?? ''
       );
-      // setValue(
-      //   'registrationNumber',
-      //   centerData.attributes.registration_number ?? ''
-      // );
+      setValue(
+        'registrationNumber',
+        centerData.attributes.registration_number ?? ''
+      );
       setValue('socialMedia', matchingLinks[0] ?? '');
       setValue('Linkedin', matchingLinks[1] ?? '');
 
