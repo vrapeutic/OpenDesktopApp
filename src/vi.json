@@ -323,9 +323,9 @@
       "max": "Tên không được vượt quá 30 ký tự"
     },
     "email": {
-      "required": "Email là bắt buộc",
+      "required": "Email là bắt buộc và phải là duy nhất",
       "invalid": "Vui lòng cung cấp địa chỉ email hợp lệ",
-      "empty": "Email không thể để trống"
+      "empty": "Email không thể để trống và phải là duy nhất"
     },
     "age": {
       "invalid": "Tuổi phải là một số",
@@ -412,6 +412,6 @@
   "FillingThenWatering": "Đổ Nước Rồi Tưới",
   "AudioDistraction": "Sự Phân Tâm Âm Thanh",
   "selectAttentionTypeError": "Vui lòng chọn loại tập trung",
-  "CourseSelectionError":"Please select a  Course Selection",
-   "AudioError":"Vui lòng chọn một âm thanh gây phân tâm"
+  "CourseSelectionError": "Please select a  Course Selection",
+  "AudioError": "Vui lòng chọn một âm thanh gây phân tâm"
 }

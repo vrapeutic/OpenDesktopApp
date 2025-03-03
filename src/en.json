@@ -322,9 +322,9 @@
       "max": "Name must not exceed 30 characters"
     },
     "email": {
-      "required": "Email is required",
+      "required": "Email is required and must be unique",
       "invalid": "Please provide a valid email address",
-      "empty": "Email cannot be empty"
+      "empty": "Email cannot be empty and must be unique"
     },
     "age": {
       "invalid": "Age must be a number",

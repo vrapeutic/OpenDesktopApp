@@ -130,7 +130,6 @@ export default function Kids() {
     })();
   }, [selectedCenter.id, sliding]);
 
-  console.log('kises', kidsList[0], kidsList[1], included);
   return (
     <>
       {showTable ? (

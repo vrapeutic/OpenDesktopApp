@@ -37,7 +37,10 @@ const SpecialtyFormModule: React.FC<AddModuleFormProps> = ({
       .required()
       .greater(joi.ref('From'))
       .message('"To" must be greater than "From"'),
-    packagename: joi.string().required(),
+    packagename: joi
+      .string()
+      .required()
+      .message('Package name is required and must be unique'),
     file: joi.any().required(),
   });
 

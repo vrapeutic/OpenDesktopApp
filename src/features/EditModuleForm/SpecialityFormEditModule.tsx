@@ -54,7 +54,10 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
       .greater(joi.ref('From'))
       .message('"To" must be greater than "From"')
       .label('To'),
-    packagename: joi.string().required(),
+    packagename: joi
+      .string()
+      .required()
+      .message('Package name is required and must be unique'),
     certification: joi.required().custom((value, helpers) => {
       if (value) {
         const ext = value.name.split('.').pop().toLowerCase();
@@ -322,7 +325,7 @@ const SpecialtyFormEditModule: React.FC<AddModuleFormProps> = () => {
                       {...register('certification')}
                       id="certification"
                       type="file"
-                      onChange={(e:any) => handleCertificateChange(e)}
+                      onChange={(e: any) => handleCertificateChange(e)}
                       style={{ display: 'none' }}
                     />
                   </label>

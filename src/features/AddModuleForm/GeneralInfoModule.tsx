@@ -25,19 +25,22 @@ const GeneralInfoModule: React.FC<TherapyFormProps> = ({
   nextHandler,
   backHandler,
   sliding,
-  
-formData
- 
+
+  formData,
 }) => {
   const schema = joi.object({
-    Name: joi.string().min(3).max(30).required().label('Name'),
+    Name: joi.string().min(3).max(30).required().label('Name').messages({
+      'string.min': 'Name must be at least 3 characters',
+      'string.empty': 'Name cannot be empty and should be unique',
+      'any.required': 'Name is required',
+    }),
 
     Technology: joi.string().required(),
     Version: joi.number().required(),
     // Otp: joi.string().required(),
     specializationschema: joi.array().required().label('specializationschema'),
   });
-  console.log(formData)
+
   const {
     register,
     handleSubmit,
@@ -47,7 +50,7 @@ formData
   } = useForm({
     resolver: joiResolver(schema),
     mode: 'onTouched',
-    defaultValues:formData
+    defaultValues: formData,
   });
 
   const FormonSubmit = (data: {

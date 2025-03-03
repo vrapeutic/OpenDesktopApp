@@ -58,7 +58,11 @@ const GeneralInfoEditModule: React.FC<Props> = () => {
   }
 
   const schema = joi.object({
-    Name: joi.string().min(3).max(30).required().label('Name'),
+    Name: joi.string().min(3).max(30).required().label('Name').messages({
+      'string.min': 'Name must be at least 3 characters',
+      'string.empty': 'Name cannot be empty and must be unique',
+      'any.required': 'Name is required',
+    }),
     Technology: joi.string().required(),
     Version: joi.required(),
     specializationschema: joi.array().required().label('specializationschema'),
